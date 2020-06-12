@@ -1,0 +1,20 @@
+---
+title: "Creating your Digital Signature"
+order: 4
+---
+
+## Creating your Digital Signature
+
+ClearBank® uses the Digital Signature to ensure the integrity of any request body sent to us is maintained. The whole HTTP request body is used to create the Digital Signature and is specific to the body of each request.
+
+Follow these steps to generate a Digital Signature using the Secure Hashing Algorithm (SHA):
+
+- Hash the request body using SHA 256
+- Using the hash value produced, pass into your Hardware Security Module (HSM)*
+- Request a Digital Signature using the RSA encryption algorithm (all carried out within the HSM)*
+- The output is the Message Digital Signature
+- Place the Digital Signature within the HTTP header for all requests that have a request body
+
+*In simulation, these operations can be undertaken using Open Source solutions.
+
+For additional help with generating your authentication profile and Digital Signature, ClearBank® has a [GitHub resource](https://github.com/clearbank/fi-api-signtool) to help with your integration in the simulation environment. Please note, these are examples and are not recommended for use in production.

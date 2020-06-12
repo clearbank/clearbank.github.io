@@ -1,0 +1,134 @@
+---
+title: "Managing Direct Debit Instructions"
+order: 1
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+## Managing Direct Debit Instructions
+
+A Direct Debit Instruction (DDI) is an authorisation to collect future payments from a nominated account.
+A DDI can be submitted to ClearBank® by Service Users electronically via the Bacs Automated Direct Debit Instruction Service (AUDDIS) or sent as a paper instruction to your address to be entered via the ClearBank® API after you have validated it.
+A DDI can be set up against real and virtual accounts held with ClearBank®.
+
+If you are transferring an existing sort code to ClearBank® that already has DDIs set up, you will need to use the API to inform us of these.
+
+<EndpointBlock
+  type="post"
+  title="Create DDI for an account"
+  message="This endpoint is only required if you have received a validated Paper DDI and need to inform ClearBank of its existence. All other DDIs are set up through AUDDIS."
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all DDIs for an account"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Mandates",
+      version: "2.0"
+    },
+    {
+      path: "/v1/Accounts/{accountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a DDI for an account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Return a DDI for an account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}/Returns",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Cancel a DDI for an account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create a DDI for a virtual account"
+  message="This endpoint is only required if you have received a validated Paper DDI and need to inform ClearBank of its existence. All other DDIs are set up through AUDDIS."
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all DDIs for a virtual account"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates",
+      version: "2.0"
+    },
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a DDI for a virtual account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Return a DDI for a virtual account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}/Returns",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Cancel a DDI for a virtual account"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>

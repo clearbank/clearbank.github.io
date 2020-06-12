@@ -1,0 +1,44 @@
+---
+title: "HTTP Status Codes"
+order: 3
+---
+
+## HTTP Status Codes
+
+ClearBank® requests return a HTTP status code to indicate the success or failure of a request. For successful requests, ClearBank® returns a HTTP `2XX` status code. For failed requests, ClearBank® returns a HTTP `4XX` or `5XX` status code. Some endpoints return JSON response bodies that include errors and additional properties.
+
+
+| Status Code | Description                                                                                                                                         |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `200`       | Success!                                                                                                                                            |
+| `201`       | Success!                                                                                                                                            |
+| `202`       | Request received successfully and is being processed                                                                                               |
+| `400`       | Bad request. Something went wrong with the request. The response should include the reason why the request has failed                               |
+| `403`       | Forbidden. Your API token does not have permissions to perform the request                                                                          |
+| `404`       | Not found. The resource you’re looking for cannot be found                                                                                         |
+| `409`       | Conflict. A request conflict with the current state of the server                                                                                   |
+| `500`       | Internal server error                                                                                                                               |
+| `503`       | Server error. Service unavailable                                                                                                                   |
+
+#### Example of a response containing detailed errors
+
+```json
+{
+  "errors": {
+    "additionalProp1": [
+      "string"
+    ],
+    "additionalProp2": [
+      "string"
+    ],
+    "additionalProp3": [
+      "string"
+    ]
+  },
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string"
+}
+```

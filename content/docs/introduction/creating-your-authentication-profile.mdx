@@ -1,0 +1,40 @@
+---
+title: "Creating your authentication profile"
+order: 3
+---
+
+## Creating your authentication profile
+
+Your ClearBank® authentication profile links your Institution to your public key therefore, it must be valid.
+
+This is a breakdown of your authentication profile:
+
+- A Key Pair (public/private)
+- A Certificate Signing Request (CSR) in PKCS #10 format*
+- A token
+
+
+*In simulation, a CSR can be generated using Open Source solutions. In production, a CSR must be generated using a Hardware Security Module (HSM) which is FIPS 140-2 level 2 compliant. Solutions include, but are not limited to, Azure KV HSM, Amazon CloudHSM, GoogleCloudHSM
+
+### Follow these steps to create a valid authentication profile
+
+- Generate your Public Key and Private Key pair in PKCS #8 format*
+- Generate your Certificate Signing Request (CSR) in PKCS #10 format which contains your certificate and Public Key
+- Save your CSR as a .csr file.
+- Sign in to the Institution portal.
+- From the Menu, select **Institution > Certificates and Tokens**.
+
+*In simulation, you can utilise Open Source tools to store your Private Key. In production, you must use a physical or virtual HSM solution to store your private key (see HSM requirements above)
+
+![alt text](/assets/images/GenerateToken_1.png "Certificates and Tokens page")
+
+- Click the Generate API User Certificate button
+- Upload your Certificate Signing Request (CSR) file
+- Enter a Profile Friendly Name and an Expiry Date for your CSR file. (the default expiry date is 12 months)
+- Click Generate New Certificate and you will see your token
+
+![alt text](/assets/images/GenerateToken_2.png "Generate API Tokens")
+
+![alt text](/assets/images/GenerateToken_3.png "View Tokens")
+
+Congratulations! You’ve successfully created your authentication profile!
