@@ -1,0 +1,136 @@
+---
+title: "FX Trade Settled Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the FX trade has been settled**
+
+#### Request body
+
+```json
+{
+    "Type":"Fx.Trade.Settled",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SellAccountOwner`      | **Required**<br /> The name used to identify the legal owner of the account from which to debit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                         |
+| `SellAccountIban`       | **Required**<br /> International Bank Account Number associated with the sellAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                           |
+| `BuyAccountOwner`       | **Required**<br /> The name used to identify the legal owner of the account in which to credit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                          |
+| `BuyAccountIban`        | **Required**<br /> International Bank Account Number associated with the buyAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                            |
+| `Attestation`           | **Required**<br /> Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `1`<br />                      |
+| `ValueDate`             | **Required**<br /> Settlement date for the FX trade.<br /> Type: `string`<br /> Format: `date-time`<br /> Min. Length: `1`<br />                                                                                          |
+| `InstructedAmount`      | **Required**<br /> Amount instructed to buy or sell.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                   |
+| `FixedSide`             | **Required**<br /> The side of the trade to be fixed. This can either be buy or sell.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `4`<br />                                                            |
+| `BuyCurrency`           | **Required**<br /> Three-letter ISO currency code for the currency to buy.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                       |
+| `SellCurrency`          | **Required**<br /> Three-letter ISO currency code for the currency to sell.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                      |
+| `Margin`                | *Optional*<br /> The optional margin (as a percentage) from the trade to be credited to a margin account.<br /> Type: `number`<br /> Format: `decimal`<br />                                                              |
+| `MarginAccountIban`     | *Optional*<br /> International Bank Account Number associated with the account in which the margin amount is to be deposited.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                   |
+| `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for the FX trade.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
+| `UnstructuredInformation`| *Optional*<br /> Additional, optional information about the FX trade.<br /> Type: `string`<br /> Max. Length: `140`<br />                                                                                                |
+| `DebitTransactionId`    | **Required**<br /> Unique identifier defined by ClearBank for each debit transaction.<br /> Type: `string`<br /> Format: `GUID`<br />  Min. Length: `1`<br />                                                             |
+| `DebitAmount`           | **Required**<br /> Amount that has been debited from the sell account.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                 |
+| `DebitCurrency`         | **Required**<br /> Three-letter ISO currency code for the debit transaction.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                     |
+| `DebitTransactionIdentifiers` | *Optional*<br /> Additional identifiers assigned to the debit transaction.<br /> It is an array of objects with a `Scope`, `Name` and `Identifier`.<br /> Type: `array`<br /><br /> `Scope`<br /> Type: `string`<br /><br /> `Name`<br /> Type: `string`<br /><br /> `Identifier`<br /> Type: `string`<br />                                                                         |
+| `DebitAdditionalProperties` | *Optional*<br /> Additional properties assigned to the debit transaction which relate to the FX Trade.<br /> It is an array of objects with a `Key` and `Value`.<br /> Type: `array`<br /><br /> `Key`<br /> Type: `string`<br /><br /> `Value`<br /> Type: `string`<br />                                                                         |
+| `DebitCreatedAt`        | **Required**<br /> Date and time for when the debit transaction was created.<br /> Type: `string`<br /> Format: `date-time`<br /> Min. Length: `1`<br />                                                                  |
+| `DebitSettledAt`        | **Required**<br /> Date and time for when the debit transaction was settled.<br /> Type: `string`<br /> Format: `date-time`<br /> Min. Length: `1`<br />                                                                  |
+| `CreditTransactionId`   | **Required**<br /> Unique identifier defined by ClearBank for each credit transaction.<br /> Type: `string`<br /> Format: `GUID`<br /> Min. Length: `1`<br />                                                             |
+| `CreditAmount`          | **Required**<br /> Amount that has been credited to the buy account.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                   |
+| `CreditCurrency`        | **Required**<br /> Three-letter ISO currency code for the credit transaction.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                    |
+| `CreditTransactionIdentifiers` | *Optional*<br /> Additional identifiers assigned to the credit transaction.<br /> It is an array of objects with a `Scope`, `Name` and `Identifier`.<br /> Type: `array`<br /><br /> `Scope`<br /> Type: `string`<br /><br /> `Name`<br /> Type: `string`<br /><br /> `Identifier`<br /> Type: `string`<br />                                                                         |
+| `CreditAdditionalProperties` | *Optional*<br /> Additional properties assigned to the credit transaction which relate to the FX Trade.<br /> It is an array of objects with a `Key` and `Value`.<br /> Type: `array`<br /><br /> `Key`<br /> Type: `string`<br /><br /> `Value`<br /> Type: `string`<br />                                                                         |
+| `CreditCreatedAt`       | **Required**<br /> Date and time for when the credit transaction was created.<br /> Type: `string`<br /> Format: `date-time` <br /> Min. Length: `1`<br />                                                                |
+| `CreditSettledAt`       | **Required**<br /> Date and time for when the credit transaction was settled.<br /> Type: `string`<br /> Format: `date-time` <br /> Min. Length: `1`<br />                                                                |
+| `MarginTransactionId`   | *Optional*<br /> Unique identifier defined by ClearBank for each margin transaction.<br /> Type: `string`<br /> Format: `GUID`<br />                                                                                      |
+| `MarginAmount`          | *Optional*<br /> The margin amount credited to the margin account.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                     |
+| `MarginCurrency`        | *Optional*<br /> Three-letter ISO currency code for the margin transaction.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                      |
+| `MarginTransactionIdentifiers` | *Optional*<br /> Additional identifiers assigned to the margin transaction.<br /> It is an array of objects with a `Scope`, `Name` and `Identifier`.<br /> Type: `array`<br /><br /> `Scope`<br /> Type: `string`<br /><br /> `Name`<br /> Type: `string`<br /><br /> `Identifier`<br /> Type: `string`<br />                                                                         |
+| `MarginAdditionalProperties` | *Optional*<br /> Additional properties assigned to the margin transaction which relate to the FX Trade.<br /> It is an array of objects with a `Key` and `Value`.<br /> Type: `array`<br /><br /> `Key`<br /> Type: `string`<br /><br /> `Value`<br /> Type: `string`<br />                                                                         |
+| `MarginCreatedAt`       | *Optional*<br /> Date and time for when the margin transaction was created.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                          |
+| `MarginSettledAt`       | *Optional*<br /> Date and time for when the margin transaction was settled.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                          |
+
+#### Example FX Trade Settled webhook request body
+
+```json
+{
+    "Type":"Fx.Trade.Settled",
+    "Version":1,
+    "Payload":{
+        "SellAccountOwner":"Smith",
+        "SellAccountIban":"GB38CLRB04040100003764",
+        "BuyAccountOwner":"Smith",
+        "BuyAccountIban":"GB14CLRB04040541930570",
+        "Attestation":"Y",
+        "ValueDate":"2021-06-04T12:24:59.969Z",
+        "InstructedAmount":1000,
+        "FixedSide":"Sell",
+        "BuyCurrency":"EUR",
+        "SellCurrency":"GBP",
+        "Margin":0.001,
+        "MarginAccountIban":"GB38CLRB04040100003764",
+        "EndToEndId":"8gIlFlqLBX01TmCO7138DbcEmNWJk0OXjC0",
+        "UnstructuredInformation":"Unstructured Information",
+        "DebitTransactionId":"28bfd9f5-d4a3-4466-8fa8-600a630a466d",
+        "DebitAmount":1000,
+        "DebitCurrency":"GBP",
+        "DebitTransactionIdentifiers":[
+            
+        ],
+        "DebitAdditionalProperties":[
+            
+        ],
+        "DebitCreatedAt":"2021-06-04T12:25:11.6041133Z",
+        "DebitSettledAt":"2021-06-04T12:25:12.8510952Z",
+        "CreditTransactionId":"e444fa2e-891a-42b8-82df-815007b2c90e",
+        "CreditAmount":1163.74684512785,
+        "CreditCurrency":"EUR",
+        "CreditTransactionIdentifiers":[
+            {
+                "Scope":"AutoFXTradeOrders",
+                "Name":"TradeRequestID",
+                "Identifier":"bafa1d1f-461d-4cee-a092-afc3658b4776"
+            },
+            {
+                "Scope":"JPMExecutionReports",
+                "Name":"ExecutionID",
+                "Identifier":"bafa1d1f-461d-4cee-a092-afc3658b4776"
+            }
+        ],
+        "CreditAdditionalProperties":[
+            {
+                "Key":"FixedSide",
+                "Value":"Sell"
+            }
+        ],
+        "CreditCreatedAt":"2021-06-04T12:25:15.1297014Z",
+        "CreditSettledAt":"2021-06-04T12:25:15.2053396Z",
+        "MarginTransactionId":"8fdb8482-894c-4d4a-bd12-a0fe76505c6e",
+        "MarginAmount":1.16,
+        "MarginCurrency":"EUR",
+        "MarginTransactionIdentifiers":[
+            
+        ],
+        "MarginAdditionalProperties":[
+            
+        ],
+        "MarginCreatedAt":"2021-06-04T12:25:16.1273482Z",
+        "MarginSettledAt":"2021-06-04T12:25:16.6258492Z"
+    },
+    "Nonce":369049401
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 369049401
+}
+```

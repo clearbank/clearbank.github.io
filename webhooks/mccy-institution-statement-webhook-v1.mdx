@@ -1,0 +1,51 @@
+---
+title: "Multicurrency Institution Statement Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook allows you to download a statement for all accounts associated with your institution**
+
+#### Request body
+
+```json
+{
+    "Type":"MCCY.Statements.InstitutionStatement",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Uri`                   | **Required**<br /> URI for downloading a statement for all accounts associated with your institution.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `URI`<br />                                               |
+| `ValidUntilDate`        | **Required**<br /> Date and time the URI will remain valid until. Time in UTC.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `date-time`<br />                                                                |
+| `Year`                  | **Required**<br /> Year for which the statement has been generated in the Four Digit Year format (e.g., 2021).<br /> Type: `integer`<br /> Format: `int32`<br />                                                          |
+| `Month`                 | **Required**<br /> Month for which the statement has been generated in the 1 - 12 format (e.g., 1 for January and 12 for December).<br /> Type: `integer`<br /> minimum: `1`<br /> maximum: `12`<br /> Format: `int32`<br /> |
+| `Currency`              | **Required**<br /> Three-letter ISO currency code for the currency of the accounts for which the statement has been generated.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                    |
+| `Format`                | **Required**<br /> File format in which the statement has been generated.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                        |
+
+#### Example institution statement webhook request body
+
+```json
+{
+    "Uri":"https://s9rzi0fsit.blob.core.windows.net/qhd30vev6g/Statement_EUR_2021_06_01aa9bf5-d56f-485f-bc37-c0c631977216.csv?skoid=9f02b375-e412-410d-bfdc-b7894320c935&sktid=0b131c91-9cfd-4603-a85a-920276f59a0f&skt=2021-07-09T08%3A11%3A33Z&ske=2021-07-10T08%3A11%3A33Z&sks=b&skv=2020-04-08&sv=2020-04-08&st=2021-07-09T07%3A11%3A33Z&se=2021-07-10T08%3A11%3A33Z&sr=b&sp=r&sig=spjcgi9e1o",
+    "ValidUntilDate":"2021-07-10T00:00:00Z",
+    "Year":2021,
+    "Month":6,
+    "Currency":"EUR",
+    "Format":"csv"
+},
+    "Nonce":795391298
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 795391298
+}
+```

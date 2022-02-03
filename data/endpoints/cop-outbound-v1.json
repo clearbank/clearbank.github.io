@@ -1,0 +1,212 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank.CoP.Outbound.Api",
+    "description": "Clear Bank API for CoP outbound requests",
+    "version": "1.0.COP-Outbound"
+  },
+  "paths": {
+    "/open-banking/outbound/v1/name-verification": {
+      "post": {
+        "tags": [
+          "CoP"
+        ],
+        "summary": "This endpoint is used to confirm the exact name registered with the payee’s account.",
+        "requestBody": {
+          "description": "Cop Outbound Request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoPOutboundRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoPOutboundRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoPOutboundRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoPOutboundResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoPOutboundResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoPOutboundResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Client Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CoPOutboundRequest": {
+        "required": [
+          "Identification",
+          "LegalOwnerType",
+          "OwnerName",
+          "SchemeName"
+        ],
+        "type": "object",
+        "properties": {
+          "SchemeName": {
+            "type": "string",
+            "description": "Indicates the sort code and account number associated with the payee’s account. The value should always be: SortCodeAccountNumber."
+          },
+          "LegalOwnerType": {
+            "type": "string",
+            "description": "Nature of funds held in the account. Valid options are: Personal, Business."
+          },
+          "Identification": {
+            "type": "string",
+            "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8-digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
+          },
+          "OwnerName": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name used to identify the owner of the account in comma-delimited format. This consists of three parts separated by a comma in a structured or unstructured format. For personal accounts in the structured format: the first part will be the salutation, the second part will be the forename and the third part will be the surname (e.g., “Mr John Smith” will be represented as “Mr, John, Smith”). Only the third part will be used for personal accounts in the unstructured format (e.g., “Mr John Smith” will be represented as “,,Mr John Smith”). Only the third part will be used for business accounts (e.g., “ClearBank Ltd” will be represented as “,,ClearBank Ltd”)."
+          },
+          "SecondaryIdentification": {
+            "maxLength": 140,
+            "minLength": 0,
+            "type": "string",
+            "description": "Payment reference information as provided by the payer. If provided, this information may be used by the payee’s ASPSP to identify the account.",
+            "nullable": true
+          },
+          "EndToEndIdentification": {
+            "maxLength": 140,
+            "minLength": 0,
+            "type": "string",
+            "description": "A unique value which can be used to identify the CoP request and then used in any subsequent payment initiations to link them to this CoP request.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Required information to perform a CoP check"
+      },
+      "CoPOutboundResponse": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "$ref": "#/components/schemas/Data"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response contract"
+      },
+      "Data": {
+        "type": "object",
+        "properties": {
+          "VerificationReport": {
+            "$ref": "#/components/schemas/VerificationReport"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the exact name registered with the payee’s account."
+      },
+      "ErrorBody": {
+        "type": "object",
+        "properties": {
+          "Reason": {
+            "type": "string",
+            "description": "The reason of error",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The body of the error with description"
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A class for error responses"
+      },
+      "VerificationReport": {
+        "required": [
+          "Matched",
+          "MatchedBank"
+        ],
+        "type": "object",
+        "properties": {
+          "Matched": {
+            "type": "boolean",
+            "description": "True if there is a match or false when there is no match or a partial match."
+          },
+          "Name": {
+            "type": "string",
+            "description": "The account holder name in case of a partial match. This will not be present if there is a true match.",
+            "nullable": true
+          },
+          "ReasonCode": {
+            "type": "string",
+            "description": "Reason code for a more detailed description of the kind of match. Defined by Pay.UK. Provided if there is no match or a partial match. This will not be present if there is a true match.",
+            "nullable": true
+          },
+          "ReasonCodeDescription": {
+            "type": "string",
+            "description": "Detailed description of the reason code, as described by Pay.UK. Provided if there is no match or a partial match. This will not be present if there is a true match.",
+            "nullable": true,
+            "readOnly": true
+          },
+          "MatchedBank": {
+            "type": "string",
+            "description": "The name of the bank that the CoP check was performed with."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information that includes the result of the name match."
+      }
+    }
+  }
+}

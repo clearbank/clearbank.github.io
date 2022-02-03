@@ -1,0 +1,95 @@
+---
+title: "Multicurrency Payment Validation Failed Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that a multicurrency payment has failed validation**
+
+Scenarios which can trigger this event include sending the payment from a debtor account that does not exist, has not yet been enabled to send payments or has not yet been enabled to send payments in the intended currency.
+
+#### Request body
+
+```json
+{
+    "Type":"MccyPayloadValidationFailed",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Errors`                | **Required**<br /> Error(s) which caused the payment validation to fail.<br /> Type: `array`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                        |
+| `UltimateDebtorName`    | *Optional*<br /> Name of the ultimate debtor making the payment.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `140`<br />                                                                               |
+| `UltimateDebtorAccount` | **Required**<br /> Account details of the ultimate debtor making the payment.<br /> Type: `string`<br /> Min. Length: `5`<br /> Max. Length: `36`<br />                                                                   |
+| `UltimateDebtorAccountIdentifier` | **Required**<br /> Account identifier used to uniquely identify the ultimate debtor. Valid values are IBAN or AccountId.<br /> Type: `string`<br /> Min. Length: `1`<br />                                      |
+| `UltimateDebtorAddressLine1` | **Required**<br /> First line of the ultimate debtor's address.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `70`<br />                                                                            |
+| `UltimateDebtorAddressLine2` | *Optional*<br /> Second line of the ultimate debtor's address.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `35`<br />                                                                             |
+| `UltimateDebtorAddressLine3` | *Optional*<br /> Third line of the ultimate debtor's address.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `35`<br />                                                                              |
+| `UltimateDebtorPostCode`| **Required**<br /> Postcode of the ultimate debtor.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `16`<br />                                                                                             |
+| `UltimateDebtorCountryCode`| **Required**<br /> Country code for the ultimate debtor's address. This is the 2-letter ISO country code.<br /> Type: `string`<br /> Min. Length: `2`<br /> Max. Length: `2`<br /> Pattern: `^[A-Z]{2}$`<br />         |
+| `InstructedAmount`      | **Required**<br /> Instructed payment amount.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                          |
+| `InstructedCurrency`    | **Required**<br /> Currency of the instructed payment. This is the 3-digit ISO currency code.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />                        |
+| `Reference`             | **Required**<br /> Reference provided by the ultimate debtor for the payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                  |
+| `BatchId`               | **Required**<br /> Unique identifier for the batch in which the payment was submitted.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                             |
+| `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for each payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
+| `SchemeEndToEndId`      | *Optional*<br /> Unique identifier created by ClearBank for each payment and passed through the scheme to the creditor.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `15`<br />                         |
+| `UltimateCreditorIBAN`  | *Optional*<br /> IBAN for the ultimate creditor. Mandatory only if Ultimate Creditor Account Number is not provided.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `34`<br />                            |
+| `UltimateCreditorAccountNumber`  | *Optional*<br /> Account Number used to uniquely identify the ultimate creditor's account. Mandatory only if Ultimate Creditor IBAN is not provided.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `34`<br /> 
+| `UltimateCreditorBic`   | *Optional*<br /> BIC for the ultimate creditor.<br /> Type: `string`<br /> Min. Length: `8`<br /> Max. Length: `11`<br /> Pattern: `^[A-Z]{6}[A-Z2-9][A-NP-Z1-9]([A-Z0-9]{3})?$`<br />                                    |
+| `UltimateCreditorName`  | **Required**<br /> Name of the ultimate creditor.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                                              |
+| `UltimateCreditorAddressLine1` | **Required**<br /> First line of the ultimate creditor's address.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `70`<br />                                                                        |
+| `UltimateCreditorAddressLine2` | *Optional*<br /> Second line of the ultimate creditor's address.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `35`<br />                                                                         |
+| `UltimateCreditorAddressLine3` | *Optional*<br /> Third line of the ultimate creditor's address.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `35`<br />                                                                          |
+| `UltimateCreditorPostCode` | **Required**<br /> Postcode of the ultimate creditor.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `16`<br />                                                                                        |
+| `UltimateCreditorCountryCode`  | **Required**<br /> Country code for the ultimate creditor's address. This is the 2-letter ISO country code.<br /> Type: `string`<br /> Min. Length: `2`<br /> Max. Length: `2`<br /> Pattern: `^[A-Z]{2}$`<br />   |
+| `TransactionId`        | **Required**<br /> Unique internal identifier defined by ClearBank for each payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                                |
+
+#### Example Payment Validation Failed webhook request body
+
+```json
+{
+    "Errors":[
+        "Account is not enabled",
+        "EndToEndId already exists.",
+        "Account does not belong to this institution"
+    ],
+    "UltimateDebtorName":"Richard Douglas",
+    "UltimateDebtorAccount":"57d06e62-efca-49e7-a71f-8eb18d72c162",
+    "UltimateDebtorAccountIdentifier":"AccountId",
+    "UltimateDebtorAddressLine1":"4th Floor, Prologue Works",
+    "UltimateDebtorAddressLine2":"25 Marsh St",
+    "UltimateDebtorAddressLine3":"Bristol",
+    "UltimateDebtorPostCode":"BS1 4AX",
+    "UltimateDebtorCountryCode":"GB",
+    "InstructedAmount":100.55,
+    "InstructedCurrency":"EUR",
+    "Reference":"My payment reference 12345",
+    "BatchId":"ab55f54a-26c3-4333-93cd-f917bb51ecad",
+    "EndToEndId":"08c2c49c9e094df59f342a27cb64395c",
+    "SchemeEndToEndId":"4026da87bb0f4a5",
+    "UltimateCreditorIBAN":"GB33BUKB20201555555555",
+    "UltimateCreditorAccountNumber":null,
+    "UltimateCreditorBic":"IIIGGB22",
+    "UltimateCreditorName":"John Baker",
+    "UltimateCreditorAddressLine1":"Buckingham Palace",
+    "UltimateCreditorAddressLine2":"London",
+    "UltimateCreditorAddressLine3":null,
+    "UltimateCreditorPostCode":"SW1A 1AA",
+    "UltimateCreditorCountryCode":"GB",
+    "TransactionId":"fd7f3082-72d4-46b3-8e0e-1f66e4a91e13"
+},
+    "Nonce":711364091
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 711364091
+}
+```

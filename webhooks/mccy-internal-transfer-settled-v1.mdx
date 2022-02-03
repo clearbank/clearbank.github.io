@@ -1,0 +1,53 @@
+---
+title: "Multicurrency Internal Transfers Settled Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that a multicurrency internal transfer request has been settled**
+
+#### Request body
+
+```json
+{
+    "Type":"Mccy.InternalTransfers.Settled",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DebitAccountIban`      | *Optional*<br /> International Bank Account Number for the debtor account.<br /> Type: `string`<br />                                                                                                                     |
+| `DebitAccountOther`     | *Optional*<br /> The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.<br /> Type: `object`<br /><br /> `Kind`<br /> The kind of account identifier provided. This can only be AccountId.<br /> Type: `string`<br /> Min. Length: `1`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                  |
+| `CreditAccountIban`     | *Optional*<br /> International Bank Account Number for the creditor account.<br /> Type: `string`<br />                                                                                                                   |
+| `CreditAccountOther`    | *Optional*<br /> The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.<br /> Type: `object`<br /><br /> `Kind`<br /> The kind of account identifier provided. This can only be AccountId.<br /> Type: `string`<br /> Min. Length: `1`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                |
+| `InstructedAmount`      | **Required**<br /> Instructed internal transfer amount.<br /> Type: `number`<br />  Format: `decimal`<br />                                                                                                               |
+| `InstructedCurrency`    | **Required**<br /> Currency of the instructed internal transfer. This is the 3-letter ISO currency code.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />             |
+| `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for each payment.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `35`<br />                                                                   |
+| `Reference`             | *Optional*<br /> Reference provided by the debtor for the internal transfer.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `140`<br />                                                                   |
+
+#### Example internal transfer settled webhook request body
+
+```json
+{
+    "EndToEndId":"56de3483a56942eb90ccacf59661356f",
+    "DebitAccountIban":"GB00CUBK11223312345678",
+    "CreditAccountIban":"GB00CUBK88776687654321",
+    "InstructedCurrency":"NOK",
+    "InstructedAmount":13,
+    "Reference":"f92af28f-0635-4d81-893f-6c32af1d2a17"
+},
+    "Nonce":748394375
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748394375
+}
+```

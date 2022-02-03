@@ -1,0 +1,75 @@
+---
+title: "Multicurrency Account Created Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the multicurrency account has been created**
+
+#### Request body
+
+```json
+{
+    "Type":"Accounts.AccountCreated",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AccountId`             | **Required**<br /> Unique identifier for the account held with ClearBank.<br /> Type: `string`<br /> Format: `GUID`<br />                                                                                                 |
+| `Name`                  | **Required**<br /> Name of the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `500`<br />                                                                                                        |
+| `Label`                 | **Required**<br /> Friendly label for the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `100`<br />                                                                                             |
+| `Owner`                 | **Required**<br /> The name used to identify the legal owner of the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                   |
+| `Kind`                  | **Required**<br /> The type of funds the account will hold.<br /> Type: `string`<br /> Examples: `YourFunds`, `GeneralSegregated`, `DesignatedSegregated`, `GeneralClient`, `DesignatedClient`<br />                      |
+| `Currencies`            | **Required**<br /> Currencies supported by the account. This is the three-letter ISO currency code.<br /> It is an array of strings.<br /> Type: `array`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-Z]{3}$`<br />                   |
+| `Status`                | **Required**<br /> Current status of the account.<br /> Type: `string`<br /> Examples: `Active`, `Suspended`, `Closed`<br />                                                                                              |
+| `ProductId`             | *Optional*<br /> The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.<br /> Type: `string`<br /> Format: `GUID`<br />                                                |
+| `CustomerId`            | *Optional*<br /> Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.<br /> Type: `string`<br /> Format: `GUID`<br />                                               |
+| `Identifiers`           | **Required**<br /> List of identifiers.<br /> It is an array of objects with an Identifier and Kind.<br /> Type: `array`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br /><br /> `Kind`<br /> The kind of account identifier provided to uniquely identify the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br />                                                                                             |
+| `TimestampCreated`      | **Required**<br /> Date and time the account was created. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                               |
+| `Type`                  | **Required**<br /> The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.<br /> Type: `string`<br />                               |
+
+#### Example account created webhook request body
+
+```json
+{
+    "InstitutionId":"faeac33e-e6ea-4712-991d-8c85d0eefda0",
+    "Type":"Accounts.AccountCreated",
+    "Version":1,
+    "Payload":{
+        "AccountId":"d55149f7-f052-49cc-865b-7446b4fb05f5",
+        "Name":"John Doe",
+        "Label":"John Doe",
+        "Owner":"Financial Services Limited",
+        "Kind":"YourFunds",
+        "Currencies":[
+            "EUR",
+            "GBP"
+        ],
+        "Status":"Active",
+        "ProductId":"f65f7f4b-b724-4692-b375-5a48513d732c",
+        "CustomerId":"9e9ac5af-53bc-4b77-a5ac-bd001c866ce3",
+        "Identifiers":[
+            {
+                "Identifier":"GB88BARC20040425385198",
+                "Kind":"IBAN"
+            }
+        ],
+        "TimestampCreated":"2021-04-08T12:00:00.0000000",
+        "Type":"Customer"
+    },
+    "Nonce":748392098
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748392098
+}
+```

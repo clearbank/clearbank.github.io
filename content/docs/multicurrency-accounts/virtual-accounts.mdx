@@ -1,0 +1,83 @@
+---
+title: "Virtual Accounts"
+order: 2
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+## Virtual Accounts
+
+Multicurrency virtual accounts are publicly addressable accounts with their own IBAN. Also known as shadow accounts, multicurrency virtual accounts are linked to real accounts and are used to separate out funds held in real accounts for the purposes of improved reconciliation and liquidity management. Additionally, the responsibility of managing and reconciling virtual accounts rests with you, giving you complete control of such accounts.
+
+Multicurrency virtual accounts are only compatible with General Client Accounts and General Segregated Accounts, and can be created, suspended or activated and closed via the ClearBank API.
+
+Multicurrency virtual accounts are enabled for balances of the same currencies as their associated real accounts. For example, if a real multicurrency account is enabled for CHF, EUR and USD, all virtual accounts opened under that real account are also automatically enabled for the same currencies.
+
+To comply with the Funds Transfer Regulation, it is important that the naming of virtual accounts reflects the legal name of the customer.
+
+<EndpointBlock
+  type="post"
+  title="Create a new virtual account"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get information for a virtual account"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend the properties of an existing virtual account"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update the status of an existing virtual account"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/status",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Close an existing virtual account "
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>

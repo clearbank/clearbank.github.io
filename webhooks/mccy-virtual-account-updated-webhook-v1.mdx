@@ -1,0 +1,65 @@
+---
+title: "Multicurrency Virtual Account Updated Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the multicurrency virtual account has been updated**
+
+#### Request body
+
+```json
+{
+    "Type":"Accounts.VirtualAccountUpdated",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `VirtualAccountId`      | **Required**<br /> Account identifier used to uniquely identify the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                               |
+| `AccountId`             | **Required**<br /> Unique identifier for the real account associated with the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                     |
+| `Owner`                 | **Required**<br /> The name used to identify the legal owner of the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                           |
+| `Status`                | **Required**<br /> The current status of the virtual account.<br /> Type: `string`<br /> Examples: `Active`, `Suspended`, `Closed`<br />                                                                                  |
+| `Identifiers`           | **Required**<br /> List of identifiers.<br /> It is an array of objects with an Identifier and Kind.<br /> Type: `array`<br /><br /> `Identifier`<br /> Unique virtual account identifier value that corresponds to the specified virtual account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br /><br /> `Kind`<br /> The kind of virtual account identifier provided to uniquely identify the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br />                                                                                             |
+| `TimestampCreated`      | **Required**<br /> Date and time the virtual account was created. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                       |
+| `TimestampModified`     | **Required**<br /> Date and time the virtual account was last modified. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                 |
+| `StatusReason`          | *Optional*<br /> Reason for changing the current status of the virtual account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount, Other.<br /> Type: `string`<br />                                                                                               |
+| `StatusInformation`     | *Optional*<br /> Additional information to support the specified status reason.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `100`<br />                                                                |
+
+#### Example virtual account updated webhook request body
+
+```json
+{
+    "Type":"Accounts.VirtualAccountUpdated",
+    "Version":1,
+    "Payload":{
+        "VirtualAccountId":"2a77e175-9bf2-4e0b-a8ca-4cee0610cf26",
+        "AccountId":"78b208f0-498e-4412-b462-68beadb6e555",
+        "Owner":"E2E Financial Services Limited",
+        "Status":"Suspended",
+        "Identifiers":[
+            {
+                "Identifier":"GB43CLRB04040545703930",
+                "Kind":"Iban"
+            }
+        ],
+        "TimestampCreated":"2021-07-21T09:06:33.0628794Z",
+        "TimestampModified":"2021-07-21T10:00:45.3113241Z",
+        "StatusReason":null,
+        "StatusInformation":null
+    },
+    "Nonce":177103143
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 177103143
+}
+```

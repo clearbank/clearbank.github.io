@@ -1,0 +1,47 @@
+---
+title: "Responding to a webhook"
+order: 2
+---
+
+## Responding to a webhook
+
+The webhook sent by ClearBank® acts as a verification mechanism.
+You verify that it is ClearBank® that has sent you the webhook and subsequently, ClearBank® needs to verify that you have successfully received the webhook (based on your response acknowledging receipt).
+This verification occurs when you return a `200` HTTP response, which includes the `Nonce` number in the `response body`  and your `DigitalSignature`.
+If your response is invalid, we will consider it as a failed webhook.
+ClearBank® will send the webhook every 15 minutes for 24 hours unless a successful response is returned by you.
+
+To verify the integrity of the webhook received from ClearBank®:
+- Download a Public Key that is specific to your institution by clicking the **Download Public Key** button on the Webhook Management page of the Institution portal.
+- Hash the request body using `SHA 256`
+- Convert the `DigitalSignature` Request Header value from `Base64` encoded string into the byte array
+- Verify the signature using the `RSA` algorithm
+
+To create the webhook digital signature:
+- Take the Nonce number from the webhook and place it in the body of the response (e.g. `{"nonce": <value>}`)
+- Hash the response body using `SHA 256`
+- Sign the hash with your `Private Key` and attach the signed hash as `Base64` encoded in the `DigitalSignature` Response Header
+
+> Your Private Key needs to correspond to a Public Key which has been used to create a Certificate Signing Request (CSR). Please refer to [creating your authentication profile](/#creating-your-authentication-profile) for more information.
+
+Example HTTP request:
+```
+POST http://yourdomain.com/sample/webhook HTTP/1.1
+Content-Type: application/json
+Content-Length: 72
+Digitalsignature: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+X-Request-Id: f0309d95-4f68-4ecd-9c8d-b2d08d9fedd8
+
+{"Type":"FITestEvent","Version":1,"Payload":"test me","Nonce":1448545215}
+```
+
+Example HTTP response:
+```
+HTTP/1.1 200 OK
+Digitalsignature: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Content-Type: application/json
+
+{
+	"Nonce": 1448545215
+}
+```

@@ -1,0 +1,29 @@
+name: build site
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: use node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+
+      - name: install gatsby
+        run: npm install -g gatsby-cli
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: fetch openapi
+        run: npm run fetch:openapi
+
+      - name: gatsby build
+        run: npx gatsby build
+
+      - name: test
+        run: npm run test:coverage

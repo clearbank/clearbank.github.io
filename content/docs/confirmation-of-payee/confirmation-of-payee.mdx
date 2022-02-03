@@ -1,0 +1,50 @@
+---
+title: "CoP Receive and Respond (Inbound)"
+order: 2
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as CONSTANTS from "./confirmation-of-payee.constants"
+
+## CoP Receive and Respond (Inbound)
+
+Responding to a CoP request from an external participant requires us to complete a fuzzy matching check on the account in question. To do so successfully, we need the following account information:
+- The name of the legal owner of the account
+-	Nature of funds held in the account i.e., Personal or Business
+-	Operating nature of the account i.e., Single or Joint
+
+For your real and virtual accounts to be CoP-ready, you will need to use the following PATCH endpoints to update your accounts:  
+-	[PATCH/v1/Accounts/{accountId}](/docs/accounts/#amend-the-properties-of-an-existing-account)
+-	[PATCH/v1/Accounts/{accountId}/Virtual/{virtualAccountId}](/docs/accounts/#amend-the-properties-of-an-existing-virtual-account)
+
+If you have chosen to use the ClearBank CoP service, all your real and virtual accounts will be opted in by default, at the time of account creation. 
+
+For a real or virtual account to be opted out from using this service, you can use the following PUT endpoints:
+-	PUT/ v1/Cop/opt/accounts/{accountId}
+-	PUT/ v1/Cop/opt/accounts/{accountId}/virtual/{VirtualAccountId}
+
+Further information about opting out from using our CoP service along with your responsibilities can be found in our Confirmation of Payee (CoP) Operating Guide. This document can be found in the Reference Documents section in the Knowledge Centre.
+
+<EndpointBlock
+  type="put"
+  title="Update an account to opt out from using the ClearBank CoP service"
+  description={CONSTANTS.postUpdateAccountToOptOutOfClearBankServicesDescription}
+  endpoints={[
+    {
+      path: "/v1/Cop/opt/accounts/{accountId}",
+      version: "1.0.COP"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Update a virtual account to opt out from using the ClearBank CoP service"
+  description={CONSTANTS.postUpdateVirtualAccountToOptOutOfClearBankServicesDescription}
+  endpoints={[
+    {
+      path: "/v1/Cop/opt/accounts/{accountId}/virtual/{virtualAccountId}",
+      version: "1.0.COP"
+    }
+  ]}
+/>

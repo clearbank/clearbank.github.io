@@ -1,0 +1,74 @@
+---
+title: "FX Trade Cancelled Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the FX trade has been cancelled**
+
+#### Request body
+
+```json
+{
+    "Type":"Fx.Trade.Cancelled",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SellAccountOwner`      | **Required**<br /> The name used to identify the legal owner of the account from which to debit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                         |
+| `SellAccountIban`       | **Required**<br /> International Bank Account Number associated with the sellAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                           |
+| `BuyAccountOwner`       | **Required**<br /> The name used to identify the legal owner of the account in which to credit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                          |
+| `BuyAccountIban`        | **Required**<br /> International Bank Account Number associated with the buyAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                            |
+| `Attestation`           | **Required**<br /> Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `1`<br />                      |
+| `ValueDate`             | **Required**<br /> Settlement date for the FX trade.<br /> Type: `string`<br /> Format: `date-time`<br /> Min. Length: `1`<br />                                                                                          |
+| `InstructedAmount`      | **Required**<br /> Amount instructed to buy or sell.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                   |
+| `FixedSide`             | **Required**<br /> The side of the trade to be fixed. This can either be buy or sell.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `4`<br />                                                            |
+| `BuyCurrency`           | **Required**<br /> Three-letter ISO currency code for the currency to buy.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                       |
+| `SellCurrency`          | **Required**<br /> Three-letter ISO currency code for the currency to sell.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                      |
+| `Margin`                | *Optional*<br /> The optional margin (as a percentage) from the trade to be credited to a margin account.<br /> Type: `number`<br /> Format: `decimal`<br />                                                              |
+| `MarginAccountIban`     | *Optional*<br /> International Bank Account Number associated with the account in which the margin amount is to be deposited.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                   |
+| `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for the FX trade.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
+| `UnstructuredInformation`| *Optional*<br /> Additional, optional information about the FX trade.<br /> Type: `string`<br /> Max. Length: `140`<br />                                                                                                |
+| `CancellationCode`      | **Required**<br /> Cancellation code.<br /> Type: `string`<br /> Min. Length: `1`<br />                                                                                                                                   |
+| `CancellationReason`    | **Required**<br /> Reason FX trade was cancelled.<br /> Type: `string`<br /> Min. Length: `1`<br />                                                                                                                       |
+
+#### Example FX Trade Cancelled webhook request body
+
+```json
+{
+    "Type":"Fx.Trade.Cancelled",
+    "Version":1,
+    "Payload":{
+        "SellAccountOwner":"Selling Bank",
+        "SellAccountIban":"GB00CUBK22002243218765",
+        "BuyAccountOwner":"Buying Bank",
+        "BuyAccountIban":"GB00CUBK44556687654321",
+        "Attestation":"Y",
+        "ValueDate":"2021-04-29T11:36:51.4635892Z",
+        "InstructedAmount":1000.0,
+        "FixedSide":"BUY",
+        "BuyCurrency":"EUR",
+        "SellCurrency":"GBP",
+        "Margin":0.5,
+        "MarginAccountIban":"GB00CUBK11223312345678",
+        "EndToEndId":"bd382f05e8fa4056b25e",
+        "UnstructuredInformation":"Client order ID: HGN76934",
+        "CancellationCode":"1",
+        "CancellationReason":"Account validation failed"
+    },
+    "Nonce":2051888317
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 2051888317
+}
+```

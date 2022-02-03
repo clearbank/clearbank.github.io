@@ -1,0 +1,60 @@
+---
+title: "Multicurrency Internal Transfers Cancelled Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that a multicurrency internal transfer request has been cancelled**
+
+#### Request body
+
+```json
+{
+    "Type":"Mccy.InternalTransfers.Cancelled",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DebitAccountIban`      | *Optional*<br /> International Bank Account Number for the debtor account.<br /> Type: `string`<br />                                                                                                                     |
+| `DebitAccountOther`     | *Optional*<br /> The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.<br /> Type: `object`<br /><br /> `Kind`<br /> The kind of account identifier provided. This can only be AccountId.<br /> Type: `string`<br /> Min. Length: `1`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                |
+| `CreditAccountIban`     | *Optional*<br /> International Bank Account Number for the creditor account.<br /> Type: `string`<br />                                                                                                                   |
+| `CreditAccountOther`    | *Optional*<br /> The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.<br /> Type: `object`<br /><br /> `Kind`<br /> The kind of account identifier provided. This can only be AccountId.<br /> Type: `string`<br /> Min. Length: `1`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                |
+| `InstructedAmount`      | **Required**<br /> Instructed internal transfer amount.<br /> Type: `number`<br />  Format: `decimal`<br />                                                                                                               |
+| `InstructedCurrency`    | **Required**<br /> Currency of the instructed internal transfer. This is the 3-letter ISO currency code.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />             |
+| `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for each payment.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `35`<br />                                                                   |
+| `Reference`             | *Optional*<br /> Reference provided by the debtor for the internal transfer.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `140`<br />                                                                   |
+| `CancellationCode`      | **Required**<br /> The cancellation code for the internal transfer. Valid options include: ValidationFailed, AssessmentFailed.<br /> Type: `string`<br />                                                                 |
+| `FailureReasons`         | **Required**<br /> Reasons the internal transfer was cancelled.<br /> Type: `array`<br /> Min. Items: `1`<br />                                                                                                           |                                                                 
+
+
+#### Example internal transfer cancelled webhook request body
+
+```json
+{
+    "CancellationCode":"AssessmentFailed",
+    "FailureReasons":[
+        "Not enough funds"
+    ],
+    "EndToEndId":"9020d28f67f042aca26ae4f031765af5",
+    "DebitAccountIban":"GB00CUBK11223312345678",
+    "CreditAccountIban":"GB00CUBK88776687654321",
+    "InstructedCurrency":"EUR",
+    "InstructedAmount":53,
+    "Reference":"226ef602-43e1-48a3-9fbd-f6a80849d74f"
+},
+    "Nonce":748394376
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748394376
+}
+```

@@ -1,0 +1,80 @@
+---
+title: "Multicurrency Account Updated Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the multicurrency account has been updated**
+
+#### Request body
+
+```json
+{
+    "Type":"Accounts.AccountUpdated",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AccountId`             | **Required**<br /> Unique identifier for the account held with ClearBank.<br /> Type: `string`<br /> Format: `GUID`<br />                                                                                                 |
+| `Name`                  | **Required**<br /> Name of the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `500`<br />                                                                                                        |
+| `Label`                 | **Required**<br /> Friendly label for the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `100`<br />                                                                                             |
+| `Owner`                 | **Required**<br /> The name used to identify the legal owner of the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                   |
+| `Kind`                  | **Required**<br /> The type of funds the account will hold.<br /> Type: `string`<br /> Examples: `YourFunds`, `GeneralSegregated`, `DesignatedSegregated`, `GeneralClient`, `DesignatedClient`<br />                      |
+| `Currencies`            | **Required**<br /> Currencies supported by the account. It is an array of strings with each currency represented by a three-letter ISO currency code.<br /> Type: `array`<br /> Pattern: `^[A-Z]{3}$`<br />               |
+| `Status`                | **Required**<br /> Current status of the account.<br /> Type: `string`<br /> Examples: `Active`, `Suspended`, `Closed`<br />                                                                                              |
+| `ProductId`             | *Optional*<br /> The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.<br /> Type: `string`<br /> Format: `GUID`<br />                                                |
+| `CustomerId`            | *Optional*<br /> Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.<br /> Type: `string`<br /> Format: `GUID`<br />                                               |
+| `Identifiers`           | **Required**<br /> List of identifiers. It is an array of objects with an Identifier and Kind.<br /> Type: `array`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br /><br /> `Kind`<br /> The kind of account identifier provided to uniquely identify the account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br />                                                                                             |
+| `TimestampCreated`      | **Required**<br /> Date and time the account was created. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                               |
+| `TimestampModified`     | **Required**<br /> Date and time the account was last modified. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                         |
+| `StatusReason`          | *Optional*<br /> Reason for changing the current status of the account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount, Other.<br /> Type: `string`<br />                                                                                               |
+| `StatusInformation`     | *Optional*<br /> Additional information to support the specified status reason.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `100`<br />                                                                |
+| `Type`                  | **Required**<br /> The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.<br /> Type: `string`<br />                               |
+
+#### Example account updated webhook request body
+
+```json
+{
+    "InstitutionId":"18be20af-77a9-4b10-b34d-759854c4f5df",
+    "Type":"Accounts.AccountUpdated",
+    "Version":1,
+    "Payload":{
+        "AccountId":"1afe639b-60d0-4d88-8b81-046dcf0219f7",
+        "Name":"Gen Seg Eco Bank",
+        "Label":"Mid tier asset funds",
+        "Owner":"Eco Bank",
+        "Kind":"YourFunds",
+        "Currencies":[
+            "EUR"
+        ],
+        "Status":"Suspended",
+        "ProductId":"8026e2f2-d127-422d-ae10-ef689282b11d",
+        "CustomerId":"ba13205e-0ad3-406c-963b-14561d583bf3",
+        "Identifiers":[
+            {
+                "Identifier":"GB29CLRB40391731926000",
+                "Kind":"Iban"
+            }
+        ],
+        "TimestampCreated":"2020-10-22T20:50:17.7107385",
+        "TimestampModified":"2021-05-09T07:26:12.2224526",
+        "StatusReason":"FraudThirdParty",
+        "StatusInformation":"Customer spotted some unrecognised transactions on their account",
+        "Type":"Customer"
+    },
+    "Nonce":732392098
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 732392098
+}
+```

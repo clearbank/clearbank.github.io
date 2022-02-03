@@ -1,0 +1,72 @@
+---
+title: "Virtual Account Creation Failed Webhook"
+version: 3
+webhook: true
+---
+
+**This webhook confirms a virtual account creation failure**
+
+Version 3 has introduced the following new optional field:
+
+- `ExternalIdentifier`
+
+The `ExternalIdentifier` field in both webhooks will show the externalId that you have specified instead of an account identifier (IBAN, BBAN or sort code and account number) at the time of creating a virtual account.
+
+#### Request body
+
+> The request body consists of a `DigitalSignature`, `Type`,`Version`,`Payload` and `Nonce`. `Payload` parameters vary depending on the webhook. Webhook responses a `200` HTTP status code which includes a `Nonce` number in the body and your `DigitalSignature`.
+
+```json
+{
+    "Type":"VirtualAccountCreationFailed",
+    "Version":3,
+    "Payload": {...},
+    "Errors":{...},
+    "OwnerName": ,
+    "Nonce":
+}
+```
+
+#### Payload
+| Element              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AccountId`          | **Required**<br />Unique identifier for the real account associated with the virtual account. <br/> Type: `string`<br /> Format:`GUID`<br /> Min. length: `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `VirtualAccountId`   | **Required**<br />Account identifier used to uniquely identify the virtual account.<br /> Type: `string`<br /> Format: `GUID`<br /> Min. length: `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `AccountIdentifiers` | **Required**<br />Virtual account identifier details.<br /> <br /> Type: `object`<br />  `IBAN`: International Bank Account Number associated with the virtual account.<br /> Type: `string`<br /> pattern: `^([A-Z]{2})([0-9]{2})([A-Za-z]{4})([0-9]{6})([0-9]{8})$`<br /> Min. length: `0`<br /> Max. length: `140`<br /><br /> `BBAN`: Basic Bank Account number associated with the virtual account.<br/> Type: `string`<br />  Pattern: `^([A-Za-z]{4})([0-9]{6})([0-9]{8})$`<br /> Min. length: `0`<br />  Max. length: `140`<br /><br />                                                                                                                                                                                                                                                                                                |
+| `ExternalIdentifier` | *Optional*<br />Unique identifier specified at the time of creating a virtual account.<br /> Type: `string`<br /> Min. length: `0`<br /> Max. length: `50`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `Errors`             | **Required**<br />Error(s) which caused the virtual account creation to fail.<br /> Type: `Object`<br /><br /> One or more errors that occurred during the processing of the request:<br /> Additional Properties<br /> Type: `string`<br /><br /> An error code and error explanation will be provided as a Key value pair<br /> These are some examples of error codes:<br />`AccountIban`, `AccountIbanSortCode`, `AccountIbanAccountNumber`, `AccountBban`, `AccountBbanSortCode`, `AccountBbanAccountNumber`, `AccountIdentifiers`, `AccountName`, `AccountHolderLabel`, `AccountIbanBankCode`, `AccountBbanBankCode`, `ClientMoneyAccountIdMissing`, `ExternalVirtualAccountIdNotUnique`, `ExternalVirtualAccountId`, `VirtualAccountIdMissing`, `AccountModulusFailed`, `SortCodeDoesNotBelongToInstitution`, `SortCodeTypeIsIncorrect` |
+| `OwnerName`          | *Optional*<br />Name for the owner of the virtual account.<br /> Type: `string`<br /> Min. length: `0`<br /> Max. length: `140`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `Timestamp`          | **Required**<br />The date and time the virtual account was created.<br /> Type: `string`<br /> Time Zone: `UTC`<br /> Format: `DateTime`<br /> Min. length: `1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `Nonce`              | Cryptographically secure number generated by ClearBank® for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+
+#### Example virtual account creation failed webhook request body
+
+```json
+{
+    "Type":"VirtualAccountCreationFailed",
+    "Version":3,
+    "Payload":{
+        "AccountId":"e2fb8de0-675d-479a-8b0f-596bc6f52a61",
+        "VirtualAccountId":"ba393cc1-8f58-4542-b72f-db62910dce0e",
+        "AccountIdentifier":{
+            "Iban":"GB00CUBK22002243218765",
+            "Bban":"CUBK22002243218765",
+            "ExternalIdentifier":"98765432abcdefg"
+        },
+        "Errors":{
+            "AccountIbanSortCode":"Invalid Sort Code"
+        },
+        "OwnerName":"Joe Brown",
+        "Timestamp":"2018-07-19T13:44:56.7406379Z"
+    },
+    "Nonce":482504208
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 482504208
+}
+```

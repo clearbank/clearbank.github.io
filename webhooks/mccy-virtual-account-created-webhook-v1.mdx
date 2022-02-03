@@ -1,0 +1,62 @@
+---
+title: "Multicurrency Virtual Account Created Webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms that the multicurrency virtual account has been created**
+
+#### Request body
+
+```json
+{
+    "Type":"Accounts.VirtualAccountCreated",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `VirtualAccountId`      | **Required**<br /> Account identifier used to uniquely identify the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                               |
+| `AccountId`             | **Required**<br /> Unique identifier for the real account associated with the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                     |
+| `BatchId`               | **Required**<br /> Unique batch identifier specified while creating a batch of virtual accounts.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                   |
+| `Owner`                 | **Required**<br /> The name used to identify the legal owner of the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                           |
+| `Status`                | **Required**<br /> The current status of the virtual account.<br /> Type: `string`<br /> Examples: `Active`, `Suspended`, `Closed`<br />                                                                                  |
+| `Identifiers`           | **Required**<br /> List of identifiers.<br /> It is an array of objects with an Identifier and Kind.<br /> Type: `array`<br /><br /> `Identifier`<br /> Unique virtual account identifier value that corresponds to the specified virtual account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br /><br /> `Kind`<br /> The kind of virtual account identifier provided to uniquely identify the virtual account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br />                                                                                             |
+| `TimestampCreated`      | **Required**<br /> Date and time the virtual account was created. Time in UTC.<br /> Type: `string`<br /> Format: `date-time`<br />                                                                                       |
+
+#### Example virtual account created webhook request body
+
+```json
+{
+    "Type":"Accounts.VirtualAccountCreated",
+    "Version":1,
+    "InstitutionId":"4befdd75-5297-44b3-b70f-234d8a525dd2",
+    "Payload":{
+        "VirtualAccountId":"b3c93a68-5992-4f83-99d5-f13405fd2d90",
+        "AccountId":"d55149f7-f052-49cc-865b-7446b4fb05f5",
+        "BatchId":"21d70e60-61f0-4bfb-bd22-a460216947b4",
+        "Owner":"Joe Brown",
+        "Status":"Active",
+        "Identifiers":[
+            {
+                "Identifier":"GB88BARC20040425385198",
+                "Kind":"IBAN"
+            }
+        ],
+        "TimestampCreated":"2021-04-08T12:00:00.0000000"
+    },
+    "Nonce":748364091
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748364091
+}
+```

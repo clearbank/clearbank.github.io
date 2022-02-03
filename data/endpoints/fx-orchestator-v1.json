@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "FX Orchestrator API",
+    "version": "1.0.FXO"
+  },
+  "servers": [
+    {
+      "url": "https://institution-api-sim.clearbank.co.uk/fx/v1/order/"
+    }
+  ],
+  "paths": {
+    "/fx/v1/order": {
+      "post": {
+        "tags": [
+          "Fx Orders"
+        ],
+        "summary": "This endpoint is used to create a Foreign Exchange (FX) trade with the buy or sell amount specified.",
+        "operationId": "Order.Create",
+        "requestBody": {
+          "description": "Data to create a Foreign Exchange (FX) trade with the buy or sell amount specified.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFxOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestAccountInfo": {
+        "required": [
+          "owner",
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "owner": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name used to identify the legal owner of the account."
+          },
+          "iban": {
+            "type": "string",
+            "description": "International Bank Account Number associated with the account."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the account."
+      },
+      "RequestCustomerInfo": {
+        "required": [
+          "attestation",
+          "buyAccount",
+          "sellAccount"
+        ],
+        "type": "object",
+        "properties": {
+          "sellAccount": {
+            "$ref": "#/components/schemas/RequestAccountInfo"
+          },
+          "buyAccount": {
+            "$ref": "#/components/schemas/RequestAccountInfo"
+          },
+          "attestation": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Account information of the customer for whom the FX trade is being created."
+      },
+      "RequestTradeDetails": {
+        "required": [
+          "buyCurrency",
+          "fixedSide",
+          "sellCurrency",
+          "instructedAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "instructedAmount": {
+            "type": "number",
+            "description": "Amount instructed to buy or sell.",
+            "format": "double"
+          },
+          "fixedSide": {
+            "minLength": 3,
+            "maxLength": 4,
+            "type": "string",
+            "description": "The side of the trade to be fixed. This can either be buy or sell."
+          },
+          "sellCurrency": {
+            "minLength": 3,
+            "maxLength": 3,
+            "type": "string",
+            "description": "Three-letter ISO currency code for the currency to sell."
+          },
+          "buyCurrency": {
+            "minLength": 3,
+            "maxLength": 3,
+            "type": "string",
+            "description": "Three-letter ISO currency code for the currency to buy."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the trade associated with the FX order."
+      },
+      "RequestMarginInfo": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "maximum": 0.05,
+            "minimum": 0,
+            "type": "number",
+            "description": "The optional margin (as a percentage) from the trade to be credited to a margin account. Must be below 0.05 (e.g., 0.002 = 0.2% margin).",
+            "format": "double"
+          },
+          "account": {
+            "$ref": "#/components/schemas/RequestAccountInfo"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The optional percentage ClearBank will deduct from the proceeds of the trade prior to crediting the financial institution’s customer. ClearBank will create a credit  transaction (equal to the margin amount calculated) to an account specified by the financial institution."
+      },
+      "RequestTradeInfo": {
+        "required": [
+          "details",
+          "endToEndId"
+        ],
+        "type": "object",
+        "properties": {
+          "valueDate": {
+            "type": "string",
+            "description": "Settlement date for the FX trade.",
+            "format": "date-time"
+          },
+          "details": {
+            "$ref": "#/components/schemas/RequestTradeDetails"
+          },
+          "margin": {
+            "$ref": "#/components/schemas/RequestMarginInfo"
+          },
+          "endToEndId": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier provided to ClearBank for the FX trade."
+          },
+          "unstructuredInformation": {
+            "maxLength": 140,
+            "type": "string",
+            "description": "Additional, optional information about the FX trade.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Trade infomation of the customer for whom the FX trade is being created."
+      },
+      "CreateFxOrderRequest": {
+        "required": [
+          "customerInformation",
+          "tradeInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "customerInformation": {
+            "$ref": "#/components/schemas/RequestCustomerInfo"
+          },
+          "tradeInformation": {
+            "$ref": "#/components/schemas/RequestTradeInfo"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information that should be used to create a FX buy or sell trade."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  }
+}
