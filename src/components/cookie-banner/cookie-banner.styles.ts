@@ -7,7 +7,7 @@ import { colors, breakpoints, widths } from 'src/components/theme'
 export const Container = styled.div`
   width: 100%;
   padding: 20px 0;
-  background: ${colors.brandInfoDark};
+  background: ${colors.brandSecondaryDarkest};
 `
 
 export const InnerContainer = styled.div`
@@ -39,11 +39,18 @@ export const CTA = styled(Button)`
   width: 100%;
   flex-direction: row;
   margin-top: 20px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #fff!important;
+  background: none;
 
   @media only screen and (min-width: ${breakpoints.small}) {
     min-width: 200px;
     width: auto;
     margin-top: 0;
+  }
+
+  &:hover:before, span:hover {
+    background: ${colors.brandPrimaryDark};
   }
 `
 

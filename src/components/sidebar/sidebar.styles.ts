@@ -4,7 +4,7 @@ import { Link } from 'gatsby'
 import { colors, fonts, widths, breakpoints } from 'src/components/theme'
 
 export const Container = styled.div`
-  background: ${colors.brandGrayLightest};
+  background: ${colors.brandGrayLight};
   position: fixed;
   top: 60px;
   bottom: 0px; // space for chrome link bubbles
@@ -50,7 +50,7 @@ export const LinkBase = styled(Link)`
   &:hover,
   &.active {
     color: ${colors.body};
-    border-left: 5px solid ${colors.highlightOrange};
+    border-left: 5px solid ${colors.highlightAqua};
   }
 `
 
@@ -60,7 +60,7 @@ export const FirstLevelLink = styled(LinkBase)`
 
   &.active {
     color: ${colors.body};
-    border-left: 5px solid ${colors.highlightOrange};
+    border-left: 5px solid ${colors.highlightAqua};
   }
 `
 
@@ -73,6 +73,6 @@ export const SecondLevelLink = styled(LinkBase)`
 
   &.active {
     color: ${colors.body};
-    border-left: 5px solid ${colors.highlightOrange};
+    border-left: 5px solid ${colors.highlightAqua};
   }
 `

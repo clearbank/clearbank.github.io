@@ -1,0 +1,70 @@
+---
+title: 'Faster Payments'
+order: 1
+---
+
+import EndpointBlock from "src/components/endpoint-block"
+
+## Faster Payments
+
+When sending payments via the ClearBank® API, Faster Payments are initiated via the POST/Payments/FPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
+Please refer to [Webhooks](/docs/webhooks) for more information.
+
+ClearBank® accounts support inbound and outbound Faster Payments. You can receive Faster Payments of up to £1,000,000. The transaction limit for an outbound Faster Payment transaction is £250,000. 
+Faster Payments are not subject to a cut-off time and can be sent or received as and when required.
+
+**Faster Payments Validation**
+
+| Element     | Type   | Validation                                                                                       | Description                                                                                                                                                                                           |
+|-------------|--------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,'+\s#=!"%&*<>;{@\r\n]*$` | **Also known as Account Holder Name** <br /> This the Creditor’s name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
+| `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,'+\s#=!"%&*<>;{@\r\n]*$` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information. If the max length exceeds 18 characters, this will be truncated before sending to scheme. |
+
+Pattern: Alphanumeric (uppercase and lowercase) and special characters*****.<br />
+*****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **<** (less than), **>** (greater than), **;** (semi colon), **{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
+
+This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
+
+<EndpointBlock
+type="post"
+title="Initiate an FPS payment"
+endpoints={[
+  {
+    path: "/v3/Payments/FPS",
+    version: "3.0.FPS-payment",
+    webhooks: [
+      'transaction-settled-webhook-v6',
+      'payment-message-assessment-failed-webhook-v1',
+      'payment-message-validation-failed-webhook-v1',
+      'transaction-rejected-v2'
+    ]
+  },
+  {
+    path: "/v2/Payments/FPS",
+    version: "2.0",
+    webhooks: [
+      'transaction-settled-webhook-v6',
+      'payment-message-assessment-failed-webhook-v1',
+      'payment-message-validation-failed-webhook-v1',
+      'transaction-rejected-v2'
+    ]
+  }
+]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Initiate a single Faster Payment Originated Overseas"
+  endpoints={[
+  {
+    path: "/v2/payments/fps/singlepayment",
+    version: "2.0.FPS-POO",
+    webhooks: [
+      'transaction-settled-webhook-v6',
+      'payment-message-assessment-failed-webhook-v1',
+      'payment-message-validation-failed-webhook-v1',
+      'transaction-rejected-v2'
+    ]
+  }
+]}
+/>

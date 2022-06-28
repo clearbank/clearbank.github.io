@@ -62,6 +62,14 @@ export const Content = styled.div`
     @media (min-width: ${themeBreakpoints.medium}) {
        width: 472px;
     }
+
+    button.el-button--primary {
+      background: ${colors.brandPrimaryDarkest}
+    }
+
+    button.el-button--primary:hover:before {
+      background: ${colors.brandPrimaryDark}
+    }
 `
 
 export const Title = styled.h1`

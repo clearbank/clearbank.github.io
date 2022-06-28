@@ -1,4 +1,4 @@
-declare module '*.svg' {
+declare module '*.png' {
   const content: string
   export const ReactComponent: any
   export default content

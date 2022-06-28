@@ -89,7 +89,8 @@ context("Sidebar", () => {
       cy.get('#navigation').contains('Payments')
       cy.get('#navigation ul li:nth-child(11)')
         .children()
-        .should('contain', 'Faster Payments and CHAPS')
+        .should('contain', 'Faster Payments')
+        .and('contain', 'CHAPS')
         .and('contain', 'Bacs Inbound Direct Credit')
     })
 
@@ -138,6 +139,16 @@ context("Sidebar", () => {
         .and('contain', 'Virtual Accounts')
         .and('contain', 'FX Trade')
         .and('contain', 'Payments')
+    })
+
+    it("contains Frequently Asked Questions section", () => {
+      cy.get('#navigation').contains('Frequently Asked Questions')
+      cy.get('#navigation ul li:nth-child(17)')
+        .children()
+        .should('contain', 'Overview')
+        .and('contain', 'Multicurrency Accounts')
+        .and('contain', 'Multicurrency Payments')
+        .and('contain', 'Multicurrency Statements')
     })
   })
 })

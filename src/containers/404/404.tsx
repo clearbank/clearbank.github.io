@@ -11,7 +11,7 @@ export default class Doc extends Component {
     return (
       <Styles.Container>
         <Styles.LogoWrapper to='/'>
-          <Logo showDeveloperLogo inverted />
+          <Logo inverted />
         </Styles.LogoWrapper>
         <Styles.ContentWrapper>
           <Styles.Content>
