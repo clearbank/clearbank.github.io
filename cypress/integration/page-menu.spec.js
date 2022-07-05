@@ -10,14 +10,14 @@ context("Page menu", () => {
       cy.get('#pageMenu').contains('On this page')
     })
 
-    it("contains FPS & Chaps heading", () => {
-      cy.get('#pageMenu').contains('Faster Payments and CHAPS')
+    it("contains FPS heading", () => {
+      cy.get('#pageMenu').contains('Faster Payments')
     })
 
     it("contains initiate payment subheading", () => {
       cy.get('#pageMenu > ul > li:nth-child(1) ul  > li:nth-child(1)')
       .invoke('text').then((text) => {
-            expect(text.replace(/\u00a0/g, ' ')).equal('Initiate a payment');
+            expect(text.replace(/\u00a0/g, ' ')).equal('Initiate an FPS payment');
         });
     })
   })

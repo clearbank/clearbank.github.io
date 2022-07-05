@@ -9,7 +9,7 @@ import * as Types from './github-connector.types'
 
 // Mock popover element
 jest.mock('element-react/dist/npm/es6/src/popover', () => {
-  const Popover = props => <div class='popover-element'>{props.children}</div>
+  const Popover = props => <div className='popover-element'>{props.children}</div>
 
   return Popover
 })

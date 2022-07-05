@@ -85,9 +85,9 @@ export const maxWidths: Types.MaxWidths = {
 }
 
 export const fonts: Types.Fonts = {
-  body: '"Source Sans Pro",sans-serif',
+  body: 'arial,sans-serif',
   monospace: '"Roboto Mono",monospace',
-  heading: '"Hurme Geometric Sans 1",sans-serif'
+  heading: 'arial,sans-serif'
 }
 
 export const colors = {
@@ -96,7 +96,7 @@ export const colors = {
 
   // Primary
   brandPrimary: '#FF9A00',
-  brandPrimaryDark: '#EA7500',
+  brandPrimaryDark: '#259098',
   brandPrimaryDarker: '#C95D00',
   brandPrimaryDarkest: '#000',
   brandPrimaryLight: '#000',
@@ -107,7 +107,7 @@ export const colors = {
   brandSecondary: '#6B99DD', // V2
   brandSecondaryDark: '#3389D7',
   brandSecondaryDarker: '#6C7F98',
-  brandSecondaryDarkest: '#0D326E',
+  brandSecondaryDarkest: '#000000',
   brandSecondaryLight: '#B4D8F1',
   brandSecondaryLighter: '#000',
   brandSecondaryLightest: '#000',
@@ -126,9 +126,9 @@ export const colors = {
   brandGrayDark: '#8F9DB0',
   brandGrayDarker: '#6C7F98',
   brandGrayDarkest: '#0B2145',
-  brandGrayLight: '#E1EFF9',
+  brandGrayLight: '#F8F8F8',
   brandGrayLighter: '#EBF1F5',
-  brandGrayLightest: '#F3F8FB',
+  brandGrayLightest: '#FFFFFF',
 
   // Green
   brandGreen: '#4EBE7E',
@@ -156,7 +156,7 @@ export const colors = {
   brandWarningDark: '#C95D00',
   brandDanger: '#F95757',
   brandDangerDark: '#C22C41',
-  brandInfo: '#0D326E',
+  brandInfo: '#000000',
   brandInfoDark: '#0B2145',
   brandNeutral: '#E0E0E0',
   brandTextPrimary: '#000',
@@ -165,7 +165,7 @@ export const colors = {
 
   // NEW COLOURS
   // Names generated from: http://chir.ag/projects/name-that-color/
-  downriver: '#031563', // V2
+  downriver: '#000000', // V2
   cornflowerBlue: '#e2eff9',
   whiteLilac: '#fafbfd',
   frenchPass: '#b3defd',
@@ -173,24 +173,24 @@ export const colors = {
   alabaster: '#fbfbfb',
   aliceBlue: '#EFF8FF',
   lynch: '#6c7f98',
-  ceruleanBlue: '#3048D1',
+  ceruleanBlue: '#000000',
   pictonBlue: '#4e99e9',
   emerald: '#00CF8A', // V2
   indigo: '#5644D3', // V2
   red: '#F00000', // V2
-  baliHai: '#6C7f98', // V2
+  baliHai: '#000000', // V2
   dodgerBlue: '#45B0FF', // V2
   blackSqueeze: '#f3fbfb', // V2
   concrete: '#F2F2F2', // V2
   alto: '#E0E0E0', // V2
 
   // New branding colours V2 - TODO: these color vars need sorting out
-  billionaireBlue: '#3048D1',
-  businessBlue: '#031563',
+  billionaireBlue: '#000000',
+  businessBlue: '#000000',
   bonusBlue: '#E1EFF9',
-  highlightOrange: '#F55200',
-  hoverOrange: '#0D326E',
-  body: '#454B6C',
+  highlightAqua: '#3DDED0',
+  hoverOrange: '#000000',
+  body: '#000000',
   hippieGreen: '#678d4b',
   dustyGray: '#9b9b9b',
   gray: '#7F7F7F',

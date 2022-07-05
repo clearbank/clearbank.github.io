@@ -1,0 +1,1295 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "FI Initiation CHAPS API",
+        "description": "FI Initiation CHAPS API",
+        "version": "3.0.Chaps-payment"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "tags": [],
+    "paths": {
+        "/v3/Payments/CHAPS": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Initiate a payment using the chaps payment scheme. This endpoint is FTR compliant.",
+                "description": "This endpoint works on a partial acceptance basis - meaning that you can submit 10 payments and only 6 of them may be accepted for processing.\r\n            \r\nEach payment instruction is validated against the scheme specific rules as well as the ISO20022 specification.\r\n            \r\nCurrently, only payments through GBP are supported. We have listed possible currencies for future proofing of the API.\r\n            \r\nThe remittance information must be scheme compatible. Values exceeding the length limits of the scheme will be truncated. Missing remittance information will be replaced by a blank string.",
+                "operationId": "PostChapsPaymentV3",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Information that should be used to create a credit transfer request.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/V3.Requests.CreateCreditTransferRequest"
+                            }
+                        }
+                    },
+                    "x-bodyName": "request"
+                },
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/V3.Responses.CreditTransferResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/v2/payments/chaps": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Request a CHAPS Payment",
+                "operationId": "PostChapsPaymentV2",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Information that should be used to create a credit transfer request.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/V2.Requests.CreateCreditTransferRequest"
+                            }
+                        }
+                    },
+                    "x-bodyName": "request"
+                },
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/V2.Responses.CreditTransferResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "V3.Requests.CreateCreditTransferRequest": {
+                "required": [
+                    "paymentInstructions"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentInstructions": {
+                        "type": "array",
+                        "description": "Details of the payments to be made.",
+                        "items": {
+                            "$ref": "#/components/schemas/V3.PaymentInstruction"
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "description": "Information that should be used to create a credit transfer."
+            },
+            "V3.PaymentInstruction": {
+                "required": [
+                    "creditTransfers",
+                    "debtor",
+                    "debtorAccount",
+                    "paymentInstructionIdentification"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentInstructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "The unique identifier for the payment instruction."
+                    },
+                    "schemeChannelName": {
+                        "type": "string",
+                        "description": "The scheme channel name."
+                    },
+                    "requestedExecutionDate": {
+                        "type": "string",
+                        "description": "The ISO 8601 date/time that the instruction should be executed at. Deprecated: Any value specified here will be ignored.",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/V3.DebtorPartyIdentifier",
+                        "description": "Details about the account holder."
+                    },
+                    "debtorAccount": {
+                        "$ref": "#/components/schemas/V3.PaymentInstructionCounterpartAccount",
+                        "description": "Information about the counterpart in a given transaction."
+                    },
+                    "creditTransfers": {
+                        "type": "array",
+                        "description": "A series of payments that should be made from the debtor account.",
+                        "items": {
+                            "$ref": "#/components/schemas/V3.CreditTransfer"
+                        }
+                    }
+                },
+                "description": "A payment from a single account to multiple creditors."
+            },
+            "V3.DebtorPartyIdentifier": {
+                "type": "object",
+                "properties": {
+                    "legalEntityIdentifier": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known."
+                    },
+                    "name": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "pattern": "^[a-zA-Z0-9\\/\\-?:().,'+ ]*$",
+                        "type": "string",
+                        "description": "The name of the account holder."
+                    },
+                    "address": {
+                        "maxLength": 105,
+                        "minLength": 0,
+                        "pattern": "^[a-zA-Z0-9\\/\\-?:().,'+ ]*$",
+                        "type": "string",
+                        "description": "The address of the account holder."
+                    }
+                },
+                "description": "Details about the account holder."
+            },
+            "V3.PaymentInstructionCounterpartAccount": {
+                "required": [
+                    "identification"
+                ],
+                "type": "object",
+                "properties": {
+                    "identification": {
+                        "$ref": "#/components/schemas/V3.PaymentInstructionCounterpartAccountIdentification",
+                        "description": "The identifiable information of an account."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information about the counterpart in a given transaction."
+            },
+            "V3.CreditTransfer": {
+                "required": [
+                    "amount",
+                    "creditor",
+                    "creditorAccount",
+                    "paymentIdentification",
+                    "remittanceInformation"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentIdentification": {
+                        "$ref": "#/components/schemas/V3.PaymentIdentification",
+                        "description": "Identification of the payment instruction."
+                    },
+                    "amount": {
+                        "$ref": "#/components/schemas/V3.Amount",
+                        "description": "Indicates the amount and the currency used in a given transaction or account balance."
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/V3.PartyIdentifier",
+                        "description": "The name and, optionally, the legal entity identifier of the account."
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/V3.PaymentInstructionCounterpartAccount",
+                        "description": "Information about the counterpart in a given transaction."
+                    },
+                    "remittanceInformation": {
+                        "$ref": "#/components/schemas/V3.RemittanceInformation",
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts’ receivable system."
+                    }
+                },
+                "description": "Represents a creditor in a payment instruction."
+            },
+            "V3.PaymentInstructionCounterpartAccountIdentification": {
+                "type": "object",
+                "properties": {
+                    "iban": {
+                        "type": "string",
+                        "description": "The International Bank Account Number of the account."
+                    },
+                    "other": {
+                        "$ref": "#/components/schemas/V3.CounterpartAccountGenericIdentification",
+                        "description": "Unique identification of an account, as assigned by the account servicer, using an identification scheme.",
+                        "nullable": true
+                    }
+                },
+                "description": "The identifiable information of an account."
+            },
+            "V3.PaymentIdentification": {
+                "required": [
+                    "endToEndIdentification",
+                    "instructionIdentification"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+                    },
+                    "endToEndIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Identification of the payment instruction."
+            },
+            "V3.Amount": {
+                "required": [
+                    "instructedAmount"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructedAmount": {
+                        "type": "number",
+                        "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+                        "format": "double"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "description": "The currency code must be a valid active currency code, not yet withdrawn on the day the message containing the currency is exchanged. Valid active currency codes are registered with the ISO 4217 Maintenance Agency, consist of three (3) contiguous letters, and are not yet withdrawn on the day the message containing the Currency is exchanged.",
+                        "enum": [
+                            "AED",
+                            "AFN",
+                            "ALL",
+                            "AMD",
+                            "ANG",
+                            "AOA",
+                            "ARS",
+                            "AUD",
+                            "AWG",
+                            "AZN",
+                            "BAM",
+                            "BBD",
+                            "BDT",
+                            "BGN",
+                            "BHD",
+                            "BIF",
+                            "BMD",
+                            "BND",
+                            "BOB",
+                            "BOV",
+                            "BRL",
+                            "BSD",
+                            "BTN",
+                            "BWP",
+                            "BYN",
+                            "BZD",
+                            "CAD",
+                            "CDF",
+                            "CHE",
+                            "CHF",
+                            "CHW",
+                            "CLF",
+                            "CLP",
+                            "CNY",
+                            "COP",
+                            "COU",
+                            "CRC",
+                            "CUC",
+                            "CUP",
+                            "CVE",
+                            "CZK",
+                            "DJF",
+                            "DKK",
+                            "DOP",
+                            "DZD",
+                            "EGP",
+                            "ERN",
+                            "ETB",
+                            "EUR",
+                            "FJD",
+                            "FKP",
+                            "GBP",
+                            "GEL",
+                            "GHS",
+                            "GIP",
+                            "GMD",
+                            "GNF",
+                            "GTQ",
+                            "GYD",
+                            "HKD",
+                            "HNL",
+                            "HRK",
+                            "HTG",
+                            "HUF",
+                            "IDR",
+                            "ILS",
+                            "INR",
+                            "IQD",
+                            "IRR",
+                            "ISK",
+                            "JMD",
+                            "JOD",
+                            "JPY",
+                            "KES",
+                            "KGS",
+                            "KHR",
+                            "KMF",
+                            "KPW",
+                            "KRW",
+                            "KWD",
+                            "KYD",
+                            "KZT",
+                            "LAK",
+                            "LBP",
+                            "LKR",
+                            "LRD",
+                            "LSL",
+                            "LYD",
+                            "MAD",
+                            "MDL",
+                            "MGA",
+                            "MKD",
+                            "MMK",
+                            "MNT",
+                            "MOP",
+                            "MRU",
+                            "MUR",
+                            "MVR",
+                            "MWK",
+                            "MXN",
+                            "MXV",
+                            "MYR",
+                            "MZN",
+                            "NAD",
+                            "NGN",
+                            "NIO",
+                            "NOK",
+                            "NPR",
+                            "NZD",
+                            "OMR",
+                            "PAB",
+                            "PEN",
+                            "PGK",
+                            "PHP",
+                            "PKR",
+                            "PLN",
+                            "PYG",
+                            "QAR",
+                            "RON",
+                            "RSD",
+                            "RUB",
+                            "RWF",
+                            "SAR",
+                            "SBD",
+                            "SCR",
+                            "SDG",
+                            "SEK",
+                            "SGD",
+                            "SHP",
+                            "SLL",
+                            "SOS",
+                            "SRD",
+                            "SSP",
+                            "STN",
+                            "SVC",
+                            "SYP",
+                            "SZL",
+                            "THB",
+                            "TJS",
+                            "TMT",
+                            "TND",
+                            "TOP",
+                            "TRY",
+                            "TTD",
+                            "TWD",
+                            "TZS",
+                            "UAH",
+                            "UGX",
+                            "USD",
+                            "USN",
+                            "UYI",
+                            "UYU",
+                            "UZS",
+                            "VEF",
+                            "VND",
+                            "VUV",
+                            "WST",
+                            "XAF",
+                            "XAG",
+                            "XAU",
+                            "XBA",
+                            "XBB",
+                            "XBC",
+                            "XBD",
+                            "XCD",
+                            "XDR",
+                            "XOF",
+                            "XPD",
+                            "XPF",
+                            "XPT",
+                            "XSU",
+                            "XTS",
+                            "XUA",
+                            "XXX",
+                            "YER",
+                            "ZAR",
+                            "ZMW",
+                            "ZWL"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Indicates the amount and the currency used in a given transaction or account balance."
+            },
+            "V3.PartyIdentifier": {
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 140,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "The name of the account holder."
+                    },
+                    "legalEntityIdentifier": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known."
+                    }
+                },
+                "description": "The name and, optionally, the legal entity identifier of the account."
+            },
+            "V3.RemittanceInformation": {
+                "type": "object",
+                "properties": {
+                    "structured": {
+                        "$ref": "#/components/schemas/V3.Structured",
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form.",
+                        "nullable": true
+                    }
+                },
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts’ receivable system."
+            },
+            "V3.CounterpartAccountGenericIdentification": {
+                "required": [
+                    "identification",
+                    "schemeName"
+                ],
+                "type": "object",
+                "properties": {
+                    "identification": {
+                        "maxLength": 34,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Identification assigned by an institution."
+                    },
+                    "schemeName": {
+                        "$ref": "#/components/schemas/V3.CounterpartAccountGenericIdentificationScheme",
+                        "description": "Name of the identification scheme."
+                    },
+                    "issuer": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The name of the entity that assigns the identification.",
+                        "nullable": true
+                    }
+                },
+                "description": "Unique identification of an account, as assigned by the account servicer, using an identification scheme."
+            },
+            "V3.Structured": {
+                "type": "object",
+                "properties": {
+                    "creditorReferenceInformation": {
+                        "$ref": "#/components/schemas/V3.CreditorReferenceInformation",
+                        "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor.",
+                        "nullable": true
+                    }
+                },
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form."
+            },
+            "V3.CounterpartAccountGenericIdentificationScheme": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Name of the identification scheme, in a coded form as published in an external list.",
+                        "enum": [
+                            "BBAN",
+                            "CUID",
+                            "UPIC"
+                        ]
+                    },
+                    "proprietary": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of the identification scheme, in a free text form.",
+                        "nullable": true
+                    }
+                },
+                "description": "Name of the identification scheme."
+            },
+            "V3.CreditorReferenceInformation": {
+                "type": "object",
+                "properties": {
+                    "reference": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction. Conditionally required if supplied by the ultimate debtor.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": true,
+                "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor."
+            },
+            "ProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "readOnly": true
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "detail": {
+                        "type": "string",
+                        "description": "A human-readable explanation specific to this occurrence of the problem.",
+                        "nullable": true
+                    },
+                    "instance": {
+                        "type": "string",
+                        "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            "V3.Responses.CreditTransferResponse": {
+                "type": "object",
+                "properties": {
+                    "transactions": {
+                        "type": "array",
+                        "description": "The acceptance or rejection status of each individual payment instruction.",
+                        "items": {
+                            "$ref": "#/components/schemas/V3.Responses.PaymentInstructionResponse"
+                        }
+                    },
+                    "halLinks": {
+                        "type": "array",
+                        "description": "Hypermedia links.",
+                        "items": {
+                            "$ref": "#/components/schemas/V3.Responses.HalLink"
+                        }
+                    }
+                },
+                "description": "The result of each payment instruction and applicable links."
+            },
+            "V3.Responses.PaymentInstructionResponse": {
+                "required": [
+                    "endToEndIdentification",
+                    "response"
+                ],
+                "type": "object",
+                "properties": {
+                    "endToEndIdentification": {
+                        "type": "string",
+                        "description": "The unique identifier for the payment instruction."
+                    },
+                    "response": {
+                        "type": "string",
+                        "description": "The result of how we are going to process the individual payment instruction.",
+                        "enum": [
+                            "Accepted",
+                            "AccountDisabled",
+                            "InsufficientFunds",
+                            "InvalidAccount",
+                            "InvalidCurrency",
+                            "Rejected",
+                            "DebitPaymentDisabled"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "An individual response for a debtor/creditor pairing."
+            },
+            "V3.Responses.HalLink": {
+                "required": [
+                    "href",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The named link type."
+                    },
+                    "href": {
+                        "type": "string",
+                        "description": "URI to be used."
+                    },
+                    "templated": {
+                        "type": "boolean",
+                        "description": "Specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "A single hypermedia link."
+            },
+            "V2.Requests.CreateCreditTransferRequest": {
+                "required": [
+                    "paymentInstructions"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentInstructions": {
+                        "type": "array",
+                        "description": "Details of the payments to be made.",
+                        "items": {
+                            "$ref": "#/components/schemas/V2.PaymentInstruction"
+                        }
+                    }
+                },
+                "description": "Information that should be used to create a credit transfer."
+            },
+            "V2.PaymentInstruction": {
+                "required": [
+                    "creditTransfers",
+                    "debtor",
+                    "debtorAccount",
+                    "paymentInstructionIdentification"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentInstructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "The unique identifier for the payment instruction."
+                    },
+                    "schemeChannelName": {
+                        "type": "string",
+                        "description": "The scheme channel name."
+                    },
+                    "requestedExecutionDate": {
+                        "type": "string",
+                        "description": "The ISO 8601 date/time that the instruction should be executed at. Deprecated: Any value specified here will be ignored.",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/V2.DebtorPartyIdentifier",
+                        "description": "Details about the account holder."
+                    },
+                    "debtorAccount": {
+                        "$ref": "#/components/schemas/V2.PaymentInstructionCounterpartAccount",
+                        "description": "Information about the counterpart in a given transaction."
+                    },
+                    "creditTransfers": {
+                        "type": "array",
+                        "description": "A series of payments that should be made from the debtor account.",
+                        "items": {
+                            "$ref": "#/components/schemas/V2.CreditTransfer"
+                        }
+                    }
+                },
+                "description": "A payment from a single account to multiple creditors."
+            },
+            "V2.DebtorPartyIdentifier": {
+                "type": "object",
+                "properties": {
+                    "legalEntityIndentifier": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known.",
+                        "nullable": true
+                    }
+                },
+                "description": "Information about the debtor of the transaction (the counterparty)."
+            },
+            "V2.PaymentInstructionCounterpartAccount": {
+                "required": [
+                    "identification"
+                ],
+                "type": "object",
+                "properties": {
+                    "identification": {
+                        "$ref": "#/components/schemas/V2.PaymentInstructionCounterpartAccountIdentification",
+                        "description": "The identifiable information of an account."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information about the counterpart in a given transaction."
+            },
+            "V2.CreditTransfer": {
+                "required": [
+                    "amount",
+                    "creditor",
+                    "creditorAccount",
+                    "paymentIdentification",
+                    "remittanceInformation"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentIdentification": {
+                        "$ref": "#/components/schemas/V2.PaymentIdentification",
+                        "description": "Identification of the payment instruction."
+                    },
+                    "amount": {
+                        "$ref": "#/components/schemas/V2.Amount",
+                        "description": "Indicates the amount and the currency used in a given transaction or account balance."
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/V2.PartyIdentifier",
+                        "description": "The name and, optionally, the legal entity identifier of the account."
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/V2.PaymentInstructionCounterpartAccount",
+                        "description": "Information about the counterpart in a given transaction."
+                    },
+                    "remittanceInformation": {
+                        "$ref": "#/components/schemas/V2.RemittanceInformation",
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts’ receivable system."
+                    }
+                },
+                "description": "Represents a creditor in a payment instruction."
+            },
+            "V2.PaymentInstructionCounterpartAccountIdentification": {
+                "type": "object",
+                "properties": {
+                    "iban": {
+                        "type": "string",
+                        "description": "The International Bank Account Number of the account."
+                    },
+                    "other": {
+                        "$ref": "#/components/schemas/V2.CounterpartAccountGenericIdentification",
+                        "description": "Unique identification of an account, as assigned by the account servicer, using an identification scheme.",
+                        "nullable": true
+                    }
+                },
+                "description": "The identifiable information of an account."
+            },
+            "V2.PaymentIdentification": {
+                "required": [
+                    "endToEndIdentification",
+                    "instructionIdentification"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+                    },
+                    "endToEndIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Identification of the payment instruction."
+            },
+            "V2.Amount": {
+                "required": [
+                    "instructedAmount"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructedAmount": {
+                        "type": "number",
+                        "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+                        "format": "double"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "description": "The currency code must be a valid active currency code, not yet withdrawn on the day the message containing the currency is exchanged. Valid active currency codes are registered with the ISO 4217 Maintenance Agency, consist of three (3) contiguous letters, and are not yet withdrawn on the day the message containing the Currency is exchanged.",
+                        "enum": [
+                            "AED",
+                            "AFN",
+                            "ALL",
+                            "AMD",
+                            "ANG",
+                            "AOA",
+                            "ARS",
+                            "AUD",
+                            "AWG",
+                            "AZN",
+                            "BAM",
+                            "BBD",
+                            "BDT",
+                            "BGN",
+                            "BHD",
+                            "BIF",
+                            "BMD",
+                            "BND",
+                            "BOB",
+                            "BOV",
+                            "BRL",
+                            "BSD",
+                            "BTN",
+                            "BWP",
+                            "BYN",
+                            "BZD",
+                            "CAD",
+                            "CDF",
+                            "CHE",
+                            "CHF",
+                            "CHW",
+                            "CLF",
+                            "CLP",
+                            "CNY",
+                            "COP",
+                            "COU",
+                            "CRC",
+                            "CUC",
+                            "CUP",
+                            "CVE",
+                            "CZK",
+                            "DJF",
+                            "DKK",
+                            "DOP",
+                            "DZD",
+                            "EGP",
+                            "ERN",
+                            "ETB",
+                            "EUR",
+                            "FJD",
+                            "FKP",
+                            "GBP",
+                            "GEL",
+                            "GHS",
+                            "GIP",
+                            "GMD",
+                            "GNF",
+                            "GTQ",
+                            "GYD",
+                            "HKD",
+                            "HNL",
+                            "HRK",
+                            "HTG",
+                            "HUF",
+                            "IDR",
+                            "ILS",
+                            "INR",
+                            "IQD",
+                            "IRR",
+                            "ISK",
+                            "JMD",
+                            "JOD",
+                            "JPY",
+                            "KES",
+                            "KGS",
+                            "KHR",
+                            "KMF",
+                            "KPW",
+                            "KRW",
+                            "KWD",
+                            "KYD",
+                            "KZT",
+                            "LAK",
+                            "LBP",
+                            "LKR",
+                            "LRD",
+                            "LSL",
+                            "LYD",
+                            "MAD",
+                            "MDL",
+                            "MGA",
+                            "MKD",
+                            "MMK",
+                            "MNT",
+                            "MOP",
+                            "MRU",
+                            "MUR",
+                            "MVR",
+                            "MWK",
+                            "MXN",
+                            "MXV",
+                            "MYR",
+                            "MZN",
+                            "NAD",
+                            "NGN",
+                            "NIO",
+                            "NOK",
+                            "NPR",
+                            "NZD",
+                            "OMR",
+                            "PAB",
+                            "PEN",
+                            "PGK",
+                            "PHP",
+                            "PKR",
+                            "PLN",
+                            "PYG",
+                            "QAR",
+                            "RON",
+                            "RSD",
+                            "RUB",
+                            "RWF",
+                            "SAR",
+                            "SBD",
+                            "SCR",
+                            "SDG",
+                            "SEK",
+                            "SGD",
+                            "SHP",
+                            "SLL",
+                            "SOS",
+                            "SRD",
+                            "SSP",
+                            "STN",
+                            "SVC",
+                            "SYP",
+                            "SZL",
+                            "THB",
+                            "TJS",
+                            "TMT",
+                            "TND",
+                            "TOP",
+                            "TRY",
+                            "TTD",
+                            "TWD",
+                            "TZS",
+                            "UAH",
+                            "UGX",
+                            "USD",
+                            "USN",
+                            "UYI",
+                            "UYU",
+                            "UZS",
+                            "VEF",
+                            "VND",
+                            "VUV",
+                            "WST",
+                            "XAF",
+                            "XAG",
+                            "XAU",
+                            "XBA",
+                            "XBB",
+                            "XBC",
+                            "XBD",
+                            "XCD",
+                            "XDR",
+                            "XOF",
+                            "XPD",
+                            "XPF",
+                            "XPT",
+                            "XSU",
+                            "XTS",
+                            "XUA",
+                            "XXX",
+                            "YER",
+                            "ZAR",
+                            "ZMW",
+                            "ZWL"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Indicates the amount and the currency used in a given transaction or account balance."
+            },
+            "V2.PartyIdentifier": {
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 140,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "The name of the account holder."
+                    },
+                    "legalEntityIndentifier": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known."
+                    }
+                },
+                "description": "The name and, optionally, the legal entity identifier of the account."
+            },
+            "V2.RemittanceInformation": {
+                "type": "object",
+                "properties": {
+                    "structured": {
+                        "$ref": "#/components/schemas/V2.Structured"
+                    }
+                },
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts’ receivable system."
+            },
+            "V2.CounterpartAccountGenericIdentification": {
+                "required": [
+                    "identification",
+                    "schemeName"
+                ],
+                "type": "object",
+                "properties": {
+                    "identification": {
+                        "maxLength": 34,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Identification assigned by an institution."
+                    },
+                    "schemeName": {
+                        "$ref": "#/components/schemas/V2.CounterpartAccountGenericIdentificationScheme",
+                        "description": "Name of the identification scheme."
+                    },
+                    "issuer": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "The name of the entity that assigns the identification.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Unique identification of an account, as assigned by the account servicer, using an identification scheme."
+            },
+            "V2.Structured": {
+                "type": "object",
+                "properties": {
+                    "creditorReferenceInformation": {
+                        "$ref": "#/components/schemas/V2.CreditorReferenceInformation",
+                        "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in a structured form."
+            },
+            "V2.CounterpartAccountGenericIdentificationScheme": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Name of the identification scheme, in a coded form as published in an external list.",
+                        "nullable": true,
+                        "enum": [
+                            "BBAN",
+                            "CUID",
+                            "UPIC"
+                        ]
+                    },
+                    "proprietary": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of the identification scheme, in a free text form."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Name of the identification scheme."
+            },
+            "V2.CreditorReferenceInformation": {
+                "type": "object",
+                "properties": {
+                    "reference": {
+                        "maxLength": 35,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction. Conditionally required if supplied by the ultimate debtor.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor."
+            },
+            "V2.Responses.CreditTransferResponse": {
+                "type": "object",
+                "properties": {
+                    "transactions": {
+                        "type": "array",
+                        "description": "The acceptance or rejection status of each individual payment instruction.",
+                        "items": {
+                            "$ref": "#/components/schemas/V2.Responses.PaymentInstructionResponse"
+                        }
+                    },
+                    "halLinks": {
+                        "type": "array",
+                        "description": "Hypermedia links.",
+                        "items": {
+                            "$ref": "#/components/schemas/V2.Responses.HalLink"
+                        }
+                    }
+                },
+                "description": "The result of each payment instruction and applicable links."
+            },
+            "V2.Responses.PaymentInstructionResponse": {
+                "required": [
+                    "endToEndIdentification",
+                    "response"
+                ],
+                "type": "object",
+                "properties": {
+                    "endToEndIdentification": {
+                        "type": "string",
+                        "description": "The unique identifier for the payment instruction."
+                    },
+                    "response": {
+                        "type": "string",
+                        "description": "The result of how we are going to process the individual payment instruction.",
+                        "enum": [
+                            "Accepted",
+                            "AccountDisabled",
+                            "InsufficientFunds",
+                            "InvalidAccount",
+                            "InvalidCurrency",
+                            "Rejected",
+                            "DebitPaymentDisabled"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "description": "An individual response for a debtor/creditor pairing."
+            },
+            "V2.Responses.HalLink": {
+                "required": [
+                    "href",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The named link type."
+                    },
+                    "href": {
+                        "type": "string",
+                        "description": "URI to be used."
+                    },
+                    "templated": {
+                        "type": "boolean",
+                        "description": "Specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "A single hypermedia link"
+            }
+        }
+    }
+}

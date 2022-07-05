@@ -1,0 +1,15 @@
+---
+title: "Multicurrency Payments"
+order: 3
+---
+
+## Multicurrency Payments
+
+#### What are the operating hours for multicurrency payments?
+The market opens at 7am for all currencies. However, the cut-off time for each currency may differ.  
+
+#### What will happen if I send a payment after the cut-off time?
+We will reject the payment message and return a HTTP Status Response 406 Not Acceptable ('Request falls outside operating hours').
+
+#### What will happen if I use the same 'EndtoEndID' for two separate payments? 
+We use the 'EndtoEndID' for idempotency and will reject the second request as a duplicate payment. The second request will be returned in the form of a Payments.Mccy.PaymentValidationFailed webhook with 'Error=EndtoEndID already exists'.

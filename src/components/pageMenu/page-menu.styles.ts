@@ -78,7 +78,7 @@ export const FirstLevelLink = styled(Link)`
     ${({ isHighlighted }) =>
       isHighlighted &&
       css`
-        border-left-color: ${colors.highlightOrange};
+        border-left-color: ${colors.highlightAqua};
       `}
   }
 `

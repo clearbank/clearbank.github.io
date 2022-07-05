@@ -28,7 +28,7 @@ export const Title = styled.h4`
 `
 
 export const WebhookLink = styled.a`
-  color: ${colors.highlightOrange};
+  color: ${colors.highlightAqua};
   font-size: 16px;
   line-height: 28px;
 

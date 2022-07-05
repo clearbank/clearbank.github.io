@@ -76,13 +76,13 @@ export const EndpointMethod = styled.span`
 
 export const EndpointName = styled.a`
   flex: 0 1 auto;
-  color: ${colors.highlightOrange};
+  color: ${colors.highlightAqua};
   font-size: 18px;
   line-height: 1.5;
 `
 
 export const WebhookTitle = styled.a`
-  color: ${colors.highlightOrange};
+  color: ${colors.highlightAqua};
   font-size: 18px;
   line-height: 1.5;
 

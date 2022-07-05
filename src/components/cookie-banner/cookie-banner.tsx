@@ -31,7 +31,7 @@ const CookieBanner: React.FunctionComponent<Types.CookieBannerProps> = (): JSX.E
           size='small'
           type='secondary'
           onClick={onClick}
-          className='el-button--auto el-button--outline'
+          className=''
         >
           Accept cookies
         </Styles.CTA>

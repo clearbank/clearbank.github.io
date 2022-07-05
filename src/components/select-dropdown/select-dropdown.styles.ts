@@ -70,11 +70,11 @@ export const SelectDropdown: any = styled(ClearbankUI.Select)`
 
     &__item {
       &.selected {
-        color: ${colors.highlightOrange};
+        color: ${colors.highlightAqua};
         background-color: ${colors.brandLight};
       }
       &.hover {
-        color: ${colors.highlightOrange};
+        color: ${colors.highlightAqua};
         background-color: ${colors.brandLight};
       }
     }

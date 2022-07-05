@@ -5,12 +5,13 @@
     "description": "Mccy Payment Orchestrator External Api V1",
     "version": "1.0.Dec21"
   },
-  "paths": {
+ "paths": {
     "/v1/mccy/payments": {
       "post": {
         "tags": [
           "Payments"
         ],
+        "summary": "This endpoint is used to initiate payments.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -349,7 +350,7 @@
           },
           "schemeName": {
             "type": "object",
-            "description": "Information about the identification scheme in coded form or free-form text. This should only be provided if the creditor’s account number has been specified.",
+            "description": "Information about the identification scheme in coded form or free-form text. This should only be provided if the creditor’s account number has been specified",
             "properties": {
               "code": {
                 "type": "string",
@@ -696,7 +697,7 @@
                 "properties": {
                   "Other": {
                     "type": "object",
-                    "description": "Information about the ultimate creditor’s non-SWIFT BIC organisation identification.",
+                    "description": "Information about the ultimate creditor’s non-SWIFT BIC organisation. identification.",
                     "properties": {
                       "identification": {
                         "type": "string",
@@ -819,7 +820,8 @@
           "amount",
           "debtorAddress",
           "creditor",
-          "debtorAccountCurrency"
+          "debtorAccountCurrency",
+          "debtorName"
         ],
         "type": "object",
         "properties": {
@@ -845,9 +847,8 @@
           "debtorName": {
             "type": "string",
             "description": "The name used to identify the legal owner of the account from which the funds will be debited.",
-            "minLength": 0,
-            "maxLength": 140,
-            "nullable": true
+            "minLength": 1,
+            "maxLength": 140
           },
           "debtorAddress": {
             "type": "object",
