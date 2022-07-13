@@ -13,7 +13,7 @@ const plugins = [
     resolve: 'gatsby-plugin-react-svg',
     options: {
       rule: {
-        include: [`${__dirname}/src/assets/images`, /\.inline\.svg$/]
+        include: [`${__dirname}/src/assets/svgs/`]
       }
     }
   },
@@ -71,6 +71,13 @@ const plugins = [
     options: {
       name: 'fonts',
       path: `${__dirname}/src/assets/fonts/`
+    }
+  },
+  {
+    resolve: 'gatsby-source-filesystem',
+    options: {
+      name: 'images',
+      path: `${__dirname}/src/assets/images/`
     }
   },
   'gatsby-plugin-client-side-redirect'

@@ -10,8 +10,8 @@ import * as Styles from './header.styles'
 import * as Types from './header.types'
 
 import Logo from 'src/components/logo'
-import IconClose from 'src/assets/images/icons/close.inline.svg'
-import IconMenu from 'src/assets/images/icons/menu.inline.svg'
+import IconClose from 'src/assets/svgs/close.inline.svg'
+import IconMenu from 'src/assets/svgs/menu.inline.svg'
 
 const isSearchEnabled = config.header.search && config.header.search.enabled
 
