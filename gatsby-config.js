@@ -13,7 +13,7 @@ const plugins = [
     resolve: 'gatsby-plugin-react-svg',
     options: {
       rule: {
-        include: [`${__dirname}/src/assets/svgs/`]
+        include: /\.inline\.svg$/
       }
     }
   },
