@@ -7,13 +7,17 @@ import EndpointBlock from "src/components/endpoint-block"
 
 ## Faster Payments
 
-When sending payments via the ClearBank® API, Faster Payments are initiated via the POST/Payments/FPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
+When sending payments via the ClearBank API, Faster Payments are initiated via the POST/Payments/FPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
 Please refer to [Webhooks](/docs/webhooks) for more information.
 
-ClearBank® accounts support inbound and outbound Faster Payments. You can receive Faster Payments of up to £1,000,000. The transaction limit for an outbound Faster Payment transaction is £250,000. 
+ClearBank accounts support inbound and outbound Faster Payments. You can send and receive Faster Payments of up to £1,000,000. 
 Faster Payments are not subject to a cut-off time and can be sent or received as and when required.
 
+Please note that payments originating overseas need to be sent using a separate endpoint: [/v2/payments/fps/singlepayment](#initiate-a-single-faster-payment-originated-overseas).
+
 **Faster Payments Validation**
+
+Each payment is validated against these rules: 
 
 | Element     | Type   | Validation                                                                                       | Description                                                                                                                                                                                           |
 |-------------|--------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -21,7 +25,7 @@ Faster Payments are not subject to a cut-off time and can be sent or received as
 | `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,'+\s#=!"%&*<>;{@\r\n]*$` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information. If the max length exceeds 18 characters, this will be truncated before sending to scheme. |
 
 Pattern: Alphanumeric (uppercase and lowercase) and special characters*****.<br />
-*****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **<** (less than), **>** (greater than), **;** (semi colon), **{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
+*****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **<** (less than), **>** (greater than), **;** (semicolon), **{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
 
 This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
 
