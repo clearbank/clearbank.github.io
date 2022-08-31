@@ -187,7 +187,7 @@ export const colors = {
   // New branding colours V2 - TODO: these color vars need sorting out
   billionaireBlue: '#000000',
   businessBlue: '#000000',
-  bonusBlue: '#E1EFF9',
+  bonusBlue: '#f8f8f8',
   highlightAqua: '#3DDED0',
   hoverOrange: '#000000',
   body: '#000000',
