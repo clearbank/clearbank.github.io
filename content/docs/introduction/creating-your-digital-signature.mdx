@@ -1,29 +1,28 @@
 ---
-title: "Creating your Digital Signature"
+title: "Create your digital signature"
 order: 4
 ---
-## Creating your Digital Signature
+## Creating your digital signature
 
-We use a Digital Signature to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a Digital Signature, as it is specific to the body of each request.
+We use a digital signature to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a digital signature, as it is specific to the body of each request.
 
-We use the following specifications to create a Digital Signature:
+We use the following specifications to create a digital signature:
 - Raw Message Encoding: UTF-8
 - Message digest algorithm: SHA-256
 - Signing algorithm: RSA
 - Padding: PKCS#1 v1.5
-- Digital Signature Encoding: Base64
+- digital signature Encoding: Base64
 
-Follow these steps to create a Digital Signature:
+To create a digital signature:
 
-- UTF-8 encode the exact request body that will be sent to our institution api (any differences e.g., addition/removal of spaces will result in a totally different Digital Signature)
-- Hash the encoded value using SHA-256
-- Request a Digital Signature for that hash value from your Hardware Security Module (HSM)*
-- The output is the Message Digital Signature
-- Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all requests that have a request body
+1. UTF-8 encode the exact request body that will be sent to our institution api (any differences e.g., addition/removal of spaces will result in a totally different digital signature)
+2. Hash the encoded value using SHA-256
+3. Request a digital signature for that hash value from your Hardware Security Module (HSM)
+> In the simulation environment, this can be done using open source solutions.
+4. The output is the message digital signature
+5. Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all requests that have a request body
 
-*In the simulation environment, these operations can be undertaken using Open Source solutions.
-
-For additional help with creating your authentication profile and Digital Signature, please refer to the following examples on the ClearBank GitHub repository:
+For additional help with creating your authentication profile and digital signature, please refer to the following examples on the ClearBank GitHub repository:
 - [C# example for ClearBank® API and Webhooks](https://github.com/clearbank/fi-api-101)
 - [Postman Collections for invoking the ClearBank® API](https://github.com/clearbank/fi-api-postman)
 - [C# example for signing ClearBank® API requests](https://github.com/clearbank/fi-api-signtool)
