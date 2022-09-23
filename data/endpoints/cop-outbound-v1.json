@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "ClearBank.CoP.Outbound.Api",
-    "description": "Clear Bank API for CoP outbound requests",
+    "description": "ClearBank API for CoP outbound requests",
     "version": "1.0.COP-Outbound"
   },
   "paths": {
@@ -13,7 +13,7 @@
         ],
         "summary": "This endpoint is used to confirm the exact name registered with the payee’s account.",
         "requestBody": {
-          "description": "Cop Outbound Request",
+          "description": "CoP outbound request",
           "content": {
             "application/json": {
               "schema": {
@@ -81,6 +81,79 @@
           }
         }
       }
+    },
+    "/open-banking/outbound/v1/srd/validate": {
+      "post": {
+        "tags": [
+          "SecondaryReferenceData"
+        ],
+        "summary": "This endpoint is used to confirm whether a given sort code/account number combination requires Secondary Reference Data (SRD) with Confirmation of Payee (CoP) requests.",
+        "requestBody": {
+          "description": "SRD validation request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SRDValidationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SRDValidationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SRDValidationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SRDValidationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SRDValidationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SRDValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -96,7 +169,7 @@
         "properties": {
           "SchemeName": {
             "type": "string",
-            "description": "Indicates the sort code and account number associated with the payee’s account. The value should always be: SortCodeAccountNumber."
+            "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
           },
           "LegalOwnerType": {
             "type": "string",
@@ -128,7 +201,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Required information to perform a CoP check"
+        "description": "Required information to perform a CoP check."
       },
       "CoPOutboundResponse": {
         "type": "object",
@@ -155,12 +228,17 @@
         "properties": {
           "Reason": {
             "type": "string",
-            "description": "The reason of error",
+            "description": "The reason for the error.",
+            "nullable": true
+          },
+          "ParticipantName": {
+            "type": "string",
+            "description": "Name of the participant (the bank or financial institution receiving the CoP request).",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "The body of the error with description"
+        "description": "The body of the error with description."
       },
       "ErrorResponse": {
         "type": "object",
@@ -170,7 +248,57 @@
           }
         },
         "additionalProperties": false,
-        "description": "A class for error responses"
+        "description": "A class for error responses."
+      },
+      "SRDValidationData": {
+        "type": "object",
+        "properties": {
+          "Required": {
+            "type": "boolean",
+            "description": "Value indicating whether Secondary Reference Data is required on a CoP request."
+          },
+          "BankName": {
+            "type": "string",
+            "description": "The name of the bank that the given identification matches with.",
+            "nullable": true
+          },
+          "Identification": {
+            "type": "string",
+            "description": "The identification given in the original request.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "SRD validation data."
+      },
+      "SRDValidationRequest": {
+        "required": [
+          "Identification",
+          "SchemeName"
+        ],
+        "type": "object",
+        "properties": {
+          "SchemeName": {
+            "type": "string",
+            "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
+          },
+          "Identification": {
+            "type": "string",
+            "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8-digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Secondary reference data validation request."
+      },
+      "SRDValidationResponse": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "$ref": "#/components/schemas/SRDValidationData"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response contract."
       },
       "VerificationReport": {
         "required": [
