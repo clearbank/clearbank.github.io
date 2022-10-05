@@ -8,14 +8,16 @@ import EndpointBlock from "src/components/endpoint-block"
 ## Faster Payments
 
 When sending payments via the ClearBank API, Faster Payments are initiated via the POST/Payments/FPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
-Please refer to [Webhooks](/docs/webhooks) for more information.
+Please refer to [Webhooks](/docs/webhooks) for more information. 
+
+A new endpoint is being added to enable you to return a faster payment: [/v3/payments/fps/return](#return-an-fps-payment) Note that this endpoint is only currently in our simulation environment.
 
 ClearBank accounts support inbound and outbound Faster Payments. You can send and receive Faster Payments of up to £1,000,000. 
 Faster Payments are not subject to a cut-off time and can be sent or received as and when required.
 
-Please note that payments originating overseas need to be sent using a separate endpoint: [/v2/payments/fps/singlepayment](#initiate-a-single-faster-payment-originated-overseas).
+Please note that payments originating overseas need to be sent using a separate endpoint: [/v2/payments/fps/singlepayment](#send-a-faster-payment-originated-overseas).
 
-**Faster Payments Validation**
+**Faster Payments validation**
 
 Each payment is validated against these rules: 
 
@@ -31,7 +33,7 @@ This endpoint uses the endToEndIdentification field as a duplicate check to ensu
 
 <EndpointBlock
 type="post"
-title="Initiate an FPS payment"
+title="Send Faster Payments"
 endpoints={[
   {
     path: "/v3/Payments/FPS",
@@ -57,8 +59,25 @@ endpoints={[
 />
 
 <EndpointBlock
+type="post"
+title="Return an FPS payment"
+endpoints={[
+  {
+    path: "/v3/Payments/FPS/return",
+    version: "3.0_FPS_return",
+    webhooks: [
+      'transaction-settled-webhook-v6',
+      'payment-message-assessment-failed-webhook-v1',
+      'payment-message-validation-failed-webhook-v1',
+      'transaction-rejected-v2'
+    ]
+  }
+]}
+/>
+
+<EndpointBlock
   type="post"
-  title="Initiate a single Faster Payment Originated Overseas"
+  title="Send a Faster Payment Originated Overseas"
   endpoints={[
   {
     path: "/v2/payments/fps/singlepayment",
