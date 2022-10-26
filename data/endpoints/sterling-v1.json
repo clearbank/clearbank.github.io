@@ -1,0 +1,1205 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "ClearBank API endpoints for creating and managing accounts and transactions.",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "1.0.Sterling"
+  },
+  "paths": {
+    "/v1/Accounts/{accountId}": {
+      "patch": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "This endpoint is used to amend the properties of an existing account.",
+        "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdPatch",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to amend account properties.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.PatchAccountRequest"
+              }
+            }
+          },
+          "x-bodyName": "request"
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Transactions": {
+      "get": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Gets a summary of all of the transactions from the institution.",
+        "operationId": "V1InstitutionsByInstitutionIdTransactionsGet",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The page number to control returned results into manageable sets. Default if not supplied: 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "This parameter controls the number of transactions returned in the response. There is a limit of 1000 per request. A request with over 1000 will result in a bad request. Default if not specified: 50.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "startDateTime",
+            "in": "query",
+            "description": "The start date time (when supplied) filters the result set to include transactions where the transaction time is either equal or greater than the value specified.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDateTime",
+            "in": "query",
+            "description": "The end date time (when supplied) filters the result set to include transactions where the transaction time is either equal or less than the value specified.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "paymentMethodType",
+            "in": "query",
+            "description": "The payment method type filters the results to include that payment method type.",
+            "schema": {
+              "enum": [
+                "Transfer",
+                "FasterPayments",
+                "Bacs",
+                "Chaps"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Institutions.InstitutionTransactionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}": {
+      "delete": {
+        "tags": [
+          "Virtual Accounts"
+        ],
+        "summary": "Disables the virtual account that belongs to the given account",
+        "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdVirtualByVirtualAccountIdDelete",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account. This can be retrieved from GET /v1/Accounts",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "virtualAccountId",
+            "in": "path",
+            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v1/Accounts/{accountId}/Virtual",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Virtual Accounts"
+        ],
+        "summary": "This endpoint is used to amend the properties of an existing virtual account.",
+        "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdVirtualByVirtualAccountIdPatch",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The account identifier.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "virtualAccountId",
+            "in": "path",
+            "description": "The virtual account identifier.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to update virtual account.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.VirtualAccounts.UpdateVirtualAccountRequest"
+              }
+            }
+          },
+          "x-bodyName": "request"
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Accounts/Virtual": {
+      "get": {
+        "tags": [
+          "Virtual Accounts"
+        ],
+        "summary": "Lists all of the virtual accounts belonging to an Institution",
+        "description": "All virtual accounts are returned including those which have been disabled. A Status field is available",
+        "operationId": "V1InstitutionsByInstitutionIdAccountsVirtualGet",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The page number to control returned results into manageable sets. Default if not supplied: 1",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The page size to control returned results into manageable sets. Default if not supplied: 50",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.VirtualAccounts.VirtualAccountsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.PatchAccountRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "NotProvided",
+              "Enabled",
+              "Closed",
+              "Suspended"
+            ],
+            "type": "string",
+            "description": "Current status of the account. Valid options include Not Provided, Enabled, Closed, Suspended."
+          },
+          "statusReason": {
+            "enum": [
+              "NotProvided",
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateSoleTraderAccount",
+              "FinancialCrime",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "Other"
+            ],
+            "type": "string",
+            "description": "Reason for why the current status of the account is Closed or Suspended. Valid options include NotProvided, AccountHolderBankrupt, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DissatisfiedCustomer, DuplicateSoleTraderAccount, FinancialCrime, FraudFirstParty, FraudThirdParty, Other."
+          },
+          "ownerName": {
+            "maxLength": 70,
+            "minLength": 0,
+            "pattern": "^[^<!&|$*;^%_>`#@=\"~\\[\\]{}\\\\]*$",
+            "type": "string",
+            "description": "The name used to identify the legal owner of the account."
+          },
+          "legalOwnerType": {
+            "enum": [
+              "Personal",
+              "Business"
+            ],
+            "type": "string",
+            "description": "Nature of funds held in the account. Valid options include: Personal, Business."
+          },
+          "relationshipType": {
+            "enum": [
+              "Single",
+              "Joint"
+            ],
+            "type": "string",
+            "description": "Operating nature of the account. Valid options include Single, Joint. If legalOwnerType is Business, relationshipType cannot be Joint."
+          },
+          "minimumBalance": {
+            "type": "number",
+            "description": "The minimum allowable balance of the account (example: -£1000). Note that you must send a negative number to create an overdraft. This field can only be used if your organisation is an embedded banking client with an overdraft agreement in place; otherwise the request will be rejected.",
+            "format": "double"
+          }
+        },
+        "description": "Information required for a current account amendment."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.ValidationProblemDetails": {
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "uniqueItems": false,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Gets or sets the validation errors associated with this instance of problem details.",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when\r\ndereferenced, it provides human-readable documentation for the problem type\r\n(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be\r\n\"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence\r\nof the problem, except for purposes of localization(e.g., using proactive content negotiation;\r\nsee[RFC7231], Section 3.4)."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+          }
+        },
+        "description": "Problem details for validation errors."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Institutions.InstitutionTransactionsResponse": {
+        "required": [
+          "transactions"
+        ],
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Transaction"
+            },
+            "description": "A collection of the transactions against the specified account."
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "Represents one or more transactions against the specified institution and associated hypermedia links."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Transaction": {
+        "required": [
+          "transactionId",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "description": "The unique identifier for this transaction."
+          },
+          "status": {
+            "enum": [
+              "ACCP",
+              "ACSC",
+              "ACSP",
+              "ACTC",
+              "ACWC",
+              "PART",
+              "PDNG",
+              "RCVD",
+              "RJCT"
+            ],
+            "type": "string",
+            "description": "The current status of the transaction."
+          }
+        },
+        "description": "Represents information regarding a transaction."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink": {
+        "required": [
+          "name",
+          "href"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The named link type."
+          },
+          "href": {
+            "type": "string",
+            "description": "URI to be used."
+          },
+          "templated": {
+            "type": "boolean",
+            "description": "Specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false."
+          }
+        },
+        "description": "A single hypermedia link."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.VirtualAccounts.UpdateVirtualAccountRequest": {
+        "type": "object",
+        "properties": {
+          "ownerName": {
+            "maxLength": 70,
+            "minLength": 0,
+            "pattern": "^[^<!&|$*;^%_>`#@=\"~\\[\\]{}\\\\]*$",
+            "type": "string",
+            "description": "The name used to identify the legal owner of the virtual account."
+          },
+          "legalOwnerType": {
+            "enum": [
+              "Personal",
+              "Business"
+            ],
+            "type": "string",
+            "description": "Nature of funds held in the virtual account. Valid options include: Personal, Business."
+          },
+          "relationshipType": {
+            "enum": [
+              "Single",
+              "Joint"
+            ],
+            "type": "string",
+            "description": "Operating nature of the virtual account. Valid options include Single, Joint. If legalOwnerType is Business, relationship type cannot be Joint."
+          }
+        },
+        "description": "Represents the data for updating a virtual account."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.VirtualAccounts.VirtualAccountsResponse": {
+        "required": [
+          "accounts"
+        ],
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.VirtualAccounts.VirtualAccount"
+            },
+            "description": "A collection of all accounts belonging to the institution associated with the API token."
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "Represents one or more accounts and associated hypermedia links."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.VirtualAccounts.VirtualAccount": {
+        "required": [
+          "id",
+          "name",
+          "type",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the virtual account."
+          },
+          "name": {
+            "type": "string",
+            "description": "The friendly name of the virtual account."
+          },
+          "type": {
+            "enum": [
+              "CACC"
+            ],
+            "type": "string",
+            "description": "Specifies the type of the virtual account."
+          },
+          "status": {
+            "enum": [
+              "Enabled",
+              "Disabled"
+            ],
+            "type": "string",
+            "description": "Specifies the status of the virtual account."
+          },
+          "currency": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "enum": [
+                "AED",
+                "AFN",
+                "ALL",
+                "AMD",
+                "ANG",
+                "AOA",
+                "ARS",
+                "AUD",
+                "AWG",
+                "AZN",
+                "BAM",
+                "BBD",
+                "BDT",
+                "BGN",
+                "BHD",
+                "BIF",
+                "BMD",
+                "BND",
+                "BOB",
+                "BOV",
+                "BRL",
+                "BSD",
+                "BTN",
+                "BWP",
+                "BYN",
+                "BZD",
+                "CAD",
+                "CDF",
+                "CHE",
+                "CHF",
+                "CHW",
+                "CLF",
+                "CLP",
+                "CNY",
+                "COP",
+                "COU",
+                "CRC",
+                "CUC",
+                "CUP",
+                "CVE",
+                "CZK",
+                "DJF",
+                "DKK",
+                "DOP",
+                "DZD",
+                "EGP",
+                "ERN",
+                "ETB",
+                "EUR",
+                "FJD",
+                "FKP",
+                "GBP",
+                "GEL",
+                "GHS",
+                "GIP",
+                "GMD",
+                "GNF",
+                "GTQ",
+                "GYD",
+                "HKD",
+                "HNL",
+                "HRK",
+                "HTG",
+                "HUF",
+                "IDR",
+                "ILS",
+                "INR",
+                "IQD",
+                "IRR",
+                "ISK",
+                "JMD",
+                "JOD",
+                "JPY",
+                "KES",
+                "KGS",
+                "KHR",
+                "KMF",
+                "KPW",
+                "KRW",
+                "KWD",
+                "KYD",
+                "KZT",
+                "LAK",
+                "LBP",
+                "LKR",
+                "LRD",
+                "LSL",
+                "LYD",
+                "MAD",
+                "MDL",
+                "MGA",
+                "MKD",
+                "MMK",
+                "MNT",
+                "MOP",
+                "MRU",
+                "MUR",
+                "MVR",
+                "MWK",
+                "MXN",
+                "MXV",
+                "MYR",
+                "MZN",
+                "NAD",
+                "NGN",
+                "NIO",
+                "NOK",
+                "NPR",
+                "NZD",
+                "OMR",
+                "PAB",
+                "PEN",
+                "PGK",
+                "PHP",
+                "PKR",
+                "PLN",
+                "PYG",
+                "QAR",
+                "RON",
+                "RSD",
+                "RUB",
+                "RWF",
+                "SAR",
+                "SBD",
+                "SCR",
+                "SDG",
+                "SEK",
+                "SGD",
+                "SHP",
+                "SLL",
+                "SOS",
+                "SRD",
+                "SSP",
+                "STN",
+                "SVC",
+                "SYP",
+                "SZL",
+                "THB",
+                "TJS",
+                "TMT",
+                "TND",
+                "TOP",
+                "TRY",
+                "TTD",
+                "TWD",
+                "TZS",
+                "UAH",
+                "UGX",
+                "USD",
+                "USN",
+                "UYI",
+                "UYU",
+                "UZS",
+                "VEF",
+                "VND",
+                "VUV",
+                "WST",
+                "XAF",
+                "XAG",
+                "XAU",
+                "XBA",
+                "XBB",
+                "XBC",
+                "XBD",
+                "XCD",
+                "XDR",
+                "XOF",
+                "XPD",
+                "XPF",
+                "XPT",
+                "XSU",
+                "XTS",
+                "XUA",
+                "XXX",
+                "YER",
+                "ZAR",
+                "ZMW",
+                "ZWL"
+              ],
+              "type": "string"
+            },
+            "description": "Currencies used for the virtual account."
+          },
+          "iban": {
+            "type": "string",
+            "description": "The IBAN identifier associated with the account."
+          },
+          "bban": {
+            "type": "string",
+            "description": "The BBAN identifier associated with the account."
+          },
+          "upic": {
+            "type": "string",
+            "description": "The Universal Payment Identification Code (UPIC) associated with the account."
+          },
+          "cuid": {
+            "type": "string",
+            "description": "The CHIPS Universal Identifier associated with the account."
+          }
+        },
+        "description": "Represents a summary of a given virtual account."
+      }
+    }
+  }
+}
