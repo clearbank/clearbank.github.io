@@ -10,7 +10,7 @@ webhook: true
 
 ```json
 {
-    "Type":"MccyPayloadTransactionCreated",
+    "Type":"Payments.Mccy.TransactionCreated",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -25,10 +25,10 @@ webhook: true
 | `EndToEndId`            | **Required**<br /> Unique identifier provided to ClearBank for each payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
 | `SchemeEndToEndId`      | *Optional*<br /> Unique identifier created by ClearBank for each payment and passed through the scheme to the creditor.<br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `15`<br />                         |
 | `AccountId`             | **Required**<br /> Unique identifier for the account held with ClearBank.<br /> Type: `string`<br />  Min. Length: `1`<br /> Format: `GUID`<br />                                                                         |
-| `Reference`             | **Required**<br /> Reference provided by the ultimate debtor for the payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                                                  |
-| `UltimateCreditorName`  | **Required**<br /> Name of the ultimate creditor.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `140`<br />                                                                                             |
+| `Reference`             | **Required**<br /> Reference provided by the ultimate debtor for the payment.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `143`<br />                                                                  |
+| `UltimateCreditorName`  | **Required**<br /> Name of the ultimate creditor.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                             |
 | `UltimateCreditorAccountIdentifiers`  | **Required**<br /> List of account identifiers used to uniquely identify the ultimate creditor.<br />  It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                              |
-| `UltimateDebtorName`    | **Required**<br /> Name of the ultimate debtor.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `140`<br />                                                                                               |
+| `UltimateDebtorName`    | **Required**<br /> Name of the ultimate debtor.<br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                               |
 | `UltimateDebtorAccountIdentifiers`    | **Required**<br /> List of account identifiers used to uniquely identify the ultimate debtor.<br /> It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                                 |                                               
 | `InstructedAmount`      | **Required**<br /> Instructed payment amount.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                          |
 | `InstructedCurrency`    | **Required**<br /> Currency of the instructed payment. This is the 3-letter ISO currency code.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />                       |
