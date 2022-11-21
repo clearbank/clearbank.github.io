@@ -80,6 +80,68 @@
                     }
                 }
             }
+        },
+        "/v3/payments/fps/return": {
+            "post": {
+              "tags": [
+                "FpsPayments"
+              ],
+              "summary": "Return a single FPS inbound payment. This endpoint is **not yet live in production**.",
+              "description":"This endpoint is the recommended method for returning faster payments that are unable to be completed for any reason.",
+              "operationId": "PostReturn",
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "Your API token, retrieved from the web portal.",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "DigitalSignature",
+                  "in": "header",
+                  "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "X-Request-Id",
+                  "in": "header",
+                  "description": "A unique identifier for the request.",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "requestBody": {
+                "description": "Information that should be used to create an FPS return.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/CreateReturnCreditTransferRequest"
+                    },
+                    "description": "Information that should be used to create a single credit return."
+                  }
+                },
+                "x-bodyName": "request"
+              },
+              "responses": {
+                "400": {
+                  "description": "Bad Request"
+                },
+                "404": {
+                  "description": "Not Found"
+                },
+                "202": {
+                  "description": "Accepted"
+                }
+              }
+            }
         }
     },
     
@@ -587,6 +649,20 @@
                 "additionalProperties": false,
                 "description": "Information about the identification scheme in coded form or free-form text."
             },
+            "CreateReturnCreditTransferRequest": {
+                "required": [
+                  "paymentReturnInstruction"
+                ],
+                "type": "object",
+                "properties": {
+                  "paymentReturnInstruction": {
+                    "$ref": "#/components/schemas/PaymentReturnInstruction",
+                    "description": "Information about the payment return."
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Information that should be used to create a single credit return."
+            },
             "HalLink": {
                 "required": [
                     "href",
@@ -637,6 +713,28 @@
                 },
                 "additionalProperties": false,
                 "description": "The acceptance or rejection status of a payment instruction."
+            },
+            "PaymentReturnInstruction": {
+                "required": [
+                  "TransactionId",
+                  "reasonForReturn"
+                ],
+                "type": "object",
+                "properties": {
+                  "TransactionId": {
+                    "maxLength": 36,
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "The ID of the transaction to be returned.",
+                    "format": "uuid"
+                  },
+                  "reasonForReturn": {
+                    "type": "string",
+                    "description": "A Scheme compliant return code. Accepted values: [ BeneficiarySortCodeOrAccountUnknown, BeneficiaryAccountClosed, BeneficiaryAccountStopped, BeneficiaryDeceased, AccountCannotBeIdentified, BeneficiaryAccountNameDoesNotMatchBeneficiaryAccountNumber, ReturnRequestedBySenderOfOriginalPayment, AccountIsNotInCurrencyQuoted, BeneficiaryNotExpectingFundsOrInstructedReturn, TermsAndConditionsOfAccountDoNotPermitCreditingOfFunds, SendingFpsInstitutionActionRequired, AccountTransferred, PaymentCannotBeAppliedBecauseOfBeneficiarySensitivities, Other ]"
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Information about the single payment return instruction."
             },
             "ProblemDetails": {
                 "type": "object",
