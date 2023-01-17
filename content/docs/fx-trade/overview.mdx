@@ -52,7 +52,11 @@ Additionally, you can also specify your margin (%) to be applied to the trade. T
 - Credit to the buyAccount: USD 1400
 - Credit to the specified margin account: GBP  10
 
-FX trades are subject to cut-off times. For more information about these, please speak to your Relationship Manager.
+#### FX trades are subject to cut-off times:
+ * If a trade is booked in time for same-day settlement, you will receive a webhook notification of the settlement. If it fails to settle (in practice, because there are insufficient funds in the account), you will learn of the failure immediately. ClearBank will then send a [fx-trade-cancelled-v1](../webhooks/#fx-trade-cancelled-webhook) webhook.
+ * If a trade is booked, but cannot be settled until a later day, and the settlement fails, the [fx-trade-settlement-failed-v1](../webhooks/#fx-trade-settlement-failed-webhook) webhook notifies you of the failure. Make sure you subscribe to this webhook if you are making FX trades with a value (settlement) date later than the day of booking.
+ 
+ For more information about cut-off times, please speak to your Relationship Manager.
 
 <EndpointBlock
   type="post"
@@ -64,7 +68,8 @@ FX trades are subject to cut-off times. For more information about these, please
       webhooks: [
         'fx-trade-executed-v1',
         'fx-trade-settled-v1',
-        'fx-trade-cancelled-v1'
+        'fx-trade-cancelled-v1',
+        'fx-trade-settlement-failed-v1'
       ]
     }
   ]}
