@@ -40,8 +40,9 @@ webhook: true
 | `BacsTransactionId`           | *(Optional)*<br /> Type: `GUID` <br />Max. length: `36`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `BacsTransactionDescription`  | *(Optional)*<br /> `CreditTransactionSettled`<br /> `DebitContraTransactionSettled`<br /> `DebitTransactionSettled`<br /> `CreditContraTransactionSettled`<br /> `DirectDebitReceivedIndemnityClaimSettled`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `TransactionType`             | *(Optional)* <br /> `DirectCredit`<br /> `DirectDebit`<br /> `DirectDebitIndemnityClaim`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `TransactionSource`           | *(Optional)*<br />/Origination of the Transaction :<br /> Max. length: `50` <br /> Example: `CardProcessor`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `TransactionSource`           | *(Optional)*<br />Origination of the Transaction :<br /> Max. length: `50` <br /> Example: `CardProcessor`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `SupplementaryData`           | *(Optional)*<br />Transaction supplementary data<br /> It is an array with the a `Name` and `Value`. <br /><br /> `Name`: Field Number/Name for an inbound CHAPS or FPS message. <br />Max. length: `33` <br /> `Name` options: `20`, `13C`, `23B`, `23E`, `26T`, `32A`, `33B`, `36`, `50a`, `51A`, `52a`, `53a`, `54a`, `55a`, `56a`, `57a`, `59a`, `70`, `71A`, `71F`, `71G`, `72`, `77B`, `SendingFpsInstitution`, `Currency`, `DateSent`, `PaymentType`, `TransactionReferenceNumber`, `Amount`, `OriginatingCreditInstitution`, `OriginatingCustomerAccountNumber`, `OriginatingCustomerAccountName`, `OriginatingCustomerAccountAddress`, `EndToEndReference`, `BeneficiaryCreditInstitution`, `BeneficiaryCustomerAccountNumber`, `BeneficiaryCustomerAccountName`, `BeneficiaryCustomerAccountAddress`, `ReturnedPaymentFpId`, `PaymentReturnCode`, `PaymentSubTypeCode`, `PurposeTransactionType`, `TypeOfAccountCode`, `NumericReference`, `ReferenceInformation`, `RemittanceInformation`, `RegulatoryReporting`, `OriginalCurrency`, `OriginalAmount`, `ExchangeRate`, `ChargingInformation`, `SubmittingMember`, `ReceivingMember`, `SettlementCycleId`, `FileId`, `ProcessedAsynchronously`, `AgencyAccountWithMember`, `AgencySortCodeWithMember` <br /><br />    `Value`<br /> Max. length: `500` <br /><br /> **There could be more than one Name and Value pair.**                                                                         |
+| `MXMessage`                       | *(Optional)*<br />Only if `Scheme` is Chaps; ISO 20022 (MX) compliant version of the transaction message. *Note*: This value can be very long.<br />Type: `string`<br /> Min. length: `0`<br /> Max. length: `80000` <br /> Example: See below.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `Nonce`                       | Cryptographically secure number generated by ClearBank® for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 #### Example transaction settled webhook request body
@@ -106,3 +107,141 @@ webhook: true
     "Nonce": 828803944
 }
 ```
+#### Example of an MXMessage field value for an outbound Chaps payment pacs008
+```xml
+ `<DataPDU xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:swift:saa:xsd:saa.2.0">
+  <Revision>2.0.10</Revision>
+  <Header>
+    <Message>
+      <SenderReference>dPoEnUJBbOGYGpLv</SenderReference>
+      <MessageIdentifier>pacs.008.001.08</MessageIdentifier>
+      <Format>MX</Format>
+      <SubFormat>Input</SubFormat>
+      <Sender>
+        <DN>ou=xxx,o=clrbgb22,o=swift</DN>
+        <FullName>
+          <X1>CLRBGB22XXX</X1>
+        </FullName>
+      </Sender>
+      <Receiver>
+        <DN>ou=xxx,o=HANDGB22,o=swift</DN>
+        <FullName>
+          <X1>HANDGB22XXX</X1>
+        </FullName>
+      </Receiver>
+      <InterfaceInfo>
+        <UserReference>dPoEnUJBbOGYGpLv</UserReference>
+        <MessageCreator>Messenger</MessageCreator>
+        <MessageContext>Original</MessageContext>
+        <MessageNature>Financial</MessageNature>
+      </InterfaceInfo>
+      <NetworkInfo>
+        <Priority>Normal</Priority>
+        <IsPossibleDuplicate>false</IsPossibleDuplicate>
+        <IsNotificationRequested>false</IsNotificationRequested>
+        <Service>boe.stg.iast!pe1</Service>
+        <SWIFTNetNetworkInfo>
+          <RequestType>pacs.008.001.08</RequestType>
+          <RequestSubtype>boe.chaps.enh.01</RequestSubtype>
+        </SWIFTNetNetworkInfo>
+      </NetworkInfo>
+      <SecurityInfo>
+        <IsSigningRequested>true</IsSigningRequested>
+        <SWIFTNetSecurityInfo>
+          <IsNRRequested>true</IsNRRequested>
+        </SWIFTNetSecurityInfo>
+      </SecurityInfo>
+    </Message>
+  </Header>
+  <Body>
+    <AppHdr xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.02">
+      <Fr>
+        <FIId>
+          <FinInstnId>
+            <BICFI>CLRBGB20</BICFI>
+          </FinInstnId>
+        </FIId>
+      </Fr>
+      <To>
+        <FIId>
+          <FinInstnId>
+            <BICFI>HANDGB20</BICFI>
+          </FinInstnId>
+        </FIId>
+      </To>
+      <BizMsgIdr>dPoEnUJBbOGYGpLv</BizMsgIdr>
+      <MsgDefIdr>pacs.008.001.08</MsgDefIdr>
+      <BizSvc>boe.chaps.enh.01</BizSvc>
+      <CreDt>2022-11-29T08:38:08+00:00</CreDt>
+    </AppHdr>
+    <Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08">
+      <FIToFICstmrCdtTrf>
+        <GrpHdr>
+          <MsgId>dPoEnUJBbOGYGpLv</MsgId>
+          <CreDtTm>2022-11-29T08:38:08+00:00</CreDtTm>
+          <NbOfTxs>1</NbOfTxs>
+          <SttlmInf>
+            <SttlmMtd>CLRG</SttlmMtd>
+            <ClrSys>
+              <Cd>STG</Cd>
+            </ClrSys>
+          </SttlmInf>
+        </GrpHdr>
+        <CdtTrfTxInf>
+          <PmtId>
+            <InstrId>dPoEnUJBbOGYGpLv</InstrId>
+            <EndToEndId>dPoEnUJBbOGYGpLv</EndToEndId>
+            <UETR>40d8cb4d-0475-477c-96b4-6027151bccd1</UETR>
+          </PmtId>
+          <IntrBkSttlmAmt
+            Ccy="GBP">198.41</IntrBkSttlmAmt>
+          <IntrBkSttlmDt>2022-11-29</IntrBkSttlmDt>
+          <SttlmPrty>NORM</SttlmPrty>
+          <InstdAmt
+            Ccy="GBP">0</InstdAmt>
+          <ChrgBr>SHAR</ChrgBr>
+          <InstgAgt>
+            <FinInstnId>
+              <BICFI>CLRBGB20</BICFI>
+            </FinInstnId>
+          </InstgAgt>
+          <InstdAgt>
+            <FinInstnId>
+              <BICFI>HANDGB20</BICFI>
+            </FinInstnId>
+          </InstdAgt>
+          <Dbtr>
+            <Nm>Current Account</Nm>
+          </Dbtr>
+          <DbtrAcct>
+            <Id>
+              <IBAN>GB55CLRB04040017974244</IBAN>
+            </Id>
+          </DbtrAcct>
+          <DbtrAgt>
+            <FinInstnId>
+              <BICFI>CLRBGB20XXX</BICFI>
+            </FinInstnId>
+          </DbtrAgt>
+          <CdtrAgt>
+            <FinInstnId>
+              <BICFI>HANDGB20XXX</BICFI>
+            </FinInstnId>
+          </CdtrAgt>
+          <Cdtr>
+            <Nm>CreditorQXFOq</Nm>
+          </Cdtr>
+          <CdtrAcct>
+            <Id>
+              <IBAN>GB40HAND40516243043167</IBAN>
+            </Id>
+          </CdtrAcct>
+          <RmtInf>
+            <Ustrd>dPoEnUJBbOGYGpLv</Ustrd>
+          </RmtInf>
+        </CdtTrfTxInf>
+      </FIToFICstmrCdtTrf>
+    </Document>
+  </Body>
+</DataPDU>`                                      
+ ```                
