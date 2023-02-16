@@ -42,10 +42,10 @@ webhook: true
 | `TransactionType`             | *(Optional)* <br /> `DirectCredit`<br /> `DirectDebit`<br /> `DirectDebitIndemnityClaim`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `TransactionSource`           | *(Optional)*<br />Origination of the Transaction :<br /> Max. length: `50` <br /> Example: `CardProcessor`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `SupplementaryData`           | *(Optional)*<br />Transaction supplementary data<br /> It is an array with the a `Name` and `Value`. <br /><br /> `Name`: Field Number/Name for an inbound CHAPS or FPS message. <br />Max. length: `33` <br /> `Name` options: `20`, `13C`, `23B`, `23E`, `26T`, `32A`, `33B`, `36`, `50a`, `51A`, `52a`, `53a`, `54a`, `55a`, `56a`, `57a`, `59a`, `70`, `71A`, `71F`, `71G`, `72`, `77B`, `SendingFpsInstitution`, `Currency`, `DateSent`, `PaymentType`, `TransactionReferenceNumber`, `Amount`, `OriginatingCreditInstitution`, `OriginatingCustomerAccountNumber`, `OriginatingCustomerAccountName`, `OriginatingCustomerAccountAddress`, `EndToEndReference`, `BeneficiaryCreditInstitution`, `BeneficiaryCustomerAccountNumber`, `BeneficiaryCustomerAccountName`, `BeneficiaryCustomerAccountAddress`, `ReturnedPaymentFpId`, `PaymentReturnCode`, `PaymentSubTypeCode`, `PurposeTransactionType`, `TypeOfAccountCode`, `NumericReference`, `ReferenceInformation`, `RemittanceInformation`, `RegulatoryReporting`, `OriginalCurrency`, `OriginalAmount`, `ExchangeRate`, `ChargingInformation`, `SubmittingMember`, `ReceivingMember`, `SettlementCycleId`, `FileId`, `ProcessedAsynchronously`, `AgencyAccountWithMember`, `AgencySortCodeWithMember` <br /><br />    `Value`<br /> Max. length: `500` <br /><br /> **There could be more than one Name and Value pair.**                                                                         |
-| `CHAPSISO20022Message`                       | *(Optional)*<br />Only if `Scheme` is Chaps; ISO 20022 (MX) compliant version of the transaction message. *Note*: This value can be very long.<br />Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `80000` <br /> Example: See below.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `Iso20022XmlDocument`                       | *(Optional)*<br />Only appears if `Scheme` is Chaps and the message type received is in ISO 20022 (MX) format. Content of the Document node of the received payment message, to enable processing of ISO 20022 messages for CHAPS. This value can be very long. See below for the example. <br />Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `80000` <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `Nonce`                       | Cryptographically secure number generated by ClearBank® for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-#### Example transaction settled webhook request body
+#### Example transaction settled webhook request body for Transfer scheme type
 
 ```json
 {
@@ -94,8 +94,7 @@ webhook: true
                 "Name":"23B",
                 "Value":"CRED"
             }
-        ]
-    },
+        ],
     "Nonce":949893874
 }
 ```
@@ -104,144 +103,73 @@ webhook: true
 
 ```json
 {
-    "Nonce": 828803944
+    "Nonce": 949893874
 }
 ```
-#### Example of an MXMessage field value for an outbound Chaps payment pacs008
-```xml
- `<DataPDU xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:swift:saa:xsd:saa.2.0">
-  <Revision>2.0.10</Revision>
-  <Header>
-    <Message>
-      <SenderReference>dPoEnUJBbOGYGpLv</SenderReference>
-      <MessageIdentifier>pacs.008.001.08</MessageIdentifier>
-      <Format>MX</Format>
-      <SubFormat>Input</SubFormat>
-      <Sender>
-        <DN>ou=xxx,o=clrbgb22,o=swift</DN>
-        <FullName>
-          <X1>CLRBGB22XXX</X1>
-        </FullName>
-      </Sender>
-      <Receiver>
-        <DN>ou=xxx,o=HANDGB22,o=swift</DN>
-        <FullName>
-          <X1>HANDGB22XXX</X1>
-        </FullName>
-      </Receiver>
-      <InterfaceInfo>
-        <UserReference>dPoEnUJBbOGYGpLv</UserReference>
-        <MessageCreator>Messenger</MessageCreator>
-        <MessageContext>Original</MessageContext>
-        <MessageNature>Financial</MessageNature>
-      </InterfaceInfo>
-      <NetworkInfo>
-        <Priority>Normal</Priority>
-        <IsPossibleDuplicate>false</IsPossibleDuplicate>
-        <IsNotificationRequested>false</IsNotificationRequested>
-        <Service>boe.stg.iast!pe1</Service>
-        <SWIFTNetNetworkInfo>
-          <RequestType>pacs.008.001.08</RequestType>
-          <RequestSubtype>boe.chaps.enh.01</RequestSubtype>
-        </SWIFTNetNetworkInfo>
-      </NetworkInfo>
-      <SecurityInfo>
-        <IsSigningRequested>true</IsSigningRequested>
-        <SWIFTNetSecurityInfo>
-          <IsNRRequested>true</IsNRRequested>
-        </SWIFTNetSecurityInfo>
-      </SecurityInfo>
-    </Message>
-  </Header>
-  <Body>
-    <AppHdr xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.02">
-      <Fr>
-        <FIId>
-          <FinInstnId>
-            <BICFI>CLRBGB20</BICFI>
-          </FinInstnId>
-        </FIId>
-      </Fr>
-      <To>
-        <FIId>
-          <FinInstnId>
-            <BICFI>HANDGB20</BICFI>
-          </FinInstnId>
-        </FIId>
-      </To>
-      <BizMsgIdr>dPoEnUJBbOGYGpLv</BizMsgIdr>
-      <MsgDefIdr>pacs.008.001.08</MsgDefIdr>
-      <BizSvc>boe.chaps.enh.01</BizSvc>
-      <CreDt>2022-11-29T08:38:08+00:00</CreDt>
-    </AppHdr>
-    <Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08">
-      <FIToFICstmrCdtTrf>
-        <GrpHdr>
-          <MsgId>dPoEnUJBbOGYGpLv</MsgId>
-          <CreDtTm>2022-11-29T08:38:08+00:00</CreDtTm>
-          <NbOfTxs>1</NbOfTxs>
-          <SttlmInf>
-            <SttlmMtd>CLRG</SttlmMtd>
-            <ClrSys>
-              <Cd>STG</Cd>
-            </ClrSys>
-          </SttlmInf>
-        </GrpHdr>
-        <CdtTrfTxInf>
-          <PmtId>
-            <InstrId>dPoEnUJBbOGYGpLv</InstrId>
-            <EndToEndId>dPoEnUJBbOGYGpLv</EndToEndId>
-            <UETR>40d8cb4d-0475-477c-96b4-6027151bccd1</UETR>
-          </PmtId>
-          <IntrBkSttlmAmt
-            Ccy="GBP">198.41</IntrBkSttlmAmt>
-          <IntrBkSttlmDt>2022-11-29</IntrBkSttlmDt>
-          <SttlmPrty>NORM</SttlmPrty>
-          <InstdAmt
-            Ccy="GBP">0</InstdAmt>
-          <ChrgBr>SHAR</ChrgBr>
-          <InstgAgt>
-            <FinInstnId>
-              <BICFI>CLRBGB20</BICFI>
-            </FinInstnId>
-          </InstgAgt>
-          <InstdAgt>
-            <FinInstnId>
-              <BICFI>HANDGB20</BICFI>
-            </FinInstnId>
-          </InstdAgt>
-          <Dbtr>
-            <Nm>Current Account</Nm>
-          </Dbtr>
-          <DbtrAcct>
-            <Id>
-              <IBAN>GB55CLRB04040017974244</IBAN>
-            </Id>
-          </DbtrAcct>
-          <DbtrAgt>
-            <FinInstnId>
-              <BICFI>CLRBGB20XXX</BICFI>
-            </FinInstnId>
-          </DbtrAgt>
-          <CdtrAgt>
-            <FinInstnId>
-              <BICFI>HANDGB20XXX</BICFI>
-            </FinInstnId>
-          </CdtrAgt>
-          <Cdtr>
-            <Nm>CreditorQXFOq</Nm>
-          </Cdtr>
-          <CdtrAcct>
-            <Id>
-              <IBAN>GB40HAND40516243043167</IBAN>
-            </Id>
-          </CdtrAcct>
-          <RmtInf>
-            <Ustrd>dPoEnUJBbOGYGpLv</Ustrd>
-          </RmtInf>
-        </CdtTrfTxInf>
-      </FIToFICstmrCdtTrf>
-    </Document>
-  </Body>
-</DataPDU>`                                      
+#### Example transaction settled webhook request body for CHAPS scheme type (Iso20022XmlDocument field present - see further below for example of content)
+
+```json
+{
+    "Type":"TransactionSettled",
+    "Version":6,
+    "Payload":{
+        "TransactionId":"d9162680-7d35-7994-4e38-fa80716899a2",
+        "Status":"Settled",
+        "Scheme":"Chaps",
+        "EndToEndTransactionId":"05726acd06dc",
+        "Amount":88.52,
+        "TimestampSettled":"2019-01-01T10:02:00.964Z",
+        "TimestampCreated":"2019-01-01T11:12:05.101Z",
+        "CurrencyCode":"GBP",
+        "DebitCreditCode":"Credit",
+        "Reference":"51dcf7ba480e61c5a60bbb6c6b774d17",
+        "IsReturn":false,
+        "Account":{
+            "IBAN":"GB00CUBK11223312345678",
+            "BBAN":"CUBK11223312345678",
+            "OwnerName":"John Doe",
+            "TransactionOwnerName":"John Doe",
+            "InstitutionName":"CustomerBank"
+        },
+        "CounterpartAccount":{
+            "IBAN":"GB00CUBK44556687654321",
+            "BBAN":"CUBK44556687654321",
+            "OwnerName":"Jane Doe",
+            "TransactionOwnerName":"Jane Doe",
+            "InstitutionName":"CustomerBank"
+        },
+        "ActualEndToEndTransactionId":"e6e7ab2a97d1",
+        "DirectDebitMandateId":"cbf17eb8-9e49-2043-2eca-0dae05e27fe5",
+        "TransactionCode":"99",
+        "ServiceUserNumber":"030201",
+        "BacsTransactionId":"3ec6f5b0-0e6b-a30b-7dc4-cdcc0751d448",
+        "BacsTransactionDescription":"CreditContraTransactionSettled",
+        "TransactionType":"DirectCredit",
+        "TransactionSource":"CardProcessor",
+        "SupplementaryData":[
+            {
+                "Name":"20",
+                "Value":"AJF9384DGSB48Sd"
+            },
+            {
+                "Name":"23B",
+                "Value":"CRED"
+            }
+        ],
+        "Iso20022XmlDocument": "<Document xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">PaymentMessageData</Document>"
+    },
+    "Nonce":949893874
+}
+```
+
+
+
+#### Example of a Transaction Settled v6 webhook with the Iso20022XmlDocument field value populated for an inbound credit CHAPS payment of pacs.008 type
+```json
+ {
+     "Type": "TransactionSettled",
+    "Version": 6,
+    "JsonPayload": "{\"Type\":\"TransactionSettled\",\"Version\":6,\"Payload\":{\"TransactionId\":\"fbb84b68-fb67-4532-bfd6-2b540e341a21\",\"Status\":\"Settled\",\"Scheme\":\"Chaps\",\"EndToEndTransactionId\":\"EndToEndId8\",\"Amount\":9.09,\"TimestampSettled\":\"2023-02-15T15:32:52.773Z\",\"TimestampCreated\":\"2023-02-15T15:32:52.437Z\",\"CurrencyCode\":\"GBP\",\"DebitCreditCode\":\"Credit\",\"Reference\":\"Reference17\",\"IsReturn\":false,\"Account\":{\"IBAN\":\"GB57CLRB04040100057354\",\"BBAN\":\"CLRB04040100057354\",\"OwnerName\":\"LEGROS - PARISIAN\",\"TransactionOwnerName\":\"Esmeralda Kuhlman\",\"InstitutionName\":\"ClearBank\"},\"CounterpartAccount\":{\"IBAN\":\"GB58CLRB04040009547509\",\"OwnerName\":\"GB58CLRB04040009547509\",\"TransactionOwnerName\":\"GB58CLRB04040009547509\",\"InstitutionName\":\"LOYDGB22XXX\"},\"ActualEndToEndTransactionId\":\"EndToEndId8\",\"SupplementaryData\":[{\"Name\":\"20\",\"Value\":\"InstrId7\"},{\"Name\":\"32A\",\"Value\":\"1909-11-12\\r\\n9.09\"},{\"Name\":\"33B\",\"Value\":\"\"},{\"Name\":\"50K\",\"Value\":\"DebtorName16\\r\\nGB58CLRB04040009547509\"},{\"Name\":\"52A\",\"Value\":\"LOYDGB22XXX\"},{\"Name\":\"57A\",\"Value\":\"CLRBGB20XXX\"},{\"Name\":\"59\",\"Value\":\"GB57CLRB04040100057354\"},{\"Name\":\"70\",\"Value\":\"EndToEndId8\\r\\nReference17\"},{\"Name\":\"71A\",\"Value\":\"DEBT\"},{\"Name\":\"111\",\"Value\":\"\"},{\"Name\":\"113\",\"Value\":\"\"},{\"Name\":\"121\",\"Value\":\"c2f6a588-8d1a-44cb-af87-4741bf2812a3\"}],\"Iso20022XmlDocument\":\"<Document xmlns:xsi=\\\"http://www.w3.org/2001/XMLSchema-instance\\\" xmlns:xsd=\\\"http://www.w3.org/2001/XMLSchema\\\" xmlns=\\\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\\\"><FIToFICstmrCdtTrf><GrpHdr><CreDtTm>1900-02-03T04:00:30+00:00</CreDtTm><NbOfTxs>1</NbOfTxs></GrpHdr><CdtTrfTxInf><PmtId><InstrId>InstrId7</InstrId><EndToEndId>EndToEndId8</EndToEndId><UETR>c2f6a588-8d1a-44cb-af87-4741bf2812a3</UETR></PmtId><IntrBkSttlmAmt Ccy=\\\"GBP\\\">9.09</IntrBkSttlmAmt><IntrBkSttlmDt>1909-11-12</IntrBkSttlmDt><ChrgBr>DEBT</ChrgBr><Dbtr><Nm>DebtorName16</Nm></Dbtr><DbtrAcct><Id><IBAN>GB58CLRB04040009547509</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId><BICFI>LOYDGB22XXX</BICFI></FinInstnId></DbtrAgt><CdtrAgt><FinInstnId><BICFI>CLRBGB20XXX</BICFI></FinInstnId></CdtrAgt><CdtrAcct><Id><IBAN>GB57CLRB04040100057354</IBAN></Id></CdtrAcct><RmtInf><Ustrd>Reference17</Ustrd></RmtInf></CdtTrfTxInf></FIToFICstmrCdtTrf></Document>\"},\"Nonce\":1772448763}",
+    "Nonce": 1772448763
+}                                 
  ```                
