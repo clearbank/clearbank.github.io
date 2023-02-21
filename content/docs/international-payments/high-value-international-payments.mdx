@@ -14,14 +14,14 @@ ClearBank accepts inbound and outbound Euro payments via the TARGET2 scheme only
 For more information about the countries that you can send high value payments to, currencies supported by ClearBank and currency cut-off times, please speak to your Relationship Manager.
 
 ### Post cut-off payments to be rescheduled
-Currently, if a multi-currency payment request is received outside of the payment window for a given currency, then an error response (406 – Not Acceptable) is returned. **This behaviour will change on 27th February 2023.** Instead, you will receive a success response (202 – Accepted). The success response will include a new response model containing an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed the following business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
+Currently, if a multi-currency payment request is received outside of the payment window for a given currency, then an error response (406 – Not Acceptable) is returned. **This behaviour will change on 28th February 2023.** Instead, you will receive a success response (202 – Accepted). The success response will include a new response model containing an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed the following business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
 
 If you would prefer not to have the payment processed the following day, you will be able to cancel the payment by using the new cancellation endpoints. The cancellation must be received no later than 1 hour prior to the opening of the next payment window. Note that to be able to cancel a payment, you must have specified a batch ID in the original payment request.
 
 * Use [DELETE /v1/mccy/payments/{batchId}](#cancel-batch-payments) to cancel a whole batch of payments
 *	Use [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](#cancel-a-single-payment) to cancel an individual payment
 
-*As these two endpoints are not yet live in production, it is possible that the details will change. This documentation will be updated to reflected any changes.*
+*As these two endpoints are not yet live in production, it is possible that the details will change. This documentation will be updated to reflect any changes.*
 
 <EndpointBlock
   type="post"
