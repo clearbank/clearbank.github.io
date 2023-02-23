@@ -4,7 +4,7 @@ version: 1
 webhook: true
 ---
 
-**This webhook confirms that the FX trade has been cancelled**
+**This webhook confirms that an FX trade has been cancelled. If a same-day trade fails (for example, due to  insufficient funds), you are immediately notified of the failure, after which you recieve this webhook informing you that ClearBank has cancelled the trade.**
 
 #### Request body
 
@@ -21,10 +21,10 @@ webhook: true
 | Element                 | Description                                                                                                                                                                                                               |
 |-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `SellAccountOwner`      | **Required**<br /> The name used to identify the legal owner of the account from which to debit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                         |
-| `SellAccountIban`       | **Required**<br /> International Bank Account Number associated with the sellAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                           |
+| `SellAccountIban`       | **Required**<br /> International Bank Account Number associated with the Sell Account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                           |
 | `BuyAccountOwner`       | **Required**<br /> The name used to identify the legal owner of the account in which to credit funds.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `140`<br />                                          |
-| `BuyAccountIban`        | **Required**<br /> International Bank Account Number associated with the buyAccount.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                            |
-| `Attestation`           | **Required**<br /> Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `1`<br />                      |
+| `BuyAccountIban`        | **Required**<br /> International Bank Account Number associated with the Buy Account.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                            |
+| `Attestation`           | **Required**<br /> Confirmation that the Sell Account and Buy Account are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `1`<br />                      |
 | `ValueDate`             | **Required**<br /> Settlement date for the FX trade.<br /> Type: `string`<br /> Format: `date-time`<br /> Min. Length: `1`<br />                                                                                          |
 | `InstructedAmount`      | **Required**<br /> Amount instructed to buy or sell.<br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                   |
 | `FixedSide`             | **Required**<br /> The side of the trade to be fixed. This can either be buy or sell.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `4`<br />                                                            |

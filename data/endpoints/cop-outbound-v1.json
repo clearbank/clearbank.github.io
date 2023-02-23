@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "ClearBank.CoP.Outbound.Api",
+    "title": "ClearBank.CoP.Outbound.Api 1.0",
     "description": "ClearBank API for CoP outbound requests",
     "version": "1.0.COP-Outbound"
   },
@@ -74,10 +74,13 @@
             }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden."
           },
           "422": {
-            "description": "Client Error"
+            "description": "CoP participant not found."
+          },
+          "424": {
+            "description": "Call to CoP participant resulted in an error."
           }
         }
       }
@@ -168,14 +171,17 @@
         "type": "object",
         "properties": {
           "SchemeName": {
+            "minLength": 1,
             "type": "string",
             "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
           },
           "LegalOwnerType": {
+            "minLength": 1,
             "type": "string",
             "description": "Nature of funds held in the account. Valid options are: Personal, Business."
           },
           "Identification": {
+            "minLength": 1,
             "type": "string",
             "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8-digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
           },
@@ -279,10 +285,12 @@
         "type": "object",
         "properties": {
           "SchemeName": {
+            "minLength": 1,
             "type": "string",
             "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
           },
           "Identification": {
+            "minLength": 1,
             "type": "string",
             "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8-digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
           }
@@ -328,6 +336,7 @@
             "readOnly": true
           },
           "MatchedBank": {
+            "minLength": 1,
             "type": "string",
             "description": "The name of the bank that the CoP check was performed with."
           }
