@@ -40,11 +40,12 @@ webhook: true
 | `BacsTransactionId`           | *(Optional)*<br /> Type: `GUID` <br />Max. length: `36`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `BacsTransactionDescription`  | *(Optional)*<br /> `CreditTransactionSettled`<br /> `DebitContraTransactionSettled`<br /> `DebitTransactionSettled`<br /> `CreditContraTransactionSettled`<br /> `DirectDebitReceivedIndemnityClaimSettled`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `TransactionType`             | *(Optional)* <br /> `DirectCredit`<br /> `DirectDebit`<br /> `DirectDebitIndemnityClaim`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `TransactionSource`           | *(Optional)*<br />/Origination of the Transaction :<br /> Max. length: `50` <br /> Example: `CardProcessor`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `TransactionSource`           | *(Optional)*<br />Origination of the Transaction :<br /> Max. length: `50` <br /> Example: `CardProcessor`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `SupplementaryData`           | *(Optional)*<br />Transaction supplementary data<br /> It is an array with the a `Name` and `Value`. <br /><br /> `Name`: Field Number/Name for an inbound CHAPS or FPS message. <br />Max. length: `33` <br /> `Name` options: `20`, `13C`, `23B`, `23E`, `26T`, `32A`, `33B`, `36`, `50a`, `51A`, `52a`, `53a`, `54a`, `55a`, `56a`, `57a`, `59a`, `70`, `71A`, `71F`, `71G`, `72`, `77B`, `SendingFpsInstitution`, `Currency`, `DateSent`, `PaymentType`, `TransactionReferenceNumber`, `Amount`, `OriginatingCreditInstitution`, `OriginatingCustomerAccountNumber`, `OriginatingCustomerAccountName`, `OriginatingCustomerAccountAddress`, `EndToEndReference`, `BeneficiaryCreditInstitution`, `BeneficiaryCustomerAccountNumber`, `BeneficiaryCustomerAccountName`, `BeneficiaryCustomerAccountAddress`, `ReturnedPaymentFpId`, `PaymentReturnCode`, `PaymentSubTypeCode`, `PurposeTransactionType`, `TypeOfAccountCode`, `NumericReference`, `ReferenceInformation`, `RemittanceInformation`, `RegulatoryReporting`, `OriginalCurrency`, `OriginalAmount`, `ExchangeRate`, `ChargingInformation`, `SubmittingMember`, `ReceivingMember`, `SettlementCycleId`, `FileId`, `ProcessedAsynchronously`, `AgencyAccountWithMember`, `AgencySortCodeWithMember` <br /><br />    `Value`<br /> Max. length: `500` <br /><br /> **There could be more than one Name and Value pair.**                                                                         |
+| `Iso20022XmlDocument`                       | *(Optional)*<br />Only appears if `Scheme` is Chaps and the message type received is in ISO 20022 (MX) format. Content of the Document node (payload) of the received payment message, to enable processing of ISO 20022 messages for CHAPS. This value can be very long. See below for examples. <br />Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `80000` <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `Nonce`                       | Cryptographically secure number generated by ClearBank® for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-#### Example transaction settled webhook request body
+#### Example transaction settled webhook request body for Transfer scheme type
 
 ```json
 {
@@ -93,8 +94,7 @@ webhook: true
                 "Name":"23B",
                 "Value":"CRED"
             }
-        ]
-    },
+        ],
     "Nonce":949893874
 }
 ```
@@ -103,6 +103,81 @@ webhook: true
 
 ```json
 {
-    "Nonce": 828803944
+    "Nonce": 949893874
+}
+```
+#### Example transaction settled webhook request body for CHAPS scheme type, Iso20022XmlDocument field present - populated for an inbound credit CHAPS payment of pacs.008 type
+
+```json
+{
+    "Type": "TransactionSettled",
+    "Version": 6,
+    "Payload": {
+        "TransactionId": "fbb84b68-fb67-4532-bfd6-2b540e341a21",
+        "Status": "Settled",
+        "Scheme": "Chaps",
+        "EndToEndTransactionId": "EndToEndId8",
+        "Amount": 9.09,
+        "TimestampSettled": "2023-02-15T15:32:52.773Z",
+        "TimestampCreated": "2023-02-15T15:32:52.437Z",
+        "CurrencyCode": "GBP",
+        "DebitCreditCode": "Credit",
+        "Reference": "Reference17",
+        "IsReturn": false,
+        "Account": {
+            "IBAN": "GB57CLRB04040100057354",
+            "BBAN": "CLRB04040100057354",
+            "OwnerName": "Fictional - Name",
+            "TransactionOwnerName": "Some Other Name",
+            "InstitutionName": "ClearBank"
+        },
+        "CounterpartAccount": {
+            "IBAN": "GB58CLRB04040009547509",
+            "OwnerName": "GB58CLRB04040009547509",
+            "TransactionOwnerName": "GB58CLRB04040009547509",
+            "InstitutionName": "LOYDGB22XXX"
+        },
+        "ActualEndToEndTransactionId": "EndToEndId8",
+        "SupplementaryData": [
+            {
+                "Name": "20",
+                "Value": "InstrId7"
+            },
+            {
+                "Name": "32A",
+                "Value": "1909-11-1\r\n9.09"
+            },
+            {
+                "Name": "33B",
+                "Value": ""
+            },
+            {
+                "Name": "50K",
+                "Value": "DebtorName16\r\nGB58CLRB04040009547509"
+            },
+            {
+                "Name": "52A",
+                "Value": "LOYDGB22XXX"
+            },
+            {
+                "Name": "57A",
+                "Value": "CLRBGB20XXX"
+            },
+            {
+                "Name": "59",
+                "Value": "GB57CLRB04040100057354"
+            },
+            {
+                "Name": "70",
+                "Value": "EndToEndId8\r\nReference17"
+            },
+            {
+                "Name": "71A",
+                "Value": "DEBT"
+            }
+        ],
+        "Iso20022XmlDocument": "<Document xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\"><FIToFICstmrCdtTrf><GrpHdr><CreDtTm>1900-02-03T04:00:30+00:00</CreDtTm><NbOfTxs>1</NbOfTxs></GrpHdr><CdtTrfTxInf><PmtId><InstrId>InstrId7</InstrId><EndToEndId>EndToEndId8</EndToEndId><UETR>c2f6a588-8d1a-44cb-af87-4741bf2812a3</UETR></PmtId><IntrBkSttlmAmt Ccy=\"GBP\">9.09</IntrBkSttlmAmt><IntrBkSttlmDt>1909-11-12</IntrBkSttlmDt><ChrgBr>DEBT</ChrgBr><Dbtr><Nm>DebtorName16</Nm></Dbtr><DbtrAcct><Id><IBAN>GB58CLRB04040009547509</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId><BICFI>LOYDGB22XXX</BICFI></FinInstnId></DbtrAgt><CdtrAgt><FinInstnId><BICFI>CLRBGB20XXX</BICFI></FinInstnId></CdtrAgt><CdtrAcct><Id><IBAN>GB57CLRB04040100057354</IBAN></Id></CdtrAcct><RmtInf><Ustrd>Reference17</Ustrd></RmtInf></CdtTrfTxInf></FIToFICstmrCdtTrf></Document>"
+    },
+    "Nonce": 1772448763
 }
 ```
