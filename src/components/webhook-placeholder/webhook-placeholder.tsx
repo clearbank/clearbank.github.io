@@ -1,6 +1,6 @@
 import React from 'react'
 import { MDXProvider } from '@mdx-js/react'
-import MDXRenderer from 'gatsby-plugin-mdx/mdx-renderer'
+import { MDXRenderer } from 'gatsby-plugin-mdx'
 import kebabCase from 'lodash.kebabcase'
 
 import customMDXComponents from './webhook-placeholder-mdx-components'

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Helmet from 'react-helmet'
-import MDXRenderer from 'gatsby-plugin-mdx/mdx-renderer'
+import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { Layout } from 'src/components'
 import GithubConnector from 'src/components/github-connector'
 import 'src/components/styles.css'

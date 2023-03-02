@@ -27,9 +27,9 @@ export const RequestDetails = styled.h4`
   text-transform: capitalize;
   font-family: 'Roboto Mono', monospace;
 `
-export const CopyButton = styled.button.attrs({
-  type: 'button'
-})`
+export const CopyButton = styled.button.attrs(props => ({
+  type: 'button',
+}))`
   padding: 0;
   border: none;
   font-family: inherit;

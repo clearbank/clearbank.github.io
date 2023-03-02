@@ -9,8 +9,7 @@ const ViewportContext = React.createContext('')
 const ViewportProvider = ({ children }: Types.ViewportProviderProps) => {
   const [currentTitle, setCurrentTitle] = useState('')
 
-  const pathname = useLocation().pathname
-  const hash = useLocation().hash
+  const { pathname, hash } = useLocation()
 
   useEffect(() => {
     const allSections: HTMLElement[] = Array.from(document.querySelectorAll('main .page'))
