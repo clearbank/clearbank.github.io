@@ -7,7 +7,7 @@ import Component from './webhook-placeholder'
 
 import * as Types from './webhook-placeholder.types'
 
-jest.mock('__mocks__/gatsby-plugin-mdx/mdx-renderer.js')
+jest.mock('__mocks__/gatsby-plugin-mdx')
 
 let component: any = null
 const defaultProps:Types.WebhookPlaceholderProps = {
