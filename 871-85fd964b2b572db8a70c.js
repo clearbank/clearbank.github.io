@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkclearbank_api_documentation=self.webpackChunkclearbank_api_documentation||[]).push([[871],{7871:function(e,t,a){a.r(t);var n=a(6706),s=a(1878),i=a(2576),r=a(7294),l=function(e){function t(){return(0,n.Z)(this,t),(0,s.Z)(this,e.apply(this,arguments))}return(0,i.Z)(t,e),t.prototype.render=function(){return r.createElement("div",{style:this.style(),className:this.className("el-tab-pane")},this.props.children)},t}(a(5757).wA);t.default=l,l.defaultProps={disabled:!1,closable:!1}}}]);
+//# sourceMappingURL=871-85fd964b2b572db8a70c.js.map
