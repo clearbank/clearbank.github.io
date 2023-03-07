@@ -17,7 +17,7 @@ module.exports = {
       to,
       ...rest
     }) =>
-      React.createElement("a", {
+      React.createElement('a', {
         ...rest,
         href: to,
       })
