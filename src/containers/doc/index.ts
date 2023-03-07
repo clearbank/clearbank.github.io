@@ -1,1 +1,1 @@
-export { default } from './doc'
+export { default, Head } from './doc'

@@ -1,9 +1,7 @@
 module.exports = {
   transform: {
-    '^.+\\.[jt]sx?$': '<rootDir>/jest-preprocess.js'
-    // '^.+\\.(md|mdx)$': 'jest-transformer-mdx'
+    '^.+\\.[jt]sx?$': '<rootDir>/jest-preprocess.js',
   },
-  transformIgnorePatterns: ['node_modules/(?!(gatsby|gatsby-plugin-mdx)/)'],
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss)$': `identity-obj-proxy`,
     '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
@@ -13,10 +11,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/**/*.spec.ts?(x)'],
   testPathIgnorePatterns: [`node_modules`, `\\.cache`, `<rootDir>.*/public`],
-  transformIgnorePatterns: [
-    `node_modules/(?!(gatsby)/)`,
-    `node_modules/(?!(gatsby-plugin-mdx)/)`
-  ],
+  transformIgnorePatterns: [`node_modules/(?!(gatsby|gatsby-script|gatsby-link|gatsby-plugin-mdx)/)`],
   globals: {
     NODE_ENV: 'test'
   },
@@ -30,9 +25,9 @@ module.exports = {
   globals: {
     __PATH_PREFIX__: ``
   },
-  testURL: `http://localhost`,
-  //setupFiles: [`<rootDir>/loadershim.js`],
+  testEnvironmentOptions: {
+    url: `http://localhost`,
+  },
   modulePaths: ['<rootDir>'],
-  // snapshotSerializers: ['<rootDir>/node_modules/enzyme-to-json/serializer']
   setupFilesAfterEnv: ['<rootDir>/setup-test-env.js']
 }

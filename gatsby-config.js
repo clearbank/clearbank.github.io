@@ -19,8 +19,6 @@ const plugins = [
   },
   'gatsby-plugin-emotion',
   'gatsby-plugin-typescript',
-  'gatsby-plugin-remove-trailing-slashes',
-  'gatsby-plugin-react-helmet',
   'gatsby-plugin-root-import',
   `gatsby-transformer-json`,
   {
@@ -116,5 +114,6 @@ module.exports = {
     headerLinks: config.header.links,
     siteUrl: config.gatsby.siteUrl
   },
+  trailingSlash: 'always',
   plugins: plugins
 }
