@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql } from 'gatsby'
 
-import Doc from 'src/containers/doc'
+import Doc, { Head as DocHead } from 'src/containers/doc'
 import CookieBanner from '../components/cookie-banner'
 
 import * as Styles from './pages.styles'
@@ -18,6 +18,7 @@ const Pages = (props: any) => {
 }
 
 export default Pages
+export const Head = DocHead;
 
 // TODO: Use fragments for these page queries
 // and share them between the doc template and this homepage
