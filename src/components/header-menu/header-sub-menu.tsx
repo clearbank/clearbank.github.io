@@ -1,9 +1,9 @@
 import React from 'react'
-import classnames from 'classnames'
 
 import * as Styles from './header-menu.styles'
+import * as Types from'./header-meny.types'
 
-const HeaderSubMenu = ({ item, isActive }) => {
+const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) => {
     return (
       <Styles.Container>
         <Styles.TitleContainer>
@@ -28,11 +28,10 @@ const HeaderSubMenu = ({ item, isActive }) => {
               <li>
                 <Styles.ListItem
                   to={link}
-                  className={classnames({
-                    active: false,
-                  })}
                   key={subMenuItem.node.fields.id}
-                >{subMenuItem.node.fields.title}</Styles.ListItem>
+                >
+                  {subMenuItem.node.fields.title}
+                </Styles.ListItem>
               </li>
             )
           })}

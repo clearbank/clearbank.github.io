@@ -2,3 +2,51 @@
 title: "CHAPS"
 order: 5
 ---
+import EndpointBlock from "src/components/endpoint-block"
+
+## CHAPS
+
+When sending payments via the ClearBank API, CHAPS are initiated via the POST /{vn}/Payments/CHAPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
+Please refer to [Webhooks](/docs/webhooks) for more information.
+
+ClearBank accounts support inbound and outbound CHAPS payments. Being that CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
+However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+
+**CHAPS validation**
+
+| Element     | Type   | Validation                                                                      | Description                                                                                                                                                                                           |
+|-------------|--------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: `^[a-zA-Z0-9\/-?:().,'+\s]*$` | **Also known as Account Holder Name** <br /> This the Creditor’s name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
+| `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: `^[a-zA-Z0-9\/-?:().,'+\s]*$` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information.  |
+
+Pattern: The character set has been extended to include all SWIFT allowed characters. Alphanumeric (uppercase and lowercase) and special characters*****.<br />
+*Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **'** (apostrophe), **+** (plus sign), &nbsp; (blank space).
+
+This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
+
+<EndpointBlock
+    type="post"
+    title="Send a CHAPS payment"
+    endpoints={[
+    {
+        path: "/v3/Payments/CHAPS",
+        version: "3.0.Chaps-payment",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    },
+    {
+        path: "/v2/Payments/CHAPS",
+        version: "2.0",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    }
+    ]}
+/>

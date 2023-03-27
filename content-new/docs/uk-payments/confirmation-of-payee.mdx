@@ -2,3 +2,98 @@
 title: "Confirmation Of Payee (CoP)"
 order: 6
 ---
+
+## Overview
+
+Confirmation of Payee (CoP) gives you greater assurance that you are sending payments to the intended beneficiary. It not only helps in preventing accidental, misdirected payments but also reduces the risk associated with Authorised Push Payment (APP) fraud. CoP is a scheme agnostic, peer-to-peer messaging service between accredited participants and sits completely outside of the payment journey. A CoP check can be made prior to setting up a payee or making a payment.
+
+ClearBank is a CoP participant and will provide this account name checking service to those customers who use ClearBank sort codes linked to our bank code.
+
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as CONSTANTS from "./confirmation-of-payee.constants"
+
+## CoP respond (inbound)
+
+Responding to a CoP request from an external participant requires us to complete a fuzzy matching check on the account in question. To do so successfully, we need the following account information:
+- The name of the legal owner of the account
+-	Nature of funds held in the account: Personal or Business
+-	Operating nature of the account: Single or Joint
+
+For your real and virtual accounts to be CoP-ready, you will need to use the following PATCH endpoints to update your accounts:  
+-	[PATCH /v1/Accounts/{accountId}](/docs/accounts/#amend-the-properties-of-an-existing-account)
+-	[PATCH /v1/Accounts/{accountId}/Virtual/{virtualAccountId}](/docs/accounts/#amend-the-properties-of-an-existing-virtual-account)
+
+If you have chosen to use the ClearBank CoP service, all your real and virtual accounts will be opted in by default, at the time of account creation. 
+
+For a real or virtual account to be opted out from using this service, you can use the following PUT endpoints:
+-	[PUT/ v1/Cop/opt/accounts/{accountId}](#update-account-to-opt-out-from-the-clearbank-cop-service)
+-	[PUT/ v1/Cop/opt/accounts/{accountId}/virtual/{VirtualAccountId}](#update-virtual-account-to-opt-out-from-the-clearbank-cop-service)
+
+Further information about opting out from using our CoP service along with your responsibilities can be found in our Confirmation of Payee (CoP) Operating Guide. This document can be found in the Reference Documents section in the Knowledge Centre.
+
+<EndpointBlock
+  type="put"
+  title="Update account to opt out from the ClearBank CoP service"
+  description={CONSTANTS.postUpdateAccountToOptOutOfClearBankServicesDescription}
+  endpoints={[
+    {
+      path: "/v1/Cop/opt/accounts/{accountId}",
+      version: "1.0.COP"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Update virtual account to opt out from the ClearBank CoP service"
+  description={CONSTANTS.postUpdateVirtualAccountToOptOutOfClearBankServicesDescription}
+  endpoints={[
+    {
+      path: "/v1/Cop/opt/accounts/{accountId}/virtual/{virtualAccountId}",
+      version: "1.0.COP"
+    }
+  ]}
+/>
+
+
+## CoP request (outbound)
+
+Sending a CoP request to an external participant requires us to pass the request to the participant so that they can complete a fuzzy matching check on the account in question. 
+To be able to send a CoP request (outbound) to an external participant, you will need to use the following POST endpoint so that the exact name registered with the payee’s account can be confirmed:
+- [POST /open-banking/outbound/v1/name-verification](#confirm-the-exact-name-registered-with-the-payees-account)
+
+Once confirmed, we pass the result of the matching check back to you which you can then expose to your customer. Pay.UK have provided a messaging standard for you to follow. Further information about the messaging standard along with your responsibilities can be found in our Confirmation of Payee (CoP) Operating Guide. This document can be found in the Reference Documents section in the Knowledge Centre.
+
+### CoP requests that require secondary reference data (SRD)
+
+CoP checks are typically carried out on accounts that are addressable by sort code and account number, but can also be done for accounts that are addressable through secondary reference data (SRD). SRD-level checks are performed against the underlying account that is identified by the SRD rather than the name held against the sort code and account number. If an account requires SRD and it is not provided, the CoP check cannot be carried out.
+
+To check whether SRD will be required, use:
+- [POST /open-banking/outbound/v1/srd/validate](#confirm-whether-a-sort-code-account-number-requires-srd-with-cop-requests)
+
+If the CoP Check requires SRD, then it must be entered in the SecondaryIdentification field in the CoP request to enable the CoP responder to identify the account.
+
+Supporting SRD-validated CoP checks is mandatory, however the integration that is required to support the SRD Validate endpoint, which is called ahead of the CoP check being sent is optional. Although not mandatory, this will inform your customers as to whether they need the secondary data ahead of sending the CoP check, making for a more streamlined and informed journey.
+
+<EndpointBlock
+  type="post"
+  title="Confirm the exact name registered with the payee’s account"
+  endpoints={[
+    {
+      path: "/open-banking/outbound/v1/name-verification",
+      version: "1.0.COP-Outbound",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Confirm whether a sort code/account number requires SRD with CoP requests"
+  endpoints={[
+    {
+      path: "/open-banking/outbound/v1/srd/validate",
+      version: "1.0.COP-Outbound",
+    }
+  ]}
+/>

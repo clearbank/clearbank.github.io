@@ -6,7 +6,6 @@ import mdxComponents from '../mdxComponents'
 import Header from '../header'
 import Footer from '../footer'
 
-import Sidebar from 'src/components/sidebar'
 import PageMenu from 'src/components/pageMenu'
 import Pagination from 'src/components/pagination'
 import BackToTop from 'src/components/back-to-top'
@@ -42,16 +41,6 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
             />
             <HeaderMenu items={pageContext.menuItems} currentPathname={pathname}/>
           </Styles.HeaderWrapper>
-          {/* <Styles.LeftSidebarWrapper id='navigation' className='hiddenMobile'>
-            <>
-              {!!menuItems && (
-                <Sidebar
-                  menuItems={menuItems}
-                  currentPageURL={`${pathname}${hash}`}
-                />
-              )}
-            </>
-          </Styles.LeftSidebarWrapper> */}
           <Styles.ContentWrapper>
             <Styles.InnerContentWrapper>
               {children}
