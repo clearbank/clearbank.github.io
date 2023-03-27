@@ -6,14 +6,14 @@ module.exports = async ({ graphql, actions }) => {
 
   createRedirect({
     fromPath: `/`,
-    toPath: `/docs/introduction`,
+    toPath: `/docs/api`,
     redirectInBrowser: true,
     isPermanent: true
   })
 
   createRedirect({
     fromPath: `/docs`,
-    toPath: `/docs/introduction`,
+    toPath: `/docs/api`,
     redirectInBrowser: true,
     isPermanent: true
   })
