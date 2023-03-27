@@ -10,6 +10,7 @@ import Sidebar from 'src/components/sidebar'
 import PageMenu from 'src/components/pageMenu'
 import Pagination from 'src/components/pagination'
 import BackToTop from 'src/components/back-to-top'
+import HeaderMenu from 'src/components/header-menu'
 
 import * as Styles from './layout.styles'
 import * as Types from './layout.types'
@@ -39,12 +40,10 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
               menuItems={pageContext.menuItems}
               currentPageURL={`${pathname}${hash}`}
             />
+            <HeaderMenu items={pageContext.menuItems} currentPathname={pathname}/>
           </Styles.HeaderWrapper>
-          <Styles.LeftSidebarWrapper id='navigation' className='hiddenMobile'>
+          {/* <Styles.LeftSidebarWrapper id='navigation' className='hiddenMobile'>
             <>
-              {/* I'm not sure why we have to do a check here for pageContext.menuItems && */}
-              {/* But not having it breaks the build (not development) */}
-              {/* I think it must do two runs and doesn't have it the first time around */}
               {!!menuItems && (
                 <Sidebar
                   menuItems={menuItems}
@@ -52,7 +51,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
                 />
               )}
             </>
-          </Styles.LeftSidebarWrapper>
+          </Styles.LeftSidebarWrapper> */}
           <Styles.ContentWrapper>
             <Styles.InnerContentWrapper>
               {children}

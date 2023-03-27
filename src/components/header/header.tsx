@@ -28,7 +28,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ({ menuItems, current
     <div className='header'>
       <Styles.Container>
         <Styles.LogoWrapper to='/'>
-          <Logo />
+          <Logo inverted />
         </Styles.LogoWrapper>
         <Styles.BurgerIconWrapper isMenuOpen={showMobileNav} data-cy='burger-menu'>
           <Styles.Button onClick={toggleMobileNav}>

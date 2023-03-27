@@ -25,7 +25,7 @@ const plugins = [
     resolve: 'gatsby-source-filesystem',
     options: {
       name: 'docs',
-      path: `${__dirname}/content/`
+      path: `${__dirname}/content-new/`
     }
   },
   {
@@ -114,6 +114,6 @@ module.exports = {
     headerLinks: config.header.links,
     siteUrl: config.gatsby.siteUrl
   },
-  trailingSlash: 'always',
+  trailingSlash: 'never',
   plugins: plugins
 }

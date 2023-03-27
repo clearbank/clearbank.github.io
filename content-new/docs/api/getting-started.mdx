@@ -1,0 +1,331 @@
+---
+title: "Getting started"
+order: 2
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+## Get connected
+
+Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
+This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
+You can find information about how to generate these in our [introduction section](/docs/introduction).
+
+## Use endpoints
+
+### Common Parameters
+
+We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header.
+
+`GET` requests have an `Authorization` header.
+
+NON-GET requests such as `POST`, `PATCH` and `DELETE` have an `Authorization` header.
+
+import ParameterDetails from 'src/components/parameter-details'
+import parameters from './parameters.json'
+
+<ParameterDetails parameter={parameters.authorization} />
+<ParameterDetails parameter={parameters.digitalSignature} />
+<ParameterDetails parameter={parameters.xRequestId} />
+<ParameterDetails parameter={parameters.xCorrelationId} />
+
+### Authenticate your API calls
+
+We use your API token to authenticate your requests and allow you to securely access protected resources.
+
+The base URL for your environment is either:
+- Simulation `https://institution-api-sim.clearbank.co.uk/`
+- Production `https://institution-api.clearbank.co.uk/`
+
+Your API token should be included in your HTTP `Authorization` header. Please refer to [Common Parameters](#common-parameters]) for more information.
+
+This example request shows the API token in the `Authorization` , `DigitalSignature` and `X-Request-Id` header.
+
+``` json
+curl -v -POST https://institution-api-sim.clearbank.co.uk/v1/Test \
+  -H “Authorization: Bearer <<your api token>>”
+  -H “DigitalSignature: <<digitalsignature>>”
+  -H “X-Request-Id: <<X-request-ID>>”      
+  -d ‘{ "body": "hello world!" }’      
+```
+
+The response shows results from the test call
+``` json
+{
+	"Message": "hello world!"
+}
+```
+
+To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank® (if you are subscribed to it).
+We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Test Webhooks](/webhooks/) for more information.
+
+#### TEST Endpoints
+
+<EndpointBlock
+  type="get"
+  title="Test"
+  endpoints={[
+    {
+      path: "/v1/Test",
+      version: "1.0",
+      title: "GET Accounts",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Test"
+  endpoints={[
+    {
+      path: "/v1/Test",
+      version: "1.0",
+      title: "POST Test",
+    }
+  ]}
+/>
+
+### Query Parameters
+
+For most of our `GET` requests, one or more query parameters in the request URL can be used to specify the number of returned results and the number of pages returned.
+
+| Parameter    | Type | Description                                                                                                 |
+|--------------|------|-------------------------------------------------------------------------------------------------------------|
+| `pageNumber` | int  | The page number to control returned results into manageable sets. Default if not supplied: 1 `pageNumber=1` |
+| `pageSize`   | int  | The page size to control returned results into manageable sets. Default if not supplied: 50 `pageSize=50`   |
+
+### HTTP Status Codes
+
+ClearBank® requests return a HTTP status code to indicate the success or failure of a request. For successful requests, we return a HTTP `2XX` status code. For failed requests, we return a HTTP `4XX` or `5XX` status code. Some endpoints return JSON response bodies that include errors and additional properties.
+
+
+| Status Code | Description                                                                                                                                         |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `200`       | Success!                                                                                                                                            |
+| `201`       | Success!                                                                                                                                            |
+| `202`       | Request received successfully and is being processed                                                                                               |
+| `400`       | Bad request. Something went wrong with the request. The response should include the reason why the request has failed                               |
+| `403`       | Forbidden. Your API token does not have permissions to perform the request                                                                          |
+| `404`       | Not found. The resource you are looking for cannot be found                                                                                         |
+| `409`       | Conflict. A request conflict with the current state of the server
+| `429`       | Too many requests. You have sent too many requests in a given time ("rate limiting")                                                                                     |
+| `500`       | Internal server error                                                                                                                           |
+| `503`       | Server error. Service unavailable                                                                                                                   |
+
+
+#### 5xx status codes
+If you receive a 5xx error code, you should retry your request as these are service errors. A request that returns these errors may, in exceptional circumstances, result in being processed regardless. Following which, you will receive a notification (webhook) delivered to you as expected. 
+
+To avoid any duplication, always retry all such requests with exactly the same request Id header and payload. If the initial request is successful, the retry request will trigger a notification (HTTP response or webhook) to confirm that it has not been processed as it was identified as a duplicate.
+
+#### Example of a response containing detailed errors
+
+```json
+{
+  "errors": {
+    "additionalProp1": [
+      "string"
+    ],
+    "additionalProp2": [
+      "string"
+    ],
+    "additionalProp3": [
+      "string"
+    ]
+  },
+  "type": "string",
+  "title": "string",
+  "status": 0,
+  "detail": "string",
+  "instance": "string"
+}
+```
+
+### HAL Links
+
+We use HAL (Hypertext Application Language) to hyperlink between resources in our API.
+
+Each HAL hyperlink contains:
+
+| Parameter   | Type      | Required | Description                                                                                                               |
+|-------------|-----------|----------|---------------------------------------------------------------------------------------------------------------------------|
+| `name`      | `string`  | Required | The named link type                                                                                                       |
+| `href`      | `string`  | Required | URI to be used                                                                                                            |
+| `templated` | `boolean` |          | Specified as `true` if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to `false` |
+
+#### Example HAL Links
+```json
+{
+    "accounts": [
+        {
+            "id": "9140d28b-58d4-4e14-a5fe-43a655c82162",
+            "name": "Gen Seg Acc Wsale - TradingBankEnd2End",
+            "type": "CACC",
+            "currency": [
+                "GBP"
+            ],
+            "balances": [
+                {
+                    "name": "Gen Seg Acc Wsale - TradingBankEnd2End",
+                    "amount": 2000000.00,
+                    "currency": "GBP",
+                    "status": "VALU"
+                }
+            ],
+            "iban": "GB90CLRB04190000001107",
+            "bban": "CLRB04190000001107"
+        },
+        {
+            "id": "9b3dd95c-92a0-4c22-8314-da97906f4a2b",
+            "name": "Mandated Minimum Balance Account",
+            "type": "CACC",
+            "currency": [
+                "GBP"
+            ],
+            "balances": [
+                {
+                    "name": "Mandated Minimum Balance Account",
+                    "amount": 2000000.00,
+                    "currency": "GBP",
+                    "status": "VALU"
+                }
+            ],
+            "iban": "GB57CLRB04190000001119",
+            "bban": "CLRB04190000001119"
+        },
+        {
+            "id": "0392ffce-fd15-47a6-824f-708e0bee007b",
+            "name": "Operating Account",
+            "type": "CACC",
+            "currency": [
+                "GBP"
+            ],
+            "balances": [
+                {
+                    "name": "Operating Account",
+                    "amount": 1999992.00,
+                    "currency": "GBP",
+                    "status": "VALU"
+                }
+            ],
+            "iban": "GB95CLRB04190000001114",
+            "bban": "CLRB04190000001114"
+        }
+    ],
+    "halLinks": [
+        {
+            "name": "self",
+            "href": "https://institution-sim.clearbank.co.uk/v1/Accounts",
+            "templated": false
+        },
+        {
+            "name": "Account",
+            "href": "https://institution-sim.clearbank.co.uk/v1/Accounts/{accountId}",
+            "templated": true
+        },
+        {
+            "name": "Transactions",
+            "href": "https://blue-institution-sim.clearbank.co.uk/v1/Accounts/{accountId}/Transactions",
+            "templated": true
+        },
+        {
+            "name": "Mandates",
+            "href": "https://blue-institution-sim.clearbank.co.uk/v1/Accounts/{accountId}/Mandates",
+            "templated": true
+        }
+    ]
+}
+```
+
+## Subscribe to webhooks
+
+### Overview
+
+In response to some events, we generate and send out a webhook message to your defined URL.
+
+> All ClearBank webhooks consist of a `DigitalSignature`, `Type`,`Version`,`Payload` and `Nonce`. `Payload` parameters vary depending on the webhook.
+Webhook responses contain a 200 HTTP status code which includes a `Nonce` number in the body and your `DigitalSignature`.
+
+### Anatomy of a webhook
+
+| Element          | Type          | Description                                                                                              |
+| ---------------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| `DigitalSignature` | string        | ClearBank®'s Digital Signature                                                                           |
+| `Type`             | string        | The type of the event                                                                                    |
+| `Version`          | int           | The webhook version                                                                                      |
+| `Nonce`            | int           | Cryptographically secure number generated by ClearBank® for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication |
+| `Payload`          | array[object] | Object which contains information related to the webhook |
+
+### Response
+
+| Element          | Type          | Description                                                                 |
+| ---------------- | ------------- | --------------------------------------------------------------------------- |
+| `DigitalSignature` | string      | Signed hash of the body of the request. The hash signed by your private key |
+| `Nonce`            | int         | The value that you receive in the webhook                                   |
+| `200 `             | int         | HTTP response status code                                                   |
+
+### Responding to a webhook
+
+The webhook sent by ClearBank® acts as a verification mechanism.
+You verify that it is ClearBank® that has sent you the webhook and subsequently, ClearBank® needs to verify that you have successfully received the webhook (based on your response acknowledging receipt).
+This verification occurs when you return a `200` HTTP response, which includes the `Nonce` number in the `response body`  and your `DigitalSignature`.
+If your response is invalid, we will consider it as a failed webhook.
+ClearBank® will send the webhook every 15 minutes for 24 hours unless a successful response is returned by you.
+
+To verify the integrity of the webhook received from ClearBank®:
+- Download a Public Key that is specific to your institution by clicking the **Download Public Key** button on the Webhook Management page of the Institution portal.
+- Hash the request body using `SHA 256`
+- Convert the `DigitalSignature` Request Header value from `Base64` encoded string into the byte array
+- Verify the signature using the `RSA` algorithm
+
+To create the webhook digital signature:
+- Take the Nonce number from the webhook and place it in the body of the response (e.g. `{"nonce": <value>}`)
+- Hash the response body using `SHA 256`
+- Sign the hash with your `Private Key` and attach the signed hash as `Base64` encoded in the `DigitalSignature` Response Header
+
+> Your Private Key needs to correspond to a Public Key which has been used to create a Certificate Signing Request (CSR). Please refer to [creating your authentication profile](/#creating-your-authentication-profile) for more information.
+
+Example HTTP request:
+```
+POST http://yourdomain.com/sample/webhook HTTP/1.1
+Content-Type: application/json
+Content-Length: 72
+Digitalsignature: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+X-Request-Id: f0309d95-4f68-4ecd-9c8d-b2d08d9fedd8
+
+{"Type":"FITestEvent","Version":1,"Payload":"test me","Nonce":1448545215}
+```
+
+Example HTTP response:
+```
+HTTP/1.1 200 OK
+Digitalsignature: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Content-Type: application/json
+
+{
+	"Nonce": 1448545215
+}
+```
+
+### Setting up and testing webhook listener URLs
+
+You can create one webhook listener for all events or separate webhook listeners specific to an event.
+In this example, you will setup an `FITestEvent` webhook URL, which you can test against the [`TEST POST` endpoint](#test-endpoints).
+
+To manage your webhook definitions and set your webhook listener URLs for each event:
+- Log in to the Institution Portal. More information about accessing the portal can be found [here](/#what-you-need-to-get-started).
+- From the menu, select **Institution** > **Webhook Management**.
+![alt text](/assets/images/webhook-management-page.png "webhook Management page")
+- Search for **Test webhook** and click the **Edit button**.
+- Enter the **URL** you want to define as your webhook listener for this webhook and set the webhook status to **Enabled**.
+- Click Save to successfully setup the webhook listern URL.
+- To test the webhook, click the **Test button**.
+- Enter a test message in the Test webhook window for example, ‘Hello World’ and click **Send**.
+
+You should receive a `FITestEvent webhook` to your nominated URL and it should contain the test message in the body.
+
+**You must not include any sensitive information (such as API keys) in your webhook URLs.**
+
+The range of public IP addresses to support your interaction with ClearBank® webhooks are:
+- Simulation Public IP address range: `51.145.122.16/28`
+- Production Public IP address range: `51.145.122.32/28`

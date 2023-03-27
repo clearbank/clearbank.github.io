@@ -77,7 +77,7 @@ export const widths: Types.Widths = {
 }
 
 export const heights: Types.Heights = {
-  header: '60px'
+  header: '160px'
 }
 
 export const maxWidths: Types.MaxWidths = {
@@ -183,6 +183,7 @@ export const colors = {
   blackSqueeze: '#f3fbfb', // V2
   concrete: '#F2F2F2', // V2
   alto: '#E0E0E0', // V2
+  wedgewoodapprox: '#478E96',
 
   // New branding colours V2 - TODO: these color vars need sorting out
   billionaireBlue: '#000000',

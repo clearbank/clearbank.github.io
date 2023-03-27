@@ -32,9 +32,9 @@ export const Wrapper = styled.div`
 
   @media screen and (min-width: ${breakpoints.large}) {
     grid-template-areas:
-      'header      header  header'
-      'sidebarLeft content sidebarRight'
-      'sidebarLeft footer  footer';
+      'header header  header'
+      'content content sidebarRight'
+      'footer footer  footer';
     grid-template-rows:
       ${heights.header}
       1fr
@@ -61,7 +61,7 @@ export const HeaderWrapper = styled.header`
   position: fixed;
   left: 0;
   right: 0;
-  background: ${colors.downriver};
+  background: ${colors.brandLight};
   z-index: 1;
 `
 
