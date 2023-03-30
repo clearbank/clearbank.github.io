@@ -9,8 +9,8 @@ import * as Types from'./header-meny.types'
 
 const isMenuActive = (item: Types.IMenu) => {
   const currentPath = hasWindow() ? window.location.pathname : ''
-  
-  return currentPath === item.menuItem.slug
+
+  return currentPath.startsWith(item.menuItem.slug) 
 }
 
 const HeaderMenu: React.FC<Types.IHeaderMenuProps> = ({ items }) => {

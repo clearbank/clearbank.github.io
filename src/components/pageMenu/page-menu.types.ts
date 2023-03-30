@@ -1,8 +1,9 @@
 export interface PageMenuProps {
-  data: any
+  headings: any
 }
 
 export interface PageSubmenuProps {
   submenu: any
   activeElementIds: any
+  target: any
 }

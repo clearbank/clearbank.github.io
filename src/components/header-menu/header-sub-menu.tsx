@@ -21,15 +21,11 @@ const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) 
         </Styles.TitleContainer>
         <Styles.List>
           {item.subMenuItems?.map(subMenuItem => {
-            const [hash] = subMenuItem.node.fields.slug.match(new RegExp(/[^\/]+$/))
-            const link = `${item.menuItem.slug}#${hash}`
+            const link = subMenuItem.node.fields.slug
 
             return (
-              <li>
-                <Styles.ListItem
-                  to={link}
-                  key={subMenuItem.node.fields.id}
-                >
+              <li key={subMenuItem.node.fields.id}>
+                <Styles.ListItem to={link}>
                   {subMenuItem.node.fields.title}
                 </Styles.ListItem>
               </li>

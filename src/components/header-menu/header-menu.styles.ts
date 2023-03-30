@@ -41,7 +41,7 @@ export const Underline = styled.div`
   border-radius: 10px;
 `
 
-export const Title = styled(LinkBase)`
+export const Title = styled(LinkBase)<{ isActive?: boolean }>`
   line-height: 38px;
   font-size: 25px;
   font-weight: ${props => props.isActive ? 500 : 400};

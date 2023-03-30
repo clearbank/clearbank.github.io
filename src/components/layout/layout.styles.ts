@@ -65,19 +65,6 @@ export const HeaderWrapper = styled.header`
   z-index: 1;
 `
 
-export const LeftSidebarWrapper = styled.nav`
-  grid-area: sidebarLeft;
-  -ms-grid-column: 1;
-  -ms-grid-row-span: 2;
-  -ms-grid-row: 2;
-  background: ${colors.brandGrayLightest};
-  display: none;
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    display: block;
-  }
-`
-
 export const ContentWrapper = styled.article`
   grid-area: content;
   -ms-grid-column: 2;
@@ -117,24 +104,10 @@ export const ContentWrapper = styled.article`
 `
 
 export const RightSidebarWrapper = styled.aside`
+  max-width: 380px;
   grid-area: sidebarRight;
   -ms-grid-column: 3;
   -ms-grid-row: 2;
-  padding: 60px 20px 40px 20px;
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    padding: 80px 60px 40px 60px;
-  }
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: 0 60px 0 0;
-    min-width: ${widths.sidebarRight}; // prevent sidebar-collapse on pages without sidebar
-    box-sizing: content-box; // add padding to min-width
-  }
-
-  @media screen and (min-width: ${breakpoints.xLarge}) {
-    padding: 0 100px 0 0;
-  }
 `
 export const InnerContentWrapper = styled.main`
   flex: 1 1 auto;

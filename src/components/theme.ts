@@ -70,8 +70,6 @@ export const widths: Types.Widths = {
   logo: '244px',
   gutter: '20px',
   container: '1400px',
-  sidebarLeft: '270px',
-  sidebarRight: '200px',
   content: '1200px',
   dropdown: '270px'
 }
@@ -184,6 +182,7 @@ export const colors = {
   concrete: '#F2F2F2', // V2
   alto: '#E0E0E0', // V2
   wedgewoodapprox: '#478E96',
+  boulderapprox: '#747474',
 
   // New branding colours V2 - TODO: these color vars need sorting out
   billionaireBlue: '#000000',

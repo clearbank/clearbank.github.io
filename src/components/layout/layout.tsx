@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import ThemeProvider from '../themeProvider'
 import mdxComponents from '../mdxComponents'
@@ -10,6 +10,8 @@ import PageMenu from 'src/components/pageMenu'
 import Pagination from 'src/components/pagination'
 import BackToTop from 'src/components/back-to-top'
 import HeaderMenu from 'src/components/header-menu'
+
+import { hasWindow } from 'src/utils/browser.services'
 
 import * as Styles from './layout.styles'
 import * as Types from './layout.types'
@@ -23,12 +25,28 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   const { pathname, hash } = location
   const { menuItems } = pageContext
 
+  // const headings = useMemo(() => {
+    // if (!hasWindow()) {
+    //   return [];
+    // }
+
+    const mdxTitles: HTMLElement[] = Array.from(document.querySelectorAll('.page .page-menu-entry'))
+
+    const headings = mdxTitles
+      .map(mdxTitle => ({
+        tag: mdxTitle.tagName,
+        parent: mdxTitle.closest('.page').id,
+        title: mdxTitle.textContent,
+        id: mdxTitle.id
+      }))
+      .filter((entry: any) => entry.id !== '')
+  // }, [data])
+
   if (!data || !data.mdx || !data.mdx.frontmatter) {
     return null
   }
 
   const { metaTitle: pageTitle, showPageMenu } = data.mdx.frontmatter
-  const showRightSidebar = showPageMenu === null ? true : showPageMenu !== false
 
   return (
     <ThemeProvider location={location}>
@@ -39,7 +57,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
               menuItems={pageContext.menuItems}
               currentPageURL={`${pathname}${hash}`}
             />
-            <HeaderMenu items={pageContext.menuItems} currentPathname={pathname}/>
+            <HeaderMenu items={pageContext.menuItems} />
           </Styles.HeaderWrapper>
           <Styles.ContentWrapper>
             <Styles.InnerContentWrapper>
@@ -48,11 +66,11 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
             </Styles.InnerContentWrapper>
           </Styles.ContentWrapper>
           <Styles.RightSidebarWrapper>
-            {showRightSidebar && (
+            {showPageMenu && (
               <>
                 {/* PageHeader only visible on small and medium viewport */}
                 <Styles.PageHeader>{pageTitle}</Styles.PageHeader>
-                <PageMenu data={data} />
+                <PageMenu headings={headings} />
               </>
             )}
           </Styles.RightSidebarWrapper>
