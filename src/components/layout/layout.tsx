@@ -11,8 +11,6 @@ import Pagination from 'src/components/pagination'
 import BackToTop from 'src/components/back-to-top'
 import HeaderMenu from 'src/components/header-menu'
 
-import { hasWindow } from 'src/utils/browser.services'
-
 import * as Styles from './layout.styles'
 import * as Types from './layout.types'
 
@@ -25,23 +23,6 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   const { pathname, hash } = location
   const { menuItems } = pageContext
 
-  // const headings = useMemo(() => {
-    // if (!hasWindow()) {
-    //   return [];
-    // }
-
-    const mdxTitles: HTMLElement[] = Array.from(document.querySelectorAll('.page .page-menu-entry'))
-
-    const headings = mdxTitles
-      .map(mdxTitle => ({
-        tag: mdxTitle.tagName,
-        parent: mdxTitle.closest('.page').id,
-        title: mdxTitle.textContent,
-        id: mdxTitle.id
-      }))
-      .filter((entry: any) => entry.id !== '')
-  // }, [data])
-
   if (!data || !data.mdx || !data.mdx.frontmatter) {
     return null
   }
@@ -53,10 +34,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
       <MDXProvider components={mdxComponents}>
         <Styles.Wrapper>
           <Styles.HeaderWrapper>
-            <Header
-              menuItems={pageContext.menuItems}
-              currentPageURL={`${pathname}${hash}`}
-            />
+            <Header />
             <HeaderMenu items={pageContext.menuItems} />
           </Styles.HeaderWrapper>
           <Styles.ContentWrapper>
@@ -70,12 +48,12 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
               <>
                 {/* PageHeader only visible on small and medium viewport */}
                 <Styles.PageHeader>{pageTitle}</Styles.PageHeader>
-                <PageMenu headings={headings} />
+                <PageMenu />
               </>
             )}
           </Styles.RightSidebarWrapper>
           <Styles.FooterWrapper>
-            <Footer />
+            <Footer items={pageContext.menuItems} />
           </Styles.FooterWrapper>
           <BackToTop />
         </Styles.Wrapper>

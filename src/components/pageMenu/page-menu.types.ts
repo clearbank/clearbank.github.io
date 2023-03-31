@@ -1,5 +1,4 @@
 export interface PageMenuProps {
-  headings: any
 }
 
 export interface PageSubmenuProps {

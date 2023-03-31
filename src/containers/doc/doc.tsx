@@ -30,7 +30,7 @@ export default function Doc(props: any) {
         {data.pageContent.edges.map(({ node }, index: number) => {
           const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
 
-           return (
+          return (
             <div key={node.id}>
               <MDXRenderer>{node.body}</MDXRenderer>
               <Styles.ShareContainer isFirstEntry={index === 0}>

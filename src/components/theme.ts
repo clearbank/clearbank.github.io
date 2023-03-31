@@ -183,6 +183,7 @@ export const colors = {
   alto: '#E0E0E0', // V2
   wedgewoodapprox: '#478E96',
   boulderapprox: '#747474',
+  mischkaapprox: '#D4D2E3',
 
   // New branding colours V2 - TODO: these color vars need sorting out
   billionaireBlue: '#000000',

@@ -4,15 +4,10 @@ import { colors, widths, breakpoints } from 'src/components/theme'
 
 export const Container = styled.div`
   color: ${colors.brandLight};
+  height: 100%;
   user-select: none;
   padding: 50px 23px 0px 23px;
   border-left: 3px solid ${colors.boulderapprox};
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    position: sticky;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
 `
 
 export const Title = styled.h5`
@@ -29,48 +24,42 @@ export const List = styled.ul`
   margin-top: 15px;
 `
 
-export const Entry = styled.li`
-  // line-height: 38px;
-  // font-size: 20px;
-`
-
-export const SecondLevelEntry = styled(Entry)``
-
-export const Link = styled.a`
+export const BaseLink = styled.a<{ isActive?: boolean }>`
   text-decoration: none;
   cursor: pointer;
-  color: ${colors.brandDark};
+  color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
+  font-weight: ${props => props.isActive ? 600 : 400};
+  line-height: 38px;
+  font-size: 20px;
+
 
   &:hover {
     color: ${colors.wedgewoodapprox};
   }
+
+  &:before {
+    margin-right: 11px;
+    content: url(/assets/images/arrow-icon.png);
+    vertical-align: middle;
+  }
 `
 
-export const FirstLevelListItem = styled.li`
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 38px;
+export const FirstLevelLink = styled(BaseLink)`
+  font-weight: 600;
+  user-select: none;
+
+  &:before {
+    content: none;
+  }
 `
 
-export const SecondLevelListItem = styled.li`
-  margin-top: 5px;
-  font-weight: 400;
-  line-height: 38px;
-  margin-left: 30px;
-
-  list-style-image: url(/assets/images/arrow-icon.png);
-`
-
-export const ThirdLevelListItem = styled.li`
-  font-weight: 400;
-  line-height: 38px;
+export const ThirdLevelLink = styled(BaseLink)`
+  margin-left: 35px;
   font-size: 16px;
-  margin-left: 60px;
+`
 
-  list-style-image: url(/assets/images/arrow-icon.png);
-`;
-
-export const Type = styled.span`
-  margin-right: 5px;
-  text-transform: uppercase;
+export const FourthLevelLink = styled(ThirdLevelLink)`
+  &:before {
+    content: none;
+  }
 `
