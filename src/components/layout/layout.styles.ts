@@ -58,9 +58,6 @@ export const HeaderWrapper = styled.header`
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
   -ms-grid-row: 1;
-  position: fixed;
-  left: 0;
-  right: 0;
   background: ${colors.brandLight};
   z-index: 1;
 `
