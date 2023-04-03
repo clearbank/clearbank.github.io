@@ -1,7 +1,4 @@
-import React, { useState, useRef, useLayoutEffect, useMemo, useEffect } from 'react'
-import throttle from 'lodash.throttle'
-import flatten from 'lodash.flatten'
-import kebabCase from 'lodash.kebabcase'
+import React, { useState, useEffect } from 'react'
 
 import { hasWindow } from 'src/utils/browser.services'
 
@@ -28,9 +25,11 @@ const mapHeadingToComponent = (heading: any) => {
     )
     case 'H3':
       return (
-        <Styles.ThirdLevelLink href={href} isActive={isActive}>
-          {heading.title}
-        </Styles.ThirdLevelLink>
+        <Styles.LinkWrapper>
+          <Styles.ThirdLevelLink href={href} isActive={isActive}>
+            {heading.title}
+          </Styles.ThirdLevelLink>
+        </Styles.LinkWrapper>
       )
     case 'H4':
       return (
@@ -51,7 +50,7 @@ const PageMenu: React.FC<Types.PageMenuProps> = () => {
     if (!hasWindow()) {
       return
     }
-console.log({ headings })
+
   const rawHeadings = Array.from(document.querySelectorAll('.page .page-menu-entry'))
     .map(mdxTitle => ({
       tag: mdxTitle.tagName,
@@ -59,7 +58,7 @@ console.log({ headings })
       title: mdxTitle.textContent,
       id: mdxTitle.id
     }))
-    .filter((entry: any) => entry.id !== '')
+    .filter((entry) => entry.id !== '')
 
     setHeadings(rawHeadings)
   }, [])
@@ -69,7 +68,7 @@ console.log({ headings })
       <Styles.Title>On this page:</Styles.Title>
       <Styles.List>
         {headings.map(heading => (
-          <li key={heading.id}>
+          <li key={heading.slug}>
             {mapHeadingToComponent(heading)}
           </li>
         ))}

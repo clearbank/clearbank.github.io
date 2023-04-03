@@ -31,12 +31,12 @@ export default function Doc(props: any) {
           const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
 
           return (
-            <div key={node.id}>
-              <MDXRenderer>{node.body}</MDXRenderer>
+            <>
+              <MDXRenderer key={node.id}>{node.body}</MDXRenderer>
               <Styles.ShareContainer isFirstEntry={index === 0}>
                 <GithubConnector filePath={filePath} />
               </Styles.ShareContainer>
-            </div>
+            </>
           )
         })}
       </Styles.Page>

@@ -1,10 +1,13 @@
 import React from 'react'
+import kebabCase from 'lodash.kebabcase'
 
 import Logo from 'src/components/logo'
 
 import * as Styles from './footer.styles'
 
-const Footer: React.FC<{}> = ({ items }) => (
+import * as Types from 'src/components/header-menu/header-meny.types'
+
+const Footer: React.FC<Types.IHeaderMenuProps> = ({ items }) => (
   <Styles.Container role='contentinfo'>
     <Styles.MenuContainer>
       {items.map(item => (
@@ -15,7 +18,11 @@ const Footer: React.FC<{}> = ({ items }) => (
           <Styles.List>
             {item.subMenuItems.map(subMenuItem => (
               <Styles.ListItem key={subMenuItem.node.fields.slug}>
-                <Styles.SubTitle>
+                <Styles.SubTitle
+                  href={
+                    `${item.menuItem.slug}#${kebabCase(subMenuItem.node.fields.title.toLowerCase())}`
+                  }
+                >
                   {subMenuItem.node.fields.title}
                 </Styles.SubTitle>
               </Styles.ListItem>  

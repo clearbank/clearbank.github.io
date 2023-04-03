@@ -36,8 +36,13 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
   &:hover {
     color: ${colors.wedgewoodapprox};
   }
+`
+
+export const LinkWrapper = styled.p`
+  margin-left: 55px;
 
   &:before {
+    margin-left: -35px;
     margin-right: 11px;
     content: url(/assets/images/arrow-icon.png);
     vertical-align: middle;
@@ -54,7 +59,6 @@ export const FirstLevelLink = styled(BaseLink)`
 `
 
 export const ThirdLevelLink = styled(BaseLink)`
-  margin-left: 35px;
   font-size: 16px;
 `
 

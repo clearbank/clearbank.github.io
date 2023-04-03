@@ -12,8 +12,7 @@ const ViewportProvider = ({ children }: Types.ViewportProviderProps) => {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    const allSections: HTMLElement[] = Array.from(document.querySelectorAll('main .page'))
-
+    const allSections: HTMLElement[] = Array.from(document.querySelectorAll('.page .page-menu-entry'))
     // only pages with ids
     const pages = allSections.filter(entry => {
       const id = entry.getAttribute('id')
