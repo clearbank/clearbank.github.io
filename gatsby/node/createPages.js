@@ -4,20 +4,18 @@ const Helpers = require('./helpers')
 const ALL_PAGES_SCHEMA = `
   {
     allPages: allMdx(
-      filter: {
-        frontmatter: { webhook: { ne: true }, order: { gt: 0 } }
-      }
-      sort: { fields: frontmatter___order }
+      filter: {frontmatter: {webhook: {ne: true}, order: {gt: 0}}}
+      sort: {frontmatter: {order: ASC}}
     ) {
-      edges {
-        node {
-          fields {
-            id
-            order
-            slug
-            title
-          }
-          body
+      nodes {
+        fields {
+          id
+          order
+          slug
+          title
+        }
+        internal {
+          contentFilePath
         }
       }
     }
@@ -50,19 +48,20 @@ module.exports = async ({ graphql, actions, reporter }) => {
   }
 
   const { allPages } = result.data
-  const rootLevelPages = allPages.edges.filter(
-    ({ node }) => Helpers.isRootLevelDocContainer(node.fields.slug)
+  const rootLevelPages = allPages.nodes.filter(
+    (node) => Helpers.isRootLevelDocContainer(node.fields.slug)
   )
   const menuItems = await Helpers.buildMenu(rootLevelPages, graphql)
 
   // Create blog posts pages.
-  allPages.edges.forEach(({ node }) => {
+  allPages.nodes.forEach((node) => {
     const { slug, id } = node.fields
     const regexFilter = `/^${slug}/`
+    const component = `${path.resolve('./src/templates/pages.tsx')}?__contentFilePath=${node.internal.contentFilePath}`
 
     createPage({
       path: slug || '/',
-      component: path.resolve('./src/templates/pages.tsx'),
+      component,
       context: {
         id,
         slug,

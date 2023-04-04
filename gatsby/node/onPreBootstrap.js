@@ -39,7 +39,7 @@ module.exports = async () => {
     const files = await getFiles('./data/webhooks/')
 
     const jsonPromises = files.map(file =>
-      $RefParser.dereference(`./data/webhooks/${file}`)
+      $RefParser.dereference(require(`../../data/webhooks/${file}`))
     )
 
     const resolvedJSONRefs = await Promise.all(jsonPromises)

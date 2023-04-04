@@ -17,13 +17,11 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-areas:
     'header'
-    'sidebarLeft'
     'sidebarRight'
     'content'
     'footer';
   grid-template-rows:
     ${heights.header}
-    auto
     auto
     1fr
     auto;

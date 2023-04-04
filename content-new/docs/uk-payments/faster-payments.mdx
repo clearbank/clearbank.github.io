@@ -1,14 +1,13 @@
 ---
 title: "Faster payments"
 order: 2
-showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block"
 
 ## Faster Payments
 
-When sending payments via the ClearBank API, Faster Payments are initiated via the POST /{vn}/Payments/FPS endpoint, and confirmation of settlement is provided to you via the Transaction Settled webhook.
+When sending payments via the ClearBank API, Faster Payments are initiated via the POST /\{vn}/Payments/FPS endpoint, and confirmation of settlement is provided to you via the Transaction Settled webhook.
 Please refer to [Webhooks](/docs/webhooks) for more information. 
 
 Sometimes you will need to return a faster payment; for example, because the beneficiary name does not match that of the account number, because the account has been closed or transferred, or because the beneficiary has deceased. To do so, please use this new endpoint:  [/v3/payments/fps/return](#return-an-fps-payment). This can be used to return one single immediate payment.
@@ -28,67 +27,67 @@ Each payment is validated against these rules:
 | `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,'+\s#=!"%&*<>;{@\r\n]*$` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information. If the max length exceeds 18 characters, this will be truncated before sending to scheme. |
 
 Pattern: Alphanumeric (uppercase and lowercase) and special characters*****.<br />
-*****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **<** (less than), **>** (greater than), **;** (semicolon), **{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
+*****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **\<** (less than), **>** (greater than), **;** (semicolon), **\{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
 
 This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
 
 <EndpointBlock
-type="post"
-title="Send Faster Payments"
-endpoints={[
-  {
-    path: "/v3/payments/fps",
-    version: "3.0.FPS-payment",
-    webhooks: [
-      'transaction-settled-webhook-v6',
-      'payment-message-assessment-failed-webhook-v1',
-      'payment-message-validation-failed-webhook-v1',
-      'transaction-rejected-v2'
-    ]
-  },
-  {
-    path: "/v2/Payments/FPS",
-    version: "2.0",
-    webhooks: [
-      'transaction-settled-webhook-v6',
-      'payment-message-assessment-failed-webhook-v1',
-      'payment-message-validation-failed-webhook-v1',
-      'transaction-rejected-v2'
-    ]
-  }
-]}
+  type="post"
+  title="Send Faster Payments"
+  endpoints={[
+    {
+      path: "/v3/payments/fps",
+      version: "3.0.FPS-payment",
+      webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+      ]
+    },
+    {
+      path: "/v2/Payments/FPS",
+      version: "2.0",
+      webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+      ]
+    }
+  ]}
 />
 
 <EndpointBlock
-type="post"
-title="Return an FPS payment"
-endpoints={[
-  {
-    path: "/v3/payments/fps/return",
-    version: "3.0.FPS-payment",
-    webhooks: [
-      'transaction-settled-webhook-v6',
-      'payment-message-assessment-failed-webhook-v1',
-      'payment-message-validation-failed-webhook-v1',
-      'transaction-rejected-v2'
-    ]
-  }
-]}
+  type="post"
+  title="Return an FPS payment"
+  endpoints={[
+    {
+      path: "/v3/payments/fps/return",
+      version: "3.0.FPS-payment",
+      webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+      ]
+    }
+  ]}
 />
 
 <EndpointBlock
   type="post"
   title="Send a Faster Payment Originated Overseas"
   endpoints={[
-  {
-    path: "/v2/payments/fps/singlepayment",
-    version: "2.0.FPS-POO",
-    webhooks: [
-      'transaction-settled-webhook-v6',
-      'payment-message-assessment-failed-webhook-v1',
-      'payment-message-validation-failed-webhook-v1',
-      'transaction-rejected-v2'
-    ]
-  }
-]}
+    {
+      path: "/v2/payments/fps/singlepayment",
+      version: "2.0.FPS-POO",
+      webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+      ]
+    }
+  ]}
 />

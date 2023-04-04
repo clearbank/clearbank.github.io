@@ -1,5 +1,4 @@
 import React from 'react'
-import { MDXRenderer } from 'gatsby-plugin-mdx'
 import kebabCase from 'lodash.kebabcase'
 
 import { Layout } from 'src/components'
@@ -20,6 +19,7 @@ export default function Doc(props: any) {
 
   const pageTitle = data.mdx.fields.title
   const pageId = kebabCase(data.mdx.fields.title.toLowerCase())
+  const filePath = `${config.header.githubDocsRoot}${props.pageContext.slug}.mdx`
 
   return (
     <Layout {...props}>
@@ -27,18 +27,10 @@ export default function Doc(props: any) {
         <Styles.Title id='pageTitle' className="page-menu-entry">
           {pageTitle}
         </Styles.Title>
-        {data.pageContent.edges.map(({ node }, index: number) => {
-          const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
-
-          return (
-            <>
-              <MDXRenderer key={node.id}>{node.body}</MDXRenderer>
-              <Styles.ShareContainer isFirstEntry={index === 0}>
-                <GithubConnector filePath={filePath} />
-              </Styles.ShareContainer>
-            </>
-          )
-        })}
+        {props.children}
+        <Styles.ShareContainer isFirstEntry={true}>
+          <GithubConnector filePath={filePath} />
+        </Styles.ShareContainer>
       </Styles.Page>
     </Layout>
   )

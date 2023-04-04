@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import ThemeProvider from '../themeProvider'
 import mdxComponents from '../mdxComponents'
@@ -27,7 +27,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
     return null
   }
 
-  const { metaTitle: pageTitle, showPageMenu } = data.mdx.frontmatter
+  const { metaTitle: pageTitle } = data.mdx.frontmatter
 
   return (
     <ThemeProvider location={location}>
@@ -44,13 +44,8 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
             </Styles.InnerContentWrapper>
           </Styles.ContentWrapper>
           <Styles.RightSidebarWrapper>
-            {showPageMenu && (
-              <>
-                {/* PageHeader only visible on small and medium viewport */}
-                <Styles.PageHeader>{pageTitle}</Styles.PageHeader>
-                <PageMenu />
-              </>
-            )}
+            <Styles.PageHeader>{pageTitle}</Styles.PageHeader>
+            <PageMenu />
           </Styles.RightSidebarWrapper>
           <Styles.FooterWrapper>
             <Footer items={pageContext.menuItems} />

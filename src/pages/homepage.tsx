@@ -38,7 +38,6 @@ export const pageQuery = graphql`
       frontmatter {
         metaTitle
         metaDescription
-        showPageMenu
       }
     }
     pageContent: allMdx(filter: {fields: {slug: {eq: "/"}}}) {
