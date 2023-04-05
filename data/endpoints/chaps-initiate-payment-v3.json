@@ -86,81 +86,8 @@
                     }
                 }
             }
-        },
-        "/v2/payments/chaps": {
-            "post": {
-                "tags": [
-                    "Payments"
-                ],
-                "summary": "Request a CHAPS Payment",
-                "operationId": "PostChapsPaymentV2",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Your API Token, retrieved from the web portal.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "DigitalSignature",
-                        "in": "header",
-                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "X-Request-Id",
-                        "in": "header",
-                        "description": "A unique identifier for the request.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Information that should be used to create a credit transfer request.",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/V2.Requests.CreateCreditTransferRequest"
-                            }
-                        }
-                    },
-                    "x-bodyName": "request"
-                },
-                "responses": {
-                    "202": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/V2.Responses.CreditTransferResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProblemDetails"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
         }
+
     },
     "components": {
         "schemas": {
