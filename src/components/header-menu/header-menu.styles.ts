@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { colors } from 'src/components/theme'
 import { Link } from 'gatsby'
 
@@ -44,7 +44,7 @@ export const Underline = styled.div`
 export const Title = styled(LinkBase)<{ isActive?: boolean }>`
   line-height: 38px;
   font-size: 25px;
-  font-weight: ${props => props.isActive ? 500 : 400};
+  font-weight: ${props => props.isActive ? 600 : 400};
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
 
   &:hover {
@@ -52,7 +52,17 @@ export const Title = styled(LinkBase)<{ isActive?: boolean }>`
   }
 `
 
+const rotateMenu = keyframes`
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+`;
+
 export const List = styled.ul`
+  overflow: hidden;
   display: none;
   z-index: 1;
   width: 100%;
@@ -64,6 +74,8 @@ export const List = styled.ul`
 
   ${Container}:hover & {
     display: block;
+    animation: ${rotateMenu} 200ms ease-in-out;
+    transform-origin: top center;
   }
 `
 

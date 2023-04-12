@@ -23,7 +23,6 @@ export type FontSizes = { [option in FontSizeOption]: number }
 export type WidthOption =
   | 'container'
   | 'gutter'
-  | 'sidebarLeft'
   | 'sidebarRight'
   | 'logo'
   | 'content'
@@ -31,7 +30,9 @@ export type WidthOption =
 
 export type Widths = { [option in WidthOption]: string }
 
-export type MaxWidthOption = 'content'
+export type MaxWidthOption =
+  | 'content'
+  | 'sidebarRight'
 
 export type MaxWidths = { [option in MaxWidthOption]: string }
 

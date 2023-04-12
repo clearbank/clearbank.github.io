@@ -1,8 +1,12 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-import { colors, widths, breakpoints } from 'src/components/theme'
+import { colors, heights } from 'src/components/theme'
 
 export const Container = styled.div`
+  position: sticky;
+  top: ${heights.header};
+  right: 0;
+  max-height: 100vh;
   color: ${colors.brandLight};
   height: 100%;
   user-select: none;

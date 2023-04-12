@@ -13,6 +13,7 @@ import * as EndpointBlock from 'src/components/endpoint-block/endpoint-block.sty
 import * as WebHookPlaceholder from 'src/components/webhook-placeholder/webhook-placeholder.styles'
 
 export const Wrapper = styled.div`
+  position: relative;
   display: -ms-grid;
   display: grid;
   grid-template-areas:
@@ -104,7 +105,7 @@ export const ContentWrapper = styled.article`
 `
 
 export const RightSidebarWrapper = styled.aside`
-  max-width: 380px;
+  max-width: ${maxWidths.sidebarRight};
   grid-area: sidebarRight;
   -ms-grid-column: 3;
   -ms-grid-row: 2;
