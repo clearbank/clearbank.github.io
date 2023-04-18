@@ -36,7 +36,9 @@ export default {
   h4: props => (
     <Styles.Header
       as='h4'
-      className='double-pica'
+      className='double-pica page-menu-entry'
+      id={kebabCase(props.children.toLowerCase())}
+      data-id={kebabCase(props.children.toLowerCase())}
       {...props}
     />
   ),

@@ -33,9 +33,11 @@ const mapHeadingToComponent = (heading: any) => {
       )
     case 'H4':
       return (
-        <Styles.FourthLevelLink href={href} isActive={isActive}>
-          {heading.title}
-        </Styles.FourthLevelLink>
+        <Styles.LinkWrapper level={2}>
+          <Styles.FourthLevelLink href={href} isActive={isActive}>
+            {heading.title}
+          </Styles.FourthLevelLink>
+        </Styles.LinkWrapper>
       )
     default:
       return null;
