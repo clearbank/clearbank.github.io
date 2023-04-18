@@ -1,0 +1,84 @@
+import React from 'react'
+import { Layout } from 'src/components'
+
+import Article from './article'
+import ClientSection from './client-section'
+
+import GetStartedIcon from '../../../static/assets/images/get-started-icon.png'
+import ApiIcon from '../../../static/assets/images/api-icon.png'
+import CodeIcon from '../../../static/assets/images/Code.png'
+import LinkIcon from '../../../static/assets/images/Link.png'
+import CheckIcon from '../../../static/assets/images/Check.png'
+
+import * as Styles from './homepage.styles'
+
+const ARTICLES = [
+  {title: "Accounts", subtitle: "Find out more about the types of accounts you can create using our API", slug: "/docs/uk-payments/internal-transfers"},
+  {title: "UK Payments", subtitle: "Everything you need to know to start connecting to the UK payment schemes through ClearBank", slug: "/docs/uk-payments/internal-transfers"},
+  {title: "Embeded Banking", subtitle: "Learn more about our award winning Embedded Banking capabilities, purpose built for Retail and SMB customers", slug: "/docs/embedded-banking"},
+  {title: "Multi-currncy", subtitle: "Looking to send payments overseas? Here’s the details on payments and accounts in different currencies", slug: "/docs/multi-currency/multi-currency-account-types"},
+  {title: "Foreight exchange", subtitle: "Find out more about our FX Trade capabilities", slug: "/docs/multi-currency/fx-trade"},
+]
+
+const GUIDES = [
+  {title: "Endpoint lookup", iconSrc: CodeIcon},
+  {title: "Webhook lookup", iconSrc: LinkIcon},
+  {title: "Allowed characters", iconSrc: CheckIcon},
+]
+
+const Homepage: React.FC<any> = (props) => {
+  return (
+    <Layout {...props} disableFooter>
+      <Styles.Page className='page'>
+        <Styles.PageTitle>Developer Portal</Styles.PageTitle>
+        <Styles.PageSubTitle>At ClearBank, we're committed to providing you with the tools and support you need to bring your ideas to life.</Styles.PageSubTitle>
+
+        <Styles.Row>
+          <Styles.IntroductionContainer>
+            <Styles.IntroductionTitle>
+              First time here? <br/>
+              Let’s get your API journey going.
+            </Styles.IntroductionTitle>
+            <Styles.IntroductionContentWrapper>
+              <Article
+                iconSrc={GetStartedIcon}
+                width="50%"
+                title="Getting Started"
+                href="/docs/api/getting-started"
+                subtitle="Everything you need to know if you’re just starting your API development journey with us"
+              />
+              <Article
+                iconSrc={ApiIcon}
+                width="50%"
+                title="ClearBank API"
+                href="/docs/api/overview"
+                subtitle="Find out more about our market disrupting API"
+              />
+            </Styles.IntroductionContentWrapper>
+          </Styles.IntroductionContainer>
+          <ClientSection/>
+        </Styles.Row>
+
+        <Styles.GuidesSectionTitle>Helpful quick reference guides</Styles.GuidesSectionTitle>
+        <Styles.ArticlesContainer>
+          {GUIDES.map(item => (
+            <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+          ))}
+        </Styles.ArticlesContainer>
+
+        <Styles.ArticlesContainer>
+          {ARTICLES.map(item =>
+            <Article
+              href={item.slug}
+              key={item.title}
+              title={item.title}
+              subtitle={item.subtitle}
+            />
+          )}
+        </Styles.ArticlesContainer>
+      </Styles.Page>
+    </Layout>
+  )
+}
+
+export default Homepage

@@ -18,16 +18,10 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   location,
   data,
   children,
-  pageContext
+  pageContext,
+  disableFooter,
 }): JSX.Element => {
-  const { pathname, hash } = location
   const { menuItems } = pageContext
-
-  if (!data || !data.mdx || !data.mdx.frontmatter) {
-    return null
-  }
-
-  const { metaTitle: pageTitle, showPageMenu } = data.mdx.frontmatter
 
   return (
     <ThemeProvider location={location}>
@@ -44,17 +38,18 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
             </Styles.InnerContentWrapper>
           </Styles.ContentWrapper>
           <Styles.RightSidebarWrapper>
-            {showPageMenu && (
+            {data?.mdx?.frontmatter?.showPageMenu && (
               <>
-                {/* PageHeader only visible on small and medium viewport */}
-                <Styles.PageHeader>{pageTitle}</Styles.PageHeader>
+                <Styles.PageHeader>{data?.mdx?.frontmatter?.metaTitle}</Styles.PageHeader>
                 <PageMenu />
               </>
             )}
           </Styles.RightSidebarWrapper>
-          <Styles.FooterWrapper>
-            <Footer items={pageContext.menuItems} />
-          </Styles.FooterWrapper>
+          {!disableFooter && (
+            <Styles.FooterWrapper>
+              <Footer items={pageContext.menuItems} />
+            </Styles.FooterWrapper>
+          )}
           <BackToTop />
         </Styles.Wrapper>
       </MDXProvider>

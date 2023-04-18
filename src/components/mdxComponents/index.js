@@ -27,8 +27,9 @@ export default {
   h3: props => (
     <Styles.H3
       as='h3'
-      className='paragon'
+      className='paragon page-menu-entry'
       id={kebabCase(props.children.toLowerCase())}
+      data-id={kebabCase(props.children.toLowerCase())}
       {...props}
     />
   ),
