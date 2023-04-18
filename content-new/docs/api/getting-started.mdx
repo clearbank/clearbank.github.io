@@ -6,11 +6,98 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block";
 
-## Get connected
-
+### Get connected
 Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
 You can find information about how to generate these in our [introduction section](/docs/introduction).
+
+#### Accessing the Simulation Environment
+
+To connect to the API in a simulation environment, you will need:
+
+- Institution Portal URL: https://institution-sim.clearbank.co.uk/
+- Login credentials for the Institution Portal (these are provided to you during the onboarding process)
+- Your authentication profile
+
+#### Accessing the Production Environment
+
+To connect to the API in a production environment, you will need:
+
+- Institution Portal URL: https://institution.clearbank.co.uk/
+- Login credentials for the Institution Portal (these are provided to you during the onboarding process)
+- The ClearBank authenticator app registered with your Android, iOS or Windows device (this can be downloaded from [Google Play](https://play.google.com/store/apps/details?id=com.clearbank.authenticator&hl=en_GB), the [App Store](https://apps.apple.com/gb/app/clearbank-authenticator/id1250455796) or the [Microsoft Store](https://www.microsoft.com/en-us/p/clearbank-authenticator/9ngtxczk15j2?activetab=pivot:overviewtab))
+- Your authentication profile
+
+### Creating your authentication profile
+
+Your ClearBank authentication profile links your institution to your public key. Therefore, it must be valid.
+
+Your authentication profile is a combination of:
+
+- A key pair (public/private)
+- A Certificate Signing Request (CSR) in PKCS #10 format*
+- A token
+
+
+*In the simulation environment, a CSR can be generated using open source solutions. In the production environment, a CSR must be generated using a FIPS 140-2 level 2 compliant Hardware Security Module (HSM) such as Azure KV HSM, Amazon CloudHSM, GoogleCloudHSM (this is not an exhaustive list).
+
+### Create an authentication profile
+
+To create a valid authentication profile:
+
+1. Generate your public key and private key pair in PKCS #8 format
+> In the simulation environment, you can utilise open source tools to store your private key. In the production environment, you must use a physical or virtual HSM solution to store your private key (see HSM requirements above)
+
+2. Generate your Certificate Signing Request (CSR) in PKCS #10 format which contains your certificate and public key
+3. Save your CSR as a .csr file
+4. Sign in to the Institution Portal
+5. From the menu, select **Institution > Certificates and Tokens**
+6. Click **Generate API Token**
+> ![alt text](/assets/images/GenerateToken_1.png "Certificates and Tokens page")
+
+7. Upload your Certificate Signing Request (.CSR) file
+8. Enter the **Token Name** and select an **Expiry Date**
+9. Click **Generate** to generate your token
+
+Your token will appear in the View Token window:
+> ![alt text](/assets/images/GenerateToken_2.png "Generate API Tokens")
+
+- You will only be able to view your token once (at the time of creation).
+- You can copy the token directly or copy it to your clipboard using the button provided.
+- Ensure that you store your token securely now. Otherwise, you will need to generate a new one.
+> ![alt text](/assets/images/GenerateToken_3.png "View Tokens")
+
+Congratulations! You have successfully created your authentication profile.
+
+### Creating your digital signature
+
+We use a digital signature to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a digital signature, as it is specific to the body of each request.
+
+We use the following specifications to create a digital signature:
+- Raw message encoding: UTF-8
+- Message digest algorithm: SHA-256
+- Signing algorithm: RSA
+- Padding: PKCS#1 v1.5
+- Digital signature encoding: Base64
+
+To create a digital signature:
+
+1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature)
+2. Hash the encoded value using SHA-256
+3. Request a digital signature for that hash value from your Hardware Security Module (HSM)
+> (In the simulation environment, this can be done using open source solutions.)
+
+4. The output is the message digital signature
+5. Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all requests that have a request body
+
+For additional help with creating your authentication profile and digital signature, please refer to the following examples on the ClearBank GitHub repository:
+- [C# example for ClearBank API and Webhooks](https://github.com/clearbank/fi-api-101)
+- [Postman Collections for invoking the ClearBank API](https://github.com/clearbank/fi-api-postman)
+- [C# example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool)
+- [Python example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool-python)
+- [Java example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool-java)
+
+Please note that the code in these examples is not production ready and has been simplified for brevity.
 
 ## Use endpoints
 
@@ -38,7 +125,7 @@ The base URL for your environment is either:
 - Simulation `https://institution-api-sim.clearbank.co.uk/`
 - Production `https://institution-api.clearbank.co.uk/`
 
-Your API token should be included in your HTTP `Authorization` header. Please refer to [Common Parameters](#common-parameters]) for more information.
+Your API token should be included in your HTTP `Authorization` header. Please refer to [Common Parameters](#common-parameters) for more information.
 
 This example request shows the API token in the `Authorization` , `DigitalSignature` and `X-Request-Id` header.
 
