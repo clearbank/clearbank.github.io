@@ -25,21 +25,7 @@ const ALL_PAGES_SCHEMA = `
 `
 
 module.exports = async ({ graphql, actions, reporter }) => {
-  const { createPage, createRedirect } = actions
-
-  createRedirect({
-    fromPath: `/`,
-    toPath: `/docs/api`,
-    redirectInBrowser: true,
-    isPermanent: true
-  })
-
-  createRedirect({
-    fromPath: `/docs`,
-    toPath: `/docs/api`,
-    redirectInBrowser: true,
-    isPermanent: true
-  })
+  const { createPage } = actions
 
   const result = await graphql(ALL_PAGES_SCHEMA)
 
@@ -54,6 +40,14 @@ module.exports = async ({ graphql, actions, reporter }) => {
     ({ node }) => Helpers.isRootLevelDocContainer(node.fields.slug)
   )
   const menuItems = await Helpers.buildMenu(rootLevelPages, graphql)
+
+  createPage({
+    path: '/',
+    component: path.resolve('./src/templates/home.tsx'),
+    context: {
+      menuItems,
+    },
+  })
 
   // Create blog posts pages.
   allPages.edges.forEach(({ node }) => {
