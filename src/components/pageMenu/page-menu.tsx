@@ -19,10 +19,12 @@ const mapHeadingToComponent = (heading: any) => {
       )
     case 'H2':
       return (
-        <Styles.BaseLink href={href} isActive={isActive}>
-          {heading.title}
-        </Styles.BaseLink>
-    )
+        <Styles.LinkWrapper level={0}>
+          <Styles.BaseLink href={href} isActive={isActive}>
+            {heading.title}
+          </Styles.BaseLink>
+        </Styles.LinkWrapper>
+      )
     case 'H3':
       return (
         <Styles.LinkWrapper>

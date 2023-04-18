@@ -42,7 +42,7 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
 `
 
 export const LinkWrapper = styled.p<{ level?: number }>`
-  margin-left: ${props => (props.level || 1) * 25 + 30}px;
+  margin-left: ${props => (props.level ?? 1) * 25 + 30}px;
 
   &:before {
     margin-left: -30px;
