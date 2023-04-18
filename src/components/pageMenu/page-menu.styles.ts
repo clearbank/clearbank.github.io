@@ -36,17 +36,16 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
   line-height: 38px;
   font-size: 20px;
 
-
   &:hover {
     color: ${colors.wedgewoodapprox};
   }
 `
 
-export const LinkWrapper = styled.p`
-  margin-left: 55px;
+export const LinkWrapper = styled.p<{ level?: number }>`
+  margin-left: ${props => (props.level || 1) * 25 + 30}px;
 
   &:before {
-    margin-left: -35px;
+    margin-left: -30px;
     margin-right: 11px;
     content: url(/assets/images/arrow-icon.png);
     vertical-align: middle;
@@ -67,7 +66,5 @@ export const ThirdLevelLink = styled(BaseLink)`
 `
 
 export const FourthLevelLink = styled(ThirdLevelLink)`
-  &:before {
-    content: none;
-  }
+  font-size: 14px;
 `

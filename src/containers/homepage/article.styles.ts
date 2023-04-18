@@ -48,8 +48,6 @@ export const Link = styled.a<{ variant: Types.ArticleVariant }>`
   cursor: pointer;
 `
 
-
-
 export const LinkIcon = styled.img`
   margin-left: 7px;
 `
