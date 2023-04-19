@@ -15,9 +15,9 @@ import * as Styles from './homepage.styles'
 const ARTICLES = [
   {title: "Accounts", subtitle: "Find out more about the types of accounts you can create using our API", slug: "/docs/uk-payments/internal-transfers"},
   {title: "UK Payments", subtitle: "Everything you need to know to start connecting to the UK payment schemes through ClearBank", slug: "/docs/uk-payments/internal-transfers"},
-  {title: "Embeded Banking", subtitle: "Learn more about our award winning Embedded Banking capabilities, purpose built for Retail and SMB customers", slug: "/docs/embedded-banking"},
-  {title: "Multi-currncy", subtitle: "Looking to send payments overseas? Here’s the details on payments and accounts in different currencies", slug: "/docs/multi-currency/multi-currency-account-types"},
-  {title: "Foreight exchange", subtitle: "Find out more about our FX Trade capabilities", slug: "/docs/multi-currency/fx-trade"},
+  {title: "Embedded Banking", subtitle: "Learn more about our award winning Embedded Banking capabilities, purpose built for Retail and SMB customers", slug: "/docs/embedded-banking"},
+  {title: "Multi-currency", subtitle: "Looking to send payments overseas? Here’s the details on payments and accounts in different currencies", slug: "/docs/multi-currency/multi-currency-account-types"},
+  {title: "Foreign exchange", subtitle: "Find out more about our FX Trade capabilities", slug: "/docs/multi-currency/fx-trade"},
 ]
 
 const GUIDES = [
