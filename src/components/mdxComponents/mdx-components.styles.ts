@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Text } from 'rebass'
 
 import AnchorTag from './anchor'
-import { breakpoints, widths, colors, fonts } from 'src/components/theme'
+import { breakpoints, widths, colors, fonts, heights } from 'src/components/theme'
 
 export const Header = styled(Text)`
   max-width: ${widths.content};
@@ -10,7 +10,7 @@ export const Header = styled(Text)`
   padding-right: 50px; // preserve space for share button
   font-family: ${fonts.heading};
   font-weight: 600;
-  scroll-margin-top: 90px;
+  scroll-margin-top: ${heights.header};
 `
 
 // TODO: This style doesn't exisit in the styleguide and needs sorting out properly
@@ -49,7 +49,7 @@ export const H3 = styled(Header)`
   line-height: 34px;
   margin-bottom: 15px;
   margin-top: 40px;
-  scroll-margin-top: 90px;
+  scroll-margin-top: ${heights.header};
 `
 
 export const List = styled.ul`

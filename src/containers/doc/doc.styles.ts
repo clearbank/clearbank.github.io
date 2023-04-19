@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { breakpoints, fonts, colors } from 'src/components/theme'
+import { breakpoints, fonts, colors, heights } from 'src/components/theme'
 
 export const Title = styled.h1`
   margin-top: 40px;
@@ -22,7 +22,7 @@ export const Title = styled.h1`
 
 export const Page = styled.section`
   position: relative;
-  scroll-margin-top: 90px;
+  scroll-margin-top: ${heights.header};
 
   & + & {
     margin-top: 60px;

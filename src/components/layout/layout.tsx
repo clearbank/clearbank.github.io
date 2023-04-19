@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import ThemeProvider from '../themeProvider'
 import mdxComponents from '../mdxComponents'

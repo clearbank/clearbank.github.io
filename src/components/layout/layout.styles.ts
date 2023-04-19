@@ -18,15 +18,13 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-areas:
     'header'
-    'sidebarLeft'
     'sidebarRight'
     'content'
     'footer';
   grid-template-rows:
     ${heights.header}
-    auto
-    auto
     1fr
+    auto
     auto;
   grid-template-columns: 1fr;
   min-height: 95vh; // 100vh unreliable in mobile browsers
@@ -40,17 +38,17 @@ export const Wrapper = styled.div`
       ${heights.header}
       1fr
       auto;
-    -ms-grid-columns: ${widths.sidebarLeft} 1fr auto;
+    -ms-grid-columns: 1fr auto;
     // prettier-ignore
-    grid-template-columns: ${widths.sidebarLeft} 1fr auto;
+    grid-template-columns: 1fr auto;
     min-height: 100vh;
   }
 
   // emulate max-width on content by setting a fixed width and make right sidebar to fill the remaining availale space
   @media screen and (min-width: ${breakpoints.xxxLarge}) {
-    -ms-grid-columns: ${widths.sidebarLeft} 1fr auto;
-    // prettier-ignore
-    grid-template-columns: ${widths.sidebarLeft} ${maxWidths.content} 1fr;
+    -ms-grid-columns: 1fr auto;
+    prettier-ignore
+    grid-template-columns: ${maxWidths.content} 1fr;
   }
 `
 

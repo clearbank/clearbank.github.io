@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { colors } from 'src/components/theme'
+import { colors, easings } from 'src/components/theme'
 import { Link } from 'gatsby'
 
 export const LinkBase = styled(Link)`
@@ -74,7 +74,7 @@ export const List = styled.ul`
 
   ${Container}:hover & {
     display: block;
-    animation: ${rotateMenu} 200ms ease-in-out;
+    animation: ${rotateMenu} 200ms ${easings.easeIn};
     transform-origin: top center;
   }
 `

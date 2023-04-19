@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { breakpoints } from 'src/components/theme'
+import { breakpoints, heights } from 'src/components/theme'
 
 export const PageTitle = styled.h1`
   line-height: 46px;
@@ -37,7 +37,7 @@ export const IntroductionTitle = styled.h2`
 
 export const Page = styled.section`
   position: relative;
-  scroll-margin-top: 90px;
+  scroll-margin-top: ${heights.header};
 
   & + & {
     margin-top: 60px;
