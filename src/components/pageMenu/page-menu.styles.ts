@@ -6,12 +6,17 @@ export const Container = styled.div`
   position: sticky;
   top: ${heights.header};
   right: 0;
-  max-height: 100vh;
+  max-height: calc(100vh - ${heights.header});
+  overflow-y: scroll;
   color: ${colors.brandLight};
   height: 100%;
   user-select: none;
   padding: 50px 23px 0px 23px;
   border-left: 3px solid ${colors.boulderapprox};
+
+  &:scrollbar {
+    display: none;
+  }
 `
 
 export const Title = styled.h5`

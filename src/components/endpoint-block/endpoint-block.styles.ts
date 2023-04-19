@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 import { Box } from 'rebass'
 
-import { breakpoints, fonts } from 'src/components/theme'
+import { breakpoints, fonts, heights } from 'src/components/theme'
 
 export const Title: any = styled.h3`
   margin: 0;
   font-family: ${fonts.heading};
-  scroll-margin-top: 90px;
+  scroll-margin-top: ${heights.header};
   font-size: 30px;
   font-weight: 700;
   line-height: 34px;

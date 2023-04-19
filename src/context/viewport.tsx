@@ -6,7 +6,7 @@ import * as Types from './viewport.types'
 
 const ViewportContext = React.createContext('')
 
-const ViewportProvider = ({ children }: Types.ViewportProviderProps) => {
+const ViewportProvider: React.FC<Types.ViewportProviderProps> = ({ children }) => {
   const [currentTitle, setCurrentTitle] = useState('')
 
   const { pathname, hash } = useLocation()
