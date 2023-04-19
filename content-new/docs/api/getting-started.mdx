@@ -6,29 +6,16 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block";
 
-### Get connected
+## Get connected
 Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
-You can find information about how to generate these in our [introduction section](/docs/introduction).
 
-#### Accessing the Simulation Environment
+| Environment             | ClearBank Portal URL |What you need for access|
+|-------------------------|-----|---|
+| Simulation      | https://institution-sim.clearbank.co.uk/ | - Login credentials for the Institution Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile|
+| Production      | https://institution.clearbank.co.uk/ | - Login credentials for the Institution Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator (or for pre-migration users, the ClearBank Authenticator app) registered with your Android, iOS or Windows device  <br/> - Your authentication profile |
 
-To connect to the API in a simulation environment, you will need:
-
-- Institution Portal URL: https://institution-sim.clearbank.co.uk/
-- Login credentials for the Institution Portal (these are provided to you during the onboarding process)
-- Your authentication profile
-
-#### Accessing the Production Environment
-
-To connect to the API in a production environment, you will need:
-
-- Institution Portal URL: https://institution.clearbank.co.uk/
-- Login credentials for the Institution Portal (these are provided to you during the onboarding process)
-- The ClearBank authenticator app registered with your Android, iOS or Windows device (this can be downloaded from [Google Play](https://play.google.com/store/apps/details?id=com.clearbank.authenticator&hl=en_GB), the [App Store](https://apps.apple.com/gb/app/clearbank-authenticator/id1250455796) or the [Microsoft Store](https://www.microsoft.com/en-us/p/clearbank-authenticator/9ngtxczk15j2?activetab=pivot:overviewtab))
-- Your authentication profile
-
-### Creating your authentication profile
+### Create your authentication profile
 
 Your ClearBank authentication profile links your institution to your public key. Therefore, it must be valid.
 
@@ -41,16 +28,14 @@ Your authentication profile is a combination of:
 
 *In the simulation environment, a CSR can be generated using open source solutions. In the production environment, a CSR must be generated using a FIPS 140-2 level 2 compliant Hardware Security Module (HSM) such as Azure KV HSM, Amazon CloudHSM, GoogleCloudHSM (this is not an exhaustive list).
 
-### Create an authentication profile
-
-To create a valid authentication profile:
+**To create a valid authentication profile:**
 
 1. Generate your public key and private key pair in PKCS #8 format
 > In the simulation environment, you can utilise open source tools to store your private key. In the production environment, you must use a physical or virtual HSM solution to store your private key (see HSM requirements above)
 
 2. Generate your Certificate Signing Request (CSR) in PKCS #10 format which contains your certificate and public key
 3. Save your CSR as a .csr file
-4. Sign in to the Institution Portal
+4. Sign in to the ClearBank Portal using the URL from the table above.
 5. From the menu, select **Institution > Certificates and Tokens**
 6. Click **Generate API Token**
 > ![alt text](/assets/images/GenerateToken_1.png "Certificates and Tokens page")
@@ -59,17 +44,17 @@ To create a valid authentication profile:
 8. Enter the **Token Name** and select an **Expiry Date**
 9. Click **Generate** to generate your token
 
-Your token will appear in the View Token window:
+> Your token will appear in the View Token window:
 > ![alt text](/assets/images/GenerateToken_2.png "Generate API Tokens")
 
-- You will only be able to view your token once (at the time of creation).
-- You can copy the token directly or copy it to your clipboard using the button provided.
-- Ensure that you store your token securely now. Otherwise, you will need to generate a new one.
+> - You will only be able to view your token once (at the time of creation).
+> - You can copy the token directly or copy it to your clipboard using the button provided.
+> - Ensure that you store your token securely now. Otherwise, you will need to generate a new one.
 > ![alt text](/assets/images/GenerateToken_3.png "View Tokens")
 
 Congratulations! You have successfully created your authentication profile.
 
-### Creating your digital signature
+### Create your digital signature
 
 We use a digital signature to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a digital signature, as it is specific to the body of each request.
 
@@ -80,7 +65,7 @@ We use the following specifications to create a digital signature:
 - Padding: PKCS#1 v1.5
 - Digital signature encoding: Base64
 
-To create a digital signature:
+**To create a digital signature:**
 
 1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature)
 2. Hash the encoded value using SHA-256
@@ -101,13 +86,21 @@ Please note that the code in these examples is not production ready and has been
 
 ## Use endpoints
 
-### Common Parameters
+Once you have set up your connection to our simulation environment, you are ready to send requests using our API endpoints. The information here allows you to use the GET /v1/Test and POST /v1/Test endpoints.
 
-We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header.
+### Header parameters
 
-`GET` requests have an `Authorization` header.
+We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header, together with an [HTTP status code](#http-status-codes).
 
-NON-GET requests such as `POST`, `PATCH` and `DELETE` have an `Authorization` header.
+Different request types require different headers as shown in this table:
+
+|Request method | Header parameters|
+|---|---|
+|GET|Authorization|
+|PUT, POST, PATCH, DELETE|Authorization, DigitalSignature, X-Request-Id|
+|Response|X-Correlation-Id|
+
+Here are the details of each parameter:
 
 import ParameterDetails from 'src/components/parameter-details'
 import parameters from './parameters.json'
@@ -147,28 +140,26 @@ The response shows results from the test call
 To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank® (if you are subscribed to it).
 We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Test Webhooks](/webhooks/) for more information.
 
-#### TEST Endpoints
-
 <EndpointBlock
   type="get"
-  title="Test"
+  title="GET Test endpoint"
   endpoints={[
     {
       path: "/v1/Test",
       version: "1.0",
-      title: "GET Accounts",
+      title: "GET Test endpoint",
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Test"
+  title="POST Test endpoint"
   endpoints={[
     {
       path: "/v1/Test",
       version: "1.0",
-      title: "POST Test",
+      title: "POST Test endpoint",
     }
   ]}
 />
