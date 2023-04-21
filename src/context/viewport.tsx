@@ -25,7 +25,7 @@ const ViewportProvider: React.FC<Types.ViewportProviderProps> = ({ children }) =
     }
 
     const onScroll = function () {
-      const intersectionPositionY = window.scrollY + 100
+      const intersectionPositionY = window.scrollY + 50
       const urlHash = (window as Window).location.hash
 
       pages.forEach(page => {
