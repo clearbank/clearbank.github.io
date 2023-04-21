@@ -85,7 +85,7 @@ const PageMenu: React.FC<Types.PageMenuProps> = () => {
     }
 
     const handleHashChange = () => setActiveHash(window.location.hash)
-    const throttledHandler = throttle(handleHashChange, 75)
+    const throttledHandler = throttle(handleHashChange, 33)
 
     window.addEventListener('scroll', throttledHandler)
 
