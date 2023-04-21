@@ -1,5 +1,82 @@
 ---
-title: "BACS Payment data"
+title: "BACS payment data"
 order: 4
 showPageMenu: true
 ---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+## Direct Debit payment data
+
+ClearBank allows you to retrieve Direct Debit payment information against your sort code, real and virtual accounts.
+This includes information about unpaid and collected payments.
+
+<EndpointBlock
+  type="get"
+  title="Get all collected Direct Debit payments (real account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Mandates/{mandateId}/Collections",
+      version: "2.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all collected Direct Debit payments (virtual account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}/Collections",
+      version: "2.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all unpaid Direct Debit payments (institution)"
+  endpoints={[
+    {
+      path: "/v1/Transactions/{sortCode}/DirectDebit/Unpaid",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all unpaid Direct Debit payments (real account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Mandates/Unpaid",
+      version: "2.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all unpaid Direct Debit payments (virtual account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/Unpaid",
+      version: "2.0"
+    }
+  ]}
+/>
+
+## Direct Credit payment data
+
+You can get information about any unapplied Direct Credit payments for your institution.
+
+<EndpointBlock
+  type="get"
+  title="Get all unapplied Direct Credit payments"
+  endpoints={[
+    {
+      path: "/v1/Transactions/{sortCode}/DirectCredit/Unapplied",
+      version: "1.0"
+    }
+  ]}
+/>

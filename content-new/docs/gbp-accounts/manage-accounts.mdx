@@ -1,5 +1,5 @@
 ---
-title: "Manage accounts"
+title: "Manage sterling accounts"
 order: 2
 showPageMenu: true
 ---
@@ -14,6 +14,9 @@ import WebhookSummary from 'src/components/webhook-summary'
 ## Real GBP accounts
 
 A real account is a physical account held with ClearBank and can be used to send and/or receive payments.
+
+**Before creating an account, please ensure that you know which [account type](./account-types) you need to create.** If you are unsure, please get in touch.
+
 The balance of a real account is also held by ClearBank and can be viewed via the Institution portal and the ClearBank API. Real accounts are reconciled for you by ClearBank.
 
 <EndpointBlock
@@ -46,14 +49,6 @@ The balance of a real account is also held by ClearBank and can be viewed via th
   ]}
 />
 
-<WebhookSummary
-  description='Create an account'
-  endpoint='/accounts/#create-an-account'
-  method='post'
-  webhooks={[
-    'account-created-webhook-v1'
-  ]}
-/>
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
 
@@ -116,22 +111,12 @@ The responsibility of managing and reconciling virtual accounts rests with you, 
   ]}
 />
 
-<WebhookSummary
-  description='Create virtual accounts'
-  endpoint='/accounts/#create-virtual-accounts'
-  method='post'
-  webhooks={[
-    'virtual-account-created-v3',
-    'virtual-account-creation-failed-v3'
-  ]}
-/>
 <WebhookPlaceholder render='virtual-account-created-v3' />
 <WebhookPlaceholder render='virtual-account-creation-failed-v3' />
 
-
 <EndpointBlock
   type="get"
-  title="Get all virtual accounts for a specific account"
+  title="Get all virtual accounts for a real account"
   endpoints={[
     {
       path: "/v2/Accounts/{accountId}/Virtual",
