@@ -57,6 +57,7 @@ export const CopywriteWrapper = styled.div`
 
 export const Copywrite = styled.p`
   max-width: 70%;
+  margin-right: 75px;
   margin-left: auto;
   text-align: right;
   color: ${colors.brandSecondaryDarker};

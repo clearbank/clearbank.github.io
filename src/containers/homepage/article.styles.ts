@@ -4,18 +4,12 @@ import { colors } from 'src/components/theme'
 
 import * as Types from './article.types';
 
-export const Article = styled.article<{ width?: string, variant?: Types.ArticleVariant }>`
-  width: ${props => props.width || '30%'};
+export const Article = styled.article<{ variant?: Types.ArticleVariant }>`
   padding: 38px 30px 30px 30px;
   border: 1px solid #8D8BA7;
   border-radius: 24px;
-  margin: 12.5px 20px 12.5px 20px;
   display: flex;
   flex-direction: column;
-
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
 
   &:hover {
     background: ${props => props.variant === 'secondary' ? '#F3F3F3' : '#88F6DD'};

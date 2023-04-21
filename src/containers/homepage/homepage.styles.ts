@@ -27,7 +27,9 @@ export const IntroductionContainer = styled.div`
 `
 
 export const IntroductionContentWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
 `
 
 export const IntroductionTitle = styled.h2`
@@ -55,9 +57,11 @@ export const Page = styled.section`
 `
 
 export const SectionContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: -12.5px -20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  grid-auto-rows: minmax(100px, auto);
+  margin-left: 30px;
 `
 
 export const GitHubSectionContainer = styled.div`
@@ -82,12 +86,11 @@ export const SectionTitle = styled.h3`
 `
 
 export const TableWrapper = styled.div`
-margin-left: 30px;
-border-radius: 25px;
+  margin-left: 30px;
+  margin-bottom: 40px;
+  border-radius: 25px;
   max-height: 270px;
   overflow-y: scroll;
-  margin-bottom: 40px;
-  // scroll-margin: 20px;
   scroll-margin-right: 30px;
 
   &::-webkit-scrollbar {
@@ -107,6 +110,7 @@ border-radius: 25px;
 `
 
 export const Table = styled.table`
+  width: 100%;
   background-color: #F3F3F3;
   border-collapse: collapse;
   border: none;

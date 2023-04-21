@@ -19,7 +19,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   data,
   children,
   pageContext,
-  disableFooter,
+  hideFooterNavigation,
 }): JSX.Element => {
   const { menuItems } = pageContext
 
@@ -45,11 +45,9 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
               </>
             )}
           </Styles.RightSidebarWrapper>
-          {!disableFooter && (
-            <Styles.FooterWrapper>
-              <Footer items={pageContext.menuItems} />
-            </Styles.FooterWrapper>
-          )}
+          <Styles.FooterWrapper>
+            <Footer items={pageContext.menuItems} hideNavigation={hideFooterNavigation} />
+          </Styles.FooterWrapper>
           <BackToTop />
         </Styles.Wrapper>
       </MDXProvider>

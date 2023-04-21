@@ -18,6 +18,7 @@ export interface IMenu {
 
 export interface IHeaderMenuProps {
   items: IMenu[]
+  hideNavigation?: boolean
 }
 
 export interface IHeaderSubMenuProps {
