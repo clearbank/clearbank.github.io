@@ -32,7 +32,7 @@ const dateFormatter = (date: string) => (new Date(date)).toLocaleDateString('en-
 
 const Homepage: React.FC<any> = (props) => {
   return (
-    <Layout {...props} disableFooter>
+    <Layout {...props} hideFooterNavigation>
       <Styles.Page className='page'>
         <Styles.PageTitle>Developer Portal</Styles.PageTitle>
         <Styles.PageSubTitle>At ClearBank, we're committed to providing you with the tools and support you need to bring your ideas to life.</Styles.PageSubTitle>
@@ -46,14 +46,12 @@ const Homepage: React.FC<any> = (props) => {
             <Styles.IntroductionContentWrapper>
               <Article
                 iconSrc={GetStartedIcon}
-                width="50%"
                 title="Getting Started"
                 href="/docs/api/getting-started"
                 subtitle="Everything you need to know if you’re just starting your API development journey with us"
               />
               <Article
                 iconSrc={ApiIcon}
-                width="50%"
                 title="ClearBank API"
                 href="/docs/api/overview"
                 subtitle="Find out more about our market disrupting API"
