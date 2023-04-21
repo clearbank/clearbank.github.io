@@ -84,9 +84,9 @@ export const maxWidths: Types.MaxWidths = {
 }
 
 export const fonts: Types.Fonts = {
-  body: '"ClearSansText",arial,sans-serif',
-  monospace: '"ClearSansText","Roboto Mono",monospace',
-  heading: '"ClearSansText",arial,sans-serif'
+  body: 'clear-sans-text,arial,sans-serif',
+  monospace: 'clear-sans-text,"Roboto Mono",monospace',
+  heading: 'clear-sans-text,arial,sans-serif'
 }
 
 export const colors = {
