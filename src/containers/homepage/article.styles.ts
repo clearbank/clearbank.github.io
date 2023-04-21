@@ -13,6 +13,10 @@ export const Article = styled.article<{ width?: string, variant?: Types.ArticleV
   display: flex;
   flex-direction: column;
 
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+
   &:hover {
     background: ${props => props.variant === 'secondary' ? '#F3F3F3' : '#88F6DD'};
   }

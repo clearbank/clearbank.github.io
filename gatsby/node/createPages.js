@@ -24,6 +24,9 @@ const ALL_PAGES_SCHEMA = `
   }
 `
 
+const REPOSITORY_OWNER = 'clearbank'
+const REPOSITORY_NAME = 'clearbank.github.io'
+
 module.exports = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
@@ -45,6 +48,8 @@ module.exports = async ({ graphql, actions, reporter }) => {
     path: '/',
     component: path.resolve('./src/templates/home.tsx'),
     context: {
+      repositoryName: REPOSITORY_NAME,
+      repositoryOwner: REPOSITORY_OWNER,
       menuItems,
     },
   })

@@ -1,5 +1,8 @@
-require('dotenv').config()
+const env = require('dotenv')
 const config = require('./config')
+
+env.config()
+
 const plugins = [
   'gatsby-plugin-sitemap',
   'gatsby-plugin-sharp',
@@ -78,7 +81,18 @@ const plugins = [
       path: `${__dirname}/src/assets/images/`
     }
   },
-  'gatsby-plugin-client-side-redirect'
+  'gatsby-plugin-client-side-redirect',
+  {
+    resolve: "gatsby-source-graphql",
+    options: {
+      typeName: "GitHub",
+      fieldName: "github",
+      url: "https://api.github.com/graphql",
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
+    },
+  },
 ]
 // check and add pwa functionality
 if (config.pwa && config.pwa.enabled && config.pwa.manifest) {

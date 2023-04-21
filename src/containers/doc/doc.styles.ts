@@ -28,7 +28,7 @@ export const Page = styled.section`
     margin-top: 60px;
   }
 
-  &:first-of-type > h2:first-of-type {
+  & > h2 {
     font-size: 27.5px;
     line-height: 62px;
     margin-bottom: 30px;

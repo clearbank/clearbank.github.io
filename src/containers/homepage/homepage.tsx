@@ -9,6 +9,7 @@ import ApiIcon from '../../../static/assets/images/api-icon.png'
 import CodeIcon from '../../../static/assets/images/Code.png'
 import LinkIcon from '../../../static/assets/images/Link.png'
 import CheckIcon from '../../../static/assets/images/Check.png'
+import GHIcon from '../../../static/assets/images/GitHub-Mark 1.png'
 
 import * as Styles from './homepage.styles'
 
@@ -25,6 +26,9 @@ const GUIDES = [
   {title: "Webhook lookup", iconSrc: LinkIcon},
   {title: "Allowed characters", iconSrc: CheckIcon},
 ]
+
+const options = { year: 'numeric', month: 'long', day: 'numeric' }
+const dateFormatter = (date: string) => (new Date(date)).toLocaleDateString('en-GB', options)
 
 const Homepage: React.FC<any> = (props) => {
   return (
@@ -59,14 +63,39 @@ const Homepage: React.FC<any> = (props) => {
           <ClientSection/>
         </Styles.Row>
 
-        <Styles.GuidesSectionTitle>Helpful quick reference guides</Styles.GuidesSectionTitle>
-        <Styles.ArticlesContainer>
+        <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
+        <Styles.SectionContainer>
           {GUIDES.map(item => (
             <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
           ))}
-        </Styles.ArticlesContainer>
+        </Styles.SectionContainer>
 
-        <Styles.ArticlesContainer>
+        <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
+        <Styles.GitHubSectionContainer>
+          <img src={GHIcon} alt="github icon" />
+          <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
+        </Styles.GitHubSectionContainer>
+        
+        <Styles.TableWrapper>
+          <Styles.Table>
+            <tbody>
+              {
+                props.data.github.repository.pullRequests.nodes
+                  .filter(node => node.state === 'MERGED')
+                  .map(node => (
+                    <tr key={node.title}>
+                      <Styles.TableTitleCell>
+                        <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
+                      </Styles.TableTitleCell>
+                      <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
+                    </tr>
+                  ))
+              }
+            </tbody>
+          </Styles.Table>
+        </Styles.TableWrapper>
+
+        <Styles.SectionContainer>
           {ARTICLES.map(item =>
             <Article
               href={item.slug}
@@ -75,7 +104,7 @@ const Homepage: React.FC<any> = (props) => {
               subtitle={item.subtitle}
             />
           )}
-        </Styles.ArticlesContainer>
+        </Styles.SectionContainer>
       </Styles.Page>
     </Layout>
   )
