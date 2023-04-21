@@ -1,0 +1,77 @@
+---
+title: "Account reporting"
+order: 3
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+## Multi-currency transactions
+
+Multicurrency transaction endpoints allow you to retrieve a list of transactions for a multicurrency account and any virtual accounts associated with it, a multicurrency virtual account as well as a single transaction. 
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a list of transactions for an account and virtual accounts associated with the account"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}/transactions",
+      version: "1.0.MCCY-Transactions",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a list of transactions for a virtual account"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/transactions",
+      version: "1.0.MCCY-Transactions",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a transaction"
+  endpoints={[
+    {
+      path: "/mccy/v1/Transactions/{transactionId}",
+      version: "1.0.MCCY-Transactions",
+    }
+  ]}
+/>
+
+## Multi-currency statements
+
+Your multicurrency bank statement is an official summary of financial transactions that have occurred for all multicurrency accounts within a calendar month.
+
+Statements can either be generated for all accounts associated with your institution or a specific real account associated with your institution.
+
+<EndpointBlock
+  type="post"
+  title="Request a statement for all accounts associated with your institution"
+  endpoints={[
+    {
+      path: "/mccy/v1/StatementRequests",
+      version: "1.0.MCCY-Statements",
+      webhooks: [
+        'mccy-institution-statement-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Request a statement for a specific account associated with your institution"
+  endpoints={[
+    {
+      path: "/mccy/v1/StatementRequests/account/{iban}",
+      version: "1.0.MCCY-Statements",
+      webhooks: [
+        'mccy-account-statement-webhook-v1'
+      ]
+    }
+  ]}
+/>

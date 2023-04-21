@@ -4,97 +4,66 @@ import { colors, widths, breakpoints } from 'src/components/theme'
 
 export const Container = styled.div`
   color: ${colors.brandLight};
+  height: 100%;
   user-select: none;
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    position: sticky;
-    top: 100px; // header height + margin top where it becomes stuck
-    bottom: 0;
-    width: ${widths.sidebarRight};
-    height: calc(100vh - 60px); // 60px header top
-    margin-top: 40px;
-    margin-bottom: 80px;
-    padding-right: 15px; // reserved space for scrollbar
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
+  padding: 50px 23px 0px 23px;
+  border-left: 3px solid ${colors.boulderapprox};
 `
 
 export const Title = styled.h5`
   margin: 0;
   color: ${colors.body};
   font-weight: 600;
-  font-size: 22px;
+  font-size: 32px;
   cursor: default;
-  line-height: 1.25; // 25px
+  line-height: 38px;
 `
 
 export const List = styled.ul`
   list-style: none;
-  margin-left: ${({ level }) => level * 10}px;
-
-  ${({ level }) =>
-    level === 0 &&
-    css`
-      padding-bottom: 40px;
-    `}
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    margin-left: ${({ level }) => level * 20}px;
-  }
+  margin-top: 15px;
 `
 
-export const Entry = styled.li`
-  margin-top: 20px;
+export const BaseLink = styled.a<{ isActive?: boolean }>`
+  text-decoration: none;
+  cursor: pointer;
+  color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
+  font-weight: ${props => props.isActive ? 600 : 400};
+  line-height: 38px;
+  font-size: 20px;
 
-  &:first-of-type {
-    margin-top: 10px;
-  }
-`
-
-export const SecondLevelEntry = styled(Entry)`
-  margin-top: 10px;
-`
-
-export const Link = styled.a`
-  display: block;
-  color: ${colors.ceruleanBlue};
-  font-size: 14px;
-  font-weight: 600;
-  transition: none;
 
   &:hover {
-    color: ${colors.brandSecondaryDarkest};
+    color: ${colors.wedgewoodapprox};
   }
 `
 
-export const FirstLevelLink = styled(Link)`
+export const LinkWrapper = styled.p`
+  margin-left: 55px;
+
+  &:before {
+    margin-left: -35px;
+    margin-right: 11px;
+    content: url(/assets/images/arrow-icon.png);
+    vertical-align: middle;
+  }
+`
+
+export const FirstLevelLink = styled(BaseLink)`
   font-weight: 600;
+  user-select: none;
 
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding-left: 7px;
-    border-left: 3px solid transparent;
-
-    ${({ isHighlighted }) =>
-      isHighlighted &&
-      css`
-        border-left-color: ${colors.highlightAqua};
-      `}
+  &:before {
+    content: none;
   }
 `
 
-export const SecondLevelLink = styled(Link)`
-  font-weight: 400;
-
-  ${({ isHighlighted }) =>
-    isHighlighted &&
-    css`
-      color: ${colors.brandSecondaryDarkest};
-      font-weight: 600;
-    `}
+export const ThirdLevelLink = styled(BaseLink)`
+  font-size: 16px;
 `
 
-export const Type = styled.span`
-  margin-right: 5px;
-  text-transform: uppercase;
+export const FourthLevelLink = styled(ThirdLevelLink)`
+  &:before {
+    content: none;
+  }
 `

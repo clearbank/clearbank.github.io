@@ -46,7 +46,7 @@ export const BurgerIconWrapper: any = styled.div`
 export const LogoWrapper = styled(Link)`
   display: flex;
   height: 100%;
-  padding: 0 14px 0 12px;
+  padding: 40px 14px 40px 60px;
   align-items: center;
 
   svg {

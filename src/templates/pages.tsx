@@ -9,7 +9,9 @@ import * as Styles from './pages.styles'
 const Pages = (props: any) => {
   return (
     <>
-      <Doc {...props} />
+      <Doc {...props}>
+        {props.children}
+      </Doc>
       <Styles.CookieWrapper>
         <CookieBanner />
       </Styles.CookieWrapper>
@@ -30,7 +32,7 @@ export const pageQuery = graphql`
         docsLocation
       }
     }
-    mdx(fields: { id: { eq: $id } }) {
+    mdx(fields: {id: {eq: $id}}) {
       fields {
         id
         title
@@ -46,18 +48,11 @@ export const pageQuery = graphql`
       frontmatter {
         metaTitle
         metaDescription
-        showPageMenu
       }
     }
     pageContent: allMdx(
-      filter: {
-        fields: { slug: { regex: $regexFilter }
-      }
-      frontmatter: {
-        order: { gt: 0 }
-      }
-    }
-      sort: { fields: frontmatter___order }
+      filter: {fields: {slug: {regex: $regexFilter}}, frontmatter: {order: {gt: 0}}}
+      sort: {frontmatter: {order: ASC}}
     ) {
       edges {
         node {

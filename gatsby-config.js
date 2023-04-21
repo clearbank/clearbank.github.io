@@ -1,5 +1,17 @@
-require('dotenv').config()
+const dotenv = require('dotenv')
 const config = require('./config')
+
+dotenv.config()
+
+const wrapESMPlugin = name =>
+  function wrapESM(opts) {
+    return async (...args) => {
+      const mod = await import(name)
+      const plugin = mod.default(opts)
+      return plugin(...args)
+    }
+  }
+
 const plugins = [
   'gatsby-plugin-sitemap',
   'gatsby-plugin-sharp',
@@ -18,14 +30,14 @@ const plugins = [
     }
   },
   'gatsby-plugin-emotion',
-  'gatsby-plugin-typescript',
+  // 'gatsby-plugin-typescript',
   'gatsby-plugin-root-import',
   `gatsby-transformer-json`,
   {
     resolve: 'gatsby-source-filesystem',
     options: {
       name: 'docs',
-      path: `${__dirname}/content/`
+      path: `${__dirname}/content-new/`
     }
   },
   {
@@ -38,6 +50,12 @@ const plugins = [
   {
     resolve: 'gatsby-plugin-mdx',
     options: {
+      // mdxOptions: {
+      //   remarkPlugins: [
+      //     // Add GitHub Flavored Markdown (GFM) support
+      //     wrapESMPlugin(`remark-gfm`)
+      //   ]
+      // },
       gatsbyRemarkPlugins: [
         {
           resolve: 'gatsby-remark-images',
@@ -114,6 +132,6 @@ module.exports = {
     headerLinks: config.header.links,
     siteUrl: config.gatsby.siteUrl
   },
-  trailingSlash: 'always',
+  trailingSlash: 'never',
   plugins: plugins
 }

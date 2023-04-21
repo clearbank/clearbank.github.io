@@ -1,13 +1,14 @@
 import React from 'react'
-import { MDXRenderer } from 'gatsby-plugin-mdx'
+import kebabCase from 'lodash.kebabcase'
+
 import { Layout } from 'src/components'
 import GithubConnector from 'src/components/github-connector'
-import 'src/components/styles.css'
+
 import config from '../../../config'
-import kebabCase from 'lodash.kebabcase'
 
 import * as Styles from './doc.styles'
 
+import 'src/components/styles.css'
 
 export default function Doc(props: any) {
   const { data } = props;
@@ -16,46 +17,21 @@ export default function Doc(props: any) {
     return null
   }
 
-  const contentInSubdirectory = new RegExp(/^\/docs\/([\w-_]+\/)[\w-_]+\/?$/)
-
-  const pageContent = data.pageContent.edges.map(({ node }, index: number, array: any[]) => {
-    const { id, slug, title } = node.fields
-    const isInSubdirectory = contentInSubdirectory.test(slug)
-    const hasSiblings = array.length > 1
-
-    const isPageInAFilledSubmenu = isInSubdirectory && hasSiblings
-    const isPageWithoutSubmenu = !isInSubdirectory && !hasSiblings
-
-    // do not generate empty root pages in subdirectories
-    if (!isPageInAFilledSubmenu && !isPageWithoutSubmenu) {
-      return null
-    }
-
-    const pageId = isPageInAFilledSubmenu ? kebabCase(title.toLowerCase()) : null
-
-    const filePath = `${config.header.githubDocsRoot}${slug}.mdx`
-
-    return (
-      <Styles.Page id={pageId} className='page' key={id}>
-        <MDXRenderer>{node.body}</MDXRenderer>
-        <Styles.ShareContainer isFirstEntry={index === 0}>
-          <GithubConnector filePath={filePath} />
-        </Styles.ShareContainer>
-      </Styles.Page>
-    )
-  })
-
-  // if you want a main page title for the whole thing
   const pageTitle = data.mdx.fields.title
+  const pageId = kebabCase(data.mdx.fields.title.toLowerCase())
+  const filePath = `${config.header.githubDocsRoot}${props.pageContext.slug}.mdx`
 
   return (
     <Layout {...props}>
-      <Styles.Title id='pageTitle'>
-        {pageTitle}
-      </Styles.Title>
-      <>
-        {pageContent}
-      </>
+      <Styles.Page className='page' id={pageId} key={pageId}>
+        <Styles.Title id='pageTitle' className="page-menu-entry">
+          {pageTitle}
+        </Styles.Title>
+        {props.children}
+        <Styles.ShareContainer isFirstEntry={true}>
+          <GithubConnector filePath={filePath} />
+        </Styles.ShareContainer>
+      </Styles.Page>
     </Layout>
   )
 }

@@ -38,13 +38,9 @@ function slugIsInSecondLevel (slug) {
 
 async function buildMenu (rootLevelPages, graphql) {
   const getSubPagesQuery = folderpath => `
-  subMenuItems: allMdx(filter: {
-      fileAbsolutePath: { regex: "/${folderpath}//" }
-      frontmatter: {
-        order: { ne: null }
-      }
-    },
-    sort: { fields: frontmatter___order }
+  subMenuItems: allMdx(
+    filter: {internal: {contentFilePath: {regex: "/${folderpath}/"}}, frontmatter: {order: {ne: null}}}
+    sort: {frontmatter: {order: ASC}}
   ) {
     edges {
       node {
@@ -59,7 +55,7 @@ async function buildMenu (rootLevelPages, graphql) {
   }
 `
 
-  const fetchSubPages = rootLevelPages.map(async ({ node }) => {
+  const fetchSubPages = rootLevelPages.map(async (node) => {
     const folderName = node.fields.slug
     const isHomePage = node.fields.slug === '/'
 

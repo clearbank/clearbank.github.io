@@ -39,7 +39,7 @@ export const Page = styled.section`
   }
 `
 
-export const ShareContainer = styled.div`
+export const ShareContainer = styled.div<{ isFirstEntry?: boolean }>`
   position: absolute;
   right: 0;
   // first headline has larger margin top
