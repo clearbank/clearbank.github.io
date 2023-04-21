@@ -15,7 +15,9 @@ const defaultProps:Types.LayoutProps = {
     hash: ''
   },
   data: {},
-  pageContext: {}
+  pageContext: {
+    menuItems: [],
+  }
 }
 
 beforeEach(() => {

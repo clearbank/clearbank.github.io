@@ -47,7 +47,7 @@ export const Wrapper = styled.div`
   // emulate max-width on content by setting a fixed width and make right sidebar to fill the remaining availale space
   @media screen and (min-width: ${breakpoints.xxxLarge}) {
     -ms-grid-columns: 1fr auto;
-    prettier-ignore
+    // prettier-ignore
     grid-template-columns: ${maxWidths.content} 1fr;
   }
 `
