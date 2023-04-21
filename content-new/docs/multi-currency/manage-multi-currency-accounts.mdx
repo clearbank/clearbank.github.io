@@ -5,6 +5,8 @@ showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
 
 ## Real MCCY accounts
 
@@ -22,7 +24,7 @@ For more information about currencies supported by ClearBank multi-currency acco
 
 <EndpointBlock
   type="post"
-  title="Create a new account"
+  title="Create a new account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts",
@@ -34,9 +36,12 @@ For more information about currencies supported by ClearBank multi-currency acco
   ]}
 />
 
+
+<WebhookPlaceholder render='mccy-account-created-webhook-v1' />
+
 <EndpointBlock
   type="get"
-  title="Get all accounts"
+  title="Get all accounts (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts",
@@ -47,7 +52,7 @@ For more information about currencies supported by ClearBank multi-currency acco
 
 <EndpointBlock
   type="get"
-  title="Get information for an account"
+  title="Get information for an account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}",
@@ -58,7 +63,7 @@ For more information about currencies supported by ClearBank multi-currency acco
 
 <EndpointBlock
   type="patch"
-  title="Amend the properties of an existing account"
+  title="Amend the properties of an account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}",
@@ -70,9 +75,11 @@ For more information about currencies supported by ClearBank multi-currency acco
   ]}
 />
 
+<WebhookPlaceholder render='mccy-account-updated-webhook-v1' />
+
 <EndpointBlock
   type="patch"
-  title="Update the status of an existing account"
+  title="Update the status of an account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/status",
@@ -85,22 +92,8 @@ For more information about currencies supported by ClearBank multi-currency acco
 />
 
 <EndpointBlock
-  type="delete"
-  title="Close an existing account"
-  endpoints={[
-    {
-      path: "/mccy/v1/Accounts/{accountId}",
-      version: "1.0.MCCY-ACC",
-      webhooks: [
-        'mccy-account-updated-webhook-v1'
-      ]
-    }
-  ]}
-/>
-
-<EndpointBlock
   type="post"
-  title="Enable an existing account to support a new currency"
+  title="Add a currency to an existing account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/currencies",
@@ -111,11 +104,25 @@ For more information about currencies supported by ClearBank multi-currency acco
 
 <EndpointBlock
   type="get"
-  title="Retrieve the balance of an account"
+  title="Get the balance of an account (real)"
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/balances",
       version: "1.0.MCCY-ACC"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Close an existing account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-account-updated-webhook-v1'
+      ]
     }
   ]}
 />
@@ -132,7 +139,7 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
 
 <EndpointBlock
   type="post"
-  title="Create a new virtual account"
+  title="Create an account (virtual)"
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts",
@@ -144,9 +151,11 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
   ]}
 />
 
+<WebhookPlaceholder render='mccy-virtual-account-created-webhook-v1' />
+
 <EndpointBlock
   type="get"
-  title="Get information for a virtual account"
+  title="Get information for an account (virtual)"
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
@@ -157,7 +166,7 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
 
 <EndpointBlock
   type="patch"
-  title="Amend the properties of an existing virtual account"
+  title="Amend the properties of an account (virtual)"
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
@@ -169,9 +178,11 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
   ]}
 />
 
+<WebhookPlaceholder render='mccy-virtual-account-updated-webhook-v1' />
+
 <EndpointBlock
   type="patch"
-  title="Update the status of an existing virtual account"
+  title="Update the status of an account (virtual)"
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/status",
@@ -185,7 +196,7 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
 
 <EndpointBlock
   type="delete"
-  title="Close an existing virtual account "
+  title="Close an account (virtual)"
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
