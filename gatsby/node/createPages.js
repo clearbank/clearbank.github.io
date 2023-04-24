@@ -57,7 +57,6 @@ module.exports = async ({ graphql, actions, reporter }) => {
   // Create blog posts pages.
   allPages.edges.forEach(({ node }) => {
     const { slug, id } = node.fields
-    const regexFilter = `/^${slug}/`
 
     createPage({
       path: (slug || '/').replace('/index', ''),
@@ -66,7 +65,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
         id,
         slug,
         menuItems,
-        regexFilter
+        regexFilter: slug,
       }
     })
 

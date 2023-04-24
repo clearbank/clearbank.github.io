@@ -51,7 +51,7 @@ export const pageQuery = graphql`
     }
     pageContent: allMdx(
       filter: {
-        fields: { slug: { regex: $regexFilter }
+        fields: { slug: { eq: $regexFilter }
       }
       frontmatter: {
         order: { gt: 0 }
