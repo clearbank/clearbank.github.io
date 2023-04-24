@@ -60,7 +60,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
     const regexFilter = `/^${slug}/`
 
     createPage({
-      path: slug || '/',
+      path: (slug || '/').replace('/index', ''),
       component: path.resolve('./src/templates/pages.tsx'),
       context: {
         id,
