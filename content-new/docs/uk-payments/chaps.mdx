@@ -5,13 +5,13 @@ showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
 ## CHAPS
 
-When sending payments via the ClearBank API, CHAPS are initiated via the POST /{vn}/Payments/CHAPS endpoint, while a confirmation of settlement is provided to you via the Transaction Settled webhook.
-Please refer to [Webhooks](/docs/webhooks) for more information.
+When sending payments through our API, CHAPS are initiated via the POST /{vn}/Payments/CHAPS endpoint, while a confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook).
 
-ClearBank accounts support inbound and outbound CHAPS payments. Being that CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
+ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
 However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
 **CHAPS validation**
@@ -39,16 +39,11 @@ This endpoint uses the endToEndIdentification field as a duplicate check to ensu
         'payment-message-validation-failed-webhook-v1',
         'transaction-rejected-v2'
         ]
-    },
-    {
-        path: "/v2/Payments/CHAPS",
-        version: "2.0",
-        webhooks: [
-        'transaction-settled-webhook-v6',
-        'payment-message-assessment-failed-webhook-v1',
-        'payment-message-validation-failed-webhook-v1',
-        'transaction-rejected-v2'
-        ]
     }
     ]}
 />
+
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
+<WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
+<WebhookPlaceholder render='transaction-rejected-v2' />

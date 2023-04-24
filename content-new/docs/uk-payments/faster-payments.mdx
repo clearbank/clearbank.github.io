@@ -1,15 +1,15 @@
 ---
 title: "Faster payments"
-order: 2
+order: 1
 showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
 ## Faster Payments
 
-When sending payments via the ClearBank API, Faster Payments are initiated via the POST /{vn}/Payments/FPS endpoint, and confirmation of settlement is provided to you via the Transaction Settled webhook.
-Please refer to [Webhooks](/docs/webhooks) for more information. 
+When sending payments through our API, Faster Payments are initiated via the POST /{vn}/Payments/FPS endpoint, and confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook).
 
 Sometimes you will need to return a faster payment; for example, because the beneficiary name does not match that of the account number, because the account has been closed or transferred, or because the beneficiary has deceased. To do so, please use this new endpoint:  [/v3/payments/fps/return](#return-an-fps-payment). This can be used to return one single immediate payment.
 
@@ -45,19 +45,14 @@ endpoints={[
       'payment-message-validation-failed-webhook-v1',
       'transaction-rejected-v2'
     ]
-  },
-  {
-    path: "/v2/Payments/FPS",
-    version: "2.0",
-    webhooks: [
-      'transaction-settled-webhook-v6',
-      'payment-message-assessment-failed-webhook-v1',
-      'payment-message-validation-failed-webhook-v1',
-      'transaction-rejected-v2'
-    ]
   }
 ]}
 />
+
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
+<WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
+<WebhookPlaceholder render='transaction-rejected-v2' />
 
 <EndpointBlock
 type="post"
