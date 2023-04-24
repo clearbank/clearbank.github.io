@@ -3,3 +3,232 @@ title: "Bacs"
 order: 3
 showPageMenu: true
 ---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Bacs
+
+Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**.
+
+![Image showing 3-day Bacs payment cycle](/assets/images/BacsOverview-Days.svg "Bacs payment cycle")
+
+As inbound Bacs payments can either be credit or debit payments, the successful payment scenario can result in money moving either to or from the end-customer's account.
+When a payment is successfully applied to an account, this message flow occurs:
+
+![Image showing a successful Bacs payment](/assets/images/BacsOverview-PaymentSuccess.svg "Successful Bacs payment")
+
+If you subscribe to the [Bacs Direct Debit Inbound Payment Created](../webhooks/#bacs-direct-debit-inbound-payment-created-webhook) and [Bacs Direct Credit Inbound Payment Created](../webhooks/#bacs-direct-credit-inbound-payment-created-webhook) webhooks, then you can use the information to notify the account owner of a pending payment scheduled to occur on day 3. You can use the Bacs transaction ID to associate the webhooks that describe each payment. Note that credit payments can be recalled up to 4pm on the processing day by the originator; in this case you will be notified by a [Bacs Direct Credit Recalled webhook](../webhooks/#bacs-direct-credit-recalled-webhook) and the credit will not appear in the account.
+
+Whether a payment is successfully applied to the end-customer's account is determined like this:
+
+![Image showing a Inbound Bacs decision tree](/assets/images/BacsOverview-DecisionTree.svg "Inbound Bacs decision tree")
+
+If the payment cannot be applied to the account, ClearBank will automatically raise an ARUCS (Automated Return of Unapplied Credits Service) item  or an ARUDD (Automated Return of Unpaid Direct Debit) item. You will be notified with a [Bacs Direct Credit Return Created](../webhooks/#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](../webhooks/#bacs-direct-debit-return-created-webhook) webhook. Note that if a Direct Debit is paid from a virtual account, it is your responsibility to ensure that the account has sufficient funds. If it does not, use the returns endpoints below.
+
+## Returning a Bacs payment
+
+You can choose to return a payment that has been applied. Returns should be initiated straight away, but can be initiated until 15:30 (UTC) the working day after settlement.
+
+**To return a Direct Credit** use the endpoints below and specify the reason for return using a [Direct Credit reason code](#arucs-direct-credit-reason-codes). ClearBank will notify you with a [Bacs Direct Credit Return Created webhook](../webhooks/#bacs-direct-credit-return-created-webhook) on the day the return is created (Day 3 or 4).  The funds will be transferred to your Bacs suspense account on the same day and returned on Day 5 or 6. The message flow is shown here:
+
+![Image showing a Inbound Bacs decision tree](/assets/images/BacsOverview-ReturnsDC.svg "Message flow: Return a Direct Credit")
+
+**To return a Direct Debit** use the endpoints below and specify the reason for return using a [Direct Debit reason code](#arudd-direct-debit-reason-codes). ClearBank will notify you with a [Bacs Direct Debit Return Created webhook](../webhooks/#bacs-direct-debit-return-created-webhook) on the day the return is created (Day 3 or 4). The funds will be transferred from your Bacs suspense account to the end-customer's account on the same day and returned on Day 5 or 6. The rest of the message flow is similar to returning a Direct Credit and is shown here:
+
+![Image showing a Inbound Bacs decision tree](/assets/images/BacsOverview-ReturnsDD.svg "Message flow: Return a Direct Debit")
+
+Use the endpoint below to return payments from a real account. To return payments from a virtual account, use: [/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](#return-bacs-payment-virtual-account)
+
+<EndpointBlock
+  type="post"
+  title="Return Bacs payment (real account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Transactions/Returns",
+      version: "1.0",
+      webhooks: [
+      'bacs-direct-credit-return-created-webhook-v4',
+      'bacs-direct-debit-return-created-webhook-v4',
+      'transaction-settled-webhook-v6'
+      ]
+    }
+  ]}
+/>
+<EndpointBlock
+  type="post"
+  title="Return Bacs payment (virtual account)"
+  endpoints={[
+    {
+      path:"/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns",
+      version: "1.0",
+      webhooks: [
+      'bacs-direct-credit-return-created-webhook-v4',
+      'bacs-direct-debit-return-created-webhook-v4',
+      'transaction-settled-webhook-v6'
+      ]
+    }
+  ]}
+/>
+
+## Bacs Direct Credit payment webhooks
+
+ClearBank does not sponsor Direct Credits, so there are no outbound Direct Credit payments. The webhooks relating to inbound Direct Credit transactions are not associated with an endpoint, instead they are listed here:
+
+- [Bacs Direct Credit Inbound Payment Created webhook](#bacs-direct-credit-inbound-payment-created-webhook)    
+- [Transaction Settled webhook](#transaction-settled-webhook)
+- [Bacs Direct Credit Inbound Payment Held webhook](#bacs-direct-credit-inbound-payment-held-webhook)
+- [Bacs Credit Payment Not Settled webhook](#bacs-credit-payment-not-settled-webhook)
+- [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook)
+- [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) (this can also occur in response to the Bacs returns endpoint)
+
+<WebhookPlaceholder render='bacs-direct-credit-inbound-payment-created-webhook-v2' />
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='bacs-direct-credit-inbound-payment-held-webhook-v3' />
+<WebhookPlaceholder render='bacs-credit-payment-not-settled-webhook-v3' />
+<WebhookPlaceholder render='bacs-direct-credit-recalled-webhook-v1' />
+<WebhookPlaceholder render='bacs-direct-credit-return-created-webhook-v4' />
+
+## Bacs Direct Debit payment webhooks
+
+The webhooks that relate to inbound Direct Debit payments also have no direct association with an endpoint:
+
+- [Bacs Direct Debit Inbound Payment Created webhook](#bacs-direct-debit-inbound-payment-created-webhook)
+- [Bacs Direct Debit Indemnity Claim Received Event webhook](#bacs-direct-debit-indemnity-claim-received-event-webhook)
+- [Transaction Settled webhook](#transaction-settled-webhook)
+- [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) (this can also occur in response to the Bacs returns endpoint)
+- [Bacs Debit Payment Not Settled webhook](#bacs-debit-payment-not-settled-webhook)
+
+These two webhooks relate to Direct Debit payments as they appear in the **originator's account**:
+- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - indicates funds received as a result of a Direct Debit payment.
+- [Bacs Unpaid Direct Debit Received webhook](#bacs-unpaid-direct-debit-received-webhook) - indicates that a Direct Debit could not be paid.
+
+You may occasionally receive multiple webhooks with the same `EndtoEndTransactionId`. In this instance, a duplicate check should take place using the `TransactionId`.
+If the same `TransactionId` is used for both payments, the webhook will be a duplicate. In case the TransactionId(s) are different, these will relate to separate transactions.
+
+<WebhookPlaceholder render='bacs-direct-debit-inbound-payment-created-webhook-v2' />
+<WebhookPlaceholder render='bacs-direct-debit-indemnity-claim-received-event-webhook-v3' />
+<WebhookPlaceholder render='bacs-direct-debit-return-created-webhook-v4' />
+<WebhookPlaceholder render='bacs-debit-payment-not-settled-webhook-v3' />
+<WebhookPlaceholder render='bacs-debit-contra-received-webhook-v3' />
+<WebhookPlaceholder render='bacs-unpaid-direct-debit-received-webhook-v3' />
+
+## Bacs codes reference
+
+The following tables give additional detail on the meanings of the various codes used in Bacs payments and returns.
+* [Bacs transaction codes](#bacs-transaction-codes)
+* [ARUCS (Direct Credit) reason codes](#arucs-direct-credit-reason-codes)
+* [ARUDD (Direct Debit) reason codes](#arudd-direct-debit-reason-codes)
+
+### Bacs transaction codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td><td>Direct Debit first collection</td>
+</tr>
+<tr>
+<td>17</td><td>Direct Debit regular collection, or credit contra (debit record to balance credit records)</td>
+</tr>
+<tr>
+<td>18</td><td>Direct Debit re-presentation</td>
+</tr>
+<tr>
+<td>19</td><td>Direct Debit final collection</td>
+</tr>
+<tr>
+<td>99</td><td>Direct Credit, or debit contra (credit record to balance debit records)</td>
+</tr>
+<tr>
+<td>Z4</td><td>Interest payments</td>
+</tr>
+<tr>
+<td>Z5</td><td>Dividend payments</td>
+</tr>
+</tbody>
+</table>
+
+### ARUCS (Direct Credit) reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td><td>Invalid details</td><td>Account details not recognised</td>
+</tr>
+<tr>
+<td>2</td><td>Beneficiary deceased</td><td> </td>
+</tr>
+<tr>
+<td>3</td><td>Account transferred</td><td>Account transferred to a new bank or building society</td>
+</tr>
+<tr>
+<td>5</td><td>No account</td><td>Account number is not recognised at the Receiving Bank</td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Beneficiary has closed its account for an unknown reason</td>
+</tr>
+<tr>
+<td>C</td><td>Requested by Remitter</td><td>Remitter has requested payment is not applied</td>
+</tr>
+</tbody>
+</table>
+
+### ARUDD (Direct Debit) reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td><td>Refer to payer</td><td>A payer’s bank is not in a position to pay the Direct Debit; (for some reason other than the exception below).
+Or, the service of a Third Party Debt Order (formerly a Garnishee Order) or Arrestment on the payer’s account, his bankruptcy, liquidation or appointment of receiver</td>
+</tr>
+<tr>
+<td>1</td><td>Instruction cancelled</td><td>Instruction cancelled by payer or their bank</td>
+</tr>
+<tr>
+<td>2</td><td>Payer deceased</td><td> </td>
+</tr>
+<tr>
+<td>3</td><td>Account transferred</td><td>Account transferred to a new bank or building society</td>
+</tr>
+<tr>
+<td>4</td><td>Advance notice disputed</td><td>Payer disputes time, amount or frequency of advance notice and has requested single payment to be countermanded</td>
+</tr>
+<tr>
+<td>5</td><td>No account (OR wrong account type)</td><td>Account number is not recognised at the paying bank</td>
+</tr>
+<tr>
+<td>6</td><td>No Instruction</td><td>No Instruction held with paying bank</td>
+</tr>
+<tr>
+<td>7</td><td>Amount differs</td><td>Payer states the amount of the Direct Debit differs from the amount in the advance notice to payer</td>
+</tr>
+<tr>
+<td>8</td><td>Amount not yet due</td><td>Payer states date of debiting is in advance of the due date specified in the advance notice to the payer.
+AUDDIS service users only – It is less than 2 working days since the DDI was lodged</td>
+</tr>
+<tr>
+<td>9</td><td>Presentation overdue</td><td>Payer states date of presentation is more than 3 working days after due date in the advance notice to payer
+Or, re-presentation of Unpaid Direct Debit is more than one month from original Direct Debit processing day</td>
+</tr>
+<tr>
+<td>A</td><td>Service user differs</td><td>Identity of service user differs from DDI</td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Payer has closed their account for an unknown reason</td>
+</tr>
+</tbody>
+</table>

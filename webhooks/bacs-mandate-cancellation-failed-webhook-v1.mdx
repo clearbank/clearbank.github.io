@@ -1,0 +1,74 @@
+---
+title: "Bacs Mandate Cancellation Failed webhook"
+version: 1
+webhook: true
+---
+
+**This sends a webhook notification confirming that a Bacs Direct Debit Instruction cancellation has failed.**
+
+This webhook is raised when ClearBank cannot match a cancellation
+instruction to an active DDI. This can be because the instruction has
+already been cancelled by a customer through the DELETE Mandates API
+endpoint, or because the original DDI was incorrectly set up.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsMandateCancellationFailed",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ReasonCode`             |Reason for failed cancellation<br/>- 6 – No instruction; no match can be made, or a matched item is already cancelled.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(6)`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `TransactionCode`        |(Optional) Bacs Transaction Code.<br /> Type: `string` or `null`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `OriginatorInformation`  |Originator Details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `PayerInformation`       |Payer Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `ServiceUserNumber`      |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `Reference`              |Bacs Mandate Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Source`                 |Origination of the endpoint.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `EventDate`              |The date the mandate was returned. Time in UTC.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+#### Example Bacs Mandate Cancellation Failed webhook request body
+
+```json
+{
+	"Type": "BacsMandateCancellationFailed",
+	"Version": 1,
+	"Payload":
+		{
+          "ReasonCode": "I",
+          "TransactionCode": "0C",
+          "OriginatorInformation":
+              {
+               "AccountName": "Jane Doe",
+               "SortCode": "445566",
+               "AccountNumber": "87654321"
+               },
+          "PayerInformation":
+               {
+               "AccountName": "UK Telecomms",
+               "SortCode": "778899",
+               "AccountNumber": "12121212"
+               },
+          "ServiceUserNumber": "010203",
+          "Reference": "MBQZRTF12345",
+          "Source": "Bacs",
+          "EventDate": "2019-03-01T00:00:00Z"
+		},
+    "Nonce": 1944996403
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1944996403
+}
+```

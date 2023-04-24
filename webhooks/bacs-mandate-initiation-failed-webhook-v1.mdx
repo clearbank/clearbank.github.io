@@ -1,0 +1,76 @@
+---
+title: "Bacs Mandate Initiation Failed webhook"
+version: 1
+webhook: true
+---
+
+**This sends a webhook notification confirming that a Bacs Direct Debit Instruction initiation has failed.**
+DDI has been received from Bacs, but could not be applied.
+
+The reason for the fail is provided as a one-character code in the
+`ReasonCode` field of the webhook. Possible reasons are that the account
+is non-existent, closed, not accepting debits, or that ClearBank
+previously returned the debit because it was cancelled by the paying
+bank.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsMandateInitiationFailed",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ReasonCode`            |Reason for failed initiation:<br/>5 - No account<br/>B - Virtual account is closed<br/>F - Real account is closed or does not accept Direct Debits<br/>I - Reference is subset or superset of another item for that SUN and account<br/>K - The Paying Bank has cancelled the DDI for that Service User<br/>O - Invalid reference.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(5¦B¦F¦I¦K¦O)`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `EventDate`             |The date the mandate was returned. Time in UTC.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `OriginatorInformation` |Originator Details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `PayerInformation`      |Payer Details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `ServiceUserNumber`     |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `Reference`             |Bacs Mandate Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Source`                |Origination of the endpoint.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+
+#### Example Bacs Mandate Initiation Failed webhook request body
+
+```json
+{
+	"Type": "BacsMandateInitiationFailed",
+	"Version": 1,
+	"Payload":
+		{
+             "ReasonCodes":  "I",
+             "ReceivedDateUtc": "2019-03-01T03:06:03.174Z",
+             "EffectiveDateUtc": "2019-03-01T01:03:01.736Z",
+             "OriginatorInformation":
+                 {
+                    "AccountName": "Jane Doe",
+                    "SortCode": "445566",
+                    "AccountNumber": "87654321"
+                  },
+             "PayerInformation":
+                  {
+                    "AccountName": "UK Telecomms",
+                    "SortCode": "778899",
+                    "AccountNumber": "12121212"
+                  },
+             "ServiceUserNumber": "010203",
+             "Reference": "MBQZRTF12345",
+             "Source": "Bacs",
+             "EventDate": "2019-03-01T00:00:00Z"
+		},
+      "Nonce": 1944956301
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1944956301
+}
+```

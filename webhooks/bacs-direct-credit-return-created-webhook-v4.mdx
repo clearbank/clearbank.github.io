@@ -1,0 +1,93 @@
+---
+title: "Bacs Direct Credit Return Created webhook"
+version: 4
+webhook: true
+---
+
+**This sends a webhook notification confirming a Bacs Direct Credit return has been created.**
+
+This webhook is the notification that a credit is being returned.
+
+A return is a payment that cannot be applied to the payee account.
+Possible reasons are:
+
+-   the account is non-existent, closed, or not accepting credits
+
+-   the customer has revoked the credit using the API before 4pm on the
+    processing day
+
+The reason for the return is provided as a one-digit code in the
+`ReasonCode` field of the webhook.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDirectCreditReturnCreatedWebHookPayload",
+    "Version": 4
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SuspenseAccount`               |*Required* Details of the suspense account from which the Bacs Direct Credit is to be returned.<br /><br />`ClearBankAccountIdentifier`: <br /> <br />`AccountNumber`<br />Type: `string` <br />Max. Length: `8`<br/>Min. Length: `8`<br />Pattern:  `^[0-9]*$` <br /><br />`SortCode`<br />Type: `string` <br />Max. Length: `6`<br />Min. Length: `6`<br />Pattern: `^[0-9]*$`<br /><br />`AccountName`<br />Type: `string` <br />Max. Length: `128`<br />Min. Length: `0`<br />Pattern: `^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$`<br /> <br /> 
+| `BeneficiaryDetails`                      |*Required*  Details of the beneficiary account to which the Bacs Direct Credit is being returned.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        Pattern: `^[0-9]*$`<br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        Pattern: `^[0-9]*$`<br /><br />`Account Name`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />        Pattern: `^([A-Z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ServiceUserInformation`                      |*Required* Details of the service user's account as specified in the original Bacs Direct Credit transaction.<br /><br /> `BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        Pattern: `^[0-9]*$`<br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        Pattern: `^[0-9]*$`<br /><br />`Account Name`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />        Pattern: `^([A-Z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `ReasonCode`       |*Required* Reason code to denote the reason why the Bacs Direct Credit transaction is being returned. For more information about reason codes, refer to 'The Payment Service Provider's Guide and Rules to the Bacs Direct Credit Scheme'.<br/>Type: `string` <br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(0¦2¦3¦5¦B¦C)`<br /> <br /> 
+| `Reference`                      |*Required*  Reference for the Bacs Direct Credit transaction being returned. <br />Type: `string`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `Amount`            |*Required*  Amount of the Bacs Direct Credit transaction being returned.<br /> Type: `Number`<br/>Format: `Decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `TransactionCode`            |*Required*  Transaction code for the Bacs Direct Credit transaction being returned. It is always going to be RA. The transaction code RA means that funds associated with an unapplied credit are being returned using an ARUCS payment instruction via Bacs.<br /> Type: `string`<br/>Max. Length: `2`<br/>Min. Length: `2`<br /> Pattern: `RA`                                                                                                        <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `Source`                |*Required*  Source of the transaction being returned. For example: Undefined, Portal, Api, ClearBank, or Bacs.<br />Type: `string`<br/>Max. Length: `9`<br/>Min. Length: `3`<br/>   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `BacsTransactionId`             |*Required*  Internal identifier for the Bacs Direct Credit transaction being returned.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `36`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `OriginalBacsTransactionId`                   |*Required*  Internal identifier for the original Bacs Direct Credit transaction.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `36`<br/> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `OriginalBacsTransactionSun`                    |*Required*  Service User Number for the original Bacs Direct Credit transaction.<br /> Type: `string`<br />  Max. Length: `6`<br />    Min. Length: `6`<br />    Pattern: `^[0-9]*$` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+#### Example Bacs Direct Credit Return Created webhook request body
+
+```json
+{
+    "Type": "BacsDirectCreditReturnCreated",
+    "Version": 4,
+    "Payload":
+       {
+          "SuspenseAccount":
+            {
+            "AccountNumber": "99119911"
+            "SortCode": "001100",
+            "AccountName": "CustomerBank",
+            },
+          "BeneficiaryDetails":
+            {
+            "AccountNumber": "87654321"
+            "SortCode": "445566",
+            "AccountName": "Jane Doe",
+            },
+          "ServiceUserInformation":
+            {
+            "AccountNumber": "12121212"
+            "SortCode": "778899",
+            "AccountName": "UK Telecomms",
+            },
+          "ReasonCode": "3",
+          "Reference": "JADA157QWNOV2018",
+          "Amount": 25.50,
+          "TransactionCode": "99",
+          "Source": "Bacs",
+          "BacsTransactionId": "b6bb16f4-a907-1ed8-8e1b-4e18efb1d82f"
+          "OriginalBacsTransactionId:" "d61b2513-f586-43da-8b72-4f6ba2e28fea",
+          "OriginalBacsTransactionSun:" "012345"
+          }
+    "Nonce": 329599533
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 329599533
+}
+```

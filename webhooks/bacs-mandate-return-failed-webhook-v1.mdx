@@ -1,0 +1,75 @@
+---
+title: "Bacs Mandate Return Failed webhook"
+version: 1
+webhook: true
+---
+
+**This sends a webhook notification confirming that a Bacs Direct Debit Instruction Return has failed.**
+
+This webhook indicates that the API endpoint `POST BacsMandateReturned`
+was called, but ClearBank could not match the data with any active DDI.
+The request could not be fulfilled because there was no basis on which
+to enact it. It is returned on the day of the request.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsMandateReturnFailed",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MandateId`             |Unique Identification of the Instruction.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+| `ErrorMessage`          |Reason for failed return<br/> Mandate Return Received Not Valid. <br />Type: `string` or `null`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `OriginatorInformation` |Originator Details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `PayerInformation`      |Payer Details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `ServiceUserNumber`     |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `Reference`             |Bacs Mandate Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Source`                |Origination of the endpoint.<br />`BacsEventSource`: One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `EventDate`             |The date the mandate was returned. Time in UTC.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+#### Example Bacs Mandate Return Failed webhook request body
+
+```json
+{
+	"Type": "BacsMandateReturnFailed",
+	"Version": 1,
+	"Payload":
+	{
+         "MandateId": "d88df1f7-ebc0-e184-6470-f6b718e3445c",
+         "ErrorMessage": "Mandate return request is not valid 
+            AccountId: 3bf0fb40-5939-f34c-5942-e0e47d50686a |
+            RepeatingPaymentId: 3bf0fb40-5939-f34c-5942-e0e47d50686a |
+            Errors: \"Duplicate Mandate\"",
+         "OriginatorInformation": {
+            "AccountName": "Jane Doe",
+            "SortCode": "445566",
+            "AccountNumber": "87654321"
+            },
+         "PayerInformation":  {
+            "AccountName": "UK Telecomms",
+            "SortCode": "778899",
+            "AccountNumber": "12121212"
+            },
+         "ServiceUserNumber": "010203",
+         "Reference": "MBQZRTF12345",
+         "Source": "Bacs",
+         "EventDate": "2019-03-01T00:00:00Z"
+	},
+    "Nonce": 1971766405
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1971766405
+}
+```

@@ -1,0 +1,74 @@
+---
+title: "Bacs Direct Credit Inbound Payment Held webhook"
+version: 3
+webhook: true
+---
+
+**This sends a webhook notification confirming that a Bacs Direct Credit inbound payment has been held.**
+
+Before a credit is settled, it undergoes regulatory screening against
+sanctions lists, or for key risk indicators. If there is anything
+suspicious, it is held for review, and this webhook is returned. It is
+normally followed by the ***transaction-settled*** webhook when the
+payment is released.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDirectCreditInboundPaymentHeldV3",
+    "Version": 3,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ServiceUserInformation`                      |Bacs Service User.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+| `BeneficiaryDetails`                      |Details of where the payment is being applied.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Reference`                      |Bacs Payment Transaction Reference. <br />Type: `string` or `null`<br/>Max. Length: `35`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Amount`            |Transaction Amount.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `ProcessingDate`       |Processing Date.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `TransactionCode`            |Bacs Transaction Code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(99¦Z4¦Z5¦86)$`<br /> <br/>                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `Source` |Origination of the endpoint.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `BacsTransactionId`             |Bacs Transaction Id.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+| `ServiceUserNumber`                    |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+
+#### Example Bacs Direct Credit Inbound Payment Held webhook request body
+
+```json
+{
+     "Type": "BacsDirectCreditInboundPaymentHeld",
+     "Version": 3,
+     "Payload":
+       {
+		"ServiceUserInformation": {
+			"AccountName": "UK Telecomms",
+			"SortCode": "778899",
+			"AccountNumber": "12121212
+        },
+		"BeneficiaryDetails":     {
+            "AccountName": "Jane Doe",
+            "SortCode": "445566",
+            "AccountNumber": "87654321"
+            },
+		"Reference": "d7eac213eb6143e0900c0cea2620ec8a",
+		"Amount": 20.50,
+		"ProcessingDate": "2019-04-01T00:00:00Z",
+		"TransactionCode": "99",
+		"Source": "Bacs",
+		"BacsTransactionId": "f688dfa0-584e-22b9-4444-584301077bbb"
+        }
+     "Nonce": 329599531
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 329599531
+}
+```

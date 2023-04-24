@@ -1,0 +1,93 @@
+---
+title: "Bacs Direct Debit Return Created webhook"
+version: 4
+webhook: true
+---
+
+**This sends a webhook notification confirming a Bacs Direct Debit return has been created.**
+
+This webhook is the notification that a debit is being returned.
+
+A return is a payment that cannot be applied to the payee account.
+Possible reasons are,
+
+-   the account is non-existent, closed, not accepting debits, or
+    insufficiently provisioned
+
+-   No Direct Debit Instruction for the transaction can be found
+
+-   the customer calls for the return through the transactions/returns
+    endpoint of the API
+
+The reason for the return is provided as a one-digit code in the
+`ReasonCode` field of the webhook.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDirectDebitReturnCreatedWebHookPayloadV4",
+    "Version": 4,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `PayerInFormation`               |*Required* Details of the payer account from which the Direct Debit is to be returned.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        Pattern: `^[0-9]*$`<br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        Pattern: `^[0-9]*$`<br /><br />`AccountName`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />        Pattern: `^([A-Z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+| `OriginatorInFormation`                      |*Required*  Details of the originating account as specified in the original Direct Debit transaction.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        Pattern: `^[0-9]*$`<br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        Pattern: `^[0-9]*$`<br /><br />`AccountName`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />        Pattern: `^([A-Z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `ReasonCode`       |*Required* Reason code to denote the reason why the Bacs Direct Debit transaction is being returned. For more information about reason codes, refer to 'The Payment Service Provider's Guide and Rules to the Bacs Direct Debit Scheme'.<br/>Type: `string` <br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `^(0¦1¦2¦3¦4¦5¦6¦7¦8¦9¦A¦B)$`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `Reference`                      |*Required*  Reference for the Direct Debit transaction being returned.<br />Type: `string`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+| `Amount`            |*Required*  Amount of the Direct Debit transaction being returned.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `TransactionCode`            |*Required*  Transaction code for the Bacs Direct Debit transaction being returned. For more information about transaction codes, refer to 'The Paying Payment Service Provider's Guide and Rules to the Direct Debit Scheme'.<br /> Type: `string`<br/>Max. Length: `2`<br/>Min. Length: `2`<br /> Pattern: `^(U1¦U7¦U8¦U9)$`                                                                                                        <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+| `Source`                |*Required*  Source of the transaction being returned. For example: Undefined, Portal, Api, ClearBank, or Bacs.<br />Type: `string`<br/>Max. Length: `9`<br/>Min. Length: `3`<br/>   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `BacsTransactionId`             |*Required*  Internal identifier for the Bacs Direct Debit transaction being returned.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `36`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+| `ProcessingDate`       |*Required* Processing date of the original Direct Debit transaction being returned.<br/>Type: `string` <br/>Format: `date-time`<br/>Min. Length: `1`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `ServiceUserNumber`                    |*Required*  Service User Number used to return the item.<br /> Type: `string`<br />  Max. Length: `6`<br />    Min. Length: `6`<br />    Pattern: `^[0-9]*$` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+| `OriginalBacsTransactionId`                   |*Required*  Internal identifier for the original Bacs Direct Debit transaction.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `36`<br/> <br /> 
+                                                                                                                                                                                                                                                                                                                                                                                                                                    | `OriginalBacsTransactionSun`                    |*Required*  Service User Number for the original Bacs Direct Debit transaction.<br /> Type: `string`<br />  Max. Length: `6`<br />    Min. Length: `6`<br />    Pattern: `^[0-9]*$` <br /> <br />                                                                                                                                                 
+
+#### Example Bacs Direct Debit Return Created webhook request body
+
+```json
+{
+    "Type": "BacsDirectDebitReturnCreated",
+    "Version": 4,
+    "Payload":
+       {
+            "PayerInformation":
+                  {
+                     "AccountNumber": "43211234"
+                     "SortCode": "002200",
+                     "AccountName": "Mary Brown",
+                  },
+            "OriginatorInformation":
+                  {
+                    "AccountNumber": "78978900"
+                    "SortCode": "113344",
+                    "AccountName": "Q-Mobile",
+                  },
+             "ReasonCode": "B",
+             "Reference": "2a51971a3576b2a5960ff65202e1539d",
+             "Amount": 25.00,
+             "TransactionCode": "17",
+             "Source": "Bacs",
+             "BacsTransactionId": "14a216fa-a70b-a211-3f31-47c2d992c86c"
+             "ProcessingDate": "2019-04-01T00:00:00Z",
+             "ServiceUserNumber": "030201",
+             "OriginalBacsTransactionId": "d61b2513-f586-43da-8b72-4f6ba2e28fea",
+             "OriginalBacsTransactionSun": "012345"
+                   }
+          "Nonce": 339588531
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 339588531
+}
+```

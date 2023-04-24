@@ -1,0 +1,82 @@
+---
+title: "Bacs Unapplied Credit Received webhook"
+version: 3
+webhook: true
+---
+
+**This sends a webhook notification confirming that an Unapplied Credit has been received.**
+
+
+Future expansion. This notification (day 4 or 5) informs a bank
+remitting credits, that the receiving bank could not apply credit and is
+sending it back.
+
+#### Request body
+
+```json
+{
+    "Type": "BacsUnappliedCreditReceivedV3",
+    "Version": 3,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CreditorInformation`                      |Creditor Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `DebtorInformation`                      |Debtor Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Reference`                      |Bacs Payment Transaction Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Amount`            |Transaction Amount.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `ProcessingDate`       |Date Processed.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `TransactionCode`            |TransactionCode<br/>- RA  – Automated return of unapplied credits.<br /> Type: `string` or `null`<br /> <br/>                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `Status`                      |Status.<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending` or `Processsed`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `ServiceUserNumber`                    |Integrator’s Unique Identifier registered with BACS.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `ReasonCode`       |ReasonCode<br/>- 0 – Invalid details<br/>- 2 – Beneficiary deceased<br/>- 3 – Account transferred<br/>- 5 – No account<br/>- B – Account closed<br/>- C – Requested by Remitter<br/>-For more information about reason codes, refer to Appendix 4 of The Payment Service Provider’s Guide and Rules to the Bacs Direct Credit Scheme.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(0¦2¦3¦5¦B¦C)`<br /> <br />
+                                                                                                                                                                                                                                                                      | `Source` 				|Origination of the endpoint.<br /><br />`BacsEventSource`:<br /><br />`Bacs`<br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                       
+| `BacsTransactionId`             |Bacs Transaction Id.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />      
+
+
+                                                                                                                                                                                                                                          |
+
+#### Example Bacs Unapplied Credit Received  webhook request body
+
+```json
+{
+  "Type": "BacsUnappliedCreditReceived",
+  "Version": 3,
+  "Payload":
+    { 
+      "CreditorInformation":
+        {
+           "AccountName": "DEST ACCOUNT",
+           "SortCode": "724000",
+           "AccountNumber": "00001090"
+        },
+       "DebtorInformation":
+        {
+           "AccountName": "NAMEOFORIGINATOR  ",
+           "SortCode": "601613", (
+           "AccountNumber": "31926819"
+        },
+      "Reference": "LATIZHAPMDULOUBXAX",
+      "Amount": 1.05,
+      "ProcessingDate": "2021-01-10T00:00:00Z",
+      "TransactionCode": "RA",
+      "Status": "Pending",
+      "ServiceUserNumber": "229816",
+      "ReasonCode": "C",
+      "Source": "Bacs",
+      "BacsTransactionId": "69099368-381a-4578-a066-e16bab86002a"
+    },
+  "Nonce": 1077041584
+}
+```
+#### Example webhook response
+
+```json
+{
+  "Nonce": 1077041584
+}
+```
