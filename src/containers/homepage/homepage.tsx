@@ -61,12 +61,12 @@ const Homepage: React.FC<any> = (props) => {
           <ClientSection/>
         </Styles.Row>
 
-        <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
+        {/* <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
         <Styles.SectionContainer>
           {GUIDES.map(item => (
             <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
           ))}
-        </Styles.SectionContainer>
+        </Styles.SectionContainer> */}
 
         <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
         <Styles.GitHubSectionContainer>
