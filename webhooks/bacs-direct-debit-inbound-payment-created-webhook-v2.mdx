@@ -4,17 +4,13 @@ version: 2
 webhook: true
 ---
 
-**This sends a webhook notification confirming that a Bacs Direct Debit inbound payment has been created. **
+This webhook confirms that a Bacs Direct Debit inbound payment has been received.
 
-On receipt of a direct debit request from a customer bank or its
-business, this webhook notifies that the debit will be paid out of its
-account on the following day.
+On receipt of a Direct Debit collection request from a service user, this webhook notifies that ClearBank will attempt to pay the debit on the working day following the processing date specified.
 
-The bank can use this to inform the debit account holder to expect the
+You can use this to inform the debit account holder to expect the
 debit, and ensure that there are sufficient funds to cover it. If they
-want to oppose the debit, they should contact ClearBank.
-
-
+want to oppose the debit, they should contact you and you can use the returns endpoint (or the ClearBank Portal) to make the return on the entry day (Day 3).
 
 #### Request body
 
@@ -30,15 +26,15 @@ want to oppose the debit, they should contact ClearBank.
 #### Payload
 | Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `PayerInformation`                      |Payer Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-| `OriginatorInformation`                      |Originator Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-| `Amount`            |Transaction Amount.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-| `Reference`                      |Bacs Collection Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-| `ProcessingDate`       |Date Processed.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-| `ServiceUserNumber`                    |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-| `TransactionCode`            |Bacs Transaction Code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(0¦17¦18¦19)`<br /> <br/>                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-| `Source` |Origination of the endpoint.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-| `BacsTransactionId`             |Bacs Transaction Id.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `PayerInformation`            |Payer information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`| 
+| `OriginatorInformation`       |Originator information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0` |
+| `Amount`                      |Transaction amount.<br /> Type: `number`<br/>Format: `decimal` |
+| `Reference`                   |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0` |
+| `ProcessingDate`              |Processing date. This is day 2 of the Bacs processing cycle.<br/>Type: `string` <br/>Format: `date-time` |
+| `ServiceUserNumber`           |Service user's unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0`  |
+| `TransactionCode`             |Bacs transaction code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(01¦17¦18¦19)` |
+| `Source`                      |Origination of the event.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` |
+| `BacsTransactionId`           |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0` |
 
 #### Example Bacs Direct Debit Inbound Payment Created webhook request body
 
@@ -49,12 +45,12 @@ want to oppose the debit, they should contact ClearBank.
    "Payload":
       {
     "PayerInformation": {
-       "AccountName": "John Doe",
+       "AccountName": "JOHN DOE",
        "SortCode": "112233",
        "AccountNumber": "12345678"
        },
     "OriginatorInformation": {
-       "AccountName": "UK Telecomms",
+       "AccountName": "UK TELECOMMS",
        "SortCode": "778899",
        "AccountNumber": "12121212"
        },

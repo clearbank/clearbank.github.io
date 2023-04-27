@@ -4,14 +4,14 @@ version: 3
 webhook: true
 ---
 
-**This sends a webhook notification confirming a Bacs Unpaid Direct Debit has been received.**
+**This webhook confirms a Bacs Unpaid Direct Debit has been received.**
 
-The direct debit originator receives notification that a direct debit
+The Direct Debit service user receives notification that a Direct Debit
 could not be paid from an account. Hence, the money needs to be
-returned.
+returned and you must ensure that the account has sufficient funds.
 
-This webhook arrives on day 4 or 5 in relation to the original direct
-debit, and is settled on the following working day.
+This webhook arrives on day 4 or 5 in relation to the original Direct
+Debit, and is settled on the working day following the processing day specified.
 
 
 #### Request body
@@ -28,17 +28,17 @@ debit, and is settled on the following working day.
 #### Payload
 | Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `CreditorInformation`                      |Creditor Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />  |
-| `DebtorInformation`                      |Debtor Information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />      |
-| `Reference`                      |Bacs Payment Transaction Reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /><br />  |
-| `Amount`            |Transaction Amount.<br /> Type: `Number`<br/>Format: `Decimal`<br /><br />  |
-| `ProcessingDate`       |Date Processed.<br/>Type: `string` <br/>Format: `date-time`<br/><br />   |
+| `CreditorInformation`                      |Creditor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />  |
+| `DebtorInformation`                      |Debtor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />      |
+| `Reference`                      |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0` |
+| `Amount`            |Transaction amount.<br /> Type: `Number`<br/>Format: `Decimal`<br /><br />  |
+| `ProcessingDate`       |Processing date.<br/>Type: `string` <br/>Format: `date-time`<br/><br />   |
 | `TransactionCode`            |TransactionCode<br/>- U1 – to return Direct Debit sent with ‘01’<br/>- U7 – to return Direct Debit sent with ‘17’<br/>- U8 – to return Direct Debit sent with ‘18’<br/>- U9 – to return Direct Debit sent with ‘19’<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(U1¦U7¦U8¦U9)`<br /> <br/>  |
 | `Status`                      |Status.<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending` or `Processsed`. <br /> Type: `string` <br /><br />  |
-| `ServiceUserNumber`                    |Integrator’s Unique Identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />  |
+| `ServiceUserNumber`                    |Service user's unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />  |
 | `ReasonCode`       |ReasonCode<br/>- 0 – Refer to payer<br/>- 1 – Instruction cancelled<br/>- 2 – Payer deceased<br/>- 3 – Account transferred<br/>- 4 – Advance notice disputed<br/>- 5 – No account (OR wrong account type)<br/>- 6 – No Instruction<br/>- 7 – Amount differs<br/>- 8 – Amount not yet due<br/>- 9 – Presentation overdue<br/>- A – Service user differs<br/>- B – Account closed<br/><br/>For more information about reason codes, refer to Section 10 of The Paying Payment Service Provider’s Guide and Rules to the Direct Debit Scheme.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `([0-9]¦A¦B)`<br /> <br />  |
-| `Source` |Origination of the endpoint.<br /><br />`BacsEventSource`: One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />   |
-| `BacsTransactionId`             |Bacs Transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />   |    
+| `Source` |Origination of the event.<br /><br />`BacsEventSource`: One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />   |
+| `BacsTransactionId`             |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />   |    
 
 #### Example Bacs Unpaid Direct Debit Received webhook request body
 

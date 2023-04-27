@@ -11,7 +11,7 @@ import WebhookSummary from 'src/components/webhook-summary'
 
 ## Bacs
 
-Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**.
+Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**. Bacs does not operate on weekends or bank holidays.
 
 ![Image showing 3-day Bacs payment cycle](/assets/images/BacsOverview-Days.svg "Bacs payment cycle")
 
@@ -78,51 +78,46 @@ Use the endpoint below to return payments from a real account. To return payment
 ClearBank does not sponsor Direct Credits, so there are no outbound Direct Credit payments. The webhooks relating to inbound Direct Credit transactions are not associated with an endpoint, instead they are listed here:
 
 - [Bacs Direct Credit Inbound Payment Created webhook](#bacs-direct-credit-inbound-payment-created-webhook)    
-- [Transaction Settled webhook](#transaction-settled-webhook)
-- [Bacs Direct Credit Inbound Payment Held webhook](#bacs-direct-credit-inbound-payment-held-webhook)
-- [Bacs Credit Payment Not Settled webhook](#bacs-credit-payment-not-settled-webhook)
 - [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook)
-- [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) (this can also occur in response to the Bacs returns endpoint)
+- [Bacs Direct Credit Inbound Payment Held webhook](#bacs-direct-credit-inbound-payment-held-webhook)
+- [Transaction Settled webhook](#transaction-settled-webhook)
+- [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) (this can occur automatically if ClearBank returns a payment, or in response to the Bacs returns endpoint)
 
 <WebhookPlaceholder render='bacs-direct-credit-inbound-payment-created-webhook-v2' />
-<WebhookPlaceholder render='transaction-settled-webhook-v6' />
-<WebhookPlaceholder render='bacs-direct-credit-inbound-payment-held-webhook-v3' />
-<WebhookPlaceholder render='bacs-credit-payment-not-settled-webhook-v3' />
 <WebhookPlaceholder render='bacs-direct-credit-recalled-webhook-v1' />
+<WebhookPlaceholder render='bacs-direct-credit-inbound-payment-held-webhook-v3' />
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
 <WebhookPlaceholder render='bacs-direct-credit-return-created-webhook-v4' />
+<WebhookPlaceholder render='bacs-unapplied-credit-received-webhook-v3' />
 
 ## Bacs Direct Debit payment webhooks
 
-The webhooks that relate to inbound Direct Debit payments also have no direct association with an endpoint:
+The webhooks that relate to inbound Direct Debit payments have no direct association with an endpoint:
 
 - [Bacs Direct Debit Inbound Payment Created webhook](#bacs-direct-debit-inbound-payment-created-webhook)
-- [Bacs Direct Debit Indemnity Claim Received Event webhook](#bacs-direct-debit-indemnity-claim-received-event-webhook)
 - [Transaction Settled webhook](#transaction-settled-webhook)
-- [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) (this can also occur in response to the Bacs returns endpoint)
-- [Bacs Debit Payment Not Settled webhook](#bacs-debit-payment-not-settled-webhook)
+- [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) (this can occur automatically if ClearBank returns a payment, or in response to the Bacs returns endpoint)
+- [Bacs Direct Debit Indemnity Claim Received Event webhook](#bacs-direct-debit-indemnity-claim-received-event-webhook)
 
-These two webhooks relate to Direct Debit payments as they appear in the **originator's account**:
-- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - indicates funds received as a result of a Direct Debit payment.
+These two webhooks relate to the origination of Direct Debit payments as they appear in the **service user's account**. You would see these if you were collecting the Direct Debit rather than paying it:
+- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - indicates funds received as a result of a Direct Debit file being processed. This is the bulk settlement.
 - [Bacs Unpaid Direct Debit Received webhook](#bacs-unpaid-direct-debit-received-webhook) - indicates that a Direct Debit could not be paid.
 
-You may occasionally receive multiple webhooks with the same `EndtoEndTransactionId`. In this instance, a duplicate check should take place using the `TransactionId`.
-If the same `TransactionId` is used for both payments, the webhook will be a duplicate. In case the TransactionId(s) are different, these will relate to separate transactions.
 
 <WebhookPlaceholder render='bacs-direct-debit-inbound-payment-created-webhook-v2' />
-<WebhookPlaceholder render='bacs-direct-debit-indemnity-claim-received-event-webhook-v3' />
 <WebhookPlaceholder render='bacs-direct-debit-return-created-webhook-v4' />
-<WebhookPlaceholder render='bacs-debit-payment-not-settled-webhook-v3' />
+<WebhookPlaceholder render='bacs-direct-debit-indemnity-claim-received-event-webhook-v3' />
 <WebhookPlaceholder render='bacs-debit-contra-received-webhook-v3' />
 <WebhookPlaceholder render='bacs-unpaid-direct-debit-received-webhook-v3' />
 
 ## Bacs codes reference
 
 The following tables give additional detail on the meanings of the various codes used in Bacs payments and returns.
-* [Bacs transaction codes](#bacs-transaction-codes)
+* [Bacs Transaction codes](#bacs-transaction-codes)
 * [ARUCS (Direct Credit) reason codes](#arucs-direct-credit-reason-codes)
 * [ARUDD (Direct Debit) reason codes](#arudd-direct-debit-reason-codes)
 
-### Bacs transaction codes
+### Bacs Transaction codes
 
 <table>
 <thead>
