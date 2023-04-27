@@ -70,24 +70,23 @@ export const widths: Types.Widths = {
   logo: '244px',
   gutter: '20px',
   container: '1400px',
-  sidebarLeft: '270px',
-  sidebarRight: '200px',
   content: '1200px',
   dropdown: '270px'
 }
 
 export const heights: Types.Heights = {
-  header: '60px'
+  header: '220px'
 }
 
 export const maxWidths: Types.MaxWidths = {
-  content: '1200px'
+  content: '1200px',
+  sidebarRight: '380px',
 }
 
 export const fonts: Types.Fonts = {
-  body: 'arial,sans-serif',
-  monospace: '"Roboto Mono",monospace',
-  heading: 'arial,sans-serif'
+  body: 'clear-sans-text,arial,sans-serif',
+  monospace: 'clear-sans-text,"Roboto Mono",monospace',
+  heading: 'clear-sans-text,arial,sans-serif'
 }
 
 export const colors = {
@@ -183,6 +182,9 @@ export const colors = {
   blackSqueeze: '#f3fbfb', // V2
   concrete: '#F2F2F2', // V2
   alto: '#E0E0E0', // V2
+  wedgewoodapprox: '#478E96',
+  boulderapprox: '#747474',
+  mischkaapprox: '#D4D2E3',
 
   // New branding colours V2 - TODO: these color vars need sorting out
   billionaireBlue: '#000000',

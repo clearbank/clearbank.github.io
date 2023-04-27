@@ -1,0 +1,98 @@
+---
+title: "FX trade"
+order: 5
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Foreign exchange trade
+
+Our FX trade offering allows you to buy and sell currency in real-time – you submit a trade order to ClearBank, we perform the required validation checks on your order and upon successful validation, execute it in the foreign exchange market against live market rates.
+
+You can use our FX trade functionality to perform FX trades between accounts which belong to the same owner. For example, let’s assume that you want to sell GBP from Account A to purchase EUR for Account B – in doing so, you will need to ensure that the owner of both accounts is the same. This applies to two accounts that belong to you, that is, the financial institution or your customers.
+
+When initiating a FX trade order via our API, you can either specify the amount of the currency you wish to buy or the amount you wish to sell. The specified amount (and currency) is referred to as the fixed side of the trade. Whereas the amount (and currency) that has not been specified is referred to as the floating side of the trade.
+
+Additionally, you can also specify your margin (%) to be applied to the trade. The margin amount is automatically calculated, applied to the credit/debit Transaction amount of the buy and sell accounts, and credited to a separate account of your choice. The margin is always reflected in the calculation of the credit/debit transaction of the floating currency.
+
+### Example: Specifying the sell amount with margin
+
+**Trade Request:**
+
+- InstructedAmount: 1000
+- FixedSide: Sell
+- BuyCurrency:  USD
+- SellCurrency: GBP (This means the fixed side of the trade is GBP and the floating side is USD. Therefore, the margin will be in USD).
+- Margin: 0.01 (Where 0.01 represents a 1% margin)
+- Assume the ClearBank rate is: 1.40 for GBP/USD
+- Margin amount: 1.4 x 0.01 x GBP 1000 = USD 14
+
+**Resulting transactions in respective accounts:**
+
+- Debit to the sellAccount: GBP 1000.00
+- Credit to the buyAccount: USD 1386 [USD 1.4 x (1-0.01) x 1000]
+- Credit to the specified margin account: USD 14
+
+### Example: Specifying the buy amount with margin
+
+**Trade Request:**
+
+- InstructedAmount: 1400
+- FixedSide: Buy
+- BuyCurrency:  USD
+- SellCurrency: GBP
+- This means the fixed side of the trade is USD and the floating side is GBP, therefore the margin will be in GBP
+- Margin: 0.01 (Where 0.01 represents a 1% margin)
+- Assume the ClearBank rate is: 1.40 for GBP/USD
+- Margin amount:  1400 / 1.4 x 0.01 = GBP 10
+
+**Resulting transactions in respective accounts:**
+
+- Debit to the sellAccount: GBP [1110 (1400 / 1.4 x (1 + 0.01)]
+- Credit to the buyAccount: USD 1400
+- Credit to the specified margin account: GBP  10
+
+**FX trades are subject to cut-off times:**
+ * If a trade is booked in time for same-day settlement, you will receive a webhook notification of the settlement. If it fails to settle (in practice, because there are insufficient funds in the account), you will learn of the failure immediately. ClearBank will then send a [fx-trade-cancelled-v1](../webhooks/#fx-trade-cancelled-webhook) webhook.
+ * If a trade is booked, but cannot be settled until a later day, and the settlement fails, the [fx-trade-settlement-failed-v1](../webhooks/#fx-trade-settlement-failed-webhook) webhook notifies you of the failure. Make sure you subscribe to this webhook if you are making FX trades with a value (settlement) date later than the day of booking.
+ 
+ For more information about cut-off times, please speak to your Relationship Manager.
+
+<EndpointBlock
+  type="post"
+  title="Create a Foreign Exchange (FX) buy and sell order"
+  endpoints={[
+    {
+      path: "/fx/v1/order",
+      version: "1.0.FXO",
+      webhooks: [
+        'fx-trade-executed-v1',
+        'fx-trade-settled-v1',
+        'fx-trade-cancelled-v1',
+        'fx-trade-settlement-failed-v1'
+      ]
+    }
+  ]}
+/>
+
+## FX trade webhooks
+
+<WebhookSummary
+  description='Create a Foreign Exchange (FX) buy and sell order'
+  endpoint='/fx-trade#create-a-foreign-exchange-fx-buy-and-sell-order'
+  method='post'
+  webhooks={[
+    'fx-trade-executed-v1',
+    'fx-trade-settled-v1',
+    'fx-trade-cancelled-v1',
+    'fx-trade-settlement-failed-v1'
+  ]}
+/>
+
+<WebhookPlaceholder render='fx-trade-executed-v1' />
+<WebhookPlaceholder render='fx-trade-settled-v1' />
+<WebhookPlaceholder render='fx-trade-cancelled-v1' />
+<WebhookPlaceholder render='fx-trade-settlement-failed-v1' />

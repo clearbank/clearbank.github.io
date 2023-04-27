@@ -1,0 +1,94 @@
+---
+title: "Bacs Direct Credit Recalled webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms a Bacs Direct Credit has been recalled, and only occurs on Day 2 of the Bacs processing cycle.
+
+A credit payment has been recalled, and will not be settled on the entry
+day. You can use the `BacsTransactionId` to identify which payment has been recalled. 
+
+ClearBank generates an **inbound-credit-created** webhook, but then
+gets a recall request from the remitting bank on the
+processing day. When the recall is processed, the payment is settled to
+a suspense account, and then returned to the remitting bank.
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDirectCreditRecalledV1",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Bacs Direct Credit Recalled webhook Payload
+| Element                       | Description  |
+|-------------------------------|---------------|
+| `CreditorInformation`         |*Required* Creditor account details for the original direct credit transaction being recalled.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        <br />`AccountName`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />         |
+| `DebtorInformation`           |*Required* Debtor account details for the original direct credit transaction being recalled.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        <br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />  <br />`AccountName`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br />       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+| `RecallingAccountInformation` |*Required* Details of the account to which we will post the money.<br /><br />`BacsAccountIdentifier`:<br /><br />`AccountNumber`<br />        Type: `string` <br />        Max. Length: `8`<br />        Min. Length: `8`<br />        <br /><br />`Sort Code`<br />        Type: `string`<br />        Max. Length: `6`<br />        Min. Length: `6`<br />        <br />`AccountName`<br />        Type: `string`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /> |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+| `ServiceUserName`             |*Required* Service user name for the original direct credit transaction being recalled.<br/>Type: `string` <br/>Max. Length: `36`<br/>Min. Length: `0`<br />          |                                  
+| `ServiceUserNumber`           |*Required* Service user number for the original direct credit transaction being recalled.<br /> Type: `string`<br />  Max. Length: `6`<br />    Min. Length: `6`<br />       |                                  
+| `Amount`                      |*Required* Amount of the transaction being recalled.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                     |
+| `PaymentReference`            |*Required* Payment reference for the original direct credit transaction being recalled.<br />Type: `string`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/>  |                                                                                                                                                                                                                                                                               
+| `TransactionCode`             |*Required* Transaction code for the original direct credit transaction being recalled. For more information about Transaction codes, refer to the Payment Service Provider's Guide and Rules to the Bacs Direct Credit Scheme.<br /> Type: `string`<br/>Max. Length: `2`<br/>Min. Length: `2`<br /> Pattern: `(99¦Z4¦Z5¦86)` <br /> <br />  |
+| `Status`                      |*Required* Status of the original direct credit transaction being recalled, always going to be `Recalled`.<br /><br />`BacsTransactionStatus`:<br /><br />One of `Undefined`, `Recalled`. <br /> Type: `string` <br /><br />    |
+| `ProcessingDate`              |*Required* Processing date of the original original direct credit transaction being recalled.<br/>Type: `string` <br/>Format: `date-time`<br/>Min. Length: `1`<br /> <br />  |
+| `SettlementDate`              |*Required* Settlement date of the original direct credit transaction being recalled.<br/>Type: `string` <br/>Format: `date-time`<br/>Min. Length: `1`<br /> <br /> |
+| `TransactionType`             |*Required* Transaction type of the original direct credit transaction being recalled, always going to be `DirectCredit`.<br /> Type: `string`<br/>Max. Length: `25`<br/>Min. Length: `0`<br /> |
+| `Source`                      |*Required* Source of the transaction being recalled.<br /><br />`EventSource`:<br /><br />One of `Undefined`, `Portal`, `API`, `ClearBank`, or `Bacs`. <br />Type: `string`<br/>   <br />  |
+| `BacsTransactionId`           |*Required* Internal identifier for the direct credit transaction being recalled.<br />Type: `string`<br />Format: `GUID`<br/>Min. Length: `1`<br/>  <br /> |
+| `SuspenseAccountId`           |*Required* Internal identifier of the suspense account from which we are transferring money.<br />Type: `string`<br />Format: `GUID`<br/>Min. Length: `1`<br/>  <br /> |
+| `RecallReference`             |*Required* Payment reference for the recalled transaction.<br /> Type: `string`<br/>Max. Length: `18`<br/>Min. Length: `0`<br /> |
+
+#### Example Bacs Direct Credit Recalled webhook request body
+
+```json
+{
+"Type": "BacsDirectCreditRecalled",
+"Version": 1,
+"Payload":
+     {
+          "CreditorInformation": {
+               "AccountNumber": "12121212"
+               "SortCode": "778899"
+               "AccountName": "UK TELECOMMS"
+               },
+          "DebtorInformation": {
+               "AccountNumber": "78978900"
+               "SortCode": "113344"
+               "AccountName": "Q-MOBILE"
+               },
+          "RecallingAccountInformation": {
+               "AccountNumber": "12345678",
+               "SortCode": "223366",
+               "AccountName": "TT-MOBILE"
+               },
+          "ServiceUserName": "Q-MOBILE",
+          "ServiceUserNumber": "030201",
+          "Amount": 13.50,
+          "PaymentReference": "DCRECALLEDTEST",
+          "TransactionCode": "99",
+          "Status": "Recalled",
+          "ProcessingDate": "2018-11-01T00:00:00",
+          "SettlementDate": "2018-11-01T00:00:00",
+          "TransactionType": "DirectCredit",
+          "Source": "Portal",
+          "BacsTransactionId": "37090806-87b5-2f35-f022-717164d11fe1",
+          "SuspenseAccountId": "37090806-87b5-2f35-f022-717164d11fe1",
+          "RecallReference": "NewRecalledReferen"
+     }
+"Nonce": 1804374592
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1804374592
+}
+```

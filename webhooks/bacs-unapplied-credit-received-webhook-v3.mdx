@@ -1,0 +1,76 @@
+---
+title: "Bacs Unapplied Credit Received webhook"
+version: 3
+webhook: true
+---
+
+**This webhook confirms that an Unapplied Credit has been received.**
+
+This may be received if a PSP incorrectly returns a Faster Payment as an unapplied Bacs Credit.
+
+#### Request body
+
+```json
+{
+    "Type": "BacsUnappliedCreditReceivedV3",
+    "Version": 3,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description |
+|-------------------------------|---------------|
+| `CreditorInformation`  |Creditor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0` |
+| `DebtorInformation`    |Debtor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`  |
+| `Reference`            |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0` |
+| `Amount`               |Transaction amount.<br /> Type: `number`<br/>Format: `decimal`|
+| `ProcessingDate`       |Processing date of the original Direct Credit transaction being returned. This field might be blank.<br/>Type: `string` <br/>Format: `date-time`|
+| `TransactionCode`      |TransactionCode<br/>- RA  – Automated return of unapplied credits.<br /> Type: `string` or `null`             |
+| `Status`               |Status.<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending` or `Processsed`. <br /> Type: `string`|
+| `ServiceUserNumber`    |Service user's unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0`  |
+| `ReasonCode`           |ReasonCode<br/>- 0 – Invalid details<br/>- 2 – Beneficiary deceased<br/>- 3 – Account transferred<br/>- 5 – No account<br/>- B – Account closed<br/>- C – Requested by Remitter<br/>-For more information about reason codes, refer to Appendix 4 of The Payment Service Provider’s Guide and Rules to the Bacs Direct Credit Scheme.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(0¦2¦3¦5¦B¦C)` |
+| `Source` 				       |Origination of the event.<br /><br />`BacsEventSource`:<br /><br />`Bacs`<br /> Type: `string`  |
+| `BacsTransactionId`    |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`   |
+
+#### Example Bacs Unapplied Credit Received  webhook request body
+
+```json
+{
+  "Type": "BacsUnappliedCreditReceived",
+  "Version": 3,
+  "Payload":
+    { 
+      "CreditorInformation":
+        {
+           "AccountName": "DEST ACCOUNT",
+           "SortCode": "724000",
+           "AccountNumber": "00001090"
+        },
+       "DebtorInformation":
+        {
+           "AccountName": "NAMEOFORIGINATOR  ",
+           "SortCode": "601613", (
+           "AccountNumber": "31926819"
+        },
+      "Reference": "LATIZHAPMDULOUBXAX",
+      "Amount": 1.05,
+      "ProcessingDate": "2021-01-10T00:00:00Z",
+      "TransactionCode": "RA",
+      "Status": "Pending",
+      "ServiceUserNumber": "229816",
+      "ReasonCode": "C",
+      "Source": "Bacs",
+      "BacsTransactionId": "69099368-381a-4578-a066-e16bab86002a"
+    },
+  "Nonce": 1077041584
+}
+```
+#### Example webhook response
+
+```json
+{
+  "Nonce": 1077041584
+}
+```

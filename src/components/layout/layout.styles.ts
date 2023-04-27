@@ -13,43 +13,42 @@ import * as EndpointBlock from 'src/components/endpoint-block/endpoint-block.sty
 import * as WebHookPlaceholder from 'src/components/webhook-placeholder/webhook-placeholder.styles'
 
 export const Wrapper = styled.div`
+  position: relative;
   display: -ms-grid;
   display: grid;
   grid-template-areas:
     'header'
-    'sidebarLeft'
     'sidebarRight'
     'content'
     'footer';
   grid-template-rows:
     ${heights.header}
-    auto
-    auto
     1fr
+    auto
     auto;
   grid-template-columns: 1fr;
   min-height: 95vh; // 100vh unreliable in mobile browsers
 
   @media screen and (min-width: ${breakpoints.large}) {
     grid-template-areas:
-      'header      header  header'
-      'sidebarLeft content sidebarRight'
-      'sidebarLeft footer  footer';
+      'header header  header'
+      'content content sidebarRight'
+      'footer footer  footer';
     grid-template-rows:
       ${heights.header}
       1fr
       auto;
-    -ms-grid-columns: ${widths.sidebarLeft} 1fr auto;
+    -ms-grid-columns: 1fr auto;
     // prettier-ignore
-    grid-template-columns: ${widths.sidebarLeft} 1fr auto;
+    grid-template-columns: 1fr auto;
     min-height: 100vh;
   }
 
   // emulate max-width on content by setting a fixed width and make right sidebar to fill the remaining availale space
   @media screen and (min-width: ${breakpoints.xxxLarge}) {
-    -ms-grid-columns: ${widths.sidebarLeft} 1fr auto;
+    -ms-grid-columns: 1fr auto;
     // prettier-ignore
-    grid-template-columns: ${widths.sidebarLeft} ${maxWidths.content} 1fr;
+    grid-template-columns: ${maxWidths.content} 1fr;
   }
 `
 
@@ -61,21 +60,8 @@ export const HeaderWrapper = styled.header`
   position: fixed;
   left: 0;
   right: 0;
-  background: ${colors.downriver};
+  background: ${colors.brandLight};
   z-index: 1;
-`
-
-export const LeftSidebarWrapper = styled.nav`
-  grid-area: sidebarLeft;
-  -ms-grid-column: 1;
-  -ms-grid-row-span: 2;
-  -ms-grid-row: 2;
-  background: ${colors.brandGrayLightest};
-  display: none;
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    display: block;
-  }
 `
 
 export const ContentWrapper = styled.article`
@@ -117,24 +103,10 @@ export const ContentWrapper = styled.article`
 `
 
 export const RightSidebarWrapper = styled.aside`
+  max-width: ${maxWidths.sidebarRight};
   grid-area: sidebarRight;
   -ms-grid-column: 3;
   -ms-grid-row: 2;
-  padding: 60px 20px 40px 20px;
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    padding: 80px 60px 40px 60px;
-  }
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: 0 60px 0 0;
-    min-width: ${widths.sidebarRight}; // prevent sidebar-collapse on pages without sidebar
-    box-sizing: content-box; // add padding to min-width
-  }
-
-  @media screen and (min-width: ${breakpoints.xLarge}) {
-    padding: 0 100px 0 0;
-  }
 `
 export const InnerContentWrapper = styled.main`
   flex: 1 1 auto;

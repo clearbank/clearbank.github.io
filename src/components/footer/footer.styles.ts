@@ -1,70 +1,64 @@
 import styled from 'styled-components'
 import { Box } from 'rebass'
 
-import { colors, breakpoints } from 'src/components/theme'
+import { colors } from 'src/components/theme'
 
-export const Container: any = styled(Box)`
+export const Container = styled(Box).attrs(() => ({ mt: '140px' }))``
+
+export const MenuContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-  border-top: dashed 1px ${colors.alto};
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    align-items: start;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: 30px;
-  }
+  justify-content: space-between;
+  margin: 0 7%;
+  padding: 0 5%;
+  border-bottom: 1px solid ${colors.mischkaapprox};
 `
 
-export const LogoWrapper: any = styled.div`
+export const ColumnContainer = styled.div`
+  max-width: 200px;
+`
+
+export const Title = styled.a`
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
+  color: ${colors.brandDark}
+`;
+
+export const SubTitle = styled.a`
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 18px;
+  color: ${colors.brandDark}
+`
+
+export const List = styled.ul`
+  margin-top: 40px;
+  list-style: none;
+  padding: 0;
+`
+
+export const ListItem = styled.li`
+  margin-bottom: 20px;
+`
+
+export const LogoWrapper = styled.div`
   max-width: 170px;
   display: block;
-  margin: auto;
-  margin-bottom: 30px;
-  margin-top: 30px;
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    margin-top: 0;
-  }
+  margin: 40px 0px 20px 40px; 
 `
 
 export const CopywriteWrapper = styled.div`
   text-align: center;
   margin-bottom: 40px;
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    margin-top: 30px;
-  }
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding-right: 50px; // space for to top button
-  }
 `
 
-export const CopyContainer = styled.div`
-  padding: 0 20px;
-`
-
-export const Copy = styled.p`
-  display: block;
-  width: 100%;
-  color: ${colors.brandSecondaryDarker};
-  font-size: 14px;
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding-right: 55px;
-
-    &:first-child {
-      margin-top: 30px;
-    }
-  }
-`
-
-export const Copywrite = styled.span`
-  white-space: nowrap;
+export const Copywrite = styled.p`
+  max-width: 70%;
+  margin-right: 75px;
+  margin-left: auto;
+  text-align: right;
   color: ${colors.brandSecondaryDarker};
 `

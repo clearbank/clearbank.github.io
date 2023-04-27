@@ -1,0 +1,72 @@
+---
+title: "Bacs Debit Contra Received webhook"
+version: 3
+webhook: true
+---
+
+This webhook confirms a Bacs Debit Contra has been received.
+
+This webhook notifies a Direct Debit service user that an account is being credited against debits on one or more
+payers' account.
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDebitContraReceivedV3",
+    "Version": 3,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `PayerInformation`       |Payer information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0` |
+| `OriginatorInformation`  |Service user information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0` |
+| `Reference`              |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `35`	<br/>Min. Length: `0` |
+| `Amount`                 |Transaction amount.<br /> Type: `number`<br/>Format: `decimal` |
+| `ProcessingDate`         |Processing date. This is day 2 of the Bacs processing cycle.<br/>Type: `string` <br/>Format: `date-time` |
+| `TransactionCode`        |Transaction code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(99)` |
+| `Status`                 |Possible states:<br/>- Pending<br/>- Processed<br/>- Returned<br/>- Recalled (Payer has recalled a transaction so has not been applied to the beneficiary account)<br/>- ContraNotReceived (A transaction is unable to settle as a contra has not been received).<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending`, `Processsed`, `Returned`, `Recalled`, `ContraNotReceived`. <br /> Type: `string` |
+| `Source`                 |Origination of the event.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` |
+| `BacsTransactionId`      |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0` |
+
+#### Example Bacs Debit Contra Received webhook request body
+
+```json
+{
+   "Type": "BacsDebitContraReceived",
+   "Version": 3,
+   "Payload":
+    {
+     "PayerInformation":
+        {
+            "AccountName": "JANE DOE",
+            "SortCode": "445566",
+            "AccountNumber": "87654321"
+        },
+     "OriginatorInformation":
+        {
+            "AccountName": "UK TELECOMMS",
+            "SortCode": "778899",
+            "AccountNumber": "12121212"
+        },
+     "Reference": "JADA157QWNOV2018",
+     "Amount": 25.50,
+     "ProcessingDate": "2019-04-01T00:00:00Z",
+     "TransactionCode": "99",
+     "Status": "Processed",
+     "Source": "Bacs",
+    },
+   "Nonce": 1579417909
+}
+```
+#### Example webhook response
+
+```json
+{
+   "Nonce": 1579417909
+}
+```

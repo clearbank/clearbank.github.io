@@ -1,0 +1,74 @@
+---
+title: "Bacs Direct Debit Inbound Payment Created webhook"
+version: 2
+webhook: true
+---
+
+This webhook confirms that a Bacs Direct Debit inbound payment has been received.
+
+On receipt of a Direct Debit collection request from a service user, this webhook notifies that ClearBank will attempt to pay the debit on the working day following the processing date specified.
+
+You can use this to inform the debit account holder to expect the
+debit, and ensure that there are sufficient funds to cover it. If they
+want to oppose the debit, they should contact you and you can use the returns endpoint (or the ClearBank Portal) to make the return on the entry day (Day 3).
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDirectDebitInboundPaymentCreatedV2",
+    "Version": 2,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `PayerInformation`            |Payer information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`| 
+| `OriginatorInformation`       |Originator information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0` |
+| `Amount`                      |Transaction amount.<br /> Type: `number`<br/>Format: `decimal` |
+| `Reference`                   |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0` |
+| `ProcessingDate`              |Processing date. This is day 2 of the Bacs processing cycle.<br/>Type: `string` <br/>Format: `date-time` |
+| `ServiceUserNumber`           |Service user's unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0`  |
+| `TransactionCode`             |Bacs transaction code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(01¦17¦18¦19)` |
+| `Source`                      |Origination of the event.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` |
+| `BacsTransactionId`           |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0` |
+
+#### Example Bacs Direct Debit Inbound Payment Created webhook request body
+
+```json
+{
+   "Type": "BacsDirectDebitInboundPaymentCreated",
+   "Version": 2,
+   "Payload":
+      {
+    "PayerInformation": {
+       "AccountName": "JOHN DOE",
+       "SortCode": "112233",
+       "AccountNumber": "12345678"
+       },
+    "OriginatorInformation": {
+       "AccountName": "UK TELECOMMS",
+       "SortCode": "778899",
+       "AccountNumber": "12121212"
+       },
+    "Amount": 13.75,
+    "Reference": "JODTR54PXZNOV2018",
+    "ProcessingDate": "2019-01-01T00:00:00Z",
+    "ServiceUserNumber": "010203",
+    "TransactionCode": "01",
+    "Source": "Bacs"
+    "BacsTransactionId": "d9c36960-53dc-fb00-8b4b-d35bdcd8ac03"
+   }
+   "Nonce": 498572217
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 498572217
+}
+```

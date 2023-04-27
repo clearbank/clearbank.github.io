@@ -1,22 +1,21 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-import { colors, widths, breakpoints } from 'src/components/theme'
+import { colors, heights } from 'src/components/theme'
 
 export const Container = styled.div`
+  position: sticky;
+  top: ${heights.header};
+  right: 0;
+  max-height: calc(100vh - ${heights.header});
+  overflow-y: scroll;
   color: ${colors.brandLight};
+  height: 100%;
   user-select: none;
+  padding: 50px 23px 0px 23px;
+  border-left: 3px solid ${colors.boulderapprox};
 
-  @media screen and (min-width: ${breakpoints.large}) {
-    position: sticky;
-    top: 100px; // header height + margin top where it becomes stuck
-    bottom: 0;
-    width: ${widths.sidebarRight};
-    height: calc(100vh - 60px); // 60px header top
-    margin-top: 40px;
-    margin-bottom: 80px;
-    padding-right: 15px; // reserved space for scrollbar
-    overflow-y: auto;
-    overscroll-behavior: contain;
+  &:scrollbar {
+    display: none;
   }
 `
 
@@ -24,77 +23,53 @@ export const Title = styled.h5`
   margin: 0;
   color: ${colors.body};
   font-weight: 600;
-  font-size: 22px;
+  font-size: 32px;
   cursor: default;
-  line-height: 1.25; // 25px
+  line-height: 38px;
 `
 
 export const List = styled.ul`
   list-style: none;
-  margin-left: ${({ level }) => level * 10}px;
-
-  ${({ level }) =>
-    level === 0 &&
-    css`
-      padding-bottom: 40px;
-    `}
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    margin-left: ${({ level }) => level * 20}px;
-  }
+  margin-top: 15px;
 `
 
-export const Entry = styled.li`
-  margin-top: 20px;
-
-  &:first-of-type {
-    margin-top: 10px;
-  }
-`
-
-export const SecondLevelEntry = styled(Entry)`
-  margin-top: 10px;
-`
-
-export const Link = styled.a`
-  display: block;
-  color: ${colors.ceruleanBlue};
-  font-size: 14px;
-  font-weight: 600;
-  transition: none;
+export const BaseLink = styled.a<{ isActive?: boolean }>`
+  text-decoration: none;
+  cursor: pointer;
+  color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
+  font-weight: ${props => props.isActive ? 600 : 400};
+  line-height: 38px;
+  font-size: 20px;
 
   &:hover {
-    color: ${colors.brandSecondaryDarkest};
+    color: ${colors.wedgewoodapprox};
   }
 `
 
-export const FirstLevelLink = styled(Link)`
+export const LinkWrapper = styled.p<{ level?: number }>`
+  margin-left: ${props => (props.level ?? 1) * 25 + 30}px;
+
+  &:before {
+    margin-left: -30px;
+    margin-right: 11px;
+    content: url(/assets/images/arrow-icon.png);
+    vertical-align: middle;
+  }
+`
+
+export const FirstLevelLink = styled(BaseLink)`
   font-weight: 600;
+  user-select: none;
 
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding-left: 7px;
-    border-left: 3px solid transparent;
-
-    ${({ isHighlighted }) =>
-      isHighlighted &&
-      css`
-        border-left-color: ${colors.highlightAqua};
-      `}
+  &:before {
+    content: none;
   }
 `
 
-export const SecondLevelLink = styled(Link)`
-  font-weight: 400;
-
-  ${({ isHighlighted }) =>
-    isHighlighted &&
-    css`
-      color: ${colors.brandSecondaryDarkest};
-      font-weight: 600;
-    `}
+export const ThirdLevelLink = styled(BaseLink)`
+  font-size: 16px;
 `
 
-export const Type = styled.span`
-  margin-right: 5px;
-  text-transform: uppercase;
+export const FourthLevelLink = styled(ThirdLevelLink)`
+  font-size: 14px;
 `

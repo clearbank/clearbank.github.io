@@ -1,0 +1,79 @@
+---
+title: "Bacs Mandate Returned webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that a Bacs Direct Debit Instruction has been returned.
+
+**Note**: A DDI should only be returned before any payments from it have been processed. If payments have been made, then the DDI should be cancelled instead.
+
+Return instructions can be made:
+
+-   by a payer through the API. For example, they signed a DDI but
+    changed their mind.
+
+-   through Bacs because the Bank does not want the instruction. For
+    example, the account is closed or non-existent.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsMandateReturned",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MandateId`             |Unique identification of the instruction.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+| `ReasonCode`            |Reason returned.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `(2¦G¦F¦B¦5¦I¦K¦1¦H)`<br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `OriginatorInformation` |Service user details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `PayerInformation`      |Payer details.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string` or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `ServiceUserNumber`     |Service user’s unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `Reference`             |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0`<br/><br /> | 
+| `Source`                |Origination of the event.<br />`BacsEventSource`: One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+| `EventDate`             |The date the DDI was returned. Time in UTC.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+ 
+#### Example Bacs Mandate Returned webhook request body
+
+```json
+{
+	"Type": "BacsMandateReturned",
+	"Version": 1,
+	"Payload":
+		{
+          "MandateId": "0257af90-4982-1c77-cbe5-0cecfd4440a0",
+          "ReasonCode": "I",
+          "OriginatorInformation":
+                {
+                   "AccountName": "JANE DOE",
+                   "SortCode": "445566",
+                   "AccountNumber": "87654321"
+                },
+          "PayerInformation":
+                {
+                   "AccountName": "UK TELECOMMS",
+                   "SortCode": "778899",
+                   "AccountNumber": "12121212"
+                },
+          "ServiceUserNumber": "010203",
+          "Reference": "MBQZRTF12345",
+          "Source": "Bacs",
+          "EventDate": "2019-03-01T00:00:00Z"
+		},
+	"Nonce": 1989766405
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1971766405
+}
+```

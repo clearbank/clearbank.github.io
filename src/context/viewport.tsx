@@ -6,14 +6,13 @@ import * as Types from './viewport.types'
 
 const ViewportContext = React.createContext('')
 
-const ViewportProvider = ({ children }: Types.ViewportProviderProps) => {
+const ViewportProvider: React.FC<Types.ViewportProviderProps> = ({ children }) => {
   const [currentTitle, setCurrentTitle] = useState('')
 
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    const allSections: HTMLElement[] = Array.from(document.querySelectorAll('main .page'))
-
+    const allSections: HTMLElement[] = Array.from(document.querySelectorAll('.page .page-menu-entry'))
     // only pages with ids
     const pages = allSections.filter(entry => {
       const id = entry.getAttribute('id')
@@ -26,7 +25,7 @@ const ViewportProvider = ({ children }: Types.ViewportProviderProps) => {
     }
 
     const onScroll = function () {
-      const intersectionPositionY = window.scrollY + 100
+      const intersectionPositionY = window.scrollY + 50
       const urlHash = (window as Window).location.hash
 
       pages.forEach(page => {

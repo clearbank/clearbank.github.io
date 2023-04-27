@@ -1,0 +1,317 @@
+---
+title: "Bacs Direct Debit Instructions"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
+
+## Direct Debit Instructions
+
+A Direct Debit Instruction (DDI) is an authorisation to collect future payments from a nominated account.
+A DDI can be submitted to ClearBank by service users in two ways:
+- Electronically via the Bacs Automated Direct Debit Instruction Service (AUDDIS), or,
+- Sent as a paper instruction to your address to be entered via the ClearBank API after you have validated it.
+
+A DDI can be set up against a real or virtual account held with ClearBank. It cannot be set up against a General Segregated Account, your Bacs Suspense Account, or your Minimum Mandated Balance account. You will receive the [Bacs Mandate Initiated webhook](./webhooks/#bacs-mandate-initiated-webhook) once the DDI is present in our system.
+
+If you are transferring an existing sort code to ClearBank that already has DDIs set up, you will need to use the API to inform us of these.
+
+Once a DDI has been set up against an account via AUDDIS, payments may be collected from the account from the third day; for paper instructions, payments may be collected from the following day.
+The timing of the payment is in the control of the service user and does not necessarily follow immediately.
+
+To receive feedback during DDI management, subscribe to the relevant webhooks which are listed here: [BACS DDI webhooks](./webhooks/#bacs-direct-debit-instructions).
+
+**Note**: Occasionally you might receive a [Bacs Mandate Cancellation Failed webhook](./webhooks/#bacs-mandate-cancellation-failed-webhook), after having cancelled a Direct Debit Instruction through the `DELETE` endpoints.  This does not necessarily mean a real failure. This situation can arise as in the following example:<br/>
+
+An end-customer cancels their phone contract with "FabuPhone". FabuPhone immediately cancel the DDI through the Bacs system. The end-customer also requests that you cancel the DDI, and you attempt to do so using the `DELETE` endpoint. As the instruction was already cancelled, it no longer exists and cannot be found. You will then receive a Bacs Mandate Cancellation Failed webhook.<br/> 
+You can use the `GET endpoint (GET /{vn}/Accounts/{accountId}/Mandates)` to check the DDIs in place for the account and verify that everything is as it should be.
+
+## Manage DDIs for real accounts
+
+<EndpointBlock
+  type="post"
+  title="Create a DDI (real account)"
+  message="This endpoint is used if you have received a validated Paper DDI and need to inform ClearBank of its existence, or if transferring a sort code that has existing DDIs lodged. All other DDIs are set up through AUDDIS."
+  description={DD_CONSTANTS.postCreateDdiForAccountDescription}
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all DDIs (real account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Mandates",
+      version: "2.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a DDI (real account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Return a DDI (real account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}/Returns",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Cancel a DDI (real account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+## Manage DDIs for virtual accounts
+
+<EndpointBlock
+  type="post"
+  title="Create a DDI (virtual account)"
+  message="This endpoint is used if you have received a validated Paper DDI and need to inform ClearBank of its existence, or if transferring a sort code that has existing DDIs lodged. All other DDIs are set up through AUDDIS."
+  description={DD_CONSTANTS.postCreateDdiForVirtualAccountDescription}
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all DDIs (virtual account)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates",
+      version: "2.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a DDI (virtual account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Return a DDI (virtual account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}/Returns",
+      version: "1.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Cancel a DDI (virtual account)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Mandates/{mandateId}",
+      version: "1.0"
+    }
+  ]}
+/>
+
+## Bacs DDI webhooks
+
+The following webhooks relate to managing Direct Debit Instructions. The webhooks can occur in response to an endpoint (as detailed below) but also if we receive a DDI from the Bacs payment service. The webhooks returned are the same regardless of whether a real or virtual account endpoint is used. Note that the webhook names include the term "mandate". This reflects the code, but should be understood to mean "Direct Debit Instruction".
+
+<WebhookSummary
+  description='Create a DDI for a real account'
+  endpoint='/bacs-direct-debits/#create-ddi-for-a-real-account'
+  method='post'
+  webhooks={[
+    'bacs-mandate-initiated-webhook-v2',
+    'bacs-mandate-initiation-failed-webhook-v1'
+  ]}
+/>
+
+
+<WebhookSummary
+  description='Cancel a DDI for a real or virtual account'
+  endpoint='/bacs-direct-debits/#cancel-a-ddi-for-a-real-account'
+  method='delete'
+  webhooks={[
+    'bacs-mandate-cancelled-webhook-v2',
+    'bacs-mandate-cancellation-failed-webhook-v1'
+  ]}
+/>
+
+
+<WebhookSummary
+  description='Return a DDI for an account'
+  endpoint='/bacs-direct-debits/#return-ddi-for-an-account'
+  method='post'
+  webhooks={[
+    'bacs-mandate-returned-webhook-v1',
+    'bacs-mandate-return-failed-webhook-v1'
+  ]}
+/>
+
+You may also receive a [Bacs Mandate Migrated webhook](#bacs-mandate-migrated-webhook) which is prompted by information received from Bacs.
+
+<WebhookPlaceholder render='bacs-mandate-initiated-webhook-v2' />
+<WebhookPlaceholder render='bacs-mandate-initiation-failed-webhook-v1' />
+<WebhookPlaceholder render='bacs-mandate-cancelled-webhook-v2' />
+<WebhookPlaceholder render='bacs-mandate-cancellation-failed-webhook-v1' />
+<WebhookPlaceholder render='bacs-mandate-returned-webhook-v1' />
+<WebhookPlaceholder render='bacs-mandate-return-failed-webhook-v1' />
+<WebhookPlaceholder render='bacs-mandate-migrated-webhook-v2' />
+
+## Bacs DDI codes reference
+
+The following tables give additional detail on the meanings of the various codes used in managing Bacs DDIs.
+
+* [AUDDIS codes](#auddis-codes)
+* [ADDACS Direct Debit Instruction amendment reason codes](#addacs-direct-debit-instruction-amendment-reason-codes)
+* [Bank returned AUDDIS (rejection) codes](#bank-returned-auddis-rejection-codes)
+
+### AUDDIS codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0N</td><td>New Instruction</td>
+</tr>
+<tr>
+<td>0C</td><td>Cancel Instruction</td>
+</tr>
+<tr>
+<td>0S</td><td>Substitute Instruction (Migrate the Instruction from paper to AUDDIS)</td>
+</tr>
+</tbody>
+</table>
+
+### ADDACS Direct Debit Instruction amendment reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td>Instruction transferred to another account at a different branch of the paying bank</td>
+<td>The payer has moved to a new house and wishes to transfer their account to a local branch. <br/>The paying bank has
+closed a branch and set up a new customer account at another sort code.</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Instruction transferred to another account at the same branch of the paying bank</td>
+<td>The payer has got married and wants to transfer a DDI from their own account to a joint account. <br/>The paying bank
+has allocated a new account to the customer.</td>
+</tr>
+</tbody>
+</table>
+
+### ADDACS Direct Debit Instruction cancellation reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td><td>Institution cancelled - refer to payer</td><td>Paying bank has cancelled the Direct Debit Instruction.  Service user cannot collect via Direct Debit on this account. If Direct Debit is to continue the service user must obtain a new DDI for a new account. </td>
+</tr>
+<tr>
+<td>1</td><td>Instruction cancelled by payer</td><td>Payer has instructed the paying bank to cancel the Direct Debit Instruction.</td>
+</tr>
+<tr>
+<td>2</td><td>Payer deceased</td><td> </td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Payer has closed their account for an unknown reason.</td>
+</tr>
+</tbody>
+</table>
+
+### Bank returned AUDDIS (rejection) codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td><td>Instruction cancelled by payer</td><td>Payer has instructed paying bank to cancel DDI.</td>
+</tr>
+<tr>
+<td>2</td><td>Payer deceased.</td><td> </td>
+</tr>
+<tr>
+<td>3</td><td>Account transferred</td><td>Account transferred to another bank or building society.</td>
+</tr>
+<tr>
+<td>5</td><td>No account</td><td>Account number is not recognised at the paying bank.</td>
+</tr>
+<tr>
+<td>6</td><td>No Instruction</td><td>Instruction does not exist on paying bank’s database (only applies to receipt of a 0C).</td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Payer has closed their account for an unknown reason.</td>
+</tr>
+<tr>
+<td>C</td><td>Account transferred to a different branch of the bank/building society</td><td>New account details supplied to the service user by paying bank.</td>
+</tr>
+<tr>
+<td>F</td><td>Invalid account type</td><td>Paying bank does not allow Direct Debits on this type of account.</td>
+</tr>
+<tr>
+<td>G</td><td>Bank will not accept Direct Debits on account</td><td>Paying bank does not allow Direct Debits on this account.</td>
+</tr>
+<tr>
+<td>H</td><td>Instruction has expired</td><td>Occurs when a service user attempts to convert a DDI which is shown as expired on the paying bank’s database.</td>
+</tr>
+<tr>
+<td>I</td><td>Payer Reference is not unique</td><td>Paying bank has matched the DDI to an existing DDI with a similar reference that has more or fewer characters.</td>
+</tr>
+<tr>
+<td>K</td><td>Instruction cancelled by paying bank</td><td>Paying bank has cancelled the DDI. Service user cannot collect via Direct Debit on this account. If Direct Debit is to continue the service user must obtain a new DDI for a new account.</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,80 @@
+---
+title: "Bacs Debit Payment Not Settled webhook"
+version: 3
+webhook: true
+---
+
+This webhook confirms that a Bacs debit payment was not settled.
+
+If a direct debit cannot be applied (for example, due to insufficient
+funds or a non-existent account), it is returned through the Automated
+Return of Unpaid Direct Debits Service (ARUDD).
+
+If a debit payment is returned, but the ARUDD report contains no
+matching contra, the return cannot settle.
+
+This webhook is sent on the day of settlement. This can be day 3, but if
+a transaction is resubmitted, it can also be day 5.
+
+#### Request body
+
+```json
+{
+    "Type": "BacsDebitPaymentNotSettledV3",
+    "Version": 3,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CreditorInformation`  |Creditor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `DebtorInformation`    |Debtor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `128`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Reference`            |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `35`	<br/>Min. Length: `0`<br/>Pattern: `^([A-Z]*[a-z]*[0-9]*\.*\&*\/*-*\s*)*$`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+| `Amount`               |Transaction amount.<br /> Type: `number`<br/>Format: `decimal`<br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `ProcessingDate`       |Processing date. This is day 2 of the Bacs processing cycle.<br/>Type: `string` <br/>Format: `date-time`<br/><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `TransactionCode`      |Transaction code.<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(RA)`<br /> <br/>                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+| `Status`               |Possible states:<br/>- Pending<br/>- Processed<br/>- Returned<br/>- Recalled (Payer has recalled a transaction so has not been applied to the beneficiary account)<br/> - ContraNotReceived (A transaction is unable to settle as a contra has not been received).<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending`, `Processsed`, `Returned`, `Recalled`, `ContraNotReceived`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+| `Source`               |Origination of the event.<br /><br />`BacsEventSource`:<br /><br />One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+| `BacsTransactionId`    |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />      
+
+#### Example Bacs Debit Payment Not Settled webhook request body
+
+```json
+{
+  "Type": "BacsDebitPaymentNotSettled",
+  "Version": 3,
+  "Payload":
+    {
+      "CreditorInformation":
+        {
+           "AccountName": "UK TELECOMMS",
+           "SortCode": "778899",
+           "AccountNumber": "12121212"
+        },
+      "DebtorInformation":
+        {
+           "AccountName": "JANE DOE",
+           "SortCode": "445566",
+           "AccountNumber": "87654321"
+        },
+      "Reference": "JADA157QWNOV2018",
+      "Amount": 25.50,
+      "ProcessingDate": "2019-04-01T00:00:00Z",
+      "TransactionCode": "01",
+      "Status": "ContraNotReceived",
+      "Source": "Bacs",
+      "BacsTransactionId": "2d9695a4-6683-d640-2a51-cd271dd9012b"
+    }
+  "Nonce": 8553416320
+}
+```
+#### Example webhook response
+
+```json
+{
+  "Nonce": 8553416320
+}
+```

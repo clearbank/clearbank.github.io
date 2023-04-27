@@ -1,0 +1,82 @@
+---
+title: "Bacs Unpaid Direct Debit Received webhook"
+version: 3
+webhook: true
+---
+
+**This webhook confirms a Bacs Unpaid Direct Debit has been received.**
+
+The Direct Debit service user receives notification that a Direct Debit
+could not be paid from an account. Hence, the money needs to be
+returned and you must ensure that the account has sufficient funds.
+
+This webhook arrives on day 4 or 5 in relation to the original Direct
+Debit, and is settled on the working day following the processing day specified.
+
+
+#### Request body
+
+```json
+{
+    "Type": "BacsUnpaidDirectDebitReceivedV3",
+    "Version": 3,                                                         
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CreditorInformation`                      |Creditor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />  |
+| `DebtorInformation`                      |Debtor information.<br />Type: `string` or `null`<br/><br />`BacsAccountIdentifier`:<br /><br />`AccountName`<br />        Type: `string`or `null`<br />        Max. Length: `18`<br />        Min. Length: `0`<br /><br />`SortCode`<br />        Type: `string` or `null`<br />        Max. Length: `6`<br />        Min. Length: `0`<br /> <br /> `AccountNumber`<br />        Type: `string` or `null`<br />        Max. Length: `8`<br />        Min. Length: `0`<br />        <br /><br />      |
+| `Reference`                      |Bacs reference. <br />Type: `string` or `null`<br/>Max. Length: `18`	<br/>Min. Length: `0` |
+| `Amount`            |Transaction amount.<br /> Type: `Number`<br/>Format: `Decimal`<br /><br />  |
+| `ProcessingDate`       |Processing date.<br/>Type: `string` <br/>Format: `date-time`<br/><br />   |
+| `TransactionCode`            |TransactionCode<br/>- U1 – to return Direct Debit sent with ‘01’<br/>- U7 – to return Direct Debit sent with ‘17’<br/>- U8 – to return Direct Debit sent with ‘18’<br/>- U9 – to return Direct Debit sent with ‘19’<br /> Type: `string` or `null`<br/>Max. Length: `2`<br/>Min. Length: `0`<br /> Pattern: `(U1¦U7¦U8¦U9)`<br /> <br/>  |
+| `Status`                      |Status.<br /><br />`BacsTransactionStatusType`:<br /><br />One of `Pending` or `Processsed`. <br /> Type: `string` <br /><br />  |
+| `ServiceUserNumber`                    |Service user's unique identifier registered with Bacs.<br /> Type: `string` or `null`<br />  Max. Length: `6`<br />    Min. Length: `0` <br /> <br />  |
+| `ReasonCode`       |ReasonCode<br/>- 0 – Refer to payer<br/>- 1 – Instruction cancelled<br/>- 2 – Payer deceased<br/>- 3 – Account transferred<br/>- 4 – Advance notice disputed<br/>- 5 – No account (OR wrong account type)<br/>- 6 – No Instruction<br/>- 7 – Amount differs<br/>- 8 – Amount not yet due<br/>- 9 – Presentation overdue<br/>- A – Service user differs<br/>- B – Account closed<br/><br/>For more information about reason codes, refer to Section 10 of The Paying Payment Service Provider’s Guide and Rules to the Direct Debit Scheme.<br/>Type: `string` or `null`<br/>Max. Length: `1`<br/>Min. Length: `0`<br />        Pattern: `([0-9]¦A¦B)`<br /> <br />  |
+| `Source` |Origination of the event.<br /><br />`BacsEventSource`: One of `Undefined`, `Portal`, `Api`, `ClearBank`, `Bacs`. <br /> Type: `string` <br /><br />   |
+| `BacsTransactionId`             |Bacs transaction ID.<br />Type: `string`<br />Format: `GUID`<br/>Max. Length: `36`<br/>Min. Length: `0`<br/>  <br />   |    
+
+#### Example Bacs Unpaid Direct Debit Received webhook request body
+
+```json
+{
+  "Type": "BacsUnpaidDirectDebitReceived",
+  "Version": 3,
+  "Payload":
+   {
+     "CreditorInformation":
+       {
+        "AccountName": "NAMEOFORIGINATOR  ",
+        "SortCode": "601613",
+        "AccountNumber": "31926819"
+       },
+     "DebtorInformation":
+       {
+        "AccountName": "DEST ACCOUNT      ",
+        "SortCode": "724000",
+        "AccountNumber": "00000167"
+       },
+     "Reference": "YGRBOXDJEPWRJQVNLF",
+     "Amount": 2.01,
+     "ProcessingDate": "2021-01-10T00:00:00Z",
+     "TransactionCode": "U7",
+     "Status": "Pending",
+     "ServiceUserNumber": "480642",
+     "ReasonCode": "0",
+     "Source": "Bacs",
+     "BacsTransactionId": "5e09a485-72a2-4acb-9c99-d2383870f96a"
+   }
+  "Nonce": 1142018831
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1142018831
+}
+```
