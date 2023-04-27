@@ -21,12 +21,12 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
                 <Styles.ListItem key={subMenuItem.node.fields.slug}>
                   <Styles.SubTitle
                     href={
-                      `${item.menuItem.slug}#${kebabCase(subMenuItem.node.fields.title.toLowerCase())}`
+                      `${item.menuItem.slug}/${kebabCase(subMenuItem.node.fields.title.toLowerCase())}`
                     }
                   >
                     {subMenuItem.node.fields.title}
                   </Styles.SubTitle>
-                </Styles.ListItem>  
+                </Styles.ListItem>
               ))}
             </Styles.List>
           </Styles.ColumnContainer>
