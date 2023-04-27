@@ -5,5 +5,5 @@ export interface LayoutProps {
   location: any
   data: any
   pageContext: any
-  disableFooter?: boolean
+  hideFooterNavigation?: boolean
 }
