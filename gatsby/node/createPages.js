@@ -28,7 +28,14 @@ const REPOSITORY_OWNER = 'clearbank'
 const REPOSITORY_NAME = 'clearbank.github.io'
 
 module.exports = async ({ graphql, actions, reporter }) => {
-  const { createPage } = actions
+  const { createPage, createRedirect } = actions
+
+  createRedirect({
+    fromPath: `/docs/introduction`,
+    toPath: `/`,
+    statusCode: 200,
+    permanent: true,
+  })
 
   const result = await graphql(ALL_PAGES_SCHEMA)
 
