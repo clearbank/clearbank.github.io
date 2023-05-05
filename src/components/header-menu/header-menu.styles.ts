@@ -48,10 +48,6 @@ export const Title = styled.h2<{ isActive?: boolean }>`
   cursor: default;
   font-weight: ${props => props.isActive ? 600 : 400};
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
-
-  &:hover {
-    color: ${colors.wedgewoodapprox};
-  }
 `
 
 const rotateMenu = keyframes`

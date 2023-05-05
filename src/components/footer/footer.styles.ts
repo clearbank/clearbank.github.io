@@ -17,9 +17,10 @@ export const ColumnContainer = styled.div`
   max-width: 200px;
 `
 
-export const Title = styled.a`
+export const Title = styled.h2`
+  cursor: default;
+  margin: 0;
   text-decoration: none;
-  cursor: pointer;
   font-weight: 600;
   font-size: 20px;
   color: ${colors.brandDark}

@@ -1,5 +1,4 @@
 import React from 'react'
-import kebabCase from 'lodash.kebabcase'
 
 import Logo from 'src/components/logo'
 
@@ -20,9 +19,7 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
               {item.subMenuItems.map(subMenuItem => (
                 <Styles.ListItem key={subMenuItem.node.fields.slug}>
                   <Styles.SubTitle
-                    href={
-                      `${item.menuItem.slug}/${kebabCase(subMenuItem.node.fields.title.toLowerCase())}`
-                    }
+                    href={subMenuItem.node.fields.slug}
                   >
                     {subMenuItem.node.fields.title}
                   </Styles.SubTitle>
