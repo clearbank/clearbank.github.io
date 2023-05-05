@@ -40,7 +40,7 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
         <br/>
         Copyright ClearBank Ltd. Authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority (Financial Services Register number: 754568). Registered Address: ClearBank, Borough Yards, 13 Dirty Lane, London, SE1 9PA.
         <br/>
-        ClearBank® provides customers with a Definitive Services Agreement, which covers the provision of indirect access services. 
+        ClearBank® provides customers with a Definitive Services Agreement, which covers the provision of indirect access services. &nbsp;
         <a href="https://www.wearepay.uk/what-we-do/payment-systems/access-to-payment-systems/code-of-conduct-for-indirect-access-providers/" target="_blank" rel="noopener noreferrer">
           Code of Conduct for Indirect Access Providers.        
         </a>
