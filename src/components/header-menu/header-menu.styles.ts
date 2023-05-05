@@ -41,15 +41,13 @@ export const Underline = styled.div`
   border-radius: 10px;
 `
 
-export const Title = styled(LinkBase)<{ isActive?: boolean }>`
+export const Title = styled.h2<{ isActive?: boolean }>`
   line-height: 38px;
   font-size: 25px;
+  margin: 0;
+  cursor: default;
   font-weight: ${props => props.isActive ? 600 : 400};
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
-
-  &:hover {
-    color: ${colors.wedgewoodapprox};
-  }
 `
 
 const rotateMenu = keyframes`

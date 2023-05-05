@@ -7,10 +7,7 @@ const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) 
     return (
       <Styles.Container>
         <Styles.TitleContainer>
-          <Styles.Title
-            to={item.menuItem.slug}
-            isActive={isActive}
-          >
+          <Styles.Title isActive={isActive}>
             {item.menuItem.title}
           </Styles.Title>
           {
