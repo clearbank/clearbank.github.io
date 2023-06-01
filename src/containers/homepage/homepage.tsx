@@ -22,9 +22,9 @@ const ARTICLES = [
 ]
 
 const GUIDES = [
-  {title: "Endpoint lookup", iconSrc: CodeIcon},
-  {title: "Webhook lookup", iconSrc: LinkIcon},
-  {title: "Allowed characters", iconSrc: CheckIcon},
+  {title: "Endpoint lookup", iconSrc: CodeIcon, slug: "/docs/lookup/endpoint-lookup-table"},
+  {title: "Webhook lookup", iconSrc: LinkIcon, slug: "/docs/lookup/webhook-lookup-table"}, /*
+{title: "Allowed characters", iconSrc: CheckIcon},*/
 ]
 
 const options = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -61,12 +61,12 @@ const Homepage: React.FC<any> = (props) => {
           <ClientSection/>
         </Styles.Row>
 
-        {/* <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
+        <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
         <Styles.SectionContainer>
           {GUIDES.map(item => (
-            <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+            <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
           ))}
-        </Styles.SectionContainer> */}
+        </Styles.SectionContainer>
 
         <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
         <Styles.GitHubSectionContainer>
