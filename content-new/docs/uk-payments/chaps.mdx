@@ -43,6 +43,37 @@ This endpoint uses the endToEndIdentification field as a duplicate check to ensu
     ]}
 />
 
+<EndpointBlock
+    type="post"
+    title="Simulate an inbound CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Return a CHAPS payment"
+    endpoints={[
+    {
+        path: "/payments/chaps/v4/return-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    }
+    ]}
+/>
+
 <WebhookPlaceholder render='transaction-settled-webhook-v6' />
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
