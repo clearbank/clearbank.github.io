@@ -9,10 +9,12 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
 ## CHAPS
 
-When sending payments through our API, CHAPS are initiated via the POST /{vn}/Payments/CHAPS endpoint, while a confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook).
-
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
 However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+
+- CHAPS payments can be sent using the [POST /v3/Payments/CHAPS](#send-a-chaps-payment) endpoint.
+- Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
+- If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v4/return-payments](#return-a-chaps-payment) endpoint.
 
 **CHAPS validation**
 
@@ -23,8 +25,6 @@ However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Frid
 
 Pattern: The character set has been extended to include all SWIFT allowed characters. Alphanumeric (uppercase and lowercase) and special characters*****.<br />
 *Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **'** (apostrophe), **+** (plus sign), &nbsp; (blank space).
-
-This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
 
 <EndpointBlock
     type="post"
