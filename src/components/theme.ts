@@ -165,7 +165,7 @@ export const colors = {
   // NEW COLOURS
   // Names generated from: http://chir.ag/projects/name-that-color/
   downriver: '#000000', // V2
-  cornflowerBlue: '#e2eff9',
+  cornflowerBlue: '#e5e5e5',
   whiteLilac: '#fafbfd',
   frenchPass: '#b3defd',
   nobel: '#b5b5b5',
