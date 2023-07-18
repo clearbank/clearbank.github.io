@@ -1,0 +1,1360 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Send CHAPS payment",
+        "description": "Send CHAPS payment",
+        "version": "4.0.Chaps-payment"
+    },
+    "paths": {
+        "/external/v4/{institutionId}/customerpayments": {
+            "post": {
+                "tags": [
+                    "ExternalCustomerPaymentsV4"
+                ],
+                "description": "Create an outbound customer payment",
+                "operationId": "ExternalCreateCustomerPayment-v4",
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "cb-logical-execution-context",
+                        "in": "header",
+                        "description": "Required header that provides context details to the call.\n e.g. {'Context':[{'Key':'CorrelationStack','Value':'ffffffff-ffff-ffff-ffff-ffffffffffff'},{'Key':'PrincipalId','Value':'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'}]}",
+                        "schema": {
+                            "type": "string",
+                            "default": "{'Context':[{'Key':'CorrelationStack','Value':'10000000-0000-0000-0000-000000000001'}]}"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV4"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV4"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV4"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AccountDetailsDtoV2": {
+                "type": "object",
+                "properties": {
+                    "iBan": {
+                        "type": "string"
+                    },
+                    "accountNumber": {
+                        "type": "string"
+                    },
+                    "sortCode": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AccountIdentificationDtoV4": {
+                "type": "object",
+                "properties": {
+                    "iban": {
+                        "minLength": 1,
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+                        "type": "string",
+                        "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                    },
+                    "schemeName": {
+                        "enum": [
+                            "BBan"
+                        ],
+                        "type": "string",
+                        "description": "Scheme Type"
+                    },
+                    "identification": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unambiguous Identification for the given scheme"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AccountIdentificationIbanDtoV4": {
+                "required": [
+                    "iban"
+                ],
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/components/schemas/AccountIdentificationDtoV4"
+                }],
+                "properties": {
+                    "iban": {
+                        "minLength": 1,
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+                        "type": "string",
+                        "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AccountIdentificationOtherDtoV4": {
+                "required": [
+                    "identification",
+                    "schemeName"
+                ],
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/components/schemas/AccountIdentificationDtoV4"
+                }],
+                "properties": {
+                    "schemeName": {
+                        "enum": [
+                            "BBan"
+                        ],
+                        "type": "string",
+                        "description": "Scheme Type"
+                    },
+                    "identification": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unambiguous Identification for the given scheme"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AddressDetailsDtoV2": {
+                "required": [
+                    "country",
+                    "postCode",
+                    "town"
+                ],
+                "type": "object",
+                "properties": {
+                    "buildingNumber": {
+                        "type": "string"
+                    },
+                    "buildingName": {
+                        "type": "string"
+                    },
+                    "streetName": {
+                        "type": "string"
+                    },
+                    "town": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "country": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "postCode": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreateBlockedParticipantRequestDtoV1": {
+                "required": [
+                    "bic",
+                    "name",
+                    "userName"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "bic": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "userName": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreateCustomerPaymentDtoV4": {
+                "required": [
+                    "creditor",
+                    "creditorAccount",
+                    "debtor",
+                    "debtorAccount",
+                    "endToEndIdentification",
+                    "instructedAmount",
+                    "instructionIdentification",
+                    "sourceAccount"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\\n\\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+                    },
+                    "endToEndIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain."
+                    },
+                    "instructedAmount": {
+                        "$ref": "#/components/schemas/InstructionAmountDtoV4"
+                    },
+                    "sourceAccount": {
+                        "$ref": "#/components/schemas/AccountIdentificationDtoV4",
+                        "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                    },
+                    "debtorAccount": {
+                        "$ref": "#/components/schemas/AccountIdentificationDtoV4",
+                        "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/PartyDetailsDtoV4"
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/AccountIdentificationDtoV4",
+                        "description": "Party is owed an amount of money as the (ultimate) creditor. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/PartyDetailsDtoV4"
+                    },
+                    "purpose": {
+                        "enum": [
+                            "Deposit",
+                            "IntraCompanyPayment",
+                            "IntraPartyPayment",
+                            "AgriculturalTransfer",
+                            "CommercialPayment",
+                            "PurchaseSaleOfGoodsAndServices",
+                            "SupplierPayment",
+                            "CharityPayment",
+                            "CompensationPayment",
+                            "PropertyLoanRepayment",
+                            "PropertyLoanSettlement",
+                            "PaymentOfInsuranceClaim",
+                            "LoanRepayment",
+                            "TradeSettlementPayment",
+                            "PaymentOfFees",
+                            "Gift",
+                            "InvoicePayment",
+                            "ForeignExchange",
+                            "Savings",
+                            "TaxPayment",
+                            "Utilities",
+                            "LotteryPayment",
+                            "PropertyCompletionPayment",
+                            "PropertyDeposit",
+                            "PropertyLoanDisbursement",
+                            "PropertyLoanRefinancing"
+                        ],
+                        "type": "string",
+                        "description": "Underlying reason for the payment transaction, as published in an external purpose code list."
+                    },
+                    "categoryPurpose": {
+                        "enum": [
+                            "TradeSettlementPayment",
+                            "PersonToPersonPayment",
+                            "GovernmentPayment",
+                            "IntraCompanyPayment",
+                            "Loan",
+                            "OtherPayment",
+                            "SupplierPayment",
+                            "TaxPayment",
+                            "Trade",
+                            "TreasuryPayment"
+                        ],
+                        "type": "string",
+                        "description": "Category purpose, in a proprietary form."
+                    },
+                    "remittanceInformation": {
+                        "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV4"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreateInstitutionPaymentDtoV4": {
+                "required": [
+                    "creditor",
+                    "creditorAccount",
+                    "debtor",
+                    "endToEndIdentification",
+                    "instructedAmount",
+                    "instructionIdentification",
+                    "sourceAccount"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentification": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+                    },
+                    "endToEndIdentification": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain."
+                    },
+                    "instructedAmount": {
+                        "$ref": "#/components/schemas/InstructionAmountDtoV4"
+                    },
+                    "sourceAccount": {
+                        "oneOf": [{
+                                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV4"
+                            },
+                            {
+                                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV4"
+                            }
+                        ],
+                        "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction."
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/PartyDetailsDtoV4"
+                    },
+                    "creditorAccount": {
+                        "oneOf": [{
+                                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV4"
+                            },
+                            {
+                                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV4"
+                            }
+                        ],
+                        "description": "Party is owed an amount of money as the (ultimate) creditor."
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/PartyDetailsDtoV4"
+                    },
+                    "purpose": {
+                        "enum": [
+                            "Deposit",
+                            "IntraCompanyPayment",
+                            "IntraPartyPayment",
+                            "AgriculturalTransfer",
+                            "CommercialPayment",
+                            "PurchaseSaleOfGoodsAndServices",
+                            "SupplierPayment",
+                            "CharityPayment",
+                            "CompensationPayment",
+                            "PropertyLoanRepayment",
+                            "PropertyLoanSettlement",
+                            "PaymentOfInsuranceClaim",
+                            "LoanRepayment",
+                            "TradeSettlementPayment",
+                            "PaymentOfFees",
+                            "Gift",
+                            "InvoicePayment",
+                            "ForeignExchange",
+                            "Savings",
+                            "TaxPayment",
+                            "Utilities",
+                            "LotteryPayment",
+                            "PropertyCompletionPayment",
+                            "PropertyDeposit",
+                            "PropertyLoanDisbursement",
+                            "PropertyLoanRefinancing"
+                        ],
+                        "type": "string",
+                        "description": "Underlying reason for the payment transaction, as published in an external purpose code list."
+                    },
+                    "categoryPurpose": {
+                        "enum": [
+                            "TradeSettlementPayment",
+                            "PersonToPersonPayment",
+                            "GovernmentPayment",
+                            "IntraCompanyPayment",
+                            "Loan",
+                            "OtherPayment",
+                            "SupplierPayment",
+                            "TaxPayment",
+                            "Trade",
+                            "TreasuryPayment"
+                        ],
+                        "type": "string",
+                        "description": "Category purpose, in a proprietary form."
+                    },
+                    "remittanceInformation": {
+                        "$ref": "#/components/schemas/UnstructuredRemittanceInformationDtoV4"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreateReturnPaymentDtoV4": {
+                "required": [
+                    "instructionIdentification",
+                    "paymentId",
+                    "reason"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string",
+                        "description": "ClearBank identifier that uniquely identifies the payment instruction. Supplied in response to the original payment instruction request.",
+                        "format": "uuid"
+                    },
+                    "reason": {
+                        "enum": [
+                            "WrongAmount",
+                            "InconsistentWithEndCustomer",
+                            "MissingCreditorAddress",
+                            "UnrecognisedInitiatingParty",
+                            "UnknownEndCustomer",
+                            "FollowingCancellationRequest",
+                            "RefundRequestByEndCustomer"
+                        ],
+                        "type": "string",
+                        "description": "Specifies the reason for the return."
+                    },
+                    "instructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "HttpValidationProblemDetails": {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/components/schemas/ProblemDetails"
+                }],
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "InboundPaymentMessageDtoV1": {
+                "required": [
+                    "mxMessageXml"
+                ],
+                "type": "object",
+                "properties": {
+                    "mxMessageXml": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPaymentSummaryDtoV1": {
+                "required": [
+                    "creditClearingTransactionIds",
+                    "id",
+                    "messageType",
+                    "messageTypeName",
+                    "state",
+                    "stateName",
+                    "uniqueSchemeId"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "uniqueSchemeId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "messageType": {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "messageTypeName": {
+                        "minLength": 1,
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "uetr": {
+                        "type": "string"
+                    },
+                    "creationDateTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "instructionIdentifier": {
+                        "type": "string"
+                    },
+                    "endToEndIdentifier": {
+                        "type": "string"
+                    },
+                    "interbankSettlementCurrency": {
+                        "type": "string"
+                    },
+                    "interbankSettlementDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "instructionAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "debtorAccountIban": {
+                        "type": "string"
+                    },
+                    "debtorAccountInstitutionBic": {
+                        "type": "string"
+                    },
+                    "creditorAccountIban": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "assignedUser": {
+                        "type": "string"
+                    },
+                    "accountId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "debtorName": {
+                        "type": "string"
+                    },
+                    "instructingAgent": {
+                        "type": "string"
+                    },
+                    "creditClearingTransactionIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    "state": {
+                        "enum": [
+                            "Created",
+                            "PaymentValidationFailed",
+                            "PaymentValidationSucceeded",
+                            "PaymentSubmittedForScreening",
+                            "CreditorAccountValidationFailed",
+                            "CreditorAccountValidationSucceeded",
+                            "CreditTransactionCreationSucceeded",
+                            "CreditTransactionSettlementSucceeded",
+                            "WebHookSent",
+                            "Clearing",
+                            "InSuspenseAccount",
+                            "Settled",
+                            "AutoReturned",
+                            "Returned",
+                            "ClientServiceReturn",
+                            "Forwarded"
+                        ],
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "minLength": 1,
+                        "type": "string",
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPaymentSummaryDtoV1PagedResponse": {
+                "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                ],
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InboundPaymentSummaryDtoV1"
+                        }
+                    },
+                    "totalCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPaymentsSummaryUpdateDtoV1": {
+                "type": "object",
+                "properties": {
+                    "assignedUser": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InstructionAmountDtoV4": {
+                "required": [
+                    "amount",
+                    "currency"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "currency": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "A **** number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217."
+            },
+            "OutboundCustomerPaymentCreateDtoV1": {
+                "required": [
+                    "debtorAccountIban",
+                    "debtorInstitutionId",
+                    "endToEndIdentifier",
+                    "instructionAmount",
+                    "instructionCurrency",
+                    "instructionIdentifier",
+                    "reference"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "endToEndIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "instructionAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "instructionCurrency": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorName": {
+                        "type": "string"
+                    },
+                    "creditorAddress": {
+                        "type": "string"
+                    },
+                    "creditorAccountIban": {
+                        "type": "string"
+                    },
+                    "creditorAccountNumber": {
+                        "type": "string"
+                    },
+                    "creditorAccountSortCode": {
+                        "type": "string"
+                    },
+                    "debtorName": {
+                        "type": "string"
+                    },
+                    "debtorAccountName": {
+                        "type": "string"
+                    },
+                    "debtorAddress": {
+                        "type": "string"
+                    },
+                    "debtorAccountIban": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorInstitutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reference": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    },
+                    "transactionIdentification": {
+                        "type": "string"
+                    },
+                    "instructionPriority": {
+                        "type": "string"
+                    },
+                    "exchangeRate": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "chargesInformationAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "chargesInformationAmountCurrency": {
+                        "type": "string"
+                    },
+                    "instructionForCreditorAgent": {
+                        "type": "string"
+                    },
+                    "instructionForNextAgent": {
+                        "type": "string"
+                    },
+                    "purpose": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "OutboundCustomerPaymentCreateDtoV2": {
+                "required": [
+                    "creditorAccount",
+                    "creditorAddressDetails",
+                    "creditorName",
+                    "debtorAccountIban",
+                    "debtorAddressDetails",
+                    "debtorInstitutionId",
+                    "debtorName",
+                    "endToEndIdentifier",
+                    "instructionAmount",
+                    "instructionCurrency",
+                    "instructionIdentifier",
+                    "reference"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "endToEndIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "instructionAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "instructionCurrency": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorName": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorAddressDetails": {
+                        "$ref": "#/components/schemas/AddressDetailsDtoV2"
+                    },
+                    "creditorLEI": {
+                        "type": "string"
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/AccountDetailsDtoV2"
+                    },
+                    "debtorName": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorAddressDetails": {
+                        "$ref": "#/components/schemas/AddressDetailsDtoV2"
+                    },
+                    "debtorLEI": {
+                        "type": "string"
+                    },
+                    "debtorAccountIban": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorInstitutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reference": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "enum": [
+                            "Deposit",
+                            "IntraCompanyPayment",
+                            "IntraPartyPayment",
+                            "AgriculturalTransfer",
+                            "CommercialPayment",
+                            "PurchaseSaleOfGoodsAndServices",
+                            "SupplierPayment",
+                            "CharityPayment",
+                            "CompensationPayment",
+                            "PropertyLoanRepayment",
+                            "PropertyLoanSettlement",
+                            "PaymentOfInsuranceClaim",
+                            "LoanRepayment",
+                            "TradeSettlementPayment",
+                            "PaymentOfFees",
+                            "Gift",
+                            "InvoicePayment",
+                            "ForeignExchange",
+                            "Savings",
+                            "TaxPayment",
+                            "Utilities",
+                            "LotteryPayment",
+                            "PropertyCompletionPayment",
+                            "PropertyDeposit",
+                            "PropertyLoanDisbursement",
+                            "PropertyLoanRefinancing"
+                        ],
+                        "type": "string"
+                    },
+                    "categoryPurposeCode": {
+                        "enum": [
+                            "TradeSettlementPayment",
+                            "PersontoPersonPayment",
+                            "GovernmentPayment",
+                            "IntraCompanyPayment",
+                            "Loan",
+                            "OtherPayment",
+                            "SupplierPayment",
+                            "TaxPayment",
+                            "Trade",
+                            "TreasuryPayment"
+                        ],
+                        "type": "string"
+                    },
+                    "channel": {
+                        "enum": [
+                            "Portal",
+                            "Api",
+                            "ControlledStart",
+                            "AutoReturn"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "OutboundInstitutionPaymentCreateDtoV1": {
+                "required": [
+                    "debtorAccountIban",
+                    "debtorInstitutionId",
+                    "endToEndIdentifier",
+                    "instructionAmount",
+                    "instructionCurrency",
+                    "instructionIdentifier",
+                    "reference"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "endToEndIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "instructionAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "instructionCurrency": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorName": {
+                        "type": "string"
+                    },
+                    "creditorAddress": {
+                        "type": "string"
+                    },
+                    "creditorAccountIban": {
+                        "type": "string"
+                    },
+                    "creditorAccountNumber": {
+                        "type": "string"
+                    },
+                    "creditorAccountSortCode": {
+                        "type": "string"
+                    },
+                    "debtorName": {
+                        "type": "string"
+                    },
+                    "debtorAddress": {
+                        "type": "string"
+                    },
+                    "debtorAccountIban": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorInstitutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reference": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    },
+                    "transactionIdentification": {
+                        "type": "string"
+                    },
+                    "instructionPriority": {
+                        "type": "string"
+                    },
+                    "instructionForCreditorAgent": {
+                        "type": "string"
+                    },
+                    "instructionForNextAgent": {
+                        "type": "string"
+                    },
+                    "purpose": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "OutboundInstitutionPaymentCreateDtoV2": {
+                "required": [
+                    "creditorAccount",
+                    "creditorAddressDetails",
+                    "creditorName",
+                    "debtorAccountIban",
+                    "debtorAddressDetails",
+                    "debtorInstitutionId",
+                    "endToEndIdentifier",
+                    "instructionAmount",
+                    "instructionCurrency",
+                    "instructionIdentifier",
+                    "reference"
+                ],
+                "type": "object",
+                "properties": {
+                    "instructionIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "endToEndIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "instructionAmount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "instructionCurrency": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorName": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "creditorLEI": {
+                        "type": "string"
+                    },
+                    "creditorAddressDetails": {
+                        "$ref": "#/components/schemas/AddressDetailsDtoV2"
+                    },
+                    "creditorAccount": {
+                        "$ref": "#/components/schemas/AccountDetailsDtoV2"
+                    },
+                    "debtorName": {
+                        "type": "string"
+                    },
+                    "debtorLEI": {
+                        "type": "string"
+                    },
+                    "debtorAddressDetails": {
+                        "$ref": "#/components/schemas/AddressDetailsDtoV2"
+                    },
+                    "debtorAccountIban": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "debtorInstitutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reference": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    },
+                    "purposeCode": {
+                        "enum": [
+                            "Deposit",
+                            "IntraCompanyPayment",
+                            "IntraPartyPayment",
+                            "AgriculturalTransfer",
+                            "CommercialPayment",
+                            "PurchaseSaleOfGoodsAndServices",
+                            "SupplierPayment",
+                            "CharityPayment",
+                            "CompensationPayment",
+                            "PropertyLoanRepayment",
+                            "PropertyLoanSettlement",
+                            "PaymentOfInsuranceClaim",
+                            "LoanRepayment",
+                            "TradeSettlementPayment",
+                            "PaymentOfFees",
+                            "Gift",
+                            "InvoicePayment",
+                            "ForeignExchange",
+                            "Savings",
+                            "TaxPayment",
+                            "Utilities",
+                            "LotteryPayment",
+                            "PropertyCompletionPayment",
+                            "PropertyDeposit",
+                            "PropertyLoanDisbursement",
+                            "PropertyLoanRefinancing"
+                        ],
+                        "type": "string"
+                    },
+                    "categoryPurposeCode": {
+                        "enum": [
+                            "TradeSettlementPayment",
+                            "PersontoPersonPayment",
+                            "GovernmentPayment",
+                            "IntraCompanyPayment",
+                            "Loan",
+                            "OtherPayment",
+                            "SupplierPayment",
+                            "TaxPayment",
+                            "Trade",
+                            "TreasuryPayment"
+                        ],
+                        "type": "string"
+                    },
+                    "channel": {
+                        "enum": [
+                            "Portal",
+                            "Api",
+                            "ControlledStart",
+                            "AutoReturn"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PartyAddressDetailsDtoV4": {
+                "required": [
+                    "country",
+                    "postCode",
+                    "townName"
+                ],
+                "type": "object",
+                "properties": {
+                    "buildingNumber": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Number that identifies the position of a building on a street."
+                    },
+                    "buildingName": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of the building or house."
+                    },
+                    "streetName": {
+                        "maxLength": 70,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of a street or thoroughfare."
+                    },
+                    "townName": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of a built-up area, with defined boundaries, and a local government."
+                    },
+                    "country": {
+                        "minLength": 1,
+                        "pattern": "[A-Z]{2,2}",
+                        "type": "string",
+                        "description": "Nation with its own government."
+                    },
+                    "postCode": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PartyDetailsDtoV4": {
+                "required": [
+                    "name",
+                    "postalAddress"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Name of the party"
+                    },
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PartyAddressDetailsDtoV4"
+                    },
+                    "lei": {
+                        "type": "string",
+                        "description": "Legal Entity Identifier of the party"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PaymentCreatedResponseDtoV4": {
+                "required": [
+                    "paymentId"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PaymentForwardDtoV1": {
+                "type": "object",
+                "properties": {
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "institutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "creditorIBan": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PaymentReturnDtoV1": {
+                "required": [
+                    "institutionId",
+                    "returnReason",
+                    "transactionId"
+                ],
+                "type": "object",
+                "properties": {
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "institutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "returnReason": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PaymentReturnDtoV2": {
+                "required": [
+                    "institutionId",
+                    "instructionIdentifier",
+                    "returnReason",
+                    "transactionId"
+                ],
+                "type": "object",
+                "properties": {
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "institutionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "returnReason": {
+                        "enum": [
+                            "WrongAmount",
+                            "InconsistentWithEndCustomer",
+                            "MissingCreditorAddress",
+                            "UnrecognisedInitiatingParty",
+                            "UnknownEndCustomer",
+                            "FollowingCancellationRequest",
+                            "RefundRequestByEndCustomer"
+                        ],
+                        "type": "string"
+                    },
+                    "instructionIdentifier": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "settlementPriority": {
+                        "type": "string"
+                    },
+                    "channel": {
+                        "enum": [
+                            "Portal",
+                            "Api",
+                            "ControlledStart",
+                            "AutoReturn"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "instance": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "StructuredRemittanceInformationDtoV4": {
+                "type": "object",
+                "properties": {
+                    "creditorReferenceInformation": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
+            },
+            "UnstructuredRemittanceInformationDtoV4": {
+                "type": "object",
+                "properties": {
+                    "unstructured": {
+                        "maxLength": 140,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
+            }
+        }
+    }
+}
