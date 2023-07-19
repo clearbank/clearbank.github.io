@@ -6,15 +6,20 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
 
 ## CHAPS
 
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
-However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+However, you can only send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
-- CHAPS payments can be sent using the [POST /v3/Payments/CHAPS](#send-a-chaps-payment) endpoint.
+- CHAPS payments can be sent using the [POST /v4/payments/chaps-customer-payment](#send-a-chaps-payment) endpoint.
 - Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
 - If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v4/return-payments](#return-a-chaps-payment) endpoint.
+
+<Callout colour="blue">
+  It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
+</Callout>
 
 **CHAPS validation**
 
@@ -49,7 +54,7 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
     title="Send a CHAPS payment"
     endpoints={[
     {
-        path: "/external/v4/{institutionId}/customerpayments",
+        path: "/v4/payments/chaps-customer-payment",
         version: "4.0.Chaps-payment",
         webhooks: [
         'transaction-settled-webhook-v6',
@@ -66,20 +71,6 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
         'payment-message-assessment-failed-webhook-v1',
         'payment-message-validation-failed-webhook-v1',
         'transaction-rejected-v2'
-        ]
-    }
-    ]}
-/>
-
-<EndpointBlock
-    type="post"
-    title="Simulate an inbound CHAPS payment"
-    endpoints={[
-    {
-        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
-        version: "1.0-ChapsSim",
-        webhooks: [
-        'transaction-settled-webhook-v6',
         ]
     }
     ]}
@@ -123,3 +114,57 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
 <WebhookPlaceholder render='transaction-rejected-v2' />
+
+## CHAPS simulation endpoints
+
+These endpoints can be used to simulate payments. You can also use them for automated testing.
+
+- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v1/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v1/return-payments](#simulate-a-return-chaps-payment) endpoint.
+- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v1/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+
+The ClearBank Payment Simulator should no longer be used for CHAPS payments.
+
+<EndpointBlock
+    type="post"
+    title="Simulate an inbound CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a returned CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/return-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a CHAPS bank-to-bank payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/institution-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+
