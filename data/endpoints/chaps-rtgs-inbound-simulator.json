@@ -92,44 +92,34 @@
         }
       }
     },
-    "/payments/chaps/v4/return-payments": {
+    "/inbound-payment-simulation/chaps/v1/institution-payments": {
       "post": {
         "tags": [
-          "ExternalReturnPaymentsV4"
+          "ExternalInboundInstitutionPaymentsSimulationV1"
         ],
-        "summary": "Use this endpoint to return a CHAPS payment.",
-        "description": "If you need to return a payment, you should do so by the next working day. The same operating hours apply for CHAPS returns as for regular CHAPS payments. Note that this endpoint only supports returning CHAPS payments made after the Bank of England's RTGS Renewal Programme went live, that is, to all payments made on or after 19 June 2023.",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
-          },
-          {
-            "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
-          },
-          {
-            "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
-          }
-        ],
+        "summary": "Define a CHAPS bank-to-bank payment to be received by an account in sim.",
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simulated inbound bank-to-bank payment. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.",
+        "operationId": "CreateInboundInstitutionPayment-v1",
         "requestBody": {
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV1"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV1"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV1"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV1"
               }
             }
           },
@@ -138,25 +128,97 @@
         "responses": {
           "202": {
             "description": "Accepted",
-            "headers": {
-              "X-Correlation-Id": {
-                "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
-              }
-            },
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound-payment-simulation/chaps/v1/return-payments": {
+      "post": {
+        "tags": [
+          "ExternalInboundReturnPaymentsSimulationV1"
+        ],
+        "summary": "Define a returned CHAPS payment to be received by an account in sim.",
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simulated returned CHAPS payment. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.",
+        "operationId": "CreateInboundReturnPayment-v1",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV1"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV1"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV1"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV1"
                 }
               }
             }
@@ -404,6 +466,7 @@
           },
           "debtorBic": {
             "minLength": 1,
+            "description": "Valid BIC for the debtor account.",
             "type": "string"
           },
           "debtorAccount": {
@@ -432,6 +495,7 @@
           },
           "creditorBic": {
             "minLength": 1,
+            "description": "Valid BIC for the creditor account.",
             "type": "string"
           },
           "creditorAccount": {
@@ -528,20 +592,284 @@
         },
         "additionalProperties": false
       },
-      "CreateReturnPaymentDtoV4": {
+      "CreateInboundInstitutionPaymentDtoV1": {
         "required": [
-          "instructionIdentification",
-          "paymentId",
-          "reason"
+          "creditor",
+          "creditorAccount",
+          "creditorBic",
+          "debtor",
+          "debtorAccount",
+          "debtorBic",
+          "endToEndIdentification",
+          "instructedAmount",
+          "instructionIdentification"
         ],
         "type": "object",
         "properties": {
-          "paymentId": {
-            "description": "Payment ID assigned by ClearBank to the inbound payment. This is the same value as the TransactionId in the Transaction Settled webhook.",
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
             "type": "string",
-            "format": "uuid"
+            "minLength": 1,
+            "maxLength": 35
           },
-          "reason": {
+          "endToEndIdentification": {
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "instructedAmount": {
+            "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.",
+            "type": "object",
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "properties": {
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              }
+            }
+          },
+          "debtorAccount": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction. You need to include EITHER the iban field OR the schemeName and identification fields in this object.",
+            "$ref": "#/components/schemas/AccountIdentificationDtoV1"
+          },
+          "debtorBic": {
+            "minLength": 1,
+            "description": "Valid BIC for the debtor account.",
+            "type": "string"
+          },
+          "debtor": {
+            "required": [
+              "name",
+              "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name by which a party is known and which is usually used to identify that party.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              },
+              "postalAddress": {
+                "required": [
+                  "country",
+                  "postCode",
+                  "townName"
+                ],
+                "type": "object",
+                "properties": {
+                  "buildingNumber": {
+                    "description": "Number that identifies the position of a building on a street.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16
+                  },
+                  "buildingName": {
+                    "description": "Name of the building or house.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "streetName": {
+                    "description": "Name of a street or thoroughfare.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 70
+                  },
+                  "townName": {
+                    "description": "Name of a built-up area, with defined boundaries, and a local government.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "country": {
+                    "description": "Nation with its own government.",
+                    "type": "string",
+                    "pattern": "[A-Z]{2,2}"
+                  },
+                  "postCode": {
+                    "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Party that owes an amount of money to the (ultimate) creditor."
+          },
+          "creditorBic": {
+            "minLength": 1,
+            "description": "Valid BIC for the creditor account.",
+            "type": "string"
+          },
+          "creditorAccount": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be made as a result of the transaction. You need to include EITHER the iban field OR the schemeName and identification fields in this object.",
+            "$ref": "#/components/schemas/AccountIdentificationDtoV1"
+          },
+          "creditor": {
+            "required": [
+              "name",
+              "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name by which a party is known and which is usually used to identify that party.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              },
+              "postalAddress": {
+                "required": [
+                  "country",
+                  "postCode",
+                  "townName"
+                ],
+                "type": "object",
+                "properties": {
+                  "buildingNumber": {
+                    "description": "Number that identifies the position of a building on a street.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16
+                  },
+                  "buildingName": {
+                    "description": "Name of the building or house.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "streetName": {
+                    "description": "Name of a street or thoroughfare.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 70
+                  },
+                  "townName": {
+                    "description": "Name of a built-up area, with defined boundaries, and a local government.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 35
+                  },
+                  "country": {
+                    "description": "Nation with its own government.",
+                    "type": "string",
+                    "pattern": "[A-Z]{2,2}"
+                  },
+                  "postCode": {
+                    "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Party that owes an amount of money to the (ultimate) creditor."
+          },
+          "purpose": {
+            "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "Deposit",
+              "IntraCompanyPayment",
+              "IntraPartyPayment",
+              "AgriculturalTransfer",
+              "CommercialPayment",
+              "PurchaseSaleOfGoodsAndServices",
+              "SupplierPayment",
+              "CharityPayment",
+              "CompensationPayment",
+              "PropertyLoanRepayment",
+              "PropertyLoanSettlement",
+              "PaymentOfInsuranceClaim",
+              "LoanRepayment",
+              "TradeSettlementPayment",
+              "PaymentOfFees",
+              "Gift",
+              "InvoicePayment",
+              "ForeignExchange",
+              "Savings",
+              "TaxPayment",
+              "Utilities",
+              "LotteryPayment",
+              "PropertyCompletionPayment",
+              "PropertyDeposit",
+              "PropertyLoanDisbursement",
+              "PropertyLoanRefinancing"
+            ]
+          },
+          "categoryPurpose": {
+            "description": "Category purpose, in a proprietary form.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "TradeSettlementPayment",
+              "PersonToPersonPayment",
+              "GovernmentPayment",
+              "IntraCompanyPayment",
+              "Loan",
+              "OtherPayment",
+              "SupplierPayment",
+              "TaxPayment",
+              "Trade",
+              "TreasuryPayment"
+            ]
+          },
+          "remittanceInformation": {
+            "type": "object",
+            "properties": {
+              "unstructured": {
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 140
+              }
+            },
+            "additionalProperties": false,
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInboundReturnPaymentDtoV1": {
+        "required": [
+          "creditorBic",
+          "debtorBic",
+          "instructedAmount",
+          "originalEndToEndIdentification",
+          "originalInstructionIdentification",
+          "originalReference",
+          "originalUetr",
+          "returnReasonCode"
+        ],
+        "type": "object",
+        "properties": {
+          "originalUetr": {
+            "description": "Universally unique identifier to provide the original end-to-end reference of a payment transaction.",
+            "type": "string",
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
+          },
+          "returnReasonCode": {
             "enum": [
               "WrongAmount",
               "InconsistentWithEndCustomer",
@@ -553,11 +881,56 @@
             ],
             "type": "string"
           },
-          "instructionIdentification": {
-            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+          "originalInstructionIdentification": {
+            "description": "Unique identification, as assigned by the original instructing party for the original instructed party, to unambiguously identify the original instruction.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
+          },
+          "originalEndToEndIdentification": {
+            "description": "Unique identification, as assigned by the original initiating party, to unambiguously identify the original transaction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "originalReference": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instructedAmount": {
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.\r\n\r\nUsage: This amount has to be transported unchanged through the transaction chain.",
+            "type": "object",
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "properties": {
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              }
+            }
+          },
+          "debtorName": {
+            "description": "Name of the person or business who owns the debtor account.",
+            "type": "string"
+          },
+          "debtorBic": {
+            "minLength": 1,
+            "description": "Valid BIC for the debtor account.",
+            "type": "string"
+          },
+          "creditorName": {
+            "type": "string",
+            "description": "Name of the person or business who owns the creditor account."
+          },
+          "creditorBic": {
+            "minLength": 1,
+            "description": "Valid BIC for the creditor account.",
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -657,15 +1030,16 @@
         },
         "additionalProperties": false
       },
-      "PaymentCreatedResponseDtoV4": {
+      "PaymentCreatedResponseDtoV1": {
         "required": [
-          "paymentId"
+          "uetr"
         ],
         "type": "object",
         "properties": {
-          "paymentId": {
+          "uetr": {
+            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
             "type": "string",
-            "format": "uuid"
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
           }
         },
         "additionalProperties": false

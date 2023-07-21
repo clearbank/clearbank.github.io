@@ -6,15 +6,22 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
 
 ## CHAPS
 
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
-However, you can only send CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+However, you can only send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
-- CHAPS payments can be sent using the [POST /v3/Payments/CHAPS](#send-a-chaps-payment) endpoint.
+- CHAPS payments can be sent using the [POST /v4/payments/chaps-customer-payment](#send-a-chaps-payment) endpoint.
 - Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
 - If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v4/return-payments](#return-a-chaps-payment) endpoint.
+
+<Callout colour="blue">
+  It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
+</Callout>
+
+The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
 **CHAPS validation**
 
@@ -49,6 +56,16 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
     title="Send a CHAPS payment"
     endpoints={[
     {
+        path: "/v4/payments/chaps-customer-payment",
+        version: "4.0.Chaps-payment",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    },
+    {
         path: "/v3/Payments/CHAPS",
         version: "3.0.Chaps-payment",
         webhooks: [
@@ -63,25 +80,11 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
 
 <EndpointBlock
     type="post"
-    title="Simulate an inbound CHAPS payment"
-    endpoints={[
-    {
-        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
-        version: "1.0-ChapsSim",
-        webhooks: [
-        'transaction-settled-webhook-v6',
-        ]
-    }
-    ]}
-/>
-
-<EndpointBlock
-    type="post"
     title="Return a CHAPS payment"
     endpoints={[
     {
         path: "/payments/chaps/v4/return-payments",
-        version: "1.0-ChapsSim",
+        version: "4.0-ChapsReturn",
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
@@ -113,3 +116,79 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
 <WebhookPlaceholder render='transaction-rejected-v2' />
+
+## CHAPS simulation endpoints
+
+These endpoints can be used to simulate payments. You can also use them for automated testing.
+
+- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v1/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v1/return-payments](#simulate-a-return-chaps-payment) endpoint.
+- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v1/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+
+The ClearBank Payment Simulator should no longer be used for CHAPS payments.
+
+<EndpointBlock
+    type="post"
+    title="Simulate an inbound CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a returned CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/return-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a CHAPS bank-to-bank payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/institution-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+## FIN to ISO20022 field mapping
+
+As part of the Bank of England's RTGS Renewal Programme, the payment message format for CHAPS has recently changed. The previous message format known as MT messages has changed to MX messages that are compliant with ISO20022.
+
+This table provides information on the most relevant fields within the messages and their associated conversions.
+
+|Field|Field name|MT103|MT202|Explanation|pacs.008 <br/>_(MT103 successor)_|pacs.009 <br/>_(MT202 successor)_|pacs.004 <br/>_(MT202 RTN successor)_|
+|---|----|---|---|---|---|---|---|
+|:20|Transaction Reference Number|Mandatory|Mandatory|This field specifies the unique reference assigned by the sender to unambiguously identify the message.|<PmtId\><InstrId\>|<PmtId\><InstrId\>|<RtrId\>|
+|:21|Related Reference||Mandatory|This field contains a reference to the related transaction.||<PmtId\><EndToEndId\>|<OrgnlInstrId\>|
+|:23B|Bank Operation Code|Mandatory||This field identifies the type of operation. By the nature of the ISO message, the payment is always credit, so there is no need to specify the type in the message itself.<br/><br/>In FIN, it's usually populated CRED - Normal credit transfer.||||
+|:32A|Value date / Currency / Interbank Settled|Mandatory|Mandatory|This field specifies the value date, currency, and settlement amount. The settlement amount is the amount to be booked/reconciled at interbank level.|<IntrBkSttlmAmt\><Ccy\><br/><br/><IntrBkSttlmDt\>|<IntrBkSttlmAmt\><Ccy\><br/><br/><IntrBkSttlmDt\>|<RtrdIntrBkSttlmAmt\><Ccy\><br/><br/><IntrBkSttlmDt\>|
+|:50A, F, or K|Ordering Customer (Payer)|Mandatory||This field specifies the customer ordering the transaction.|<Dbtr\><br/><br/><DbtrAcct\>||<RtrChain\><Dbtr\><Pty\>|
+|:52A or D|Ordering Institution (Payer's Bank)|Optional|Optional|This field specifies the financial institution of the ordering customer.|<DbtrAgt\> Supercedes Field 52a - Ordering Institution<br/><br/><DbtrAgtAcct\> Supercedes Field 52a - Ordering Institution Account Number subfield|<Dbtr\> Supercedes Field 52a - Ordering Institution<br/><br/><DbtrAcct\> Supercedes Field 52a - Ordering Institution Account Number subfield|<RtrChain\><Dbtr\><Agt\>|
+|:57A, B, C, or D|Account with Institution (Beneficiary's Bank)|Optional|Optional|This field specifies the financial institution which services the account for the beneficiary customer.|<CdtrAgt\> Supercedes Field 57a – Account With  Institution<br/><br/><CdtrAgtAcct\> Supercedes Field 57a – Account With Institution Account Number subfield|<CdtrAgt\> Supercedes Field 57a – Account With  Institution<br/><br/><CdtrAgtAcct\> Supercedes Field 57a – Account With Institution Account Number subfield|<RtrChain\><CdtrAgt\>|
+|:58A or D|Beneficiary Institution||Mandatory|This field specifies the financial institution which has been designated by the ordering institution as the ultimate recipient of the funds being transferred.||<Cdtr\><br/><br/><CdtrAcct\>|<RtrChain\><Cdtr\><Agt\>|
+|:59 or 59A, F|Beneficiary|Mandatory||This field specifies the customer which will be paid.|<Cdtr\><br/><br/><CdtrAcct\>||<RtrChain\><Cdtr\><Pty\>|
+|:70|Remittance Information (payment reference)|Optional||This field specifies either the details of the individual transaction, or a reference to another message containing the details which are to be transmitted to the beneficiary customer.|<PmtId\><EndToEndId\> Supercedes Field 70 - preceded by codeword /ROC/<br/><br/><UltmtDbtr\> Supercedes Field 70 - preceded by codeword /ULTD/<br/><br/><UltmtCdtr\> Supercedes Field 70 - preceded by codeword /ULTB/<br/><br/><RltdRmtInf\> Supercedes Field 70 - preceded by codeword /RELID/<br/><br/><RmtInf\> Supercedes Field 70 - Remittance Information|<RmtInf\>||
+|:71A|Details of Charges|Mandatory||This field specifies which party will bear the charges for the transaction.<br/><br/>Previous FIN charge codes:<br/>BEN - Beneficiary<br/>OUR - Our Customer charged<br/> SHA - Shared Charges|<ChrgBr\><br/> Borne by Creditor - CRED<br/>Borne by Debtor - DEBT<br/>Shared - SHAR||<ChrgBr\><br/> Borne by Creditor - CRED<br/>Borne by Debtor - DEBT<br/>Shared - SHAR|
+|:72|Sender to Receiver Information|Optional|Optional|This field specifies additional information for the Receiver or other party specified.<br/><br/>Previously, in FIN, if the first six characters in line 1 contain the character string /REJT/ or /RETN/, then it is mandatory to follow the Payments Reject/Return Guidelines described in the Standards MT Usage Guidelines.|<PmtTpInf\><LclInstrm\> Supercedes Field 72 –  preceded by codeword /LOCINS/<br/><br/> <PrvsInstgAgt1\><PrvsInstgAgt2\><PrvsInstgAgt3\> Supercedes Field 72 –  preceded by codeword /INS/<br/><br/><InstgAgt\> Sender<br/><br/><InstdAgt\>Receiver<br/><br/><IntrmyAgt2\><IntrmyAgt3\> Supercedes Field 72 –  preceded by codeword /INTA/<br/><br/><InstrForCdtrAgt\> Supercedes Field 72 – preceded by codeword /ACC/<br/><br/><InstrForNxtAgt\> Supercedes Field 72 – preceded by codeword /REC/<br/><br/>|<PmtTpInf\><LclInstrm\> Supercedes Field 72 – preceded by codeword /LOCINS/ Also CLS-specific codewords<br/><br/><PmtTpInf\><CtgyPurp\> Supercedes Field 72 – preceded by codeword /CATPURP/<br/><br/><PrvsInstgAgt1\><PrvsInstgAgt2\><PrvsInstgAgt3\> Supercedes Field 72 – preceded by codeword /INS/<br/><br/><IntrmyAgt2\><IntrmyAgt3\> Supercedes Field 72 – preceded by codeword /INTA/<br/><br/><DbtrAgt\> Supercedes Field 72 – preceded by codeword /INS/<br/><br/><InstrForCdtrAgt\> Supercedes Field 72 – preceded by codeword /ACC/, /PHONBEN/, /TELEBEN/<br/><br/><InstrForNxtAgt\> Supercedes Field 72 – preceded by codeword /REC/<br/><br/><Purp\> Supercedes Field 72 – preceded by codeword /PURP/<br/><br/><RmtInf\> Supercedes Field 72 – preceded by codeword /BNF/ or /TSU/<br/><br/>|<RtrRsnInf\><Rsn\><Cd\> Supercedes Field 72 - Sender to Receiver Info - Line 2<br/><br/><OrgnlEndToEndId\> Supercedes Field 72 - Sender to Receiver Info - Line 4<br/><br/><ChrgsInf\><Amt\> Supercedes Field 72 - Sender to Receiver Info - Line 5<br/><br/><OrgnlIntrBkSttlmDt\> Supercedes Field 72 - Sender to Receiver Info - Line 6|
+
+
+
