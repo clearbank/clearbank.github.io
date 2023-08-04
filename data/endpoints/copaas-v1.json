@@ -1,0 +1,122 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "ClearBank.CoP.TenantService",
+      "version": "1.0.CoPaaS"
+    },
+    "paths": {
+      "/v1/softwarestatements/{softwareStatementId}/csr/{certificatetype}": {
+        "get": {
+          "tags": [
+            "Onboarding"
+          ],
+          "summary": "This endpoint is used to GET the CSR Certificate Type.",
+          "parameters": [
+            {
+              "name": "softwareStatementId",
+              "in": "path",
+              "description": "SoftwareStatementId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "certificateType",
+              "in": "path",
+              "description": "certificateType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Institution is not setup for CoP."
+            }
+          }
+        }
+      },
+      "/v1/softwarestatements/{softwareStatementId}/pem": {
+        "post": {
+          "tags": [
+            "Onboarding"
+          ],
+          "summary": "This endpoint is used to create a Certificate.",
+          "parameters": [
+            {
+              "name": "softwareStatementId",
+              "in": "path",
+              "description": "SoftwareStatementId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "createCertificateRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCertificateRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCertificateRequest"
+                }
+              },
+              "application/*+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCertificateRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Institution is not setup for CoP."
+            },
+            "500": {
+              "description": "Certificate onboarding failed. Please retry or if it fails consistently contact ClearBank with the Software Statement Id and Kid."
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "CreateCertificateRequest": {
+          "type": "object",
+          "properties": {
+            "pem": {
+              "type": "string",
+              "description": "Pem from OpenBanking",
+              "nullable": true
+            },
+            "kid": {
+              "type": "string",
+              "description": "Kid from OpenBanking",
+              "nullable": true
+            },
+            "certificateType": {
+              "type": "string",
+              "description": "Signing / Transport Certificate",
+              "nullable": true
+            }
+          },
+          "additionalProperties": false,
+          "description": "This model allows for creation of certificates."
+        }
+      }
+    }
+  }
