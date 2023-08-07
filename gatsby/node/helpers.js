@@ -27,7 +27,7 @@ function hasMultipleSlashes (string) {
 }
 
 function isRootLevelDocContainer (path) {
-  return path.match(new RegExp('^\/docs\/([^\/]+)$', 'g'))
+  return path.match(new RegExp('^\/[a-zA-Z]+\/docs\/([^\/]+)$', 'g'))
 }
 
 function slugIsInSecondLevel (slug) {
