@@ -1,5 +1,6 @@
 const path = require('path')
 const Helpers = require('./helpers')
+const redirects = require("./redirects.json")
 
 const ALL_PAGES_SCHEMA = `
   {
@@ -30,12 +31,11 @@ const REPOSITORY_NAME = 'clearbank.github.io'
 module.exports = async ({ graphql, actions, reporter }) => {
   const { createPage, createRedirect } = actions
 
-  createRedirect({
-    fromPath: `/docs/introduction`,
-    toPath: `/`,
+  redirects.forEach(redirect => createRedirect({
+    fromPath: redirect.fromPath,
+    toPath: redirect.toPath,
     statusCode: 200,
-    permanent: true,
-  })
+  }))
 
   const result = await graphql(ALL_PAGES_SCHEMA)
 
