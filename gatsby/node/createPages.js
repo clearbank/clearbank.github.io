@@ -49,15 +49,28 @@ module.exports = async ({ graphql, actions, reporter }) => {
   const rootLevelPages = allPages.edges.filter(
     ({ node }) => Helpers.isRootLevelDocContainer(node.fields.slug)
   )
-  const menuItems = await Helpers.buildMenu(rootLevelPages, graphql)
+  const ukMenu = rootLevelPages.filter(({ node }) => node.fields.slug.startsWith('/uk'))
+  const euMenu = rootLevelPages.filter(({ node }) => node.fields.slug.startsWith('/eu'))
+  const ukMenuItems = await Helpers.buildMenu(ukMenu, graphql)
+  const euMenuItems = await Helpers.buildMenu(euMenu, graphql)
 
   createPage({
-    path: '/',
+    path: '/uk',
     component: path.resolve('./src/templates/home.tsx'),
     context: {
       repositoryName: REPOSITORY_NAME,
       repositoryOwner: REPOSITORY_OWNER,
-      menuItems,
+      menuItems: ukMenuItems,
+    },
+  })
+
+  createPage({
+    path: '/eu',
+    component: path.resolve('./src/templates/home.tsx'),
+    context: {
+      repositoryName: REPOSITORY_NAME,
+      repositoryOwner: REPOSITORY_OWNER,
+      menuItems: euMenuItems,
     },
   })
 
@@ -71,7 +84,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
       context: {
         id,
         slug,
-        menuItems,
+        menuItems: slug.startsWith('/uk') ? ukMenuItems : euMenuItems,
         regexFilter: slug,
       }
     })

@@ -30,45 +30,39 @@ function isRootLevelDocContainer (path) {
   return path.match(new RegExp('^\/[a-zA-Z]+\/docs\/([^\/]+)$', 'g'))
 }
 
-function slugIsInSecondLevel (slug) {
-  const isInSubfolderTest = new RegExp('^/[^/]+/[^/]+[a-zA-Z0-9]$')
-
-  return isInSubfolderTest.test(slug)
-}
-
-async function buildMenu (rootLevelPages, graphql) {
-  const getSubPagesQuery = folderpath => `
-  subMenuItems: allMdx(filter: {
-      fileAbsolutePath: { regex: "/${folderpath}//" }
-      frontmatter: {
-        order: { ne: null }
-      }
-    },
-    sort: { fields: frontmatter___order }
-  ) {
-    edges {
-      node {
-        fields {
-          id
-          order
-          slug
-          title
+const getSubPagesQuery = folderpath => `
+    subMenuItems: allMdx(filter: {
+        fileAbsolutePath: { regex: "/${folderpath}//" }
+        frontmatter: {
+          order: { ne: null }
+        }
+      },
+      sort: { fields: frontmatter___order }
+    ) {
+      edges {
+        node {
+          fields {
+            id
+            order
+            slug
+            title
+          }
         }
       }
     }
-  }
-`
+  `
 
+async function buildMenu (rootLevelPages, graphql) {
   const fetchSubPages = rootLevelPages.map(async ({ node }) => {
     const folderName = node.fields.slug
     const isHomePage = node.fields.slug === '/'
 
-    const getSubPages = await fetchData(getSubPagesQuery(folderName), graphql)
+    const subPages = await fetchData(getSubPagesQuery(folderName), graphql)
 
-    const hasSubMenuItems = !!getSubPages.data.subMenuItems.edges.length
+    const hasSubMenuItems = !!subPages.data.subMenuItems.edges.length
     const subMenuItems =
       hasSubMenuItems && !isHomePage
-        ? getSubPages.data.subMenuItems.edges
+        ? subPages.data.subMenuItems.edges
         : null
 
     return {
@@ -77,13 +71,7 @@ async function buildMenu (rootLevelPages, graphql) {
     }
   })
 
-  const subMenuItems = await Promise.all(fetchSubPages)
-
-  return new Promise(resolve => {
-    if (subMenuItems) {
-      return resolve(subMenuItems)
-    }
-  })
+  return Promise.all(fetchSubPages)
 }
 
 module.exports = {
