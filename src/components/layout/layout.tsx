@@ -31,6 +31,11 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
             <Header />
             <HeaderMenu items={pageContext.menuItems} />
           </Styles.HeaderWrapper>
+          <Styles.Banner className='banner'>
+            {data?.mdx?.frontmatter?.bannerSrc && (
+              <img src={data.mdx.frontmatter.bannerSrc} alt="page banner" />
+            )}
+          </Styles.Banner>
           <Styles.ContentWrapper>
             <Styles.InnerContentWrapper>
               {children}
