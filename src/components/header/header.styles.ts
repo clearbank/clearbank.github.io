@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import Link from '../link'
-import { widths, colors, themeBreakpoints } from 'src/components/theme'
+import { widths, colors, themeBreakpoints, breakpoints } from 'src/components/theme'
+
 
 export const Container = styled.div`
   display: flex;
@@ -11,7 +12,6 @@ export const Container = styled.div`
   position: relative;
 
   @media (min-width: ${themeBreakpoints.large}) {
-    // width: 270px;
     flex-grow: 0;
   }
 `
@@ -66,4 +66,16 @@ export const Button = styled.button`
 export const SwitchContainer = styled.div`
   margin-left: auto;
   margin-right: 30px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-right: 60px;
+  }
+
+  @media screen and (min-width: ${breakpoints.large}) {
+    margin-right: 30px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    margin-right: 60px;
+  }
 `;
