@@ -11,7 +11,7 @@ export const Container = styled.div`
   position: relative;
 
   @media (min-width: ${themeBreakpoints.large}) {
-    width: 270px;
+    // width: 270px;
     flex-grow: 0;
   }
 `
@@ -62,3 +62,8 @@ export const Button = styled.button`
   padding: 0;
   outline: none;
 `
+
+export const SwitchContainer = styled.div`
+  margin-left: auto;
+  margin-right: 30px;
+`;

@@ -6,31 +6,19 @@ import ClientSection from './client-section'
 
 import GetStartedIcon from '../../../static/assets/images/get-started-icon.png'
 import ApiIcon from '../../../static/assets/images/api-icon.png'
-import CodeIcon from '../../../static/assets/images/Code.png'
-import LinkIcon from '../../../static/assets/images/Link.png'
-import CheckIcon from '../../../static/assets/images/Check.png'
+// import CodeIcon from '../../../static/assets/images/Code.png'
+// import LinkIcon from '../../../static/assets/images/Link.png'
+// import CheckIcon from '../../../static/assets/images/Check.png'
 import GHIcon from '../../../static/assets/images/GitHub-Mark 1.png'
 
 import * as Styles from './homepage.styles'
 
-const ARTICLES = [
-  {title: "Accounts", subtitle: "Find out more about the types of accounts you can create using our API", slug: "/uk/docs/gbp-accounts/account-types"},
-  {title: "UK payments", subtitle: "Everything you need to know to start connecting to the UK payment schemes through ClearBank", slug: "/uk/docs/uk-payments/faster-payments"},
-  {title: "Embedded banking", subtitle: "Learn more about our award winning embedded banking capabilities, purpose built for retail and SMB customers", slug: "/uk/docs/embedded-banking/fscs-protected-deposits"},
-  {title: "Multi-currency", subtitle: "Looking to send payments overseas? Here are the details on payments and accounts in different currencies", slug: "/uk/docs/multi-currency/multi-currency-account-types"},
-  {title: "Foreign exchange", subtitle: "Find out more about our FX trade capabilities", slug: "/uk/docs/multi-currency/fx-trade"},
-]
-
-const GUIDES = [
-  {title: "Endpoint lookup", iconSrc: CodeIcon},
-  {title: "Webhook lookup", iconSrc: LinkIcon},
-  {title: "Allowed characters", iconSrc: CheckIcon},
-]
-
-const options = { year: 'numeric', month: 'long', day: 'numeric' }
+const options = { year: 'numeric', month: 'long', day: 'numeric' } as Intl.DateTimeFormatOptions
 const dateFormatter = (date: string) => (new Date(date)).toLocaleDateString('en-GB', options)
 
 const Homepage: React.FC<any> = (props) => {
+  const { pageContext } = props
+
   return (
     <Layout {...props} hideFooterNavigation>
       <Styles.Page className='page'>
@@ -61,48 +49,55 @@ const Homepage: React.FC<any> = (props) => {
           <ClientSection/>
         </Styles.Row>
 
-        {/* <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
-        <Styles.SectionContainer>
-          {GUIDES.map(item => (
-            <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
-          ))}
-        </Styles.SectionContainer> */}
-
-        <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
-        <Styles.GitHubSectionContainer>
-          <img src={GHIcon} alt="github icon" />
-          <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
-        </Styles.GitHubSectionContainer>
+        {pageContext?.guides?.length > 0 && (
+          <>
+            <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
+            <Styles.SectionContainer>
+              {pageContext.guides.map(item => (
+                <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+              ))}
+            </Styles.SectionContainer>
+          </>
+        )}
         
-        <Styles.TableWrapper>
-          <Styles.Table>
-            <tbody>
-              {
-                props.data.github.repository.pullRequests.nodes
-                  .filter(node => node.state === 'MERGED')
-                  .map(node => (
-                    <tr key={node.title}>
-                      <Styles.TableTitleCell>
-                        <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
-                      </Styles.TableTitleCell>
-                      <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
-                    </tr>
-                  ))
-              }
-            </tbody>
-          </Styles.Table>
-        </Styles.TableWrapper>
+        {pageContext?.pullRequests?.length > 0 && (
+          <>
+            <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
+            <Styles.GitHubSectionContainer>
+              <img src={GHIcon} alt="github icon" />
+              <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
+            </Styles.GitHubSectionContainer>
 
-        <Styles.SectionContainer>
-          {ARTICLES.map(item =>
-            <Article
-              href={item.slug}
-              key={item.title}
-              title={item.title}
-              subtitle={item.subtitle}
-            />
-          )}
-        </Styles.SectionContainer>
+            <Styles.TableWrapper>
+              <Styles.Table>
+                <tbody>
+                  {pageContext.pullRequests.map(node => (
+                      <tr key={node.title}>
+                        <Styles.TableTitleCell>
+                          <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
+                        </Styles.TableTitleCell>
+                        <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
+                      </tr>
+                    ))}
+                </tbody>
+              </Styles.Table>
+            </Styles.TableWrapper>
+          </>
+          
+        )}
+        
+        {pageContext?.articles?.length > 0 && (
+          <Styles.SectionContainer>
+            {pageContext.articles.map(item =>
+              <Article
+                href={item.slug}
+                key={item.title}
+                title={item.title}
+                subtitle={item.subtitle}
+              />
+            )}
+          </Styles.SectionContainer>
+        )}
       </Styles.Page>
     </Layout>
   )

@@ -1,10 +1,12 @@
 const path = require('path')
 const Helpers = require('./helpers')
-const redirects = require("./redirects.json")
+const redirects = require('./static-data/redirects.json')
+const euHomeContent = require('./static-data/eu-home-content.json')
+const ukHomeContent = require('./static-data/uk-home-content.json')
 
 const ALL_PAGES_SCHEMA = `
-  {
-    allPages: allMdx(
+  query($repositoryName: String!, $repositoryOwner: String!) {
+    allMdx(
       filter: {
         frontmatter: { webhook: { ne: true }, order: { gt: 0 } }
       }
@@ -18,7 +20,19 @@ const ALL_PAGES_SCHEMA = `
             slug
             title
           }
-          body
+        }
+      }
+    }
+    github {
+      repository(name: $repositoryName, owner: $repositoryOwner) {
+        pullRequests(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
+          totalCount
+          nodes {
+            title
+            state
+            createdAt
+            url
+          }
         }
       }
     }
@@ -37,7 +51,10 @@ module.exports = async ({ graphql, actions, reporter }) => {
     statusCode: 200,
   }))
 
-  const result = await graphql(ALL_PAGES_SCHEMA)
+  const result = await graphql(
+    ALL_PAGES_SCHEMA,
+    { repositoryName: REPOSITORY_NAME, repositoryOwner: REPOSITORY_OWNER }
+  )
 
   if (result.errors) {
     console.log(result.errors)
@@ -45,22 +62,26 @@ module.exports = async ({ graphql, actions, reporter }) => {
     return
   }
 
-  const { allPages } = result.data
-  const rootLevelPages = allPages.edges.filter(
-    ({ node }) => Helpers.isRootLevelDocContainer(node.fields.slug)
-  )
-  const ukMenu = rootLevelPages.filter(({ node }) => node.fields.slug.startsWith('/uk'))
-  const euMenu = rootLevelPages.filter(({ node }) => node.fields.slug.startsWith('/eu'))
+  const { allMdx } = result.data;
+  const rootLevelPages = allMdx.edges
+    .filter(edge => Helpers.isRootLevelDocContainer(edge.node.fields.slug))
+  const ukMenu = rootLevelPages.filter(edge => edge.node.fields.slug.startsWith('/uk'))
+  const euMenu = rootLevelPages.filter(edge => edge.node.fields.slug.startsWith('/eu'))
+
   const ukMenuItems = await Helpers.buildMenu(ukMenu, graphql)
   const euMenuItems = await Helpers.buildMenu(euMenu, graphql)
+
+  const pullRequests = result.data.github.repository.pullRequests.nodes
+    .filter(node => node.state === 'MERGED')
 
   createPage({
     path: '/uk',
     component: path.resolve('./src/templates/home.tsx'),
     context: {
-      repositoryName: REPOSITORY_NAME,
-      repositoryOwner: REPOSITORY_OWNER,
       menuItems: ukMenuItems,
+      articles: ukHomeContent.articles,
+      pullRequests,
+      guides: [],
     },
   })
 
@@ -68,14 +89,15 @@ module.exports = async ({ graphql, actions, reporter }) => {
     path: '/eu',
     component: path.resolve('./src/templates/home.tsx'),
     context: {
-      repositoryName: REPOSITORY_NAME,
-      repositoryOwner: REPOSITORY_OWNER,
       menuItems: euMenuItems,
+      articles: euHomeContent.articles,
+      pullRequests,
+      guides: [],
     },
   })
 
   // Create blog posts pages.
-  allPages.edges.forEach(({ node }) => {
+  allMdx.edges.forEach(({ node }) => {
     const { slug, id } = node.fields
 
     createPage({
