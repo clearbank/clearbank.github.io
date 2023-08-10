@@ -19,10 +19,6 @@ const Header: React.FunctionComponent<Types.HeaderProps> = () => {
     setShowMobileNav(newShowMobileNav)
   }
 
-  const handleRegionChange = (isActive: boolean) => {
-    document.location.href = isActive ? '/eu' : '/uk';
-  }
-
   return (
     <div className='header'>
       <Styles.Container>
@@ -38,7 +34,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = () => {
           </Styles.Button>
         </Styles.BurgerIconWrapper>
         <Styles.SwitchContainer>
-          <RegionSwitch onChange={handleRegionChange}/>
+          <RegionSwitch />
         </Styles.SwitchContainer>
       </Styles.Container>
     </div>

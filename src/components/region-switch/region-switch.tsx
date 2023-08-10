@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Toggle from 'react-toggle';
 
-interface RegionSwitchProps {
-  onChange?: (isActive: boolean) => void
-}
-
-export default function RegionSwitch({ onChange }: RegionSwitchProps) {
-  const [activeOption, setActiveOption] = useState<boolean>(false);
+export default function RegionSwitch() {
+  const [activeOption, setActiveOption] = useState<boolean>(document.location.href.includes('/eu'));
 
   const handleSwitchClick = () => {
-    onChange?.(!activeOption);
     setActiveOption(!activeOption);
+
+    setTimeout(() => document.location.href = !activeOption ? '/eu' : '/uk', 300);
   };
 
   return (
     <label>
       <Toggle
         icons={false}
-        defaultChecked={document.location.href.startsWith('/eu')}
+        defaultChecked={activeOption}
         onChange={handleSwitchClick}
       />
     </label>
