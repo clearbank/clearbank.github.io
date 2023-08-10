@@ -47,6 +47,7 @@ export const pageQuery = graphql`
         metaTitle
         metaDescription
         showPageMenu
+        bannerSrc
       }
     }
     pageContent: allMdx(

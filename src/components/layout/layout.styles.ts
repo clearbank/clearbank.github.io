@@ -18,11 +18,13 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-areas:
     'header'
+    'banner'
     'sidebarRight'
     'content'
     'footer';
   grid-template-rows:
     ${heights.header}
+    auto
     1fr
     auto
     auto;
@@ -31,11 +33,13 @@ export const Wrapper = styled.div`
 
   @media screen and (min-width: ${breakpoints.large}) {
     grid-template-areas:
-      'header header  header'
+      'header header header'
+      'banner banner banner'
       'content content sidebarRight'
-      'footer footer  footer';
+      'footer footer footer';
     grid-template-rows:
       ${heights.header}
+      minmax(0px, auto)
       1fr
       auto;
     -ms-grid-columns: 1fr auto;
@@ -136,4 +140,11 @@ export const PageHeader = styled.h1`
   @media screen and (min-width: ${breakpoints.large}) {
     display: none;
   }
+`
+
+export const Banner = styled.div`
+  grid-area: banner;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  -ms-grid-row: 1;
 `
