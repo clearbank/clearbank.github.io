@@ -41,7 +41,9 @@ The webhook sent by ClearBank® acts as a verification mechanism.
 You verify that it is ClearBank® that has sent you the webhook and subsequently, ClearBank® needs to verify that you have successfully received the webhook (based on your response acknowledging receipt).
 This verification occurs when you return a `200` HTTP response, which includes the `Nonce` number in the `response body`  and your `DigitalSignature`.
 If your response is invalid, we will consider it as a failed webhook.
-ClearBank® will send the webhook every 15 minutes for 24 hours unless a successful response is returned by you.
+
+Webhook responses must be sent in less than 5 seconds. Any response provided after 5 seconds will be considered a failed webhooks. For this reason we recommend that acceptance and processing of webhooks are handled seperately, verification must be done synchronously but processing should be done asynchronously to ensure you can respond quickly.
+ClearBank® will retry failed webhooks every 15 minutes for 24 hours unless a successful response is returned by you.
 
 To verify the integrity of the webhook received from ClearBank®:
 - Download a Public Key that is specific to your institution by clicking the **Download Public Key** button on the Webhook Management page of the Institution portal.
