@@ -35,21 +35,33 @@ Webhook responses contain a 200 HTTP status code which includes a `Nonce` number
 | `200 `             | int         | HTTP response status code                                                   |
 
 
-## Responding to a webhook
+## Handling a webhook
 
 The webhook sent by ClearBank® acts as a verification mechanism.
-You verify that it is ClearBank® that has sent you the webhook and subsequently, ClearBank® needs to verify that you have successfully received the webhook (based on your response acknowledging receipt).
-This verification occurs when you return a `200` HTTP response, which includes the `Nonce` number in the `response body`  and your `DigitalSignature`.
-If your response is invalid, we will consider it as a failed webhook.
+It is important that you verify that it is ClearBank® that has sent you the webhook and subsequently, ClearBank® verifies that you have successfully received the webhook (based on your response acknowledging receipt).
 
-Webhook responses must be sent in less than 5 seconds. Any response provided after 5 seconds will be considered a failed webhooks. For this reason we recommend that acceptance and processing of webhooks are handled seperately, verification must be done synchronously but processing should be done asynchronously to ensure you can respond quickly.
-ClearBank® will retry failed webhooks every 15 minutes for 24 hours unless a successful response is returned by you.
+We have provided an example C# controller in the [ClearBank fi-api-101 Github Repository](https://github.com/clearbank/fi-api-101) which shows how to calculate the Hash value and verify the digital signature.
+
+The handling of a webhook can be thought of in three different parts: Verification, Response and finally Processing.
+
+### Verification
+
+Step 1 is webhook verification. Here you must verify that ClearBank® is the true source of the webhook, and that it hasn't been tampered with.
 
 To verify the integrity of the webhook received from ClearBank®:
 - Download a Public Key that is specific to your institution by clicking the **Download Public Key** button on the Webhook Management page of the Institution portal.
 - Hash the request body using `SHA 256`
 - Convert the `DigitalSignature` Request Header value from `Base64` encoded string into the byte array
 - Verify the signature using the `RSA` algorithm
+
+After verification you can then respond accordingly.
+
+### Response
+
+If you were able to successfully verify that ClearBank® was the true source of the webhook then you must return a `200` HTTP response, which includes the `Nonce` number in the `response body`  and a valid `DigitalSignature`.
+If your response is invalid, we will consider it as a failed webhook. Likewise if you are not able to verify the webhook source then you should respond with a reasonable status code/error code to signify that the webhook should be treated as failed.
+
+ClearBank® will retry failed webhooks every 15 minutes for 24 hours unless a successful response is returned by you.
 
 To create the webhook digital signature:
 - Take the Nonce number from the webhook and place it in the body of the response (e.g. `{"nonce": <value>}`)
@@ -80,7 +92,11 @@ Content-Type: application/json
 }
 ```
 
-We have provided an example C# controller in the [ClearBank fi-api-101 Github Repository](https://github.com/clearbank/fi-api-101) which shows how to calculate the Hash value and verify the digital signature.
+A webhook responses must be sent in less than 5 seconds. Any response provided after 5 seconds will be considered a failed webhook. 
+
+### Processing
+
+The processing stage covers everything that happens in your system after receipt of a webhook. Because of the 5 second timeout we recommend any processing on your side should be done after responding to the webhook request.
 
 ## Setting up and testing webhook listener URLs
 
