@@ -220,8 +220,15 @@
             },
             "kind": {
               "type": "string",
-              "description": "The type of funds the account will hold. Valid options include: YourFunds, GeneralSegregated, DesignatedSegregated, GeneralClient, DesignatedClient.",
-              "example": "GeneralSegregated"
+              "description": "The type of funds the account will hold.",
+              "example": "GeneralSegregated",
+              "enum": [
+                "YourFunds",
+                "GeneralSegregated",
+                "DesignatedSegregated",
+                "GeneralClient",
+                "DesignatedClient"
+              ]
             },
             "currencies": {
               "type": "array",
@@ -267,8 +274,16 @@
             },
             "type": {
               "type": "string",
-              "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense.",
-              "example": "Customer"
+              "description": "The type of account.",
+              "example": "Customer",
+              "enum": [
+                "Customer",
+                "Operating",
+                "MinimumMandatedBalance",
+                "Treasury",
+                "HeldSuspense",
+                "RepairSuspense"
+            ]
             }
           },
           "additionalProperties": false
@@ -287,10 +302,11 @@
             "DuplicateAccount"
           ],
           "type": "string",
-          "description": "Reason for why the current status of the account is Closed or Suspended. Valid options include: Other, AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount."
+          "description": "Reason for why the current status of the account is Closed or Suspended."
         },
         "CreateAccountRequest": {
           "required": [
+            "bankIdentifierCode",
             "currencies",
             "kind",
             "label",
@@ -314,8 +330,15 @@
             },
             "kind": {
               "type": "string",
-              "description": "The type of funds the account will hold. Valid options include: YourFunds, GeneralSegregated, DesignatedSegregated, GeneralClient, DesignatedClient.",
-              "example": "GeneralSegregated"
+              "description": "The type of funds the account will hold.",
+              "example": "GeneralSegregated",
+              "enum": [
+                "YourFunds",
+                "GeneralSegregated",
+                "DesignatedSegregated",
+                "GeneralClient",
+                "DesignatedClient"
+              ]
             },
             "currencies": {
               "type": "array",
@@ -334,13 +357,13 @@
             },
             "bankIdentifierCode": {
               "type": "string",
-              "description": "The 8 or 11 character BIC under which the new account should be created.",
+              "description": "The 8 or 11 character BIC under which the new account should be created. If using a UK BIC, a routing code will also be required.",
               "nullable": true,
               "example": "CLRBGB99"
             },
             "routingCode": {
               "type": "string",
-              "description": "Routing code for the new account. For example, 010203.",
+              "description": "Routing code for the new account. For example, 010203. When creating a UK account, a routing code (sort code) is required.",
               "nullable": true,
               "example": "010203"
             },
