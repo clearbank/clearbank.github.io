@@ -1,0 +1,210 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "ClearBank API endpoint for submission of cheque images to Exela Mobile WebService.",
+    "version": "1.0Cheques"
+  },
+  "paths": {
+    "/v1/submitDeposit": {
+      "post": {
+        "tags": [
+          "Submit deposit"
+        ],
+        "summary": "Submit deposit",
+        "description": "Submit deposit to the Exela Portal API.",
+        "operationId": "submitDeposit",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit deposit request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/submitDepositRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Submit deposit response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/submitDepositResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. The request could not be processed.",
+            "content": {
+              "application/json": { }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": { }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "beneficiary": {
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number"
+          },
+          "sortCode": {
+            "type": "string",
+            "description": "Sort code"
+          },
+          "tranCode": {
+            "type": "string",
+            "description": "Tran code"
+          }
+        },
+        "description": "Beneficiary"
+      },
+      "chequeImages": {
+        "type": "object",
+        "properties": {
+          "frontImage": {
+            "type": "string",
+            "description": "Front image"
+          },
+          "backImage": {
+            "type": "string",
+            "description": "Back image"
+          },
+          "imageType": {
+            "enum": [
+              "tiff"
+            ],
+            "type": "string",
+            "description": "Image type"
+          }
+        },
+        "description": "Cheque images"
+      },
+      "deposit": {
+        "type": "object",
+        "properties": {
+          "beneficiary": {
+            "$ref": "#/components/schemas/beneficiary"
+          },
+          "chequeAmount": {
+            "type": "integer",
+            "description": "Cheque amount in pence",
+            "format": "int32",
+            "default": 0
+          },
+          "chequeImages": {
+            "$ref": "#/components/schemas/chequeImages"
+          }
+        },
+        "description": "Deposit"
+      },
+      "submitDepositRequest": {
+        "type": "object",
+        "properties": {
+          "deposit": {
+            "$ref": "#/components/schemas/deposit"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "Message ID"
+          }
+        },
+        "description": "Submit deposit request"
+      },
+      "submitDepositResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "Message ID"
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "rejected",
+              "error"
+            ],
+            "type": "string",
+            "description": "Status"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "errorCode": {
+            "enum": [
+              "Invalid_Request",
+              "Over_Max_Cheque_Amount",
+              "Over_Max_Daily_Amount",
+              "Over_Max_Daily_Cheque_Count",
+              "Duplicate",
+              "Invalid_Codeline",
+              "Invalid_Image",
+              "Failed_IUA",
+              "Failed_IQA",
+              "Failed_Recognition",
+              "Unexpected_Server_Error"
+            ],
+            "type": "string",
+            "description": "Error code"
+          }
+        },
+        "description": "Submit deposit response"
+      }
+    }
+  }
+}

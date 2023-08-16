@@ -1,0 +1,32 @@
+---
+title: "Cheque Paid webhook"
+version: 1
+webhook: true
+---
+
+**This webhook confirms a Bacs Unpaid Direct Debit has been received.**
+
+The Direct Debit service user receives notification that a Direct Debit
+could not be paid from an account. Hence, the money needs to be
+returned and you must ensure that the account has sufficient funds.
+
+This webhook arrives on day 4 or 5 in relation to the original Direct
+Debit, and is settled on the working day following the processing day specified.
+
+
+#### Request body
+
+```json
+{
+    "Type": "ChequePaid",
+    "Version": 1,                                                         
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                       | Description                |
+|-------------------------------|----------------------------|
+| `TransactionSetId`            |Unique Transaction Set ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `22`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`|
+|
