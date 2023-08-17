@@ -18,7 +18,7 @@ const EndpointBlockWebhooks: React.FunctionComponent<Types.EndpointBlockWebhooks
         {!!webhooks &&
           webhooks.map((webhook: any, index: number) => (
             <Styles.ListEntry key={index}>
-              <Styles.WebhookLink href={'/docs/webhooks/#' + kebabCase(webhook.toLowerCase())}>
+              <Styles.WebhookLink href={'#' + kebabCase(webhook.toLowerCase())}>
                 {webhook}
               </Styles.WebhookLink>
             </Styles.ListEntry>
