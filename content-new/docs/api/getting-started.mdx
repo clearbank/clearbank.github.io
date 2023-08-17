@@ -323,7 +323,7 @@ When certain events occur, we generate and send out a webhook message to your de
 
 All ClearBank webhooks consist of a `DigitalSignature`, `Type`, `Version`, `Payload`, and `Nonce`. Payload parameters vary depending on the webhook.
 
-Webhooks are asynchronous events and can be delivered in any order. We provide at-least-once delivery of webhooks. Because webhooks may be sent more than once, your webhook handlers must check for idempotency based on the payload of the webhook.
+Webhooks are asynchronous events and can be delivered in any order. We provide at-least-once delivery of webhooks. Because webhooks may be sent more than once, your webhook handlers must be idempotent. You can check for duplicates based on the payload of the webhook.
 
 #### Webhook structure
 
@@ -418,7 +418,7 @@ Content-Type: application/json
 
 #### Processing
 
-Due to the 5 second timeout window that applies to successful webhook responses, it makes sense to minimise the processing that is done before responding to the webhook. We recommend verifying and responding to the webhook synchronously, then using an internal queuing solution to handle any further processing asynchronously (including the check for idempotency).
+Due to the 5 second timeout window that applies to successful webhook responses, it makes sense to minimise the processing that is done before responding to the webhook. We recommend verifying, queuing, and responding to the webhook synchronously. An internal queuing solution can then handle any further processing asynchronously (including any checks for duplicates).
 
 ### Set up and test webhook listener URLs
 
