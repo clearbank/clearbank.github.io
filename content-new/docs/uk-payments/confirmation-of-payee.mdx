@@ -108,8 +108,8 @@ Supporting SRD-validated CoP checks is mandatory, however the integration that i
 
 As part of your onboarding journey for CoPaaS, you will need to:
 
-- Use the [Get CSR](#get-certificate-type) endpoint to get the Certificate Signing Request (CSR) .csr file. The softwareStatementID and certificateType inputs are required inputs.
-- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM format for use in OpenBanking applications. The certificate can be associated with the Software Statement ID to authenticate and enable secure communication with Open Banking APIs. This POST endpoint provides a secure and straightforward approach to obtain a certificate in a PEM format.
+- Use the [Get CSR](#get-certificate-type) endpoint to get the Certificate Signing Request (CSR) .csr file. The softwareStatementID and certificateType inputs are required. The `{softwareStatementId}` URL parameter is the unique ID of a CoP software statement on your Open Banking Directory entry.
+- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM .pem format. This is the signed PEM you can download from the Open Banking Directory after uploading the certificate signing request returned from the Get certificate type endpoint. Line breaks must be removed from the PEM before submission to ClearBank.
 
 <Callout colour="blue">
 These endpoints are only applicable if you are using CoPaaS.
@@ -118,11 +118,11 @@ These endpoints are only applicable if you are using CoPaaS.
 Once you have completed the onboarding set up, you can use the [CoP respond](#cop-respond-inbound) and [CoP request](#cop-request-outbound) endpoints in the usual way.
 
 <EndpointBlock
-  type="post"
+  type="get"
   title="Get certificate type"
   endpoints={[
     {
-      path: "/v1/softwarestatements/{softwareStatementId}/pem",
+      path: "/v1/softwarestatements/{softwareStatementId}/csr/{certificatetype}",
       version: "1.0.CoPaaS"
     }
   ]}
