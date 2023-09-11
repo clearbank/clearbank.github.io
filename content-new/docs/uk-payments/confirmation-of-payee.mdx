@@ -5,6 +5,7 @@ showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
 import * as CONSTANTS from "./confirmation-of-payee.constants"
 
 ## Overview
@@ -12,6 +13,11 @@ import * as CONSTANTS from "./confirmation-of-payee.constants"
 Confirmation of Payee (CoP) gives you greater assurance that you are sending payments to the intended beneficiary. It not only helps in preventing accidental, misdirected payments but also reduces the risk associated with Authorised Push Payment (APP) fraud. CoP is a scheme agnostic, peer-to-peer messaging service between accredited participants and sits completely outside of the payment journey. A CoP check can be made prior to setting up a payee or making a payment.
 
 ClearBank is a CoP participant and will provide this account name checking service to those customers who use ClearBank sort codes linked to our bank code.
+
+### Confirmation of Payee as a Service
+Confirmation of Payee as a Service (CoPaaS) is an extension of the technical capability of ClearBank’s own participation in Confirmation of Payee (CoP), whereby clients must become direct participants with Pay.UK to use CoP and then integrate with ClearBank’s technical service to have access to CoP request and/or CoP response functionality. For this service, ClearBank will solely be the Technical Service Provider (TSP) and this service is only available to clients operating under their own bank code.
+
+If you are using CoPaaS, you will need to use the [CoPaaS onboarding](#copaas-onboarding) endpoints to complete your onboarding. You can then use the CoP respond and request endpoints in the usual way.
 
 ## CoP respond (inbound)
 
@@ -78,22 +84,57 @@ Supporting SRD-validated CoP checks is mandatory, however the integration that i
 
 <EndpointBlock
   type="post"
-  title="Check name registered with the payee’s account"
+  title="Check payee account name"
   endpoints={[
     {
       path: "/open-banking/outbound/v1/name-verification",
-      version: "1.0.COP-Outbound",
+      version: "1.0.COP-Outbound"
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Check whether a sort code/account number requires SRD with CoP requests"
+  title="Check whether a sort code/account number requires SRD"
   endpoints={[
     {
       path: "/open-banking/outbound/v1/srd/validate",
-      version: "1.0.COP-Outbound",
+      version: "1.0.COP-Outbound"
+    }
+  ]}
+/>
+
+## CoPaaS onboarding
+
+As part of your onboarding journey for CoPaaS, you will need to:
+
+- Use the [Get CSR](#get-certificate-type) endpoint to get the Certificate Signing Request (CSR) .csr file. The softwareStatementID and certificateType inputs are required. The `{softwareStatementId}` URL parameter is the unique ID of a CoP software statement on your Open Banking Directory entry.
+- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM .pem format. This is the signed PEM you can download from the Open Banking Directory after uploading the certificate signing request returned from the Get certificate type endpoint. Line breaks must be removed from the PEM before submission to ClearBank.
+
+<Callout colour="blue">
+These endpoints are only applicable if you are using CoPaaS.
+</Callout>
+
+Once you have completed the onboarding set up, you can use the [CoP respond](#cop-respond-inbound) and [CoP request](#cop-request-outbound) endpoints in the usual way.
+
+<EndpointBlock
+  type="get"
+  title="Get certificate type"
+  endpoints={[
+    {
+      path: "/v1/softwarestatements/{softwareStatementId}/csr/{certificatetype}",
+      version: "1.0.CoPaaS"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create a new certificate"
+  endpoints={[
+    {
+      path: "/v1/softwarestatements/{softwareStatementId}/pem",
+      version: "1.0.CoPaaS"
     }
   ]}
 />

@@ -13,7 +13,7 @@
         ],
         "summary": "This endpoint is used to confirm the exact name registered with the payee’s account.",
         "requestBody": {
-          "description": "CoP outbound request",
+          "description": "CoP Outbound Request",
           "content": {
             "application/json": {
               "schema": {
@@ -53,6 +53,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -73,14 +76,11 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden."
-          },
           "422": {
-            "description": "CoP participant not found."
+            "description": "CoP participant not found"
           },
           "424": {
-            "description": "Call to CoP participant resulted in an error."
+            "description": "Call to CoP participant resulted in an error"
           }
         }
       }
@@ -92,7 +92,7 @@
         ],
         "summary": "This endpoint is used to confirm whether a given sort code/account number combination requires Secondary Reference Data (SRD) with Confirmation of Payee (CoP) requests.",
         "requestBody": {
-          "description": "SRD validation request",
+          "description": "SRD Validation Request",
           "content": {
             "application/json": {
               "schema": {
@@ -132,6 +132,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -151,9 +154,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden"
           }
         }
       }
@@ -173,23 +173,23 @@
           "SchemeName": {
             "minLength": 1,
             "type": "string",
-            "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
+            "description": "Indicates the sort code and account number associated with the payee’s account. The value should always be SortCodeAccountNumber."
           },
           "LegalOwnerType": {
             "minLength": 1,
             "type": "string",
-            "description": "Nature of funds held in the account. Valid options are: Personal, Business."
+            "description": "Nature of funds held in the account. Valid options are Personal or Business."
           },
           "Identification": {
             "minLength": 1,
             "type": "string",
-            "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8-digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
+            "description": "Payee's sort code and account number, used by an Account Servicing Payment Service Provider (ASPSP) to identify the account. In case the account number contains less than 8 digits, it can be padded with preceding zeros to make the length up to 8. The format should always be SortCodeAccountNumber   (e.g., “04040412345678”)."
           },
           "OwnerName": {
             "maxLength": 140,
             "minLength": 1,
             "type": "string",
-            "description": "The name used to identify the owner of the account in comma-delimited format. This consists of three parts separated by a comma in a structured or unstructured format. For personal accounts in the structured format: the first part will be the salutation, the second part will be the forename and the third part will be the surname (e.g., “Mr John Smith” will be represented as “Mr, John, Smith”). Only the third part will be used for personal accounts in the unstructured format (e.g., “Mr John Smith” will be represented as “,,Mr John Smith”). Only the third part will be used for business accounts (e.g., “ClearBank Ltd” will be represented as “,,ClearBank Ltd”)."
+            "description": "The name used to identify the owner of the account in comma delimited format. This consists of three parts separated by a comma in a structured or unstructured format. For personal accounts in the structured format: the first part is the salutation, the second part is the forename, and the third part is the surname (e.g., “Mr John Smith” will be represented as “Mr, John, Smith”). Only the third part will be used for personal accounts in the unstructured format (e.g., “Mr John Smith” will be represented as “,,Mr John Smith”). Only the third part will be used for business accounts (e.g., “ClearBank Ltd” will be represented as “,,ClearBank Ltd”)."
           },
           "SecondaryIdentification": {
             "maxLength": 140,
@@ -207,7 +207,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Required information to perform a CoP check."
+        "description": "Required information to perform a CoP check"
       },
       "CoPOutboundResponse": {
         "type": "object",
@@ -234,17 +234,17 @@
         "properties": {
           "Reason": {
             "type": "string",
-            "description": "The reason for the error.",
+            "description": "The error reason.",
             "nullable": true
           },
           "ParticipantName": {
             "type": "string",
-            "description": "Name of the participant (the bank or financial institution receiving the CoP request).",
+            "description": "Name of the participant.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "The body of the error with description."
+        "description": "Error body with description."
       },
       "ErrorResponse": {
         "type": "object",
@@ -254,7 +254,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "A class for error responses."
+        "description": "Error response class."
       },
       "SRDValidationData": {
         "type": "object",
@@ -275,7 +275,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "SRD validation data."
+        "description": "SRD Validation data."
       },
       "SRDValidationRequest": {
         "required": [
@@ -287,7 +287,7 @@
           "SchemeName": {
             "minLength": 1,
             "type": "string",
-            "description": "Indicates the scheme name the CoP request falls under. The value should always be the text: SortCodeAccountNumber."
+            "description": "Indicates the sort code and account number associated with the payee’s account. The value should always be SortCodeAccountNumber."
           },
           "Identification": {
             "minLength": 1,
@@ -296,7 +296,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Secondary reference data validation request."
+        "description": "Secondary reference data validation request"
       },
       "SRDValidationResponse": {
         "type": "object",
@@ -317,7 +317,7 @@
         "properties": {
           "Matched": {
             "type": "boolean",
-            "description": "True if there is a match or false when there is no match or a partial match."
+            "description": "True if there is a match. False when there is no match or a partial match."
           },
           "Name": {
             "type": "string",
@@ -339,10 +339,24 @@
             "minLength": 1,
             "type": "string",
             "description": "The name of the bank that the CoP check was performed with."
+          },
+          "ResponseWithinSla": {
+            "type": "boolean",
+            "description": "Time taken by the responder for the CoP request"
+          },
+          "LegalOwnerType": {
+            "type": "string",
+            "description": "Legal Owner Type used in the Cop check",
+            "nullable": true
+          },
+          "ResponderRegistrationId": {
+            "type": "string",
+            "description": "Open Banking Directory registration ID of the participant responding to the cop request.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Information that includes the result of the name match."
+        "description": "Additional information, including the result of the name match."
       }
     }
   }
