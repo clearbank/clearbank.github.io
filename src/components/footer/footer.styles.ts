@@ -9,7 +9,9 @@ export const MenuContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 0 7%;
+  margin-left: 50px;
   padding: 0 5%;
+  padding-left: 0;
   border-bottom: 1px solid ${colors.mischkaapprox};
 `
 
@@ -58,8 +60,8 @@ export const CopywriteWrapper = styled.div`
 
 export const Copywrite = styled.p`
   max-width: 70%;
-  margin-right: 75px;
-  margin-left: auto;
-  text-align: right;
+  margin-left: 50px;
+  margin-right: auto;
+  text-align: left;
   color: ${colors.brandSecondaryDarker};
 `
