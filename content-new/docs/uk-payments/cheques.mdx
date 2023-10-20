@@ -10,11 +10,29 @@ import WebhookSummary from 'src/components/webhook-summary'
 
 ## Cheques
 
-ClearBank accounts support inbound cheques. 
+ClearBank accounts can support inbound cheques. If you'd like access to this product, please speak to your relationship manager.
 
-Explain what the endpoint/webhooks are for; if their are restrictions (i.e. opening hours, things customers may not guess); anything customers have to do with onboarding (i.e. potentially talk to RM).
+You can submit cheques as TIFF or JPEG files using the [Submit a cheque](#Submit-a-cheque) endpoint. Alternatively, you can direct your customers to send cheques to your private client PO box, which you set up when you onboarded.
 
-Ideally, add a diagram to explain.
+Once submitted, cheques take up to three working days to process. If the cheque passes validation, you will recieve the Cheque Paid and Transaction Settled webhooks. If the cheque fails validation or is over the limits you defined during onboarding, you will recieve a 400 response.
+
+**Message flow diagram for cheques submitted via the endpoint:**
+
+![alt text](/assets/images/cheque_endpoint.svg "Message flow diagram explaining how to submit cheques via the endpoint")
+
+**Message flow diagram for cheques submitted via post:**
+
+![alt text](/assets/images/cheque_post.svg "Message flow diagram explaining how to submit cheques via post")
+
+### Image requirements
+For cheque images to successfully validate, they must satisfy the following requirements:
+- Bitonal TIFF or JPEG, as base64 encoded string
+- Image resolution of 200DPI
+- CCITT Group 4 compression
+- Front image compressed size: 600 to 90,000 bytes
+- Rear image compressed size: 58 to 90,000 bytes.
+
+Cheque images must also be clear, uncrumpled, and without folded corners.
 
 <EndpointBlock
   type="post"
@@ -32,3 +50,4 @@ Ideally, add a diagram to explain.
 
 <WebhookPlaceholder render='cheque-paid-webhook-v1' />
 <WebhookPlaceholder render='cheque-not-paid-webhook-v1' />
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
