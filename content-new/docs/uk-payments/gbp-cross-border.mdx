@@ -1,0 +1,141 @@
+---
+title: "GBP cross-border"
+order: 6
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
+
+## GBP cross-border
+
+Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross Border payment product enables you to send sterling payments to any sterling account, in any overseas jurisdiction. 
+Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
+
+There is no limit to the amount that can be sent using this service.
+
+You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v1/payments](#send-a-gpb-cross-border-payment) endpoint. 
+
+Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
+
+Things to note:
+
+- Payments can only be initiated during the sterling availability period (08:00 to 17:00) on business days.
+> ClearBank has a cut-off time of one hour before the scheme cut-off time. If the outbound payment approval occurs outside the availability period, we’ll treat the instruction as having been received during the next GBP availability period when the approval has been received.
+- Associated capabilities include pacs.008 messages.
+- This payment service is not appropriate for retail customers requiring same-day payment services to facilitate overseas transfer of funds relating to FX payments, or to accounts in any other currency than GBP.
+- There is no limit to the size of a GBP Cross Border transaction. However, ClearBank reserves the right to impose a maximum limit for outbound payments.
+- Once a payment has been initiated by ClearBank, you cannot cancel or amend the GBP payment, per scheme rules. However, you can request that the GBP payment be recalled at any time after it has been settled. 
+
+
+<Callout colour="blue">
+  It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
+</Callout>
+
+The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
+
+**GBP cross-border validation**
+
+| Element     | Type   | Validation                                                                      | Description                                                                                                                                                                                           |
+|-------------|--------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as Account Holder Name** <br /> This the Creditor’s name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
+| `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information.  |
+
+Pattern: The character set has been extended to include all SWIFT allowed characters. Alphanumeric (uppercase and lowercase) and special characters shown in this table:<br />
+
+|Special character|Description|Special character|Description|
+|---|----|---|---|
+|**\!**|Exclamation mark|**\|**|Pipe|
+|**\#**|Hash|**\}**|Right curly bracket|
+|**$**|Dollar sign|**\~**|Tilde|
+|**%**|Percent|**"**|Double straight quote|
+|**&**|Ampersand|**\(**|Left parenthesis|
+|**'**|Single straight quote|**\)**|Right parenthesis|
+|**\***|Asterisk|**,**|Comma|
+|**\+**|Plus sign|**:**|Colon|
+|**\-**|Hyphen|**;**|Semicolon|
+|**/**|Forward slash|**<**|Left angle bracket|
+|**=**|Equals sign|**\>**|Right angle bracket|
+|**?**|Question mark|**@**|At sign|
+|**^**|Caret|**\[**|Left square bracket|
+|**_**|Underscore|**\\**|Backslash|
+|**\`**|Backtick|**\]**|Right square bracket|
+|**\{**|Left curly bracket|||
+
+<EndpointBlock
+    type="post"
+    title="Send a GBP cross-border payment"
+    endpoints={[
+    {
+        path: "/payments/cross-border-sterling/v1/payments",
+        version: "1.0GBPCrossBorder",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'outbound-held-transaction-v1',
+        'transaction-rejected-v2'
+        ]
+    }
+    ]}
+/>
+
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
+<WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
+<WebhookPlaceholder render='transaction-rejected-v2' />
+<WebhookPlaceholder render='inbound-held-transaction-v1' />
+<WebhookPlaceholder render='outbound-held-transaction-v1' />
+
+## CHAPS simulation endpoints
+
+These endpoints can be used to simulate payments. You can also use them for automated testing.
+
+- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v1/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v1/return-payments](#simulate-a-return-chaps-payment) endpoint.
+- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v1/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+
+The ClearBank Payment Simulator should no longer be used for CHAPS payments.
+
+<EndpointBlock
+    type="post"
+    title="Simulate an inbound CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a returned CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/return-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a CHAPS bank-to-bank payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v1/institution-payments",
+        version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>

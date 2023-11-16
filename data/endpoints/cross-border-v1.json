@@ -1,0 +1,590 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank.Chaps.Rtgs.Api",
+    "version": "1.0GBPCrossBorder"
+  },
+  "paths": {
+    "/payments/cross-border-sterling/v1/payments": {
+      "post": {
+        "description": "Request to make Cross Border customer payment (Pacs008)",
+        "operationId": "ExternalCrossBorderCreateCustomerPayment-v4",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrossBorderCustomerPaymentDtoV4"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrossBorderCustomerPaymentDtoV4"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrossBorderCustomerPaymentDtoV4"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrossBorderCustomerPaymentDtoV4"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountIdentificationDtoV4": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "AccountIdentificationIbanDtoV4": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountIdentificationDtoV4"
+          }
+        ],
+        "properties": {
+          "iban": {
+            "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions.",
+            "type": "string",
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountIdentificationOtherDtoV4": {
+        "required": [
+          "identification",
+          "schemeName"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountIdentificationDtoV4"
+          }
+        ],
+        "properties": {
+          "schemeName": {
+            "description": "Qualifier for scheme name that identifies an organisation provided as either a code or free form text.\nShould be populated based on instructions published on ClearBank Developer Portal or supplied in onboarding guide.\n",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "BBan",
+              "Other"
+            ]
+          },
+          "proprietary": {
+            "type": "string",
+            "description": "Proprietary"
+          },
+          "identification": {
+            "description": "Identification assigned by an institution.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCrossBorderCustomerPaymentDtoV4": {
+        "required": [
+          "creditor",
+          "creditorAccount",
+          "debtor",
+          "debtorAccount",
+          "endToEndIdentification",
+          "instructedAmount",
+          "instructionIdentification",
+          "sourceAccount"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "endToEndIdentification": {
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/InstructionAmountDtoV4"
+          },
+          "sourceAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV4"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV4"
+              }
+            ],
+            "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction."
+          },
+          "debtorAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV4"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV4"
+              }
+            ],
+            "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction."
+          },
+          "debtor": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PartyDetailsDtoV4"
+              },
+              {
+                "$ref": "#/components/schemas/CrossBorderCreditorDetailsDtoV4"
+              }
+            ],
+            "description": "Party that owes an amount of money to the (ultimate) creditor."
+          },
+          "creditorAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CrossBorderCreditorIdentificationIbanDtoV4"
+              },
+              {
+                "$ref": "#/components/schemas/CrossBorderCreditorIdentificationOtherDtoV4"
+              }
+            ],
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction."
+          },
+          "creditor": {
+            "required": [
+              "bic"
+            ],
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PartyDetailsDtoV4"
+              }
+            ],
+            "properties": {
+              "bic": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Party to which an amount of money is due."
+          },
+          "purpose": {
+            "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "Deposit",
+              "IntraCompanyPayment",
+              "IntraPartyPayment",
+              "AgriculturalTransfer",
+              "CommercialPayment",
+              "PurchaseSaleOfGoodsAndServices",
+              "SupplierPayment",
+              "CharityPayment",
+              "CompensationPayment",
+              "PropertyLoanRepayment",
+              "PropertyLoanSettlement",
+              "PaymentOfInsuranceClaim",
+              "LoanRepayment",
+              "TradeSettlementPayment",
+              "PaymentOfFees",
+              "Gift",
+              "InvoicePayment",
+              "ForeignExchange",
+              "Savings",
+              "TaxPayment",
+              "Utilities",
+              "LotteryPayment",
+              "PropertyCompletionPayment",
+              "PropertyDeposit",
+              "PropertyLoanDisbursement",
+              "PropertyLoanRefinancing"
+            ]
+          },
+          "categoryPurpose": {
+            "description": "Category purpose, in a proprietary form.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "TradeSettlementPayment",
+              "PersonToPersonPayment",
+              "GovernmentPayment",
+              "IntraCompanyPayment",
+              "Loan",
+              "OtherPayment",
+              "SupplierPayment",
+              "TaxPayment",
+              "Trade",
+              "TreasuryPayment"
+            ]
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV4"
+          },
+          "intermediaryAgent1": {
+            "$ref": "#/components/schemas/IntermediaryAgentDetailsV4"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrossBorderCreditorDetailsDtoV4": {
+        "required": [
+          "bic"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PartyDetailsDtoV4"
+          }
+        ],
+        "properties": {
+          "bic": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Party to which an amount of money is due."
+      },
+      "CrossBorderCreditorIdentificationDtoV4": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CrossBorderCreditorIdentificationIbanDtoV4": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CrossBorderCreditorIdentificationDtoV4"
+          }
+        ],
+        "properties": {
+          "iban": {
+            "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions.",
+            "type": "string",
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrossBorderCreditorIdentificationOtherDtoV4": {
+        "required": [
+          "identification",
+          "schemeName"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CrossBorderCreditorIdentificationDtoV4"
+          }
+        ],
+        "properties": {
+          "schemeName": {
+            "description": "Qualifier for scheme name that identifies an organisation provided as either a code or free form text.\nShould be populated based on instructions published on ClearBank Developer Portal or supplied in onboarding guide.\n",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "BBan",
+              "Other"
+            ]
+          },
+          "identification": {
+            "description": "Identification assigned by an institution.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetails"
+          }
+        ],
+        "properties": {
+          "errors": {
+            "description": "Extension objects that describe specific problem details. Encapsulated in a named property to ensure the content can be parsed deterministically.\n",
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "uniqueItems": false
+            }
+          }
+        },
+        "additionalProperties": {}
+      },
+      "InstructionAmountDtoV4": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217."
+      },
+      "IntermediaryAgentDetailsV4": {
+        "required": [
+          "bic",
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name by which an agent is known and which is usually used to identify that agent.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV4"
+          },
+          "bic": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lei": {
+            "description": "Legal entity identifier of the financial institution.",
+            "type": "string",
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Agent between the debtor's agent and the creditor's agent.\n\nUsage: If more than one intermediary agent is present, then IntermediaryAgent1 identifies the agent between the DebtorAgent and the IntermediaryAgent2."
+      },
+      "PartyAddressDetailsDtoV4": {
+        "required": [
+          "country",
+          "postCode",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNumber": {
+            "description": "Number that identifies the position of a building on a street.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "buildingName": {
+            "description": "Name of the building or house.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "streetName": {
+            "description": "Name of a street or thoroughfare.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 70
+          },
+          "townName": {
+            "description": "Name of a built-up area, with defined boundaries, and a local government.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "country": {
+            "description": "Nation with its own government.",
+            "type": "string",
+            "pattern": "[A-Z]{2,2}"
+          },
+          "postCode": {
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          }
+        },
+        "additionalProperties": false
+      },
+      "PartyDetailsDtoV4": {
+        "required": [
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name by which a party is known and which is usually used to identify that party.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV4"
+          },
+          "lei": {
+            "description": "Legal entity identification as an alternate identification for a party.",
+            "type": "string",
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreatedResponseDtoV4": {
+        "required": [
+          "paymentId"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "description": "Properties of a given error",
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
+            "type": "string"
+          },
+          "errors": {},
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported",
+            "type": "string"
+          }
+        }
+      },
+      "StructuredRemittanceInformationDtoV4": {
+        "type": "object",
+        "properties": {
+          "creditorReferenceInformation": {
+            "x-flattened-from-source-iso-type": true,
+            "x-source-iso-type-name": "CreditorReferenceType2",
+            "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
+      }
+    }
+  }
+}
