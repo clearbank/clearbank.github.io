@@ -22,8 +22,8 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 Things to note:
 
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent after this window closes will be rejected with a 400 Bad Request response.
-> If the outbound payment approval occurs outside the availability period, we’ll treat the instruction as having been received during the next GBP availability period when the approval has been received.
 - You'll need to include a GBP Direct Participant in the intermediary agent field.
+- You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
 
 
 <Callout colour="blue">
@@ -70,7 +70,6 @@ The character set defined by the pattern for the `name` and `reference` fields i
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
-        'payment-message-validation-failed-webhook-v1',
         'outbound-held-transaction-v1',
         'transaction-rejected-v2'
         ]
@@ -80,7 +79,6 @@ The character set defined by the pattern for the `name` and `reference` fields i
 
 <WebhookPlaceholder render='transaction-settled-webhook-v6' />
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
-<WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
 <WebhookPlaceholder render='transaction-rejected-v2' />
 <WebhookPlaceholder render='inbound-held-transaction-v1' />
 <WebhookPlaceholder render='outbound-held-transaction-v1' />
