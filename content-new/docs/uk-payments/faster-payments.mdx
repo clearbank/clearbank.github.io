@@ -22,8 +22,8 @@ Please note that payments originating overseas need to be sent using a separate 
 
 Each payment is validated against these rules: 
 
-| Element     | Type   | Validation                                                                                       | Description                                                                                                                                                                                           |
-|-------------|--------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Element     | Type   | Validation | Description  |
+|-------------|--------|------------|--------------|
 | `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,’+\s#=!"%&*<>;{@\r\n]*$` | **Also known as Account Holder Name** <br /> This the creditor's name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
 | `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: `^[a-zA-Z0-9\/\-?:().,’+\s#=!"%&*<>;{@\r\n]*$` | **Also known as the Payment Reference** <br /> This is the payment reference under remittance information. If the max length exceeds 18 characters, this will be truncated before sending to scheme. |
 
@@ -31,6 +31,19 @@ Pattern: Alphanumeric (uppercase and lowercase) and special characters*****.<br 
 *****Special characters: **/** (forward slash), **-** (hyphen), **?** (question mark), **:** (colon), **(** (left parenthesis), **)** (right parenthesis), **.** (full stop), **,** (comma), **’** (right single quote), **+** (plus sign), &nbsp; (blank space), **#** (hash), **=** (equals), **!** (exclamation mark), **”** (right double quote), **%** (percentage), **&** (ampersand), ***** (asterisk), **<** (less than), **>** (greater than), **;** (semicolon), **{** (left curly bracket), **@** (commercial at), **CrLf** (carriage return line feed).
 
 This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
+
+**Faster Payments abusive messages validation**
+
+To protect payment recipients from harm and abuse, outbound payments are subject to screening against a profanity list maintained by Faster Payments scheme. The profanity list can be found on the Reference Documents page of the ClearBank Knowledge Centre which can be accessed through the ClearBank Portal. Inbound payments are subject to screening by the remitting bank and Faster Payments scheme.
+
+The screening specifically looks at the Reference string of the RemittanceInformation object. If a reference is removed from this field for a hit against the profanity list, the field will be blank when the payment reaches the beneficiary.
+
+The outcome of profanity screening can be identified in the SupplementaryData field of the Transaction Settled webhook as follows:
+
+| Abusive message screening outcome    | SupplementaryData value for structured reference   | SupplementaryData value for unstructured reference  |
+|--------------------------------------|----------------------------------------------------|-----------------------------------------------------|
+| Pass                                 | `AbusiveMesageScreeningOutcome:Pass`                 | N/A                                                 |
+| Fail                                 | `AbusiveMesageScreeningOutcome:Fail`                 | `AbusiveMesageScreeningOutcome:Fail` `AbusiveMesageScreeningIdentifiers:` `paymentInstruction.creditTransfer.remittanceInformation.unstructured.additionalReferenceInformation.reference` |                         
 
 <EndpointBlock
 type="post"
