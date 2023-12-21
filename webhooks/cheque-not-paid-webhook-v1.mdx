@@ -4,7 +4,7 @@ version: 1
 webhook: true
 ---
 
-This webhook confirms a cheque has been recieved and will not be paid.
+This webhook confirms a cheque has been received and will not be paid.
 
 #### Request body
 
@@ -20,16 +20,16 @@ This webhook confirms a cheque has been recieved and will not be paid.
 #### Payload
 | Element                    | Description                |
 |----------------------------|----------------------------|
-| `TransactionSetId`         |Unique Transaction Set ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `22`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`|
-| `CreditItemId`             |Unique Credit Item ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `25`<br/>Min. Length: `1`|
-| `Account`                  |Account details of the beneficiary associated with the cheque.<br/><br/>`SortCode`<br/>Type: `string`<br/>Max. Length: `6`<br/>Min. Length: `6`<br/>Pattern: `^[0-9]*$`<br/><br/>`AccountNumber`<br/>Type: `string`<br/>Max. Length: `8`<br/>Min. Length: `8`<br/>Pattern: `^[0-9]*$`|
-| `DebitItemId`              |Unique Debit Item ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `25`<br/>Min. Length: `1`|
-| `ChequeAmount`             |Amount for the cheque debit item in the transaction, in sterling.<br/>Type: `number`<br/>Format: `decimal`|
-| `CounterpartAccount`       |Account details for the cheque debit item in the transaction.<br/><br/>`SortCode`<br/>Type: `string`<br/>Max. Length: `6`<br/>Min. Length: `6`<br/>Pattern: `^[0-9]*$`<br/><br/>`AccountNumber`<br/>Type: `string`<br/>Max. Length: `8`<br/>Min. Length: `8`<br/>Pattern: `^[0-9]*$`|
-| `ChequeSerialNumber`       |Cheque Serial Number for the cheque debit item in the transaction.<br/>Max. Length: `6`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`<br/>|
-| `NoPayReasonCode`          |Reason code to specify why the cheque has not been paid by the paying bank.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`|
+| `TransactionSetId`         |**Required**<br/>Unique Transaction Set ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `22`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`|
+| `CreditItemId`             |**Required**<br/>Unique Credit Item ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `25`<br/>Min. Length: `1`|
+| `Account`                  |**Required**<br/>Account details of the beneficiary associated with the cheque.<br/><br/>`SortCode`<br/>Type: `string`<br/>Max. Length: `6`<br/>Min. Length: `6`<br/>Pattern: `^[0-9]*$`<br/><br/>`AccountNumber`<br/>Type: `string`<br/>Max. Length: `8`<br/>Min. Length: `8`<br/>Pattern: `^[0-9]*$`|
+| `DebitItemId`              |**Required**<br/>Unique Debit Item ID used for Image Clearing System (ICS) processing.<br/>Type: `string`<br/>Max. Length: `25`<br/>Min. Length: `1`|
+| `ChequeAmount`             |**Required**<br/>Amount for the cheque debit item in the transaction, in sterling.<br/>Type: `number`<br/>Format: `decimal`|
+| `CounterpartAccount`       |**Required**<br/>Account details for the cheque debit item in the transaction.<br/><br/>`SortCode`<br/>Type: `string`<br/>Max. Length: `6`<br/>Min. Length: `6`<br/>Pattern: `^[0-9]*$`<br/><br/>`AccountNumber`<br/>Type: `string`<br/>Max. Length: `8`<br/>Min. Length: `8`<br/>Pattern: `^[0-9]*$`|
+| `ChequeSerialNumber`       |**Required**<br/>Cheque Serial Number for the cheque debit item in the transaction.<br/>Max. Length: `6`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`<br/>|
+| `NoPayReasonCode`          |**Required**<br/>Reason code to specify why the cheque has not been paid by the paying bank.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br/>Pattern: `^[0-9]*$`|
 | `SwitchedSortCode`         |Account switching scenario - switched sort code of the cheque.<br/>Type: `string` or `null`<br/>Max. Length: `6`<br/>Min. Length: `6`<br/>Pattern: `^[0-9]*$`|
 | `SwitchedAccountNumber`    |Account switching scenario - switched account number of the cheque.<br/>Type: `string` or `null`<br/>Max. Length: `8`<br/>Min. Length: `8`<br/>Pattern: `^[0-9]*$`|
-| `MessageId`                |Unique identifier provided to ClearBank for each payment.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`|
+| `MessageId`                |**Required**<br/>Unique identifier provided to ClearBank for each payment.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`|
 | `MessageSourceId`          |ClearBank client identifier.<br/>Type: `string` or `null`<br/>Max. Length: `36`<br/>Min. Length: `0`|
-| `TimestampCreated`         |Date and time when the webhook was created within ClearBank. Time in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+| `TimestampCreated`         |**Required**<br/>Date and time when the webhook was created within ClearBank. Time in UTC.<br/>Type: `string`<br/>Format: `date-time`|

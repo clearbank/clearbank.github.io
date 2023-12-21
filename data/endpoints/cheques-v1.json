@@ -9,7 +9,7 @@
     "/v1/submitDeposit": {
       "post": {
         "tags": [
-          "Submit deposit"
+          "Deposit a cheque"
         ],
         "description": "Submit deposit.",
         "operationId": "submitDeposit",
@@ -65,16 +65,44 @@
             }
           },
           "400": {
-            "description": "Bad request."
+            "description": "Bad request.",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                  }
+              }
+          }
           },
           "503": {
-            "description": "Service unavailable."
+            "description": "Service unavailable.",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                  }
+              }
+          }
           },
           "500": {
-            "description": "Internal Server Error. The request could not be processed."
+            "description": "Internal Server Error. The request could not be processed.",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                  }
+              }
+          }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                  }
+              }
+          }
           }
         }
       }
@@ -87,39 +115,42 @@
         "properties": {
           "accountNumber": {
             "type": "string",
-            "description": "Account number"
+            "description": "Beneficiary's account number."
           },
           "sortCode": {
             "type": "string",
-            "description": "Sort code"
+            "description": "Beneficiary's sort code."
           },
-          "tranCode": {
-            "type": "string",
-            "description": "Tran code"
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of the beneficiaries that are on the cheque."
           }
         },
-        "description": "Beneficiary"
+        "description": "Information about the cheque's beneficiary."
       },
       "chequeImages": {
         "type": "object",
         "properties": {
           "frontImage": {
             "type": "string",
-            "description": "Front image"
+            "description": "The front image of the cheque."
           },
           "backImage": {
             "type": "string",
-            "description": "Back image"
+            "description": "The back image of the cheque."
           },
           "imageType": {
             "enum": [
-              "tiff"
+              "tiff", "jpeg"
             ],
             "type": "string",
-            "description": "Image type"
+            "description": "The cheque image type."
           }
         },
-        "description": "Cheque images"
+        "description": "Cheque image information."
       },
       "deposit": {
         "type": "object",
@@ -128,16 +159,47 @@
             "$ref": "#/components/schemas/beneficiary"
           },
           "chequeAmount": {
-            "type": "integer",
-            "description": "Cheque amount in pence",
-            "format": "int32",
+            "type": "number",
+            "description": "Cheque amount in pounds sterling, up to two decimal places.",
+            "format": "decimal",
             "default": 0
           },
           "chequeImages": {
             "$ref": "#/components/schemas/chequeImages"
           }
         },
-        "description": "Deposit"
+        "description": "Object describing the cheque to be deposited."
+      },
+      "ProblemDetails": {
+        "description": "Properties of a given error",
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
+            "type": "string"
+          },
+          "errors": {},
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported",
+            "type": "string"
+          }
+        }
       },
       "submitDepositRequest": {
         "type": "object",
@@ -150,7 +212,7 @@
             "description": "Message ID"
           }
         },
-        "description": "Submit deposit request"
+        "description": "Submit deposit request."
       },
       "submitDepositResponse": {
         "type": "object",
@@ -167,27 +229,6 @@
             ],
             "type": "string",
             "description": "Status"
-          },
-          "errorMessage": {
-            "type": "string",
-            "description": "Error message"
-          },
-          "errorCode": {
-            "enum": [
-              "Invalid_Request",
-              "Over_Max_Cheque_Amount",
-              "Over_Max_Daily_Amount",
-              "Over_Max_Daily_Cheque_Count",
-              "Duplicate",
-              "Invalid_Codeline",
-              "Invalid_Image",
-              "Failed_IUA",
-              "Failed_IQA",
-              "Failed_Recognition",
-              "Unexpected_Server_Error"
-            ],
-            "type": "string",
-            "description": "Error code"
           }
         },
         "description": "Submit deposit response"
