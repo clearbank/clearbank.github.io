@@ -1,0 +1,997 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank.Target2.Orchestrator.Api",
+    "version": "1.0-T2"
+  },
+  "paths": {
+    "/payments/t2-rtgs/v1/institution-payments": {
+        "post": {
+            "tags": [
+                "T2-RTGS Institution Payment"
+            ],
+            "description": "Operations supporting T2 (Target2) real-time gross settlement (RTGS) institution payment requests (Pacs009)",
+            "parameters": [],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/InstitutionPayments.InstitutionPaymentRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "202": {
+                    "description": "Accepted",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InstitutionPayments.InstitutionPaymentResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/payments/t2-rtgs/v1/payment-returns": {
+        "post": {
+            "tags": [
+                "T2-RTGS Payment Return"
+            ],
+            "description": "Operations supporting T2 (Target2) real-time gross settlement (RTGS) payment return requests (Pacs004)",
+            "parameters": [],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PaymentReturns.PaymentReturnRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "202": {
+                    "description": "Accepted",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentReturns.PaymentReturnResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Not Found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/payments/t2-rtgs/v1/customer-payments": {
+        "post": {
+            "tags": [
+                "T2-RTGS Customer Payment"
+            ],
+            "description": "Operations supporting T2 (Target2) real-time gross settlement (RTGS) customer payment requests (Pacs008)",
+            "parameters": [],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CustomerPayments.CustomerPaymentRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "202": {
+                    "description": "Accepted",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CustomerPayments.CustomerPaymentsResponse"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+},
+"components": {
+    "schemas": {
+        "CustomerPayments.Agent": {
+            "required": [
+                "bicfi",
+                "name",
+                "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of the party"
+                },
+                "postalAddress": {
+                    "$ref": "#/components/schemas/CustomerPayments.BasicAddress"
+                },
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                },
+                "lei": {
+                    "type": "string",
+                    "description": "Legal Entity Identifier of the party"
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.BasicAddress": {
+            "required": [
+                "country",
+                "townName"
+            ],
+            "type": "object",
+            "properties": {
+                "townName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of a built-up area, with defined boundaries, and a local government."
+                },
+                "country": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Nation with its own government."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.CreditorAgent": {
+            "required": [
+                "bicfi"
+            ],
+            "type": "object",
+            "properties": {
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.CurrencyAmount": {
+            "required": [
+                "amount",
+                "currency"
+            ],
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "Indicates the amount used in a given transaction or account balance."
+                },
+                "currency": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                }
+            },
+            "additionalProperties": false,
+            "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217."
+        },
+        "CustomerPayments.CustomerPaymentRequest": {
+            "required": [
+                "creditor",
+                "creditorAccount",
+                "creditorAgent",
+                "debtor",
+                "debtorAccount",
+                "endToEndIdentification",
+                "instructionIdentification",
+                "interbankSettlementAmount",
+                "sourceAccount",
+                "uetr"
+            ],
+            "type": "object",
+            "properties": {
+                "sourceAccount": {
+                    "$ref": "#/components/schemas/CustomerPayments.SourceAccount",
+                    "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction."
+                },
+                "creditor": {
+                    "$ref": "#/components/schemas/CustomerPayments.PartyInformation",
+                    "description": "The name and, optionally, the legal entity identifier of the account."
+                },
+                "creditorAccount": {
+                    "$ref": "#/components/schemas/CustomerPayments.IbanAccount",
+                    "description": "Information about the creditor account in a given transaction."
+                },
+                "debtor": {
+                    "$ref": "#/components/schemas/CustomerPayments.PartyInformation",
+                    "description": "Details about the account holder."
+                },
+                "debtorAccount": {
+                    "$ref": "#/components/schemas/CustomerPayments.IbanAccount",
+                    "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                },
+                "creditorAgent": {
+                    "$ref": "#/components/schemas/CustomerPayments.CreditorAgent",
+                    "description": "Information that identifies the creditor agent as a financial institution."
+                },
+                "endToEndIdentification": {
+                    "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "instructionIdentification": {
+                    "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "uetr": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
+                },
+                "interbankSettlementAmount": {
+                    "$ref": "#/components/schemas/CustomerPayments.CurrencyAmount"
+                },
+                "exchangeRate": {
+                    "description":"Exchange rate applied to convert the currency of the source amount or OriginalCurrency (prior to deduction of charges) to GBP.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "instructedAmount": {
+                    "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+                    "$ref": "#/components/schemas/CustomerPayments.CurrencyAmount"
+                },
+                "previousInstructingAgents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/CustomerPayments.PreviousInstructingAgent"
+                    }
+                },
+                "initiatingParty": {
+                    "$ref": "#/components/schemas/CustomerPayments.PartyInformation"
+                },
+                "ultimateCreditor": {
+                    "description": "Information about the ultimate creditor of the transaction.",
+                    "$ref": "#/components/schemas/CustomerPayments.PartyInformation"
+                },
+                "ultimateDebtor": {
+                    "description":"Information about the ultimate debtor of the transaction (the party holding the ultimate debtor account).",
+                    "$ref": "#/components/schemas/CustomerPayments.PartyInformation"
+                },
+                "purpose": {
+                    "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.CustomerPaymentsResponse": {
+            "type": "object",
+            "properties": {
+                "paymentId": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.DateAndPlaceOfBirth": {
+            "required": [
+                "birthDate",
+                "cityOfBirth",
+                "countryOfBirth"
+            ],
+            "type": "object",
+            "properties": {
+                "birthDate": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Customer's date of birth."
+                },
+                "cityOfBirth": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Customer's city of birth."
+                },
+                "countryOfBirth": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Two-letter ISO country code for the customer's country of birth."
+                },
+                "provinceOfBirth": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.IbanAccount": {
+            "required": [
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.OrganisationIdentification": {
+            "type": "object",
+            "properties": {
+                "anyBic": {
+                    "type": "string"
+                },
+                "lei": {
+                    "type": "string",
+                    "description": "Legal Entity Identifier of the party"
+                },
+                "other": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/CustomerPayments.Other"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.Other": {
+            "required": [
+                "identification",
+                "issuer",
+                "schemeName"
+            ],
+            "type": "object",
+            "properties": {
+                "identification": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Unambiguous Identification for the given scheme."
+                },
+                "schemeName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Scheme type."
+                },
+                "issuer": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "The name of the entity that assigns the identification."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.PartyInformation": {
+            "required": [
+                "name",
+                "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of the party"
+                },
+                "postalAddress": {
+                    "$ref": "#/components/schemas/CustomerPayments.PostalAddress"
+                },
+                "countryOfResidence": {
+                    "description": "The party's country of residence",
+                    "type": "string"
+                },
+                "organisationIdentification": {
+                    "$ref": "#/components/schemas/CustomerPayments.OrganisationIdentification",
+                    "description": "Information about the organisation."
+                },
+                "privateIdentification": {
+                    "$ref": "#/components/schemas/CustomerPayments.PrivateIdentification",
+                    "description":"The party’s private or personal information."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.PostalAddress": {
+            "required": [
+                "country",
+                "postCode",
+                "townName"
+            ],
+            "type": "object",
+            "properties": {
+                "postCode": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
+
+                },
+                "townName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of a built-up area, with defined boundaries, and a local government."
+                },
+                "country": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Nation with its own government."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.PreviousInstructingAgent": {
+            "required": [
+                "agent",
+                "order"
+            ],
+            "type": "object",
+            "properties": {
+                "order": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "agent": {
+                    "$ref": "#/components/schemas/CustomerPayments.Agent"
+                },
+                "agentAccount": {
+                    "$ref": "#/components/schemas/CustomerPayments.PreviousInstructingAgentAccount"
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.PreviousInstructingAgentAccount": {
+            "required": [
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.PrivateIdentification": {
+            "type": "object",
+            "properties": {
+                "dateAndPlaceOfBirth": {
+                    "$ref": "#/components/schemas/CustomerPayments.DateAndPlaceOfBirth"
+                },
+                "other": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/CustomerPayments.Other"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "CustomerPayments.SourceAccount": {
+            "required": [
+                "bicfi",
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                },
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.Agent": {
+            "required": [
+                "bicfi",
+                "name",
+                "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "lei": {
+                    "type": "string",
+                    "description": "Legal Entity Identifier of the party"
+                },
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of the party"
+                },
+                "postalAddress": {
+                    "$ref": "#/components/schemas/InstitutionPayments.PostalAddress"
+                },
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.CreditorAgent": {
+            "required": [
+                "bicfi"
+            ],
+            "type": "object",
+            "properties": {
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.FinancialInstitutionId": {
+            "required": [
+                "bicfi",
+                "name",
+                "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "lei": {
+                    "type": "string",
+                    "description": "Legal Entity Identifier of the party"
+                },
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of the party"
+                },
+                "postalAddress": {
+                    "$ref": "#/components/schemas/InstitutionPayments.PostalAddress"
+                },
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Financial Institution's Bank Identifier Code (BIC)."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.IbanAccount": {
+            "required": [
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.InstitutionPaymentRequest": {
+            "required": [
+                "creditor",
+                "creditorAccount",
+                "creditorAgent",
+                "debtor",
+                "debtorAccount",
+                "endToEndIdentification",
+                "instructionIdentification",
+                "interbankSettlementAmount",
+                "sourceAccount",
+                "uetr"
+            ],
+            "type": "object",
+            "properties": {
+                "creditor": {
+                    "$ref": "#/components/schemas/InstitutionPayments.FinancialInstitutionId",
+                    "description": "The name and, optionally, the legal entity identifier of the account."
+                },
+                "creditorAccount": {
+                    "$ref": "#/components/schemas/InstitutionPayments.IbanAccount",
+                    "description": "Information about the creditor account in a given transaction."
+                },
+                "creditorAgent": {
+                    "$ref": "#/components/schemas/InstitutionPayments.CreditorAgent",
+                    "description": "Information that identifies the creditor agent as a financial institution."
+                },
+                "debtor": {
+                    "$ref": "#/components/schemas/InstitutionPayments.FinancialInstitutionId",
+                    "description": "Details about the account holder."
+                },
+                "debtorAccount": {
+                    "$ref": "#/components/schemas/InstitutionPayments.IbanAccount",
+                    "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                },
+                "endToEndIdentification": {
+                    "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "instructionIdentification": {
+                    "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\\n\\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "interbankSettlementAmount": {
+                    "$ref": "#/components/schemas/InstitutionPayments.InterbankSettlementAmount"
+                },
+                "sourceAccount": {
+                    "$ref": "#/components/schemas/InstitutionPayments.SourceAccount",
+                    "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction."
+                },
+                "uetr": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
+                },
+                "previousInstructingAgents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/InstitutionPayments.PreviousInstructingAgent"
+                    }
+                },
+                "purpose": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.InstitutionPaymentResponse": {
+            "type": "object",
+            "properties": {
+                "paymentId": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.InterbankSettlementAmount": {
+            "required": [
+                "amount",
+                "currency"
+            ],
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "Indicates the amount used in a given transaction or account balance."
+                },
+                "currency": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.PostalAddress": {
+            "required": [
+                "country",
+                "townName"
+            ],
+            "type": "object",
+            "properties": {
+                "townName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of a built-up area, with defined boundaries, and a local government."
+                },
+                "country": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Nation with its own government."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.PreviousInstructingAgent": {
+            "required": [
+                "agent",
+                "order"
+            ],
+            "type": "object",
+            "properties": {
+                "order": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "agent": {
+                    "$ref": "#/components/schemas/InstitutionPayments.Agent"
+                },
+                "agentAccount": {
+                    "$ref": "#/components/schemas/InstitutionPayments.PreviousInstructingAgentAccount"
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.PreviousInstructingAgentAccount": {
+            "required": [
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "InstitutionPayments.SourceAccount": {
+            "required": [
+                "bicfi",
+                "iban"
+            ],
+            "type": "object",
+            "properties": {
+                "bicfi": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Financial Institution's Bank Identifier Code (BIC)."
+                },
+                "iban": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                }
+            },
+            "additionalProperties": false
+        },
+        "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "detail": {
+                    "type": "string"
+                },
+                "instance": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": {}
+        },
+        "PaymentReturns.DateAndPlaceOfBirth": {
+            "required": [
+                "birthDate",
+                "cityOfBirth",
+                "countryOfBirth"
+            ],
+            "type": "object",
+            "properties": {
+                "birthDate": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Customer's date of birth."
+                },
+                "provinceOfBirth": {
+                    "type": "string"
+                },
+                "cityOfBirth": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Return recipient's city of birth."
+                },
+                "countryOfBirth": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description":"Two-letter ISO country code for the return recipient's country of birth."
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.OrganisationIdentification": {
+            "type": "object",
+            "properties": {
+                "anyBic": {
+                    "type": "string"
+                },
+                "lei": {
+                    "type": "string",
+                    "description": "Legal Entity Identifier of the party"
+                },
+                "other": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/PaymentReturns.Other"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.Other": {
+            "required": [
+                "identification",
+                "issuer",
+                "schemeName"
+            ],
+            "type": "object",
+            "properties": {
+                "identification": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Unambiguous Identification for the given scheme."
+                },
+                "schemeName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Scheme type."
+                },
+                "issuer": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "The name of the entity that assigns the identification."
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.PartyInformation": {
+            "required": [
+                "name",
+                "postalAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "name": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of the party"
+                },
+                "postalAddress": {
+                    "$ref": "#/components/schemas/PaymentReturns.PostalAddress"
+                },
+                "countryOfResidence": {
+                    "description": "The party's country of residence",
+                    "type": "string"
+                },
+                "organisationIdentification": {
+                    "$ref": "#/components/schemas/PaymentReturns.OrganisationIdentification",
+                    "description": "Information about the organisation."
+                },
+                "privateIdentification": {
+                    "$ref": "#/components/schemas/PaymentReturns.PrivateIdentification",
+                    "description":"The party's private or personal information."
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.PaymentReturnRequest": {
+            "required": [
+                "originalUetr",
+                "reason",
+                "requestingParty"
+            ],
+            "type": "object",
+            "properties": {
+                "originalUetr": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "requestingParty": {
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "reason": {
+                    "minLength": 1,
+                    "type": "string"
+                },
+                "initiatingParty": {
+                    "$ref": "#/components/schemas/PaymentReturns.PartyInformation"
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.PaymentReturnResponse": {
+            "type": "object",
+            "properties": {
+                "paymentReturnId": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.PostalAddress": {
+            "required": [
+                "country",
+                "postCode",
+                "townName"
+            ],
+            "type": "object",
+            "properties": {
+                "townName": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Name of a built-up area, with defined boundaries, and a local government."
+                },
+                "postCode": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
+                },
+                "country": {
+                    "minLength": 1,
+                    "type": "string",
+                    "description": "Nation with its own government."
+                }
+            },
+            "additionalProperties": false
+        },
+        "PaymentReturns.PrivateIdentification": {
+            "type": "object",
+            "properties": {
+                "dateAndPlaceOfBirth": {
+                    "$ref": "#/components/schemas/PaymentReturns.DateAndPlaceOfBirth"
+                },
+                "other": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/PaymentReturns.Other"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
+}
