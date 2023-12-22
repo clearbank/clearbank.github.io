@@ -9,18 +9,23 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
 ## Faster Payments
 
-When sending payments through our API, Faster Payments are initiated via the POST /{vn}/Payments/FPS endpoint, and confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook).
-
-Sometimes you will need to return a faster payment; for example, because the beneficiary name does not match that of the account number, because the account has been closed or transferred, or because the beneficiary has deceased. To do so, please use this new endpoint:  [/v3/payments/fps/return](#return-an-fps-payment). This can be used to return one single immediate payment.
+When sending payments through our API, Faster Payments are initiated via the [POST /{vn}/Payments/FPS](#send-faster-payments) endpoint, and confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook). You can send individual or bulk payments.
 
 ClearBank accounts support inbound and outbound Faster Payments. You can send and receive Faster Payments of up to £1,000,000. 
-Faster Payments are not subject to a cut-off time and can be sent or received as and when required.
+Faster Payments are not subject to a cut-off time.
 
-Please note that payments originating overseas need to be sent using a separate endpoint: [/v2/payments/fps/singlepayment](#send-a-faster-payment-originated-overseas).
+Sometimes you will need to return a faster payment, for example when: 
+- the beneficiary name does not match that of the account number, 
+- the account has been closed or transferred, 
+- the beneficiary has deceased. 
 
-**Faster Payments validation**
+To return one single immediate payment, use the [POST /v3/payments/fps/return](#return-a-faster-payment) endpoint.
 
-Each payment is validated against these rules: 
+Payments originating overseas need to be sent using a separate endpoint: [/v2/payments/fps/singlepayment](#send-a-faster-payment-originated-overseas).
+
+#### Validation
+
+Each Faster Payment is validated against these rules: 
 
 | Element     | Type   | Validation | Description  |
 |-------------|--------|------------|--------------|
@@ -32,11 +37,13 @@ Pattern: Alphanumeric (uppercase and lowercase) and special characters*****.<br 
 
 This endpoint uses the endToEndIdentification field as a duplicate check to ensure the request is idempotent.   
 
-**Faster Payments abusive messages validation**
+#### Abusive message filtering
 
-To protect payment recipients from harm and abuse, outbound payments are subject to screening against a profanity list maintained by Faster Payments scheme. The profanity list can be found on the Reference Documents page of the Knowledge Centre which can be accessed through the ClearBank Portal. Inbound payments are subject to screening by the remitting bank.
+To protect payment recipients from harm and abuse, outbound payments are subject to screening to check for profanities.
 
-The screening checks the Reference string of the RemittanceInformation object. If any part of this string matches a term on the profanity list, it will be removed and the field will be blank when the payment reaches the beneficiary.
+The screening checks the `Reference` string of the `RemittanceInformation` object. If any part of this string matches a term on the profanity list, it will be removed and the field will be blank when the payment reaches the beneficiary.
+
+References will be removed if they contain profanity as per (but not limited to) the Pay.UK list of profanities that can be found on the Reference Documents page of the Knowledge Centre. This can be accessed by signing in to the ClearBank Portal.
 
 <EndpointBlock
 type="post"
@@ -65,7 +72,7 @@ endpoints={[
 
 <EndpointBlock
 type="post"
-title="Return an FPS payment"
+title="Return a Faster Payment"
 endpoints={[
   {
     path: "/v3/payments/fps/return",
