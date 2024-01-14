@@ -11,13 +11,22 @@ export default function RegionSwitch() {
     setTimeout(() => document.location.href = !activeOption ? '/eu' : '/uk', 300);
   };
 
+  let region;
+  if (activeOption){
+    region = 'Europe API docs';
+  } else{
+    region = 'UK API docs'
+  }
+
   return (
     <label>
+      <span className="react-toggle-label"><strong>{region}</strong></span>
       <Toggle
         icons={false}
         defaultChecked={activeOption}
         onChange={handleSwitchClick}
       />
+      <br/>UK &nbsp;&nbsp;&nbsp;&nbsp; EU
     </label>
   );
 }

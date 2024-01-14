@@ -49,7 +49,6 @@ export const Tdata = styled.td`
   padding: 20px;
   font-size: 16px;
   text-align: left;
-  color: ${colors.brandGrayDarker};
 
   &.has-wrappable-content {
     code {
