@@ -1,0 +1,167 @@
+---
+title: "Cash ISAs"
+order: 3
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as ACCOUNTS_CONSTANTS from "./real-accounts.constants"
+import * as VIRTUAL_ACC_CONSTANTS from "./virtual-accounts.constants"
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Cash ISAs
+
+A cash ISA (Individual Savings Account) is a real account held with ClearBank that is subject to tax benefits [defined by the UK government](https://www.gov.uk/individual-savings-accounts). It can be used to send and/or receive payments once a **nominated account** has also been defined.
+
+**Before creating an account, please ensure that you know which [account type](./account-types) you need to create.** If you are unsure, please get in touch.
+
+The balance of a real account is also held by ClearBank and can be viewed via the ClearBank Portal and our API. Real accounts are reconciled for you by ClearBank.
+
+To set up a cash ISA:
+
+1. Use the []() endpoint to create the account
+2. Use the []() endpoint to define the nominated account for the cash ISA
+
+To close a cash ISA:
+1. Use the []() endpoint to request the account closure. 
+> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed. This is shown in the message flow diagram below.
+
+<EndpointBlock
+  type="get"
+  title="Get all accounts (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling"
+    },
+    {
+      path: "/v2/Accounts",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create an account (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts/{accountId}",
+      version: "3.0.Sterling"
+    },
+    {
+      path: "/v2/Accounts/{accountId}",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an account (real)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+## Virtual GBP accounts
+
+A virtual account held with ClearBank is a shadow account which should mirror an account held on your platform.
+Each virtual account is linked to a real account held at ClearBank. You can use a virtual account to send and/or receive payments by means of its association with this real account.
+The responsibility of managing and reconciling virtual accounts rests with you, which gives you complete control of such accounts.
+
+<EndpointBlock
+  type="get"
+  title="Get accounts (virtual)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/Virtual",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create accounts (virtual)"
+  description={VIRTUAL_ACC_CONSTANTS.postVirtualAccountsDescription}
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual",
+      version: "2.0.Sterling",
+      webhooks: [
+        'virtual-account-created-v3',
+        'virtual-account-creation-failed-v3'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='virtual-account-created-v3' />
+<WebhookPlaceholder render='virtual-account-creation-failed-v3' />
+
+<EndpointBlock
+  type="get"
+  title="Get all virtual accounts for a real account"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (virtual)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an account (virtual)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Disable an account (virtual)"
+  endpoints={[
+    {
+      path: "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
