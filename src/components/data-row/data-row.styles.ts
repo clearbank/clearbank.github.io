@@ -135,12 +135,10 @@ export const Header: any = styled.span`
 export const SubHeader: any = styled.span`
   font-size: 24px;
   font-family: ${fonts.body};
-  color: ${colors.brandSecondaryDarker};
 `
 
 export const In: any = styled.span`
   font-size: 13px;
-  color: ${colors.brandGrayDarker};
   font-family: ${fonts.monospace};
   text-transform: capitalize;
 `

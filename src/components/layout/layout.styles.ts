@@ -147,4 +147,6 @@ export const Banner = styled.div`
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
   -ms-grid-row: 1;
+  width:100%;
+  background-color: #eaeaea;
 `

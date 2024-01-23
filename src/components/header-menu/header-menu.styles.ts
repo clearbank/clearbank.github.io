@@ -16,7 +16,8 @@ export const LinkBase = styled(Link)`
 export const MenuContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0px 75px;
+  padding: 0px 75px;
+  background-color: #f8f8f8;
 `
 
 export const Container = styled.div`

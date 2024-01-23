@@ -11,7 +11,6 @@ const arrowTranslate = {
 export const Label = styled.span`
   font-size: 14px;
   cursor: default;
-  color: ${colors.lynch};
 `
 
 export const Icon: any = styled.i``

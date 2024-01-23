@@ -33,7 +33,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
           </Styles.HeaderWrapper>
           <Styles.Banner className='banner'>
             {data?.mdx?.frontmatter?.bannerSrc && (
-              <img src={data.mdx.frontmatter.bannerSrc} alt="page banner" />
+              <img src={data.mdx.frontmatter.bannerSrc} alt="page banner"/>
             )}
           </Styles.Banner>
           <Styles.ContentWrapper>

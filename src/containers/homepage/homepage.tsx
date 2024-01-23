@@ -6,8 +6,8 @@ import ClientSection from './client-section'
 
 import GetStartedIcon from '../../../static/assets/images/get-started-icon.png'
 import ApiIcon from '../../../static/assets/images/api-icon.png'
-// import CodeIcon from '../../../static/assets/images/Code.png'
-// import LinkIcon from '../../../static/assets/images/Link.png'
+import CodeIcon from '../../../static/assets/images/Code.png'
+import LinkIcon from '../../../static/assets/images/Link.png'
 // import CheckIcon from '../../../static/assets/images/Check.png'
 import GHIcon from '../../../static/assets/images/GitHub-Mark 1.png'
 
@@ -53,8 +53,8 @@ const Homepage: React.FC<any> = (props) => {
           <>
             <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
             <Styles.SectionContainer>
-              {pageContext.guides.map(item => (
-                <Article title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+              {pageContext.Guides.map(item => (
+                <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
               ))}
             </Styles.SectionContainer>
           </>
