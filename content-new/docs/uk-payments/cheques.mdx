@@ -25,12 +25,13 @@ Cheques take up to three working days to process. If the cheque passes processin
 Scenarios where the cheque wouldn't process successfully include:
 - If a decision is made by the issuing bank to not pay the cheque, or the check fails at the ICS scheme, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 - If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
+- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, on day 2 or 3 you will receive a manual response from ClearBank on Freshdesk.
 
 **Cheques can also be submitted via post to the PO box you set up during onboarding.**
 
 The message flow for cheques submitted by post is shown here.
 
-![alt text](/assets/images/cheque_post.svg "Message flow diagram explaining how to submit cheques via post. In the 'Cheque Paid' outcome, once ClearBank receives the cheque in the post, if it passes processing you will receive the Cheque Paid and Transaction Settled webhooks. In the 'Cheque Not Paid' outcome, once ClearBank receives the cheque in the post, if it fails processing you will receive the Cheque Not Paid webhook.")
+![alt text](/assets/images/cheque_post.svg "Message flow diagram explaining how to submit cheques via post. In the 'Cheque Paid' outcome, once ClearBank receives the cheque in the post on day 1, if it passes processing you will receive the Cheque Paid and Transaction Settled webhooks on day 2 or 3. In the 'Cheque Not Paid' outcome, once ClearBank receives the cheque in the post on day 1, if it fails processing you will receive the Cheque Not Paid webhook on day 2 or 3.")
 
 Postal cheques are processed the same way as cheques submitted via the endpoint.
 
