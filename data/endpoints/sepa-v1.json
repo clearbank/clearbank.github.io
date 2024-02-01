@@ -1,0 +1,334 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "ClearBank.Sepa.Ct.Orchestrator.Api",
+        "version": "1.0-SEPACT"
+    },
+    "paths": {
+        "/v1/payments/sepa": {
+            "post": {
+                "tags": [
+                    "ClearBank.Sepa.Ct.Orchestrator.Api"
+                ],
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateSepaOutboundPaymentRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/v1/payments/sepa/{paymentId}/recall": {
+            "post": {
+                "tags": [
+                    "ClearBank.Sepa.Ct.Orchestrator.Api"
+                ],
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "paymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecallOfOutboundPaymentRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                }
+            }
+        },
+        "/v1/payments/sepa/{paymentId}/recall-response": {
+            "post": {
+                "tags": [
+                    "ClearBank.Sepa.Ct.Orchestrator.Api"
+                ],
+                "parameters": [
+                    {
+                        "name": "sepaPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecallOfInboundPaymentReviewRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateSepaOutboundPaymentRequest": {
+                "type": "object",
+                "properties": {
+                    "endToEndId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "debtor": {
+                        "$ref": "#/components/schemas/Debtor"
+                    },
+                    "creditor": {
+                        "$ref": "#/components/schemas/Creditor"
+                    },
+                    "creditorAgent": {
+                        "$ref": "#/components/schemas/CreditorAgent"
+                    },
+                    "reference": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Creditor": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "accountIban": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PostalAddress"
+                    },
+                    "identification": {
+                        "$ref": "#/components/schemas/Identification"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreditorAgent": {
+                "type": "object",
+                "properties": {
+                    "bic": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "DateAndPlaceOfBirth": {
+                "type": "object",
+                "properties": {
+                    "dateOfBirth": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "placeOfBirth": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Debtor": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "accountIban": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PostalAddress"
+                    },
+                    "identification": {
+                        "$ref": "#/components/schemas/Identification"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Identification": {
+                "type": "object",
+                "properties": {
+                    "organisationIdentification": {
+                        "$ref": "#/components/schemas/OrganisationIdentification"
+                    },
+                    "privateIdentification": {
+                        "$ref": "#/components/schemas/PrivateIdentification"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "OrganisationIdentification": {
+                "type": "object",
+                "properties": {
+                    "bic": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PostalAddress": {
+                "type": "object",
+                "properties": {
+                    "streetName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "buildingNumber": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "townName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "countrySubdivision": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PrivateIdentification": {
+                "type": "object",
+                "properties": {
+                    "dateAndPlaceOfBirth": {
+                        "$ref": "#/components/schemas/DateAndPlaceOfBirth"
+                    },
+                    "other": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "RecallOfInboundPaymentReviewRequest": {
+                "type": "object",
+                "properties": {
+                    "recallResponseAccepted": {
+                        "type": "boolean"
+                    },
+                    "rejectCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "additionalInfo": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "RecallOfOutboundPaymentRequest": {
+                "type": "object",
+                "properties": {
+                    "recallCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "additionalInfo": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    }
+}
