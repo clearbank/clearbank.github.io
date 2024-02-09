@@ -8,8 +8,10 @@
         "/v1/payments/sepa": {
             "post": {
                 "tags": [
-                    "ClearBank.Sepa.Ct.Orchestrator.Api"
+                    "Sepa CT Payments"
                 ],
+                "summary": "This endpoint will send a SEPA CT payment.",
+                "operationId": "Payment.Create",
                 "parameters": [
                     {
                         "name": "institutionId",
@@ -37,6 +39,61 @@
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                }
+            }
+        },
+        "/v1/payments/sepa/{paymentId}/recall-response": {
+            "post": {
+                "tags": [
+                    "This endpoint will approve or reject a request for a SEPA CT inbound payment."
+                ],
+                "operationId": "Payments.Inbound.RecallRequestResult",
+                "parameters": [
+                    {
+                        "name": "paymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecallOfInboundPaymentReviewRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Conflict"
                     }
                 }
             }
@@ -44,8 +101,11 @@
         "/v1/payments/sepa/{paymentId}/recall": {
             "post": {
                 "tags": [
-                    "ClearBank.Sepa.Ct.Orchestrator.Api"
+                    "Sepa CT Payments"
                 ],
+                "summary": "Recalls Outbound SEPA CT Payment",
+                "description": "Recalls Outbound SEPA CT Payment",
+                "operationId": "Payment.Recall",
                 "parameters": [
                     {
                         "name": "institutionId",
@@ -88,63 +148,29 @@
                     }
                 }
             }
-        },
-        "/v1/payments/sepa/{paymentId}/recall-response": {
-            "post": {
-                "tags": [
-                    "ClearBank.Sepa.Ct.Orchestrator.Api"
-                ],
-                "parameters": [
-                    {
-                        "name": "sepaPaymentId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
-                        "name": "institutionId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RecallOfInboundPaymentReviewRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "202": {
-                        "description": "Accepted"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                }
-            }
         }
     },
     "components": {
         "schemas": {
             "CreateSepaOutboundPaymentRequest": {
+                "required": [
+                    "creditor",
+                    "creditorAgent",
+                    "debtor",
+                    "endToEndId",
+                    "remittanceInformationUnstructured"
+                ],
                 "type": "object",
                 "properties": {
                     "endToEndId": {
-                        "type": "string",
-                        "nullable": true
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "amount": {
+                        "maximum": 10000000000000,
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
                         "type": "number",
                         "format": "double"
                     },
@@ -161,23 +187,30 @@
                     "creditorAgent": {
                         "$ref": "#/components/schemas/CreditorAgent"
                     },
-                    "reference": {
-                        "type": "string",
-                        "nullable": true
+                    "remittanceInformationUnstructured": {
+                        "maxLength": 140,
+                        "minLength": 1,
+                        "type": "string"
                     }
                 },
                 "additionalProperties": false
             },
             "Creditor": {
+                "required": [
+                    "accountIban",
+                    "name",
+                    "postalAddress"
+                ],
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string",
-                        "nullable": true
+                        "maxLength": 70,
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "accountIban": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/PostalAddress"
@@ -189,11 +222,14 @@
                 "additionalProperties": false
             },
             "CreditorAgent": {
+                "required": [
+                    "bic"
+                ],
                 "type": "object",
                 "properties": {
                     "bic": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     }
                 },
                 "additionalProperties": false
@@ -207,6 +243,7 @@
                         "nullable": true
                     },
                     "placeOfBirth": {
+                        "maxLength": 35,
                         "type": "string",
                         "nullable": true
                     }
@@ -214,15 +251,21 @@
                 "additionalProperties": false
             },
             "Debtor": {
+                "required": [
+                    "accountIban",
+                    "name",
+                    "postalAddress"
+                ],
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string",
-                        "nullable": true
+                        "maxLength": 70,
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "accountIban": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/PostalAddress"
@@ -256,11 +299,16 @@
                 "additionalProperties": false
             },
             "PostalAddress": {
+                "required": [
+                    "country",
+                    "streetName"
+                ],
                 "type": "object",
                 "properties": {
                     "streetName": {
-                        "type": "string",
-                        "nullable": true
+                        "maxLength": 70,
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "buildingNumber": {
                         "type": "string",
@@ -279,8 +327,26 @@
                         "nullable": true
                     },
                     "country": {
+                        "maxLength": 2,
+                        "minLength": 1,
                         "type": "string",
-                        "nullable": true
+                        "allOf": [
+                            {
+                                "pattern": "^[A-Z]{2}$"
+                            },
+                            {
+                                "pattern": "^[A-Z]{2}$"
+                            },
+                            {
+                                "pattern": "^[A-Z]{2}$"
+                            },
+                            {
+                                "pattern": "^[A-Z]{2}$"
+                            },
+                            {
+                                "pattern": "^[A-Z]{2}$"
+                            }
+                        ]
                     }
                 },
                 "additionalProperties": false
@@ -316,11 +382,15 @@
                 "additionalProperties": false
             },
             "RecallOfOutboundPaymentRequest": {
+                "required": [
+                    "recallCode"
+                ],
                 "type": "object",
                 "properties": {
                     "recallCode": {
-                        "type": "string",
-                        "nullable": true
+                        "maxLength": 4,
+                        "minLength": 4,
+                        "type": "string"
                     },
                     "additionalInfo": {
                         "type": "string",
