@@ -9,23 +9,32 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
 ## High value international payments
 
-You can send single or bulk high value payments overseas in currencies other than GBP. To be able to initiate high value international payments, we will need you to first fund your SIM account  while integrating with our API in the simulation environment. As part of our fund assessment control framework, you will not be able to initiate high value international payments without doing so.
+You can send single or bulk high value payments overseas in currencies other than GBP. To be able to initiate high value international payments, we will need you to first [fund your SIM account](#fund-your-account-in-the-simulation-environment) while integrating with our API in the simulation environment. As part of our fund assessment control framework, you will not be able to initiate high value international payments without doing so.
 
-ClearBank accepts inbound and outbound Euro payments via the TARGET2 scheme only. Inbound payments which are processed via any other scheme apart from TARGET2 will not be accepted by ClearBank. Non-EUR high value international payments are settled according to cut-off times specific to the currency in which the payment is made.
+ClearBank accepts inbound and outbound Euro payments via the T2 scheme only. Inbound payments which are processed via any other scheme apart from T2 will not be accepted by ClearBank. Non-EUR high value international payments are settled according to cut-off times specific to the currency in which the payment is made.
 
 For more information about the countries that you can send high value payments to, currencies supported by ClearBank and currency cut-off times, please speak to your Relationship Manager.
 
 ### Post cut-off payments are rescheduled
-If a multi-currency payment request is received outside of the payment window for a given currency, you will normally receive a success response (202 – Accepted) including an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed the following business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
+If a multi-currency payment request is received outside of the payment window for a given currency, you will normally receive a success response (202 – Accepted) including an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed on the next available business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
 
-If you would prefer not to have the payment processed the following day, you can cancel the payment by using the cancellation endpoints. The cancellation must be received no later than 1 hour prior to the opening of the next payment window. Note that to be able to cancel a payment, you must have specified a batch ID in the original payment request.
+If a payment is scheduled for processing on the next available business day, the time at which the payment will be processed will vary depending on the currency selected as follows:
+
+| Currency                           | Currency Code | Scheduled processing time  |
+|------------------------------------|---------------|----------------------------|
+| Czech Koruna                       | CZK           | 8:20 AM                    |
+| Romanian Leu                       | RON           | 8:20 AM                    |
+| All other supported currencies     |               | 8:30 AM                    |
+
+
+If you would prefer not to have the rescheduled payment processed, you can cancel the payment by using the cancellation endpoints. The cancellation must be received more than 1 hour before the scheduled processing time. Note that to be able to cancel a payment, you must have specified a **batch ID** in the original payment request.
 
 * Use [DELETE /v1/mccy/payments/{batchId}](#cancel-batch-payments) to cancel a whole batch of payments
-* Use [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](#cancel-a-single-payment) to cancel an individual payment
+* Use [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](#cancel-a-single-payment) to cancel a single payment or an individual payment within a batch
 
 <EndpointBlock
   type="post"
-  title="Fund your account in the simulation environment "
+  title="Fund your account in the simulation environment"
   endpoints={[
     {
       path: "/v1/mccy/inboundpayment/{accountUniqueId}",
