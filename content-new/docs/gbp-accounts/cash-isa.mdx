@@ -44,7 +44,7 @@ To close a cash ISA:
 
 Message flow diagram showing account closure process:
 
-[ADD DIAGRAM HERE]
+![Flow diagram](/assets/images/close-a-cash-isa.svg)
 
 ### Manage cash ISAs
 
@@ -53,51 +53,95 @@ You can manage the majority of the tasks you need to complete for cash ISAs thro
 Use these endpoints to:
 - Get information on a cash ISA
 - Get information on a nominated account
-- Cancel a cash ISA application (this must occur within x days after requesting a cash ISA creation and before it is funded.)
+- Cancel a cash ISA application (cancellation must occur within x days after requesting a cash ISA creation and before it is funded)
 - Set an eligibility flag for cash ISAs for a named customer
 - Transfer funds out of a cash ISA
-
 
 ## Set up a cash ISA
 
 <EndpointBlock
   type="post"
-  title="Create an account (real)"
+  title="Create an cash ISA"
   endpoints={[
     {
-      path: "/v3/Accounts",
-      version: "3.0.Sterling",
-      webhooks: [
-        'account-created-webhook-v1'
-      ]
+      path: "/v1/isas",
+      version: "1.0.Sterling",
     }
   ]}
 />
-
-nominated account
-Get - return details
 
 <EndpointBlock
-  type="post"
-  title="Create an account (real)"
+  type="put"
+  title="Set up a nominated account"
   endpoints={[
     {
-      path: "/v3/Accounts",
-      version: "3.0.Sterling",
-      webhooks: [
-        'account-created-webhook-v1'
-      ]
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
     }
   ]}
 />
+
 
 ## Manage a cash ISA
 
-Add endpoints
+<EndpointBlock
+  type="get"
+  title="Get information on a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+### get nominated account details endpoint doesn't seem to exist?
+
+<EndpointBlock
+  type="post"
+  title="Transfer out a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-outs",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Set customer as ineligible"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/customer-eligibility",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
 
 ## Close a cash ISA
 
-add endpoints
+<EndpointBlock
+  type="post"
+  title="Close a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Check cash ISA closure status"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
