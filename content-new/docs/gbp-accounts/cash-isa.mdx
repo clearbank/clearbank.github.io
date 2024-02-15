@@ -24,27 +24,27 @@ A <strong>nominated account</strong> is the account that any remaining funds and
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
-### Sequence to open and close Cash ISAs
+### Open and close cash ISAs
 
 To set up a cash ISA:
 
-1. Use the [POST /v1/isas]() endpoint to create the account
-2. Use the [PUT /v1/accounts/{id}/nominated-account]() endpoint to define the nominated account for the cash ISA
+1. Use the [POST /v1/isas](#create-an-cash-isa) endpoint to create the account
+2. Use the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint to define the nominated account for the cash ISA
 > You cannot deposit money into the cash ISA before the nominated account has been defined. 
 
 Message flow diagram showing account opening process:
 
-![Flow diagram](/assets/images/open-a-cash-isa.svg)
+![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/open-a-cash-isa.svg)
 
 To close a cash ISA:
-1. Use the [POST /v1/accounts/{id}/closure]() endpoint to request the account closure. 
+1. Use the [POST /v1/isas/{accountId}/cancellation](#close-a-cash-isa) endpoint to request the account closure. 
 > This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
-2. OPTIONAL Use the [GET /v1/accounts/{id}/closure]() endpoint to check whether the account has been closed.
+2. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
 3. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
 
 Message flow diagram showing account closure process:
 
-![Flow diagram](/assets/images/close-a-cash-isa.svg)
+![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/close-a-cash-isa.svg)
 
 ### Manage cash ISAs
 
@@ -55,13 +55,13 @@ Use these endpoints to:
 - Get information on a nominated account
 - Cancel a cash ISA application (cancellation must occur within x days after requesting a cash ISA creation and before it is funded)
 - Set an eligibility flag for cash ISAs for a named customer
-- Transfer funds out of a cash ISA
+- Transfer a cash ISA to another provider
 
 ## Set up a cash ISA
 
 <EndpointBlock
   type="post"
-  title="Create an cash ISA"
+  title="Create a cash ISA"
   endpoints={[
     {
       path: "/v1/isas",
@@ -81,12 +81,22 @@ Use these endpoints to:
   ]}
 />
 
+<EndpointBlock
+  type="post"
+  title="Cancel cash ISA application"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/cancellation",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
 
 ## Manage a cash ISA
 
 <EndpointBlock
   type="get"
-  title="Get information on a cash ISA"
+  title="Return details of a cash ISA"
   endpoints={[
     {
       path: "/v1/isas/{accountId}",
@@ -95,11 +105,11 @@ Use these endpoints to:
   ]}
 />
 
-### get nominated account details endpoint doesn't seem to exist?
+### Get nominated account details endpoint doesn't seem to exist?
 
 <EndpointBlock
   type="post"
-  title="Transfer out a cash ISA"
+  title="Transfer a cash ISA to another provider"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
@@ -111,6 +121,7 @@ Use these endpoints to:
 <EndpointBlock
   type="put"
   title="Set customer as ineligible"
+  description="Note this flag cannot be cleared through the API"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/customer-eligibility",
