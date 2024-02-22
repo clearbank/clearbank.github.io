@@ -7,6 +7,7 @@ showPageMenu: true
 import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
 
 ## SEPA CT
 
@@ -14,13 +15,17 @@ SEPA CT, also known as the Single Euro Payments Area Credit Transfer, enables yo
 
 You can send a SEPA CT payment using the **[/v1/payments/sepa](#send-a-sepa-ct-payment)** endpoint. To recall a payment, use the **[/v1/payments/sepa/{paymentId}/recall](#recall-a-sepa-ct-payment)** endpoint.
 
-You may recieve a webhook 
+### Incoming SEPA CT recall requests
+
+You may recieve a recall request via the [Recall Request webhook](). To respond to the recall request, use the **[/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-SEPA-CT-payment-recall-request)** endpoint.
+
+You can only return the full amount. Partial refunds are not accepted.
+
+<Callout colour="blue">
+If you accept the recall, a pacs.004 payment will be automatically initiated. You do not need to use the send a payment endpoint.
+</Callout>
 
 #### Operating hours
-
-You can receive T2 payments Monday - Friday, 02:30 - 18:00 CET.
-
-You can send pacs.008 and pacs.004 payments Monday - Friday, 07:00 - 17:00 CET, with pacs.009 extended until 18:00 CET. Outside of these operating hours, outgoing payments will be rejected.
 
 <EndpointBlock
   type="post"
