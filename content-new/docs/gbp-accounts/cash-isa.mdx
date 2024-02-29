@@ -20,7 +20,7 @@ A cash ISA (Individual Savings Account) is a real savings deposit account held w
 A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
-The balance of a real account is held by ClearBank and can be viewed via the ClearBank Portal and our API. Real accounts are reconciled for you by ClearBank.
+The balance of a real account is held by ClearBank and can be viewed only via our API. Real accounts are reconciled for you by ClearBank.
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
@@ -61,6 +61,10 @@ Message flow diagram showing account opening process:
 ## Closing a cash ISA
 
 If your cash ISA is within 14 days of opening and has has money deposited into the account, use the [cancel a cash ISA](cancel-a-cash-ISA) endpoint instead.
+
+Before an account closure can be requested, your customer should have reduced the account balance to 0. Funds can be withdrawn to a nominated account or another ClearBank account.
+
+If the account balance is not 0, the request will be rejected. Account closure requests cannot be undone.
 
 To close a cash ISA:
 1. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
@@ -156,8 +160,8 @@ Cash ISAs can be transferred to another provider.
 To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
 > The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be debited from the account.
-2. Withdraw the full balance of the account. **If they're transferring out, why would they need to withdraw? How would they do it?**
-3. Wait at least the remainder of the 15 working day waiting period. **From what day?**
+2. **Once you have recieved the final interest payment--is this true? How does interest factor into the account needing to be at 0?** Withdraw the full balance of the account to the transfer hub created during onboarding.
+3. Wait at least the remainder of the 15 working day waiting period from account closure. If you requested an account closure on the 1st of the month, the waiting period ends at midnight on the 16th.
 4. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
 > This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
