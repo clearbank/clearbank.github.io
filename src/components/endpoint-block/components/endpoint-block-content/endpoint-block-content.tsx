@@ -112,7 +112,7 @@ const EndpointBlockContent: React.FunctionComponent<
                         index !== 0 &&
                         index === choicePropertyNames.length - 1
                       ) {
-                        return " and " + propertyName
+                        return ", and " + propertyName
                       }
                       if (
                         index !== 0 &&
