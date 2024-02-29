@@ -16,15 +16,15 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 A cash ISA (Individual Savings Account) is a real savings deposit account held with ClearBank that is subject to tax benefits [defined by the UK government](https://www.gov.uk/individual-savings-accounts). It can be used to send and/or receive payments once a **nominated account** has also been defined.
 
-The balance of a real account is held by ClearBank and can be viewed via the ClearBank Portal and our API. Real accounts are reconciled for you by ClearBank.
-
 <Callout colour="blue">
 A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
+The balance of a real account is held by ClearBank and can be viewed via the ClearBank Portal and our API. Real accounts are reconciled for you by ClearBank.
+
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
-### Open and close cash ISAs
+## Set up a cash ISA
 
 To set up a cash ISA:
 
@@ -35,60 +35,6 @@ To set up a cash ISA:
 Message flow diagram showing account opening process:
 
 ![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/cash-isa-open.svg)
-
-To close a cash ISA:
-1. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
-> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
-2. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
-3. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
-
-Message flow diagram showing account closure process:
-
-![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
-
-### Manage cash ISAs
-
-You can manage the majority of the tasks you need to complete for cash ISAs through our API. 
-
-Use these endpoints to:
-- Get information on a cash ISA
-- Set an eligibility flag for cash ISAs for a named customer
-- Cancel a cash ISA
-- Transfer out a cash ISA
-
-#### Cancelling a cash ISA
-
-Cash ISAs can be cancelled within 14 days of account creation. The endpoint both cancels and closes the endpoint.
-
-To cancel the ISA, money must have already been deposited into the account. If no money has been deposited, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint instead.
-
-To cancel a cash ISA:
-1. Within 14 days of account creation, use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
-2. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
-3. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
-
-Message flow diagram showing account cancellation process:
-![alt text](/assets/images/cash-isa-cancel.svg)
-
-#### Transferring out a cash ISA
-
-Cash ISAs can be transferred to another provider.
-
-To transfer out a cash ISA:
-1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
-> The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be debited from the account.
-2. Withdraw the full balance of the account.
-3. Wait at least the remainder of the 15 working day waiting period.
-4. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
-> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
-5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
-6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
-
-Message flow diagram showing transfer out process:
-
-![alt text](/assets/images/cash-isa-transfer-out.svg)
-
-## Set up a cash ISA
 
 <EndpointBlock
   type="post"
@@ -112,53 +58,19 @@ Message flow diagram showing transfer out process:
   ]}
 />
 
-<EndpointBlock
-  type="post"
-  title="Cancel a cash ISA"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/cancellation",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
+## Closing a cash ISA
 
-## Manage a cash ISA
+If your cash ISA is within 14 days of opening and has has money deposited into the account, use the [cancel a cash ISA](cancel-a-cash-ISA) endpoint instead.
 
-<EndpointBlock
-  type="get"
-  title="Get cash ISA details"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
+To close a cash ISA:
+1. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
+> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+2. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
+3. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
 
-<EndpointBlock
-  type="post"
-  title="Transfer out a cash ISA"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/transfer-outs",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
+Message flow diagram showing account closure process:
 
-<EndpointBlock
-  type="put"
-  title="Set customer as ineligible"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/customer-eligibility",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-## Close a cash ISA
+![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
 
 <EndpointBlock
   type="post"
@@ -181,6 +93,92 @@ Message flow diagram showing transfer out process:
     }
   ]}
 />
+
+## Manage a cash ISA
+
+You can manage the majority of the tasks you need to complete for cash ISAs through our API. 
+
+Use these endpoints to:
+- Get information on a cash ISA
+- Set an eligibility flag for cash ISAs for a named customer
+
+<EndpointBlock
+  type="get"
+  title="Get cash ISA details"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Set customer as ineligible"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/customer-eligibility",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Cancelling a cash ISA
+
+Cash ISAs can be cancelled within 14 days of account creation. The endpoint both cancels and closes the account. **For example, an account with a field set to x day can be cancelled up to y day.**
+
+**To cancel the ISA, money must have already been deposited into the account.** If no money has been deposited, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint instead.
+
+To cancel a cash ISA:
+1. Within 14 days of account creation, use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
+2. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
+3. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+
+Message flow diagram showing account cancellation process:
+![alt text](/assets/images/cash-isa-cancel.svg)
+
+<EndpointBlock
+  type="post"
+  title="Cancel a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/cancellation",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Transferring out a cash ISA
+
+Cash ISAs can be transferred to another provider.
+
+To transfer out a cash ISA:
+1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
+> The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be debited from the account.
+2. Withdraw the full balance of the account. **If they're transferring out, why would they need to withdraw? How would they do it?**
+3. Wait at least the remainder of the 15 working day waiting period. **From what day?**
+4. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
+> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
+6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+
+Message flow diagram showing transfer out process:
+
+![alt text](/assets/images/cash-isa-transfer-out.svg)
+
+<EndpointBlock
+  type="post"
+  title="Transfer out a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-outs",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Cash ISA webhooks
 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
