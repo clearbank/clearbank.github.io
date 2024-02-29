@@ -264,7 +264,64 @@
                         "description": "Party is owed an amount of money as the (ultimate) creditor. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
                     },
                     "creditor": {
-                        "$ref": "#/components/schemas/PartyDetailsDtoV4"
+                            "required": [
+                                "name"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "minLength": 1,
+                                    "type": "string",
+                                    "description": "Name of the party"
+                                },
+                                "postalAddress": {
+                                        "type": "object",
+                                        "properties": {
+                                            "buildingNumber": {
+                                                "maxLength": 16,
+                                                "minLength": 1,
+                                                "type": "string",
+                                                "description": "Number that identifies the position of a building on a street."
+                                            },
+                                            "buildingName": {
+                                                "maxLength": 35,
+                                                "minLength": 1,
+                                                "type": "string",
+                                                "description": "Name of the building or house."
+                                            },
+                                            "streetName": {
+                                                "maxLength": 70,
+                                                "minLength": 1,
+                                                "type": "string",
+                                                "description": "Name of a street or thoroughfare."
+                                            },
+                                            "townName": {
+                                                "maxLength": 35,
+                                                "minLength": 1,
+                                                "type": "string",
+                                                "description": "Name of a built-up area, with defined boundaries, and a local government. If the Creditor PostalAddress object is populated, then this field is required."
+                                            },
+                                            "country": {
+                                                "minLength": 1,
+                                                "pattern": "[A-Z]{2,2}",
+                                                "type": "string",
+                                                "description": "Nation with its own government. If the Creditor PostalAddress object is populated, then this field is required."
+                                            },
+                                            "postCode": {
+                                                "maxLength": 16,
+                                                "minLength": 1,
+                                                "type": "string",
+                                                "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                },
+                                "lei": {
+                                    "type": "string",
+                                    "description": "Legal Entity Identifier of the party"
+                                }
+                            },
+                            "additionalProperties": false
                     },
                     "purpose": {
                         "enum": [
