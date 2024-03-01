@@ -156,38 +156,40 @@
         },
         "CreateReturnPaymentDtoV4": {
           "required": [
-            "instructionIdentification",
-            "paymentId",
-            "reason"
+              "instructionIdentification",
+              "paymentId",
+              "reason"
           ],
           "type": "object",
           "properties": {
-            "paymentId": {
-              "description": "Payment ID assigned by ClearBank to the inbound payment. This is the same value as the TransactionId in the Transaction Settled webhook.",
-              "type": "string",
-              "format": "uuid"
-            },
-            "reason": {
-              "enum": [
-                "WrongAmount",
-                "InconsistentWithEndCustomer",
-                "MissingCreditorAddress",
-                "UnrecognisedInitiatingParty",
-                "UnknownEndCustomer",
-                "FollowingCancellationRequest",
-                "RefundRequestByEndCustomer"
-              ],
-              "type": "string"
-            },
-            "instructionIdentification": {
-              "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 35
-            }
+              "paymentId": {
+                  "type": "string",
+                  "description": "ClearBank identifier that uniquely identifies the inbound payment that is being returned.",
+                  "format": "uuid"
+              },
+              "reason": {
+                  "enum": [
+                      "WrongAmount",
+                      "InconsistentWithEndCustomer",
+                      "MissingCreditorAddress",
+                      "UnrecognisedInitiatingParty",
+                      "UnknownEndCustomer",
+                      "FollowingCancellationRequest",
+                      "RefundRequestByEndCustomer"
+                  ],
+                  "type": "string",
+                  "description": "Specifies the reason for the return."
+              },
+              "instructionIdentification": {
+                  "maxLength": 35,
+                  "minLength": 1,
+                  "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+                  "type": "string",
+                  "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+              }
           },
           "additionalProperties": false
-        },
+      },
         "PaymentCreatedResponseDtoV4": {
           "required": [
             "paymentId"
