@@ -1,0 +1,111 @@
+---
+title: "Account reporting"
+order: 5
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+
+## Statements
+
+You can request a statement containing all payment activity across your ClearBank accounts for the previous business day, also referred to as a 'Bank to Customer Statement'. The statement is delivered in an ISO 20022 compliant XML file known as camt.053 (Cash Management message).
+
+The statement is populated with transaction activity across all of your accounts within the time range given. Note that a transaction must be in a **Settled** state to be included. Your statement request must contain a **startDateTime** and **endDateTime** which will be validated against the fo:
+- The difference between the startDateTime and endDateTime must be less than or equal to 25 hours
+- The startDateTime must be within the last 6 months
+- The endDateTime must be in the past
+
+
+### Note the following regarding statement generation:
+- ClearBank complete internal reconciliation for the previous business day in the early hours of the morning and will respond to requests to generate a statement for that period once reconciliation is complete. 
+- The time taken to generate a statement may vary depending on the number of accounts or number of settled transactions included in the request.
+- The statement will be divided into pages and assigned a **PageNumber** value (1 page contains 10,000 transaction records).
+- Once generated, statements are available to download for 2 weeks.
+ 
+Once the statement has been generated, you will receive a Statements.ReadyForDownload (confirm name) webhook containing a unique **MessageId** and a **TotalPages** value.
+Use the GET /v1/statements{messageId} endpoint and provide a **PageNumber** value to retrieve that page of the statement. Note that only one page can be retrieved per GET request.
+
+## How to download your statement
+We respond to valid GET statement calls with a **200 OK** response which contains an **XMLObject**. This object contains the requested page of the camt.053 statement in XML format.
+
+If the **TotalPages** value in the Statements.ReadyForDownload webhook is greater than 1, repeat the GET call until:
+- **PageNumber** value in the GET call is equal to **TotalPages** value in the webhook, or 
+- **LastPageIndicator** in the Group Header of the XML is true (confirm if the value is 'true' or '1')
+
+If you request a statement for a time range where there have been no settled transactions, you will still receive a Statements.ReadyForDownload webhook with a **TotalPages** value of **1** and a valid **MessageId**. The download will contain a blank statement.
+
+![Image showing camt.053 statement message flow](/assets/images/camt053-message-flow.drawio.svg "camt.053 statement request message flow")
+
+## Joel to confirm:
+## Intraday - If the current date is requested, do we return what we have up to that point or generate it next day
+
+<EndpointBlock
+  type="post"
+  title="Request a statement for all accounts"
+  endpoints={[
+    {
+      path: "/v1/statementrequests",
+      version: "1.0_camt053",
+      webhooks: [
+        'statement-ready-for-download-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='statement-ready-for-download-webhook-v1'/>
+
+<EndpointBlock
+  type="get"
+  title="Request statement pages"
+  endpoints={[
+    {
+      path: "/v1/statements/{messageId}",
+      version: "1.0_camt053"
+    }
+  ]}
+/>
+
+
+# Key camt.053 fields
+
+## **Group header**
+
+|Element |Data type |Min length |Max length |Level |Mandatory/Optional |Description |
+|--------|----------|-----------|-----------|------|-------------------|------------|
+|Group Header |N/A |N/A |N/A |+GrpHdr |Mandatory |Common information for the message. It only occurs once.|
+|MessageIdentification |String |1 |35 |+GrpHdr <br>++MsgId |Mandatory |Point to point reference, as assigned by ClearBank, and sent to the account owner or the party authorised to receive the message, to unambiguously identify the message. The Message Identification has following pattern: <br>o <service> Service name = CAMT053 <br>o <date> in the format YYYYMMDD <br>o <time> in the format hhmmssMs <br>o <random alphanumeric string> 8 characters random alphanumeric string <br>Remark: ‘_’ underscore segregates the elements|
+|CreationDateTime |DateTime |N/A |N/A |+GrpHdr <br>++CreDtTm |Mandatory |Date and time when the message was created, time in UTC format (YYYY-MM-DDThh:mm:ss.sssZ)|
+|MessagePagination |N/A |N/A |N/A |+GrpHdr <br>++MsgPgntn |Optional |Provides details on the page number of the message. |
+|PageNumber |Numeric |1 |5 |+GrpHdr <br>++MsgPgntn <br>+++PgNb |Optional |The Page Number, beginning with "1", is used to count the number of messages in a statement. |
+|LastPageIndicator |Indicator |N/A |N/A |+GrpHdr <br>++MsgPgntn <br>+++LastPgInd |Optional |Indicates the last page. True or False. |
+|Message Recipient |N/A |N/A |N/A |+GrpHdr <br>++MsgRcpt |Optional |ClearBank client authorised by the account owner to receive information about movements on the account. |
+|Name |String |1 |140 |+GrpHdr <br>++MsgRcpt <br>+++Nm |Optional |Name of ClearBank's client. |
+
+## **Statement**
+|Element |Data type |Min length |Max length |Level |Mandatory/Optional |Description |
+|--------|----------|-----------|-----------|------|-------------------|------------|
+|Identification |String |1 |35 |+GrpHdr <br>++MsgRcpt <br>+++Id <br>++++OrgId <br>+++++Othr <br>++++++Id |Optional |Your Institution ID |
+|Identification |String |1 |35 |+Stmt <br>++Id |Mandatory |Unique ID per statement |
+|FromDateTime |DateTime |N/A |N/A |+Stmt <br>++FrToDt <br>++FrDtTm |Optional |Date and time at which the period starts. |
+|ToDateTime |DateTime |N/A |N/A |+Stmt <br>++FrToDt <br>++FrDtTm |Optional |Date and time at which the period ends. |
+|IBAN |String |22 |34 |+Stmt <br>++Acct <br>+++Id <br>++++IBAN |Optional |International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. ISO 13616. |
+|Code |Enum |1 |4 |+Stmt <br>++Acct <br>+++Tp <br>++++Cd |Optional |Account type, in a coded form.  ExternalCashAccountType1Code, default to CACC. |
+|Name |String |1 |140 |+Stmt <br>++Acct <br>+++Ownr <br>++++Nm |Optional |Name by which a party is known and which is usually used to identify that party. |
+|BICFI |String |8 |11 |+Stmt <br>++Acct <br>+++Svcr <br>++++FinInstnId <br>+++++BICFI |Optional |Code allocated to a financial institution by the ISO 9362 Registration Authority (ClearBank's BIC). |
+|Name |String |1 |140 |+Stmt <br>++Acct <br>+++Svcr <br>++++FinInstnId <br>+++++Nm |Optional |Name by which an agent is known and which is usually used to identify that agent (ClearBank) |
+|Code |String |1 |4 |+Stmt <br>++Bal <br>+++Tp <br>++++CdOrPrtry <br>+++++Cd |Mandatory |Balance type, in a coded format. OPBD or CLBD (Opening or Closing Balance) |
+|Amount |String |0 |18,5 |+Stmt <br>++Bal <br>+++Amt |Mandatory |Amount of money of the cash balance e.g.  ``<Amt Ccy="GBP">100.00</Amt>`` |
+|CreditDebitIndicator |Enum |4 |4 |+Stmt <br>++Bal <br>+++CdtDbtInd |Mandatory |Indicates whether the balance is a credit or a debit balance. A zero balance is considered to be a credit balance. CRDT or DBIT. |
+|Currency Exchange |N/A |N/A |N/A |+Stmt <br>++Ntry <br>+++AmtDtls <br>++++InstdAmt <br>+++++CcyXchg |Optional |Set of elements used to provide details on the currency exchange |
+|Source Currency |Enum |3 |3 |+Stmt <br>++Ntry <br>+++AmtDtls <br>++++InstdAmt <br>+++++CcyXchg <br>++++++SrcCcy |Optional |Currency from which an amount is to be converted in a currency conversion. |
+|Target Currency |Enum |3 |3 |+Stmt <br>++Ntry <br>+++AmtDtls <br>++++InstdAmt <br>+++++CcyXchg <br>++++++TrgtCcy |Optional |Currency into which an amount is to be converted in a currency conversion. |
+|Exchange Rate |Numeric |0 |11 (10 Fraction digits) |+Stmt <br>++Ntry <br>+++AmtDtls <br>++++InstdAmt <br>+++++CcyXchg <br>++++++XchgRate |Optional |Factor used to convert an amount from one currency into another. This reflects the price at which one currency was bought with another currency. |
+|Code |Enum |1 |4 |+Stmt <br>++Ntry <br>+++Sts <br>++++Cd |Optional |Entry status, in a coded form, always BOOK |
+|Account Servicer Reference |String |1 |35 |+Stmt <br>++Ntry <br>+++AcctSvcrRef |Optional |Unique reference as assigned by the account servicing institution to unambiguously identify the entry (ClearBank's TransactionId) |
+|EndToEndIdentification |String |1 |35 |+Stmt <br>++Ntry <br>+++NtryDtls <br>++++TxDtls <br>+++++Refs <br>++++++EndToEndId |Optional |Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain (EndtoEndId) |
+|InstructionIdentification |String |1 |35 |+Stmt <br>++Ntry <br>+++NtryDtls <br>++++TxDtls <br>+++++Refs <br>++++++InstrId |Optional |Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction. ActualEndToEndTransactionId for GBP payments else SchemeEndToEndId for MCCY |
+|Ultimate Debtor |N/A |N/A |N/A |+Stmt <br>++Ntry <br>+++NtryDtls <br>++++TxDtls <br>+++++RltdPties <br>++++++UltmtDbtr |Optional |Party that initiated the payment that is reported in the entry. |
+|Ultimate Creditor |N/A |N/A |N/A |+Stmt <br>++Ntry <br>+++NtryDtls <br>++++TxDtls <br>+++++RltdPties <br>++++++UltmtCdtr |Optional |Ultimate party to which an amount of money is due. |
+

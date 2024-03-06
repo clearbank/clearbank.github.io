@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Customer Statements API",
+    "version": "1.0_camt053"
+  },
+  "paths": {
+    "/v1/statementrequests": {
+      "post": {
+        "tags": [
+          "StatementRequests"
+        ],
+        "summary": "Request a camt.053 statement to be generated.",
+        "description": "POSTs a statement generation request by specifying the start and end of the statement in UTC.",
+        "requestBody": {
+          "description": "Definition of the statement period requested.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "422": {
+            "description": "Client Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "503": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/v1/statements/{messageId}": {
+      "get": {
+        "tags": [
+          "Statements"
+        ],
+        "summary": "Retrieve a camt.053 statement which has been generated.",
+        "description": "GETs a generated statement in camt.053 format by specifying the MessageId property of the statement and a page number.",
+        "parameters": [
+          {
+            "name": "messageId",
+            "in": "path",
+            "description": "The statement ID as per the MsgId field of the camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The requested page number; should be no greater than the TotalPages property of the Statements.ReadyForDownload webhook.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "XMLObject": {
+                "type": "object",
+                "properties": {
+                  "startDateTimeUtc": {
+                    "type": "string",
+                    "description": "The statement includes transactions after this time.",
+                    "format": "yyyy-MM-ddTHH:mm:ssZ"
+                  },
+                  "endDateTimeUtc": {
+                    "type": "string",
+                    "description": "The statement includes transactions before this time.",
+                    "format": "yyyy-MM-ddTHH:mm:ssZ"
+                  }
+                },
+                "additionalProperties": false,
+                "description": "The camt.053 message in XML format."
+              }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatementRequest": {
+        "type": "object",
+        "properties": {
+          "startDateTimeUtc": {
+            "type": "string",
+            "description": "The statement includes transactions after this time.",
+            "format": "yyyy-MM-ddTHH:mm:ssZ"
+          },
+          "endDateTimeUtc": {
+            "type": "string",
+            "description": "The statement includes transactions before this time.",
+            "format": "yyyy-MM-ddTHH:mm:ssZ"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The statement generation request body defines the period for the statement to cover. The period can be no more than 25 hours."
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}
+}
