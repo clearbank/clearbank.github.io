@@ -5,6 +5,7 @@ export interface EndpointBlockContentProps {
 }
 
 export interface OneOfProps {
+  type: string,
   required: Array<string>,
   properties: Object,
 }
