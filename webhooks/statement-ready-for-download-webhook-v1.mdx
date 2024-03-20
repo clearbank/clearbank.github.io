@@ -1,16 +1,16 @@
 ---
-title: "Multi-currency Account Statement webhook"
+title: "Statement Ready For Download webhook"
 version: 1
 webhook: true
 ---
 
-This webhook allows you to download a statement for a specific multi-currency account associated with your institution.
+This webhook notifies you that a requested statement is ready for download.
 
 #### Request body
 
 ```json
 {
-    "Type":"MCCY.Statements.AccountStatement",
+    "Type":"Statements.ReadyForDownload",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -20,13 +20,10 @@ This webhook allows you to download a statement for a specific multi-currency ac
 #### Payload
 | Element                 | Description                                                                                                                                                                                                               |
 |-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Uri`                   | **Required**<br /> URI for downloading a statement for a specific account associated with your institution.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `URI`<br />                                         |
-| `ValidUntilDate`        | **Required**<br /> Date and time the URI will remain valid until. Time in UTC.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `date-time`<br />                                                                |
-| `Year`                  | **Required**<br /> Year for which the statement has been generated in the Four Digit Year format (e.g., 2021).<br /> Type: `integer`<br /> Format: `int32`<br />                                                          |
-| `Month`                 | **Required**<br /> Month for which the statement has been generated in the 1 - 12 format (e.g., 1 for January and 12 for December).<br /> Type: `integer`<br /> minimum: `1`<br /> maximum: `12`<br />  Format: `int32`<br /> |
-| `Currency`              | **Required**<br /> Three-letter ISO currency code for the currency of the account for which the statement has been generated.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                    |
-| `Format`                | **Required**<br /> File format in which the statement has been generated.<br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br />                                                                        |
-| `AccountIban`           | **Required**<br /> International Bank Account Number for the account for which the statement has been generated.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `50`<br />                                |
+| `MessageId`                   | **Required**<br /> Unique identifier of the statement requested as assigned by ClearBank.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `string`<br />                                         |
+| `TotalPages`        | **Required**<br /> Total number of pages available for download.<br /> Type: `int32`<br /> Format: `int32`<br />                                                                |
+| `StartDateTime`                  | **Required**<br /> Start date and time for the statement requested in UTC.<br /> Type: `date-time`<br /> Min. Length: `1`<br /> Format: `date-time`<br />                                                          |
+| `EndDateTime`                 | **Required**<br /> End date and time for the statement requested in UTC.<br /> Type: `date-time`<br /> Min. Length: `1`<br /> Format: `date-time`<br /> |
 
 #### Example account statement webhook request body
 

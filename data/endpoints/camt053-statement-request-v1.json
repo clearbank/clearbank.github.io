@@ -10,7 +10,7 @@
         "tags": [
           "StatementRequests"
         ],
-        "summary": "Request a camt.053 statement to be generated.",
+        "summary": "Request a Camt.053 statement to be generated.",
         "description": "POSTs a statement generation request by specifying the start and end of the statement in UTC.",
         "requestBody": {
           "description": "Definition of the statement period requested.",
@@ -50,13 +50,13 @@
         "tags": [
           "Statements"
         ],
-        "summary": "Retrieve a camt.053 statement which has been generated.",
-        "description": "GETs a generated statement in camt.053 format by specifying the MessageId property of the statement and a page number.",
+        "summary": "Retrive a Camt.053 statement which has been generated.",
+        "description": "GETs a generated statement in Camt.053 format by specifying the MessageId property of the statement and a page number.",
         "parameters": [
           {
             "name": "messageId",
             "in": "path",
-            "description": "The statement ID as per the MsgId field of the camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook.",
+            "description": "The statement ID as per the MsgId field of the Camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook.",
             "required": true,
             "schema": {
               "type": "string"
@@ -75,25 +75,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success",
             "content": {
-              "XMLObject": {
-                "type": "object",
-                "properties": {
-                  "startDateTimeUtc": {
-                    "type": "string",
-                    "description": "The statement includes transactions after this time.",
-                    "format": "yyyy-MM-ddTHH:mm:ssZ"
-                  },
-                  "endDateTimeUtc": {
-                    "type": "string",
-                    "description": "The statement includes transactions before this time.",
-                    "format": "yyyy-MM-ddTHH:mm:ssZ"
-                  }
-                },
-                "additionalProperties": false,
-                "description": "The camt.053 message in XML format."
-              }
+              "application/xml": null
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -181,5 +166,4 @@
       }
     }
   }
-}
 }
