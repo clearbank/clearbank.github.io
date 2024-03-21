@@ -11,7 +11,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/**/*.spec.ts?(x)'],
   testPathIgnorePatterns: [`node_modules`, `\\.cache`, `<rootDir>.*/public`],
-  transformIgnorePatterns: [`node_modules/(?!(gatsby|gatsby-script|gatsby-link|gatsby-plugin-mdx)/)`],
+  transformIgnorePatterns: [`node_modules/(?!(gatsby|gatsby-script|gatsby-link|gatsby-plugin-mdx|element-react)/)`],
   globals: {
     NODE_ENV: 'test'
   },
