@@ -12,6 +12,35 @@
         ],
         "summary": "Request a Camt.053 statement to be generated.",
         "description": "POSTs a statement generation request by specifying the start and end of the statement in UTC.",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Definition of the statement period requested.",
           "content": {
@@ -29,18 +58,12 @@
           "422": {
             "description": "Client Error",
             "content": {
-              "application/problem+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Server Error"
-          },
-          "503": {
-            "description": "Server Error"
           }
         }
       }
@@ -50,9 +73,18 @@
         "tags": [
           "Statements"
         ],
-        "summary": "Retrive a Camt.053 statement which has been generated.",
+        "summary": "Retrieve a Camt.053 statement which has been generated.",
         "description": "GETs a generated statement in Camt.053 format by specifying the MessageId property of the statement and a page number.",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "messageId",
             "in": "path",
@@ -75,15 +107,12 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/xml": null
-            }
+            "description": "Accepted"
           },
           "400": {
             "description": "Bad Request",
             "content": {
-              "application/problem+json": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
@@ -92,9 +121,6 @@
           },
           "404": {
             "description": "Not Found"
-          },
-          "500": {
-            "description": "Server Error"
           }
         }
       }
@@ -107,12 +133,12 @@
         "properties": {
           "startDateTimeUtc": {
             "type": "string",
-            "description": "The statement includes transactions after this time.",
+            "description": "The statement includes transactions after this time in the format yyyy-MM-ddTHH:mm:ssZ.",
             "format": "yyyy-MM-ddTHH:mm:ssZ"
           },
           "endDateTimeUtc": {
             "type": "string",
-            "description": "The statement includes transactions before this time.",
+            "description": "The statement includes transactions before this time in the format yyyy-MM-ddTHH:mm:ssZ.",
             "format": "yyyy-MM-ddTHH:mm:ssZ"
           }
         },
