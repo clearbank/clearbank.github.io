@@ -82,6 +82,27 @@ If the CoP Check requires SRD, then it must be entered in the SecondaryIdentific
 
 Supporting SRD-validated CoP checks is mandatory, however the integration that is required to support the SRD Validate endpoint, which is called ahead of the CoP check being sent is optional. Although not mandatory, this will inform your customers as to whether they need the secondary data ahead of sending the CoP check, making for a more streamlined and informed journey.
 
+### Owner name formatting requirements
+
+The **OwnerName** field is used to identify the owner of the account. The name must be provided in a structured or unstructured comma-delimited format. Both formats consist of three parts separated by commas. For simplicity, we recommend using the **unstructured** format for all CoP name verification requests.
+
+- The unstructured format is valid for personal, business, and joint accounts. The full owner name string is populated in the third part.
+- The structured format is only valid for personal accounts. The salutation, forename(s), and surname are separated by commas.
+
+<Callout colour="blue">
+Commas must be included, if omitted, it may cause delays in receiving the outcome of the verification from the external participant.
+</Callout>
+
+For reference, the following table gives examples of how the owner name should be formatted for different types of accounts:
+
+| Format | Account type | Example |
+|--------|--------------|---------|
+| Unstructured | Personal | ``,,Mr John Smith``<br /> ``,,Mr John Andrew Smith``<br /> ``Mr John A Smith``  |
+| Unstructured | Business | ``,,ClearBank Ltd``|
+| Unstructured | Joint | ``,,John Smith and Jane MacDonald``<br /> ``Mr and Mrs J Smith``|
+| Structured | Personal | ``Mr, John, Smith``<br /> ``Mr, John Andrew, Smith``<br /> ``Mr, John A, Smith``|
+
+
 <EndpointBlock
   type="post"
   title="Check payee account name"
