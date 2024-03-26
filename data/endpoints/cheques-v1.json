@@ -65,31 +65,11 @@
             }
           },
           "400": {
-            "description": "Bad request.",
+            "description": "Bad request",
             "content": {
               "application/json": {
                   "schema": {
-                      "$ref": "#/components/schemas/ProblemDetails"
-                  }
-              }
-          }
-          },
-          "503": {
-            "description": "Service unavailable.",
-            "content": {
-              "application/json": {
-                  "schema": {
-                      "$ref": "#/components/schemas/ProblemDetails"
-                  }
-              }
-          }
-          },
-          "500": {
-            "description": "Internal Server Error. The request could not be processed.",
-            "content": {
-              "application/json": {
-                  "schema": {
-                      "$ref": "#/components/schemas/ProblemDetails"
+                      "$ref": "#/components/schemas/400ProblemDetails"
                   }
               }
           }
@@ -198,6 +178,43 @@
           "type": {
             "description": "A URI that uniquely identifies the problem type being reported",
             "type": "string"
+          }
+        }
+      },
+      "400ProblemDetails": {
+        "description": "Properties of a given error",
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
+            "type": "string",
+            "example": "One or more validation errors occurred, validation details are in the error section."
+          },
+          "errors": {
+            "example": "SubmitDepositRequest.Deposit.Currency:\nThe 'Currency' must be 'GBP'.\nSubmitDepositRequest.Deposit.ChequeImages.FrontImage\n'Front Image' must not be empty.\nSubmitDepositRequest.Deposit.ChequeImages.BackImage\n'Back Image' must not be empty."
+          },
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
+            "type": "string",
+            "example": "400"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
+            "type": "string",
+            "example": "One or more validation errors occurred."
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported",
+            "type": "string",
+            "example": "https://httpstatuses.io/400"
           }
         }
       },
