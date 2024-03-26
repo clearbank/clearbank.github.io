@@ -20,7 +20,7 @@ A cash ISA (Individual Savings Account) is a real savings deposit account held w
 A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
-The balance of a real account is held by ClearBank and can be viewed only via our API. Real accounts are reconciled for you by ClearBank.
+The balance of a real account is held by ClearBank and can be viewed only via our API. Real accounts are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
@@ -69,7 +69,7 @@ If the cash ISA is under 14 days old and has had money deposited, use the <a hre
 
 Before an account closure can be requested, any interest accrued will be paid and the account balance must be zero. Funds can be withdrawn to a nominated account or another ClearBank account.
 
-If the account balance is not zero, the request will be rejected. Account closure requests cannot be undone.
+If the account balance is not zero, the request will be rejected. **Account closure requests cannot be undone.**
 
 To close a cash ISA:
 1. Withdraw all funds from the cash ISA.
@@ -85,7 +85,7 @@ The process is shown in this message flow diagram:
 ### Cancel
 When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
 
-The cancellation period is based on the acceptance date field. For example, an account with created on the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
+The cancellation period is based on the acceptance date field. For example, an account with the acceptance date of the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
 
 Money must have already been deposited into the cash ISA. If no money has been deposited, or the account is over 14 days old, use the <a href="#close-a-cash-isa">POST /v1/accounts/{accountId}/closure</a> endpoint instead.
 
@@ -103,6 +103,8 @@ The process is shown in this message flow diagram:
 ### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer is successful and the waiting period has completed, request to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
+While you can transfer out an account during the 14 day grace period after opening an account, we recommend to close the account and move the funds. Closing an account is faster than a transfer, and the customer will not lose their tax liability.
+
 During transfer out, you move funds to a transfer out account created during onboarding. If the transfer out is successful, you can then move the funds from the transfer out account to the new provider's account. If the transfer out fails, the new provider will return funds to the transfer account.
 
 There is a mandatory 15 day waiting period. If you requested an account closure on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
@@ -111,9 +113,8 @@ To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
 > The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be withdrawn from the account.
 2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out account created during onboarding. ClearBank will send the transfer history form to the new ISA provider.
-3. Wait at least the remainder of the 15 working day waiting period from account closure to ensure the transfer has been successful.
+3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
 4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
-> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
 6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
 
