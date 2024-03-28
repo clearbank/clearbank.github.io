@@ -88,7 +88,7 @@
           {
             "name": "messageId",
             "in": "path",
-            "description": "The statement ID as per the MsgId field of the Camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook.",
+            "description": "The statement ID as per the MsgId field of the Camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook. Pattern: (CAMT053_)[0-9]{8}[_][0-9]{8}[_]\\w{8}",
             "required": true,
             "schema": {
               "type": "string"
@@ -107,7 +107,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Accepted"
+            "description": "OK (Contains statement in XML)",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -144,6 +148,10 @@
         },
         "additionalProperties": false,
         "description": "The statement generation request body defines the period for the statement to cover. The period can be no more than 25 hours."
+      },
+      "Camt.053":{
+        "description": "Camt.053 XML file",
+        "type": "string"
       },
       "ValidationProblemDetails": {
         "type": "object",
