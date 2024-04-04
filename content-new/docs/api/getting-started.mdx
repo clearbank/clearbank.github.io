@@ -385,7 +385,7 @@ We have provided an example C# controller in the [ClearBank fi-api-101 Github Re
   A webhook response must be sent in less than 5 seconds. Any response received more than 5 seconds after the webhook was sent is ignored, and the webhook will be considered to have failed. 
 </Callout>
 
-We will retry webhooks that we are able to consider successful every 15 minutes for 24 hours or until you return a successful response. We prefer to be cautious to ensure the webhook has been correctly received.
+We will retry webhooks that we are not able to consider successful every 15 minutes for 24 hours or until you return a successful response. We prefer to be cautious to ensure you have correctly received the webhook.
 
 **To create the webhook digital signature:**
 1. Take the nonce number from the webhook and place it in the body of the response (like this: `{"nonce": <value>}`).
@@ -424,7 +424,9 @@ Due to the 5 second timeout window that applies to successful webhook responses,
 
 We use at-least-once delivery when sending webhooks. This means to ensure you have recieved a webhook, we may send it to you multiple times.
 
-No matter how many times we send a webhook, you **must** respond to it, and respond the same way every time. You should not send different responses as you'll get retries.
+Duplicate webhooks can generally be determined by looking at the EventType, Timestamp and Id within the payload. If the values are the same, the webhook is a duplicate.
+
+No matter how many times we send a webhook, you must respond to it every time, and you must respond the same way every time. You should not send different responses as we will send different retries.
 
 ### Set up and test webhook listener URLs
 
