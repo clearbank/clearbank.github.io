@@ -45,65 +45,6 @@
                 }
             }
         },
-        "/payments/t2-rtgs/v1/payment-returns/{returnId}/forward": {
-            "post": {
-                "tags": [
-                    "Forward Payment"
-                ],
-                "description": "This endpoint will forward a payment to a nominated account.",
-                "parameters": [
-                    {
-                        "name": "returnId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ForwardPaymentReturn.ForwardPaymentReturnRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "202": {
-                        "description": "Accepted",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CustomerPayments.CustomerPaymentsResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/payments/t2-rtgs/v1/payment-returns": {
             "post": {
                 "tags": [
@@ -193,77 +134,6 @@
                     }
                 }
             }
-        },
-        "/payments/t2-rtgs/v1/paymentstatus/{paymentId}": {
-            "get": {
-                "tags": [
-                    "PaymentStatusEndpoint"
-                ],
-                "parameters": [
-                    {
-                        "name": "paymentId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PaymentStatus.PaymentStatusResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/payments/t2-rtgs/v1/recall": {
-            "post": {
-                "tags": [
-                    "RecallEndpoint"
-                ],
-                "parameters": [],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Recalls.PaymentRecallRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "202": {
-                        "description": "Accepted"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -288,15 +158,16 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
-                        "type": "string"
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
+                        "type": "string",
+                        "description": "Financial Institution's Bank Identifier Code (BIC)."
                     },
                     "lei": {
                         "type": "string",
                         "description": "Legal Entity Identifier of the party",
                         "maxLength": 20,
                         "minLength": 20,
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z"
+                        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}"
                     }
                 },
                 "additionalProperties": false
@@ -313,7 +184,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "Name of a built-up area, with defined boundaries, and a local government.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])"
                     },
                     "country": {
                         "maxLength": 2,
@@ -333,7 +204,7 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     }
@@ -405,19 +276,19 @@
                         "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
                         "minLength": 1,
                         "maxLength": 35,
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "type": "string"
                     },
                     "instructionIdentification": {
                         "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
                         "minLength": 1,
                         "maxLength": 35,
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "type": "string"
                     },
                     "uetr": {
                         "type": "string",
-                        "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
+                        "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
                         "format": "uuid",
                         "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
                     },
@@ -477,7 +348,7 @@
                 "type": "object",
                 "properties": {
                     "birthDate": {
-                        "pattern": "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])\\z",
+                        "pattern": "\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])",
                         "type": "string",
                         "description": "Party's date of birth."
                     },
@@ -486,7 +357,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "Party's city of birth.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])"
                     },
                     "countryOfBirth": {
                         "minLength": 2,
@@ -499,7 +370,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "Party's province of birth.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])"
                     }
                 },
                 "additionalProperties": false
@@ -513,7 +384,7 @@
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -527,14 +398,14 @@
                         "maxLength": 11,
                         "minLength": 11,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "description": "A BIC assigned by SWIFT to a non financial institution."
                     },
                     "lei": {
                         "maxLength": 20,
                         "minLength": 20,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
                         "description": "Legal Entity Identifier of the party"
                     },
                     "other": {
@@ -557,7 +428,7 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "description": "Unambiguous Identification for the given scheme."
                     },
                     "schemeName": {
@@ -571,7 +442,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "The name of the entity that assigns the identification.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])"
                     }
                 },
                 "additionalProperties": false
@@ -588,7 +459,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "Name of the party",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,138}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,138}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/CustomerPayments.PostalAddress"
@@ -622,14 +493,14 @@
                         "maxLength": 16,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,14}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,14}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
                     },
                     "townName": {
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Name of a built-up area, with defined boundaries, and a local government."
                     },
                     "country": {
@@ -672,7 +543,7 @@
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -705,14 +576,14 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     },
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -740,7 +611,7 @@
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string"
                     }
                 },
@@ -757,7 +628,7 @@
                     "lei": {
                         "maxLength": 20,
                         "minLength": 20,
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
                         "type": "string",
                         "description": "Legal Entity Identifier of the party"
                     },
@@ -773,7 +644,7 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     }
@@ -789,7 +660,7 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     }
@@ -807,7 +678,7 @@
                     "lei": {
                         "maxLength": 20,
                         "minLength": 20,
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
                         "type": "string",
                         "description": "Legal Entity Identifier of the party"
                     },
@@ -823,7 +694,7 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     }
@@ -839,7 +710,7 @@
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -885,14 +756,14 @@
                         "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
                         "minLength": 1,
                         "maxLength": 35,
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "type": "string"
                     },
                     "instructionIdentification": {
                         "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
                         "minLength": 1,
                         "maxLength": 35,
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "type": "string"
                     },
                     "interbankSettlementAmount": {
@@ -904,7 +775,7 @@
                     },
                     "uetr": {
                         "type": "string",
-                        "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
+                        "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
                         "format": "uuid",
                         "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
                     },
@@ -963,7 +834,7 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Name of a built-up area, with defined boundaries, and a local government."
                     },
                     "country": {
@@ -1006,7 +877,7 @@
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -1023,14 +894,14 @@
                     "bicfi": {
                         "minLength": 11,
                         "maxLength": 11,
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "type": "string",
                         "description": "Financial Institution's Bank Identifier Code (BIC)."
                     },
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
-                        "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                         "type": "string",
                         "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
                     }
@@ -1069,7 +940,7 @@
                 "type": "object",
                 "properties": {
                     "birthDate": {
-                        "pattern": "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])\\z",
+                        "pattern": "\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])",
                         "type": "string",
                         "description": "Party's date of birth."
                     },
@@ -1077,7 +948,7 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Party's province of birth."
                     },
                     "cityOfBirth": {
@@ -1085,7 +956,7 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "Return recipient's city of birth.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])"
                     },
                     "countryOfBirth": {
                         "minLength": 2,
@@ -1103,14 +974,14 @@
                         "maxLength": 11,
                         "minLength": 11,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
                         "description": "A BIC assigned by SWIFT to a non financial institution."
                     },
                     "lei": {
                         "maxLength": 20,
                         "minLength": 20,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
                         "description": "Legal Entity Identifier of the party"
                     },
                     "other": {
@@ -1133,7 +1004,7 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "description": "Unambiguous Identification for the given scheme."
                     },
                     "schemeName": {
@@ -1146,11 +1017,51 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
                         "description": "The name of the entity that assigns the identification."
                     }
                 },
                 "additionalProperties": false
+            },
+            "PaymentReturns.SettlementAmount": {
+                "required": [
+                    "amount",
+                    "currency"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Indicates the amount used in a given transaction or account balance."
+                    },
+                    "currency": {
+                        "minLength": 3,
+                        "maxLength": 3,
+                        "type": "string",
+                        "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "PaymentReturns.ChargeInformation": {
+                "required": [
+                    "bicfi",
+                    "chargeAmount"
+                ],
+                "type": "object",
+                "properties": {
+                    "bicfi": {
+                        "minLength": 11,
+                        "maxLength": 11,
+                        "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
+                        "type": "string",
+                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                    },
+                    "chargeAmount": {
+                        "$ref": "#/components/schemas/PaymentReturns.SettlementAmount"
+                    }
+                }
             },
             "PaymentReturns.PartyInformation": {
                 "required": [
@@ -1162,7 +1073,7 @@
                     "name": {
                         "maxLength": 140,
                         "minLength": 1,
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,138}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,138}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "type": "string",
                         "description": "Name of the party"
                     },
@@ -1190,13 +1101,14 @@
                 "required": [
                     "originalUetr",
                     "reason",
-                    "requestingParty"
+                    "requestingParty",
+                    "instructionIdentification"
                 ],
                 "type": "object",
                 "properties": {
                     "originalUetr": {
                         "type": "string",
-                        "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
+                        "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
                         "format": "uuid"
                     },
                     "requestingParty": {
@@ -1317,6 +1229,22 @@
                         ],
                         "type": "string"
                     },
+                    "instructionIdentification": {
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+                        "minLength": 1,
+                        "maxLength": 35,
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
+                        "type": "string"
+                    },
+                    "SettlementAmount": {
+                        "$ref": "#/components/schemas/PaymentReturns.SettlementAmount"
+                    },
+                    "chargesInformation": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentReturns.ChargeInformation"
+                        }
+                    },
                     "initiatingParty": {
                         "description": "Information about the party that holds the initating payment account.",
                         "$ref": "#/components/schemas/PaymentReturns.PartyInformation"
@@ -1345,14 +1273,14 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Name of a built-up area, with defined boundaries, and a local government."
                     },
                     "postCode": {
                         "maxLength": 16,
                         "minLength": 1,
                         "type": "string",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,14}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,14}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])",
                         "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
                     },
                     "country": {
@@ -1516,7 +1444,7 @@
                         "format": "uuid"
                     },
                     "uetr": {
-                        "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
+                        "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
                         "type": "string"
                     },
                     "end2EndId": {

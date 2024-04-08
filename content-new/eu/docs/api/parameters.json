@@ -13,8 +13,8 @@
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["put", "post", "patch", "delete", "request"],
-    "body": "<p>This is a hash of the request body signed with your private key.</p>",
+    "methods": ["get", "put", "post", "patch", "delete", "request"],
+    "body": "<p>This value is generated from your <code>HTTP METHOD</code>, <code>Query Path</code>, <code>X-Request-Id</code>, and <code>X-Request-Time</code> values.</p>",
     "example": null
   },
   "xRequestId": {
@@ -22,8 +22,17 @@
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["put", "post", "patch", "delete", "request"],
+    "methods": ["get", "put", "post", "patch", "delete", "request"],
     "body": "<p>This is used to check for duplicate requests. You generate this identifier which must be unique (max length 83) for any subsequent requests sent for at least 24 hours after the initial request was sent.</p><p> If an <code>X-Request-Id</code> Header is not supplied, or is invalid, a <code>400</code>:Bad Request HTTP status code response will be returned.</p><p>If ClearBank detects a duplicate, a <code>409</code>: Conflict HTTP status code response will be returned.<p>",
+    "example": null
+  },
+  "xRequestTime": {
+    "name": "X-Request-Time",
+    "type": "string",
+    "location": "header",
+    "required": true,
+    "methods": ["get", "delete"],
+    "body": "<p>The current UTC time in ticks. This value will be rejected if it is more than 60 seconds late.</p>",
     "example": null
   },
   "xCorrelationId": {
