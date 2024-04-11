@@ -48,7 +48,7 @@
           }
         ],
         "requestBody": {
-          "description": "The information required to create an ISA.",
+          "description": "The information required to create a cash ISA.",
           "content": {
             "application/json": {
               "schema": {
@@ -433,12 +433,11 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The unique identifier for the ISA.",
+            "description": "The unique identifier for the cash ISA.",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -499,8 +498,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -902,420 +900,9 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/v1/isas/{accountId}/customer-eligibility": {
-      "put": {
-        "tags": [
-          "Accounts"
-        ],
-        "summary": "This endpoint is used to update the customer eligibility status.",
-        "operationId": "V1InstitutionsByInstitutionIdIsasByAccountIdCustomer-eligibilityPut",
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "description": "The unique identifier for the account.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-            }
           },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API Token, retrieved from the web portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "DigitalSignature",
-            "in": "header",
-            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "A unique identifier for the request.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The information required to update the customer eligibility status.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.SetCustomerEligibilityRequest"
-              }
-            }
-          },
-          "x-bodyName": "request"
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetCustomerEligibilityResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetCustomerEligibilityResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "A validation problem object",
-                  "required": [
-                    "errors"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference RFC3986 that identifies the problem type.",
-                      "format": "uri-reference"
-                    },
-                    "title": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
-                    },
-                    "status": {
-                      "maximum": 599,
-                      "minimum": 100,
-                      "type": "integer",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
-                    },
-                    "detail": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A human-readable explanation specific to this occurrence of the problem."
-                    },
-                    "instance": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                      "format": "uri-reference"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "Human-readable validation errors specific to this occurrence of the problem."
-                    }
-                  }
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "title": "A validation problem object",
-                  "required": [
-                    "errors"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference RFC3986 that identifies the problem type.",
-                      "format": "uri-reference"
-                    },
-                    "title": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
-                    },
-                    "status": {
-                      "maximum": 599,
-                      "minimum": 100,
-                      "type": "integer",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
-                    },
-                    "detail": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A human-readable explanation specific to this occurrence of the problem."
-                    },
-                    "instance": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                      "format": "uri-reference"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "Human-readable validation errors specific to this occurrence of the problem."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Client Error",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "A validation problem object",
-                  "required": [
-                    "errors"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference RFC3986 that identifies the problem type.",
-                      "format": "uri-reference"
-                    },
-                    "title": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
-                    },
-                    "status": {
-                      "maximum": 599,
-                      "minimum": 100,
-                      "type": "integer",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
-                    },
-                    "detail": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A human-readable explanation specific to this occurrence of the problem."
-                    },
-                    "instance": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                      "format": "uri-reference"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "Human-readable validation errors specific to this occurrence of the problem."
-                    }
-                  }
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "title": "A validation problem object",
-                  "required": [
-                    "errors"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference RFC3986 that identifies the problem type.",
-                      "format": "uri-reference"
-                    },
-                    "title": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
-                    },
-                    "status": {
-                      "maximum": 599,
-                      "minimum": 100,
-                      "type": "integer",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
-                    },
-                    "detail": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A human-readable explanation specific to this occurrence of the problem."
-                    },
-                    "instance": {
-                      "type": "string",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                      "format": "uri-reference"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "description": "Human-readable validation errors specific to this occurrence of the problem."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
+          "409": {
+            "description": "Conflict",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -1343,8 +930,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -1376,7 +962,7 @@
           }
         ],
         "requestBody": {
-          "description": "The information required to transfer out the ISA.",
+          "description": "The information required to transfer out the cash ISA.",
           "content": {
             "application/json": {
               "schema": {
@@ -1765,8 +1351,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -2175,8 +1760,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -2424,7 +2008,7 @@
         "tags": [
           "Accounts"
         ],
-        "summary": "Get current status of the cash ISA closure request.",
+        "summary": "Get current status of the account closure request.",
         "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdClosureGet",
         "parameters": [
           {
@@ -2434,8 +2018,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -2572,9 +2155,19 @@
         "tags": [
           "Accounts"
         ],
-        "summary": "This endpoint is used to close a cash ISA.",
+        "summary": "This endpoint is used to create an account closure request.",
         "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdClosurePost",
         "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           {
             "name": "Authorization",
             "in": "header",
@@ -2600,17 +2193,6 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "accountId",
-            "in": "path",
-            "description": "The unique identifier for the account.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
             }
           }
         ],
@@ -3305,7 +2887,7 @@
           }
         ],
         "requestBody": {
-          "description": "The information required to create an ISA.",
+          "description": "The information required to create a cash ISA.",
           "content": {
             "application/json": {
               "schema": {
@@ -3694,19 +3276,17 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
             "name": "virtualAccountId",
             "in": "path",
-            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v2/Accounts/{accountId}/Virtual.",
+            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v3/Accounts/{accountId}/Virtual.",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -3862,23 +3442,21 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The account identifier.",
+            "description": "The unique identifier for the real account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
             "name": "virtualAccountId",
             "in": "path",
-            "description": "The virtual account identifier.",
+            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v3/Accounts/{accountId}/Virtual.",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              "format": "uuid"
             }
           },
           {
@@ -4321,37 +3899,37 @@
             "minLength": 0,
             "pattern": "^[^<!|$*;^%_>`#@=\"~\\[\\]{}\\\\]*$",
             "type": "string",
-            "description": "The name used to identify the legal owner of the account."
+            "description": "The name used to identify the legal owner of the account.",
+            "example": "John Smith"
           },
           "sortCode": {
             "pattern": "^\\d{6}$",
             "type": "string",
-            "description": "The sort code that the account should be created under."
+            "description": "The sort code that the account should be created under.",
+            "example": "010203"
           },
           "productId": {
             "type": "string",
             "description": "The product identifier of the account. It is used to determine the behaviour of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the customer that holds the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "applicationDate": {
             "type": "string",
-            "description": "The date the ISA application got created.",
+            "description": "The date the cash ISA application got created.",
             "format": "date-time"
           },
           "acceptanceDate": {
             "type": "string",
-            "description": "The date the ISA application got accepted.",
+            "description": "The date the cash ISA application got accepted.",
             "format": "date-time"
           }
         },
-        "description": "Information that is used to create an ISA request."
+        "description": "Information that is used to create a cash ISA request."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountResponse": {
         "type": "object",
@@ -4368,7 +3946,7 @@
             "description": "Hypermedia links."
           }
         },
-        "description": "Information representing the ISA and associated hypermedia links."
+        "description": "Information representing the cash ISA and associated hypermedia links."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountDto": {
         "type": "object",
@@ -4376,20 +3954,17 @@
           "accountId": {
             "type": "string",
             "description": "The unique identifier for the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "productId": {
             "type": "string",
             "description": "The product identifier of the account. It is used to determine the behaviour of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the customer that holds the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "accountName": {
             "type": "string",
@@ -4397,11 +3972,13 @@
           },
           "ownerName": {
             "type": "string",
-            "description": "The name used to identify the legal owner of the account."
+            "description": "The name used to identify the legal owner of the account.",
+            "example": "John Smith"
           },
           "iban": {
             "type": "string",
-            "description": "The IBAN identifier associated with the account."
+            "description": "The IBAN identifier associated with the account.",
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
           },
           "bban": {
             "type": "string",
@@ -4414,12 +3991,12 @@
           },
           "applicationDate": {
             "type": "string",
-            "description": "The date the ISA application got created.",
+            "description": "The date the cash ISA application got created.",
             "format": "date-time"
           },
           "acceptanceDate": {
             "type": "string",
-            "description": "The date the ISA application got accepted.",
+            "description": "The date the cash ISA application got accepted.",
             "format": "date-time"
           },
           "cashIsaProductType": {
@@ -4449,7 +4026,7 @@
             "description": "The ISA customer eligibility status reason. Supported values are 'CustomerResidencyStatusChanged', 'CustomerResidencyStatusChanged', 'CustomerHasActiveIsa' or empty"
           }
         },
-        "description": "Information representing the ISA."
+        "description": "Information representing the cash ISA."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink": {
         "required": [
@@ -4488,19 +4065,19 @@
             "description": "Hypermedia links."
           }
         },
-        "description": "Information representing the ISA and associated hypermedia links."
+        "description": "Information representing the cash ISA and associated hypermedia links."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.GetIsaAccountDto": {
         "type": "object",
         "properties": {
           "closureDate": {
             "type": "string",
-            "description": "The date the ISA closure was completed.",
+            "description": "The date the cash ISA closure was completed.",
             "format": "date-time"
           },
           "cancellationRequestDate": {
             "type": "string",
-            "description": "The date the ISA cancellation was requested.",
+            "description": "The date the cash ISA cancellation was requested.",
             "format": "date-time"
           },
           "isCancellationRequestedWithinGracePeriod": {
@@ -4514,25 +4091,22 @@
           },
           "transferOutStatus": {
             "type": "string",
-            "description": "The status of the ISA transfer out. Supported values are 'None', 'InProgress', 'FullTransferOutComplete', 'AwaitingFullTransferOutConfirmation', 'AwaitingFullFundReturn', 'Rejected'."
+            "description": "The status of the cash ISA transfer out. Supported values are 'None', 'InProgress', 'FullTransferOutComplete', 'AwaitingFullTransferOutConfirmation', 'AwaitingFullFundReturn', 'Rejected'."
           },
           "accountId": {
             "type": "string",
             "description": "The unique identifier for the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "productId": {
             "type": "string",
             "description": "The product identifier of the account. It is used to determine the behaviour of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the customer that holds the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "accountName": {
             "type": "string",
@@ -4557,12 +4131,12 @@
           },
           "applicationDate": {
             "type": "string",
-            "description": "The date the ISA application got created.",
+            "description": "The date the cash ISA application got created.",
             "format": "date-time"
           },
           "acceptanceDate": {
             "type": "string",
-            "description": "The date the ISA application got accepted.",
+            "description": "The date the cash ISA application got accepted.",
             "format": "date-time"
           },
           "cashIsaProductType": {
@@ -4581,18 +4155,21 @@
           },
           "cashIsaStatus": {
             "type": "string",
-            "description": "The ISA status. Supported values are 'Inactive', 'Active', 'Cancelled', 'Closed', 'TransferredOut'."
+            "description": "The ISA status. Supported values are 'Inactive', 'Active', 'Cancelled', 'Closed', 'TransferredOut'.",
+            "example": "Active"
           },
           "customerEligibilityStatus": {
             "type": "string",
-            "description": "The ISA customer eligibility status. Supported values are 'Eligible', 'Ineligible'."
+            "description": "The ISA customer eligibility status. Supported values are 'Eligible', 'Ineligible'.",
+            "example": "eligibile"
           },
           "customerEligibilityStatusReason": {
             "type": "string",
-            "description": "The ISA customer eligibility status reason. Supported values are 'CustomerResidencyStatusChanged', 'CustomerResidencyStatusChanged', 'CustomerHasActiveIsa' or empty"
+            "description": "The ISA customer eligibility status reason. Supported values are 'CustomerResidencyStatusChanged', 'CustomerResidencyStatusChanged', 'CustomerHasActiveIsa' or empty",
+            "example": "CustomerResidencyStatusChanged"
           }
         },
-        "description": "Information representing the ISA."
+        "description": "Information representing the cash ISA."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.CancelIsaAccountRequest": {
         "required": [
@@ -4602,11 +4179,11 @@
         "properties": {
           "cancellationRequestDate": {
             "type": "string",
-            "description": "The date the ISA cancellation was requested.",
+            "description": "The date the cash ISA cancellation was requested.",
             "format": "date-time"
           }
         },
-        "description": "Information that is used to create an ISA cancellation request."
+        "description": "Information that is used to create a cash ISA cancellation request."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountCancellationResponse": {
         "type": "object",
@@ -4623,7 +4200,7 @@
             "description": "Hypermedia links."
           }
         },
-        "description": "Information representing the ISA cancellation request and associated hypermedia links."
+        "description": "Information representing the cash ISA cancellation request and associated hypermedia links."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountCancellationResponseDto": {
         "type": "object",
@@ -4631,8 +4208,7 @@
           "accountId": {
             "type": "string",
             "description": "The identifier of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "cancellationRequestDate": {
             "type": "string",
@@ -4651,61 +4227,6 @@
         },
         "description": "Information representing the account closure request."
       },
-      "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.SetCustomerEligibilityRequest": {
-        "required": [
-          "customerEligibilityStatus",
-          "customerEligibilityStatusReason"
-        ],
-        "type": "object",
-        "properties": {
-          "customerEligibilityStatus": {
-            "type": "string",
-            "description": "The eligibility status of the customer. Supported values are 'Eligible', 'Ineligible'."
-          },
-          "customerEligibilityStatusReason": {
-            "type": "string",
-            "description": "The reason for the eligibility status of the customer. Supported values are 'CustomerResidencyStatusChanged ', 'CustomerAddressChanged ', 'CustomerHasActiveIsa'."
-          }
-        },
-        "description": "Information that is used to create a set customer eligibility request."
-      },
-      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetCustomerEligibilityResponse": {
-        "type": "object",
-        "properties": {
-          "customerEligibility": {
-            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetCustomerEligibilityResponseDto"
-          },
-          "halLinks": {
-            "uniqueItems": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink"
-            },
-            "description": "Hypermedia links."
-          }
-        },
-        "description": "Information representing the set customer eligibility request and associated hypermedia links."
-      },
-      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetCustomerEligibilityResponseDto": {
-        "type": "object",
-        "properties": {
-          "accountId": {
-            "type": "string",
-            "description": "The identifier of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
-          },
-          "customerEligibilityStatus": {
-            "type": "string",
-            "description": "The eligibility status of the customer."
-          },
-          "customerEligibilityStatusReason": {
-            "type": "string",
-            "description": "The reason for the eligibility status of the customer."
-          }
-        },
-        "description": "Information representing the set customer eligibility request."
-      },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.TransferOutIsaAccountRequest": {
         "required": [
           "transferOutRequestDate",
@@ -4715,16 +4236,16 @@
         "properties": {
           "transferOutRequestDate": {
             "type": "string",
-            "description": "The date the ISA transfer out was requested.",
+            "description": "The date the cash ISA transfer out was requested.",
             "format": "date-time"
           },
           "transferOutEffectiveDate": {
             "type": "string",
-            "description": "The date the ISA transfer out should be in effect requested.",
+            "description": "The date the cash ISA transfer out should be in effect requested.",
             "format": "date-time"
           }
         },
-        "description": "Information that is used to create an ISA transfer out request."
+        "description": "Information that is used to create a cash ISA transfer out request."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountTransferOutResponse": {
         "type": "object",
@@ -4741,7 +4262,7 @@
             "description": "Hypermedia links."
           }
         },
-        "description": "Information representing the ISA transfer out response and associated hypermedia links."
+        "description": "Information representing the cash ISA transfer out response and associated hypermedia links."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountTransferOutResponseDto": {
         "type": "object",
@@ -4749,29 +4270,28 @@
           "accountId": {
             "type": "string",
             "description": "The identifier of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "cashIsaStatus": {
             "type": "string",
-            "description": "The status of the ISA."
+            "description": "The status of the cash ISA."
           },
           "transferOutStatus": {
             "type": "string",
-            "description": "The status of the ISA transfer out. Supported values are 'InProgress'."
+            "description": "The status of the cash ISA transfer out. Supported values are 'InProgress'."
           },
           "transferOutRequestDate": {
             "type": "string",
-            "description": "The date the ISA transfer out was requested.",
+            "description": "The date the cash ISA transfer out was requested.",
             "format": "date-time"
           },
           "transferOutEffectiveDate": {
             "type": "string",
-            "description": "The date the ISA transfer out should be in effect requested.",
+            "description": "The date the cash ISA transfer out should be in effect requested.",
             "format": "date-time"
           }
         },
-        "description": "Information representing the ISA transfer out response."
+        "description": "Information representing the cash ISA transfer out response."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.PatchAccountRequest": {
         "type": "object",
@@ -4850,13 +4370,9 @@
             "example": "GB29NWBK60161331926819 (IBAN), NWBK60161331926819 (BBAN) or 60161331926819 (SCAN)"
           },
           "identifierKind": {
-            "enum": [
-              "IBAN",
-              "BBAN",
-              "SCAN"
-          ],
-          "type": "string",
-          "description": "The identifier kind of the nominated account."
+            "type": "string",
+            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN'.",
+            "example": "IBAN"
           },
           "ownerName": {
             "maxLength": 140,
@@ -4893,11 +4409,13 @@
           },
           "identifierKind": {
             "type": "string",
-            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN'."
+            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN'.",
+            "example": "IBAN"
           },
           "ownerName": {
             "type": "string",
-            "description": "The name used to identify the legal owner of the nominated account."
+            "description": "The name used to identify the legal owner of the nominated account.",
+            "example": "John Smith"
           }
         },
         "description": "The nominated account details."
@@ -4951,8 +4469,7 @@
           "accountId": {
             "type": "string",
             "description": "The identifier of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "closureReason": {
             "type": "string",
@@ -4988,8 +4505,7 @@
           "accountId": {
             "type": "string",
             "description": "The identifier of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "accountStatus": {
             "type": "string",
@@ -5088,22 +4604,21 @@
           "sortCode": {
             "pattern": "^\\d{6}$",
             "type": "string",
-            "description": "The sort code that the account should be created under."
+            "description": "The sort code that the account should be created under.",
+            "example": "010203"
           },
           "productId": {
             "type": "string",
             "description": "The product identifier of the account. It is used to determine the behaviour of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the customer that holds the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           }
         },
-        "description": "Information that is used to create an ISA request."
+        "description": "Information that is used to create a cash ISA request."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SavingAccountResponse": {
         "type": "object",
@@ -5128,20 +4643,17 @@
           "accountId": {
             "type": "string",
             "description": "The unique identifier for the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "productId": {
             "type": "string",
             "description": "The product identifier of the account. It is used to determine the behaviour of the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the customer that holds the account.",
-            "format": "uuid",
-            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+            "format": "uuid"
           },
           "accountName": {
             "type": "string",
@@ -5149,7 +4661,8 @@
           },
           "ownerName": {
             "type": "string",
-            "description": "The name used to identify the legal owner of the account."
+            "description": "The name used to identify the legal owner of the account.",
+            "example": "John Smith"
           },
           "iban": {
             "type": "string",

@@ -29,7 +29,7 @@
               "format": "int32",
               "default": 1
             }
-            },
+          },
           {
             "name": "pageSize",
             "in": "query",
@@ -1102,7 +1102,7 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "description": "The unique identifier for the real account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
             "schema": {
               "type": "string",
@@ -1112,7 +1112,7 @@
           {
             "name": "virtualAccountId",
             "in": "path",
-            "description": "The unique identifier for the virtual account.",
+            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v2/Accounts/{accountId}/Virtual.",
             "required": true,
             "schema": {
               "type": "string",
@@ -1593,7 +1593,7 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "description": "The unique identifier for the real account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
             "schema": {
               "type": "string",
@@ -1771,7 +1771,7 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "description": "The unique identifier for the real account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
             "schema": {
               "type": "string",
@@ -2040,7 +2040,7 @@
           {
             "name": "accountId",
             "in": "path",
-            "description": "The account identifier.",
+            "description": "The unique identifier for the real account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
             "schema": {
               "type": "string",
@@ -2050,7 +2050,7 @@
           {
             "name": "virtualAccountId",
             "in": "path",
-            "description": "The virtual account identifier.",
+            "description": "The unique identifier for the virtual account. This can be retrieved from GET /v3/Accounts/{accountId}/Virtual.",
             "required": true,
             "schema": {
               "type": "string",
@@ -2269,28 +2269,6 @@
                       "description": "Human-readable validation errors specific to this occurrence of the problem."
                     }
                   }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Server Error",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2540,7 +2518,8 @@
               ],
               "type": "string"
             },
-            "description": "Currencies used for the account."
+            "description": "Currencies used for the account.",
+            "example": "GBP"
           },
           "balances": {
             "uniqueItems": false,
@@ -2791,7 +2770,7 @@
               "ZWL"
             ],
             "type": "string",
-            "description": "The currency will be set to 'GBP' as other currencies are not supported.",
+            "description": "Set to 'GBP' as other currencies are not supported.",
             "example": "GBP"
           },
           "status": {
@@ -2803,15 +2782,11 @@
             ],
             "type": "string",
             "description": "The type of balance that is being reported."
-          },
-          "lastCommittedTransaction": {
-            "type": "string",
-            "description": "The reference of the last committed transaction against the account."
           }
         },
         "description": "A summary of the balance of an account, in a specific currency."
       },
-            "ClearBank.FI.API.Accounts.Versions.V2.Models.Response.Accounts.AccountResponse": {
+      "ClearBank.FI.API.Accounts.Versions.V2.Models.Response.Accounts.AccountResponse": {
         "required": [
           "account"
         ],
@@ -3118,7 +3093,7 @@
               "ZWL"
             ],
             "type": "string",
-            "description": "The currency will be set to 'GBP' as other currencies are not supported and not yet withdrawn on the day the message containing the currency is exchanged.",
+            "description": "Set to 'GBP' as other currencies are not supported and not yet withdrawn on the day the message containing the currency is exchanged.",
             "example": "GBP"
           }
         },
