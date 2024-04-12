@@ -1,241 +1,241 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "ClearBank.Chaps.RtgsPortalManager.Container",
-      "version": "4.0-ChapsReturn"
-    },
-    "paths": {
-      "/payments/chaps/v4/return-payments": {
-        "post": {
-          "tags": [
-            "ExternalReturnPaymentsV4"
-          ],
-          "summary": "Use this endpoint to return a CHAPS payment.",
-          "description": "If you need to return a payment, you should do so by the next working day. The same operating hours apply for CHAPS returns as for regular CHAPS payments. Note that this endpoint only supports returning CHAPS payments made after the Bank of England's RTGS Renewal Programme went live, that is, to all payments made on or after 19 June 2023.",
-          "parameters": [
-            {
-              "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank.Chaps.RtgsPortalManager.Container",
+    "version": "4.0-ChapsReturn"
+  },
+  "paths": {
+    "/payments/chaps/v4/return-payments": {
+      "post": {
+        "tags": [
+          "ExternalReturnPaymentsV4"
+        ],
+        "summary": "Use this endpoint to return a CHAPS payment.",
+        "description": "If you need to return a payment, you should do so by the next working day. The same operating hours apply for CHAPS returns as for regular CHAPS payments. Note that this endpoint only supports returning CHAPS payments made after the Bank of England's RTGS Renewal Programme went live, that is, to all payments made on or after 19 June 2023.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+              }
             },
-            {
-              "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+              }
             },
-            {
-              "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+              }
             }
-          ],
-          "requestBody": {
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
+              }
+            },
             "content": {
-              "application/json-patch+json": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
                 }
-              },
-              "application/*+json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateReturnPaymentDtoV4"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "202": {
-              "description": "Accepted",
-              "headers": {
-                "X-Correlation-Id": {
-                  "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               },
-              "content": {
-                "text/plain": {
-                  "schema": {
-                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
-                  }
-                },
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
-                  }
-                },
-                "text/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV4"
-                  }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
-            },
-            "400": {
-              "description": "Bad Request",
-              "content": {
-                "text/plain": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ProblemDetails"
-                  }
-                },
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ProblemDetails"
-                  }
-                },
-                "text/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/ProblemDetails"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "components": {
-      "headers": {
-        "HeadersOpenapi_CorrelationIdentifier": {
-          "description": "A unique identifier generated by ClearBank for the request. It is recommended you store this response header for debugging purposes",
-          "schema": {
-            "$ref": "#/components/schemas/ApiHeadersSchema_CorrelationIdentifierType"
-          }
-        }
-      },
-      "parameters": {
-        "ParametersOpenapi_Authorization": {
-          "name": "Authorization",
-          "in": "header",
-          "description": "Your API token retrieved from the portal",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/ApiHeadersSchema_AuthorizationType"
-          }
-        },
-        "ParametersOpenapi_DigitalSignature": {
-          "name": "DigitalSignature",
-          "in": "header",
-          "description": "The hash of the request body signed with your private key",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/ApiHeadersSchema_DigitalSignatureType"
-          }
-        },
-        "ParametersOpenapi_RequestIdentifier": {
-          "name": "X-Request-Id",
-          "in": "header",
-          "description": "A unique identifier for the request.",
-          "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/ApiHeadersSchema_RequestIdentifierType"
-          }
-        }
-      },
-      "schemas": {
-        "ApiHeadersSchema_AuthorizationType": {
-          "description": "Authorization header restricted to Bearer token only",
-          "type": "string",
-          "pattern": "^Bearer +.+"
-        },
-        "ApiHeadersSchema_DigitalSignatureType": {
-          "description": "The digital signature generated by the API consumer",
-          "type": "string"
-        },
-        "ApiHeadersSchema_RequestIdentifierType": {
-          "description": "The request identifier supplied by the API consumer",
-          "type": "string"
-        },
-        "ApiHeadersSchema_CorrelationIdentifierType": {
-          "description": "A unique identifier generated by ClearBank®",
-          "type": "string"
-        },
-        "CreateReturnPaymentDtoV4": {
-          "required": [
-              "instructionIdentification",
-              "paymentId",
-              "reason"
-          ],
-          "type": "object",
-          "properties": {
-              "paymentId": {
-                  "type": "string",
-                  "description": "ClearBank identifier that uniquely identifies the inbound payment that is being returned.",
-                  "format": "uuid"
-              },
-              "reason": {
-                  "enum": [
-                      "WrongAmount",
-                      "InconsistentWithEndCustomer",
-                      "MissingCreditorAddress",
-                      "UnrecognisedInitiatingParty",
-                      "UnknownEndCustomer",
-                      "FollowingCancellationRequest",
-                      "RefundRequestByEndCustomer"
-                  ],
-                  "type": "string",
-                  "description": "Specifies the reason for the return."
-              },
-              "instructionIdentification": {
-                  "maxLength": 35,
-                  "minLength": 1,
-                  "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
-                  "type": "string",
-                  "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
-              }
-          },
-          "additionalProperties": false
-      },
-        "PaymentCreatedResponseDtoV4": {
-          "required": [
-            "paymentId"
-          ],
-          "type": "object",
-          "properties": {
-            "paymentId": {
-              "description": "A unique identifier generated by ClearBank. This will be different to the paymentId submitted in the request.",
-              "type": "string",
-              "format": "uuid",
-              "example": "9e987f04-4c84-1009-ef88-a9121bc8948f"
-            }
-          },
-          "additionalProperties": false
-        },
-        "ProblemDetails": {
-          "description": "Properties of a given error",
-          "type": "object",
-          "required": [
-            "type",
-            "title"
-          ],
-          "properties": {
-            "detail": {
-              "description": "A human-readable description of the problem unique to the instance of the problem.",
-              "type": "string"
-            },
-            "errors": {},
-            "instance": {
-              "description": "A URI that uniquely identifies the problem being reported. ",
-              "type": "string"
-            },
-            "status": {
-              "description": "The HTTP response code returned by the API. ",
-              "type": "string"
-            },
-            "title": {
-              "description": "A short, human-readable summary of the problem type.",
-              "type": "string"
-            },
-            "type": {
-              "description": "A URI that uniquely identifies the problem type being reported.",
-              "type": "string"
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "headers": {
+      "HeadersOpenapi_CorrelationIdentifier": {
+        "description": "A unique identifier generated by ClearBank for the request. It is recommended you store this response header for debugging purposes",
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_CorrelationIdentifierType"
+        }
+      }
+    },
+    "parameters": {
+      "ParametersOpenapi_Authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "description": "Your API token retrieved from the portal",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_AuthorizationType"
+        }
+      },
+      "ParametersOpenapi_DigitalSignature": {
+        "name": "DigitalSignature",
+        "in": "header",
+        "description": "The hash of the request body signed with your private key",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_DigitalSignatureType"
+        }
+      },
+      "ParametersOpenapi_RequestIdentifier": {
+        "name": "X-Request-Id",
+        "in": "header",
+        "description": "A unique identifier for the request.",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_RequestIdentifierType"
+        }
+      }
+    },
+    "schemas": {
+      "ApiHeadersSchema_AuthorizationType": {
+        "description": "Authorization header restricted to Bearer token only",
+        "type": "string",
+        "pattern": "^Bearer +.+"
+      },
+      "ApiHeadersSchema_DigitalSignatureType": {
+        "description": "The digital signature generated by the API consumer",
+        "type": "string"
+      },
+      "ApiHeadersSchema_RequestIdentifierType": {
+        "description": "The request identifier supplied by the API consumer",
+        "type": "string"
+      },
+      "ApiHeadersSchema_CorrelationIdentifierType": {
+        "description": "A unique identifier generated by ClearBank®",
+        "type": "string"
+      },
+      "CreateReturnPaymentDtoV4": {
+        "required": [
+          "instructionIdentification",
+          "paymentId",
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "description": "Payment ID assigned by ClearBank to the inbound payment. This is the same value as the TransactionId in the Transaction Settled webhook.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "enum": [
+              "WrongAmount",
+              "InconsistentWithEndCustomer",
+              "MissingCreditorAddress",
+              "UnrecognisedInitiatingParty",
+              "UnknownEndCustomer",
+              "FollowingCancellationRequest",
+              "RefundRequestByEndCustomer"
+            ],
+            "type": "string",
+            "description": "Specifies the reason for the return."
+          },
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "type": "string",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreatedResponseDtoV4": {
+        "required": [
+          "paymentId"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "description": "A unique identifier generated by ClearBank. This will be different to the paymentId submitted in the request.",
+            "type": "string",
+            "format": "uuid",
+            "example": "9e987f04-4c84-1009-ef88-a9121bc8948f"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "description": "Properties of a given error",
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem.",
+            "type": "string"
+          },
+          "errors": {},
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported. ",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API. ",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type.",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported.",
+            "type": "string"
+          }
+        }
+      }
+    }
   }
+}
