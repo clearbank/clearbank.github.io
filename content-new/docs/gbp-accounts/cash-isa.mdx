@@ -17,16 +17,24 @@ import WebhookSummary from 'src/components/webhook-summary';
 A cash ISA (Individual Savings Account) is a real savings deposit account held with ClearBank that is subject to tax benefits [defined by the UK government](https://www.gov.uk/individual-savings-accounts). It can be used to send and/or receive payments once a **nominated account** has also been defined.
 
 <Callout colour="blue">
-A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the cash ISA.
+A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
-The balance of a real account is held by ClearBank and can be viewed only via our API. Real accounts are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
+The balance of a cash ISA is held by ClearBank and can be viewed only via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
+
+<Callout colour="blue">
+Funds can also be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
+</Callout>
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
 ## Set up a cash ISA
 
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
+
+<Callout colour="blue">
+If the customer does not already exist, you need to first create a retail customer using the <a href="../embedded-banking/fscs-protected-deposits#create-a-retail-customer">POST /v1/customers/retail</a> endpoint.
+</Callout>
 
 To set up a cash ISA:
 
@@ -104,8 +112,6 @@ The process is shown in this message flow diagram:
 
 ### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
-
-While you can transfer out an account during the 14 day grace period after opening an account, we recommend to close the account and move the funds. Closing an account is faster than a transfer, and the customer will not lose their tax liability.
 
 During the transfer process, you move funds to a transfer out account created during onboarding. If the transfer out is successful, you can then move the funds from the transfer out account to the new provider's account. If the transfer out fails, the new provider will return funds to the transfer account. You can then recredit this to the cash ISA and the account will continue to exist.
 
