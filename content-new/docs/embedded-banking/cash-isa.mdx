@@ -18,10 +18,10 @@ A cash ISA (Individual Savings Account) is a real savings deposit account held w
 A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
-The balance of a cash ISA is held by ClearBank and can be viewed only via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
+The balance of a cash ISA is held by ClearBank and can only be viewed via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
 
 <Callout colour="blue">
-Funds be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
+Funds can be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
 </Callout>
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
@@ -54,7 +54,7 @@ There are several ways you can close a cash ISA. You need to choose the appropri
 | Action | What this does |
 |---------|------------|
 | Close | Closes the account. |
-| Cancel | Cancels and closes the account without registering the account with the UK government. |
+| Cancel | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
 | Transfer out | Allows you to transfer the account to another provider. You then need to close the account. |
 
 You can use this diagram to select the correct action:
@@ -73,7 +73,7 @@ When closing a cash ISA, you must first withdraw funds before closing the accoun
 If the cash ISA is under 14 days old and has had money deposited, use the <a href="#cancel-a-cash-isa">cancel a cash ISA</a> endpoint instead.
 </Callout>
 
-Before an account closure can be requested, any interest accrued will be paid and the account balance must be zero. Funds can be withdrawn to a nominated account or another ClearBank account.
+Before an account closure can be requested, the account balance must be zero. Funds can be withdrawn to a nominated account or another ClearBank account. If any interest has been accrued, it will be paid to the nominated account.
 
 If the account balance is not zero, the request will be rejected. **Account closure requests cannot be undone.**
 
@@ -100,7 +100,7 @@ Money must have already been deposited into the cash ISA. If no money has been d
 To cancel a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
-> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until the last interest payment, if there is one, is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has gained interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been cancelled.
 4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account cancellation process has completed.
 
