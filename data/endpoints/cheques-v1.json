@@ -43,7 +43,7 @@
           }
         ],
         "requestBody": {
-          "description": "Submit deposit request",
+          "description": "Submit cheque deposit request.",
           "content": {
             "application/json": {
               "schema": {
@@ -69,7 +69,7 @@
             "content": {
               "application/json": {
                   "schema": {
-                      "$ref": "#/components/schemas/400ProblemDetails"
+                      "$ref": "#/components/schemas/problemDetails"
                   }
               }
           }
@@ -79,10 +79,11 @@
             "content": {
               "application/json": {
                   "schema": {
-                      "$ref": "#/components/schemas/ProblemDetails"
+                      "$ref": "#/components/schemas/problemDetails"
                   }
               }
-          }
+            },
+            "x-ms-summary": "Forbidden"
           }
         }
       }
@@ -91,20 +92,33 @@
   "components": {
     "schemas": {
       "beneficiary": {
+        "required": [
+          "accountNumber",
+          "sortCode",
+          "names"
+        ],
         "type": "object",
         "properties": {
           "accountNumber": {
             "type": "string",
-            "description": "Beneficiary's account number."
-          },
+            "description": "Beneficiary's account number.",
+            "pattern": "^\\d{8}&"          },
           "sortCode": {
             "type": "string",
-            "description": "Beneficiary's sort code."
+            "maxLength": 6,
+            "minLength": 6,
+            "description": "Beneficiary's sort code.",
+            "pattern": "^\\d{6}&"
           },
           "names": {
             "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
             "items": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 140,
+              "minLength": 1,
+              "pattern" : "^.{1,140}$"
             },
             "description": "Names of the beneficiaries that are on the cheque."
           }
@@ -112,27 +126,38 @@
         "description": "Information about the cheque's beneficiary."
       },
       "chequeImages": {
+        "required": [
+          "frontImage",
+          "backImage",
+          "imageType"
+        ],
         "type": "object",
         "properties": {
           "frontImage": {
             "type": "string",
-            "description": "The front image of the cheque."
+            "description": "Base64 representation of the front image of the cheque."
           },
           "backImage": {
             "type": "string",
-            "description": "The back image of the cheque."
+            "description": "Base64 representation of the back image of the cheque."
           },
           "imageType": {
-            "enum": [
-              "tiff", "jpeg"
-            ],
             "type": "string",
-            "description": "The cheque image type."
+            "maxLength": 4,
+            "minLength": 4,
+            "description": "Image format. Only 'TIFF' and 'JPEG' formats are supported.",
+            "pattern" : "^(JPEG|TIFF)$"
           }
         },
         "description": "Cheque image information."
       },
       "deposit": {
+        "required": [
+          "beneficiary",
+          "chequeAmount",
+          "currency",
+          "chequeImages"
+        ],
         "type": "object",
         "properties": {
           "beneficiary": {
@@ -142,83 +167,34 @@
             "type": "number",
             "description": "Cheque amount in pounds sterling, up to two decimal places.",
             "format": "decimal",
-            "default": 0
+            "default": 0,
+            "pattern": "^\\d+(\\.\\d{1,2})?$"
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
+            "pattern" : "^GBP$"
           },
           "chequeImages": {
             "$ref": "#/components/schemas/chequeImages"
           }
         },
-        "description": "Object describing the cheque to be deposited."
+        "description": "Deposit details."
       },
-      "ProblemDetails": {
-        "description": "Properties of a given error",
-        "type": "object",
-        "required": [
-          "type",
-          "title"
-        ],
-        "properties": {
-          "detail": {
-            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
-            "type": "string"
-          },
-          "errors": {},
-          "instance": {
-            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
-            "type": "string"
-          },
-          "status": {
-            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
-            "type": "string"
-          },
-          "title": {
-            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
-            "type": "string"
-          },
-          "type": {
-            "description": "A URI that uniquely identifies the problem type being reported",
-            "type": "string"
-          }
-        }
-      },
-      "400ProblemDetails": {
-        "description": "Properties of a given error",
-        "type": "object",
-        "required": [
-          "type",
-          "title"
-        ],
-        "properties": {
-          "detail": {
-            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
-            "type": "string",
-            "example": "One or more validation errors occurred, validation details are in the error section."
-          },
-          "errors": {
-            "example": "'SubmitDepositRequest.Deposit.Currency': The 'Currency' must be 'GBP'."
-          },
-          "instance": {
-            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
-            "type": "string"
-          },
-          "status": {
-            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
-            "type": "string",
-            "example": "400"
-          },
-          "title": {
-            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
-            "type": "string",
-            "example": "One or more validation errors occurred."
-          },
-          "type": {
-            "description": "A URI that uniquely identifies the problem type being reported",
-            "type": "string",
-            "example": "https://httpstatuses.io/400"
-          }
-        }
+      "list_string": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of error messages."
       },
       "submitDepositRequest": {
+        "required": [
+          "deposit",
+          "messageId"
+        ],
         "type": "object",
         "properties": {
           "deposit": {
@@ -226,17 +202,20 @@
           },
           "messageId": {
             "type": "string",
-            "description": "Message ID"
+            "maxLength": 35,
+            "minLength": 1,
+            "description": "The unique identifier for the message.",
+            "pattern": "^\\S{1,35}$"
           }
         },
-        "description": "Submit deposit request."
+        "description": "Submit cheque deposit request."
       },
       "submitDepositResponse": {
         "type": "object",
         "properties": {
           "messageId": {
             "type": "string",
-            "description": "Message ID"
+            "description": "The unique identifier for the message."
           },
           "status": {
             "enum": [
@@ -245,10 +224,52 @@
               "error"
             ],
             "type": "string",
-            "description": "Status"
+            "description": "Status of the submit deposit request."
           }
         },
-        "description": "Submit deposit response"
+        "description": "Submit cheque deposit response."
+      },
+      "problemDetails": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/list_string"
+            },
+            "description": "The validation errors associated with this instance of problem details."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4)."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+          },
+          "messageId": {
+            "type": "string",
+            "description": "The unique identifier for the message."
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "A string that represents an error code."
+          }
+        },
+        "description": "Problem details."
       }
     }
   }
