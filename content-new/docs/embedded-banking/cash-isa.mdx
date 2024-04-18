@@ -1,12 +1,10 @@
 ---
 title: "Cash ISAs"
-order: 3
+order: 2
 showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
-import * as ACCOUNTS_CONSTANTS from "./real-accounts.constants";
-import * as VIRTUAL_ACC_CONSTANTS from "./virtual-accounts.constants";
 import Callout from "src/components/callout";
 
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
@@ -23,7 +21,7 @@ A <strong>nominated account</strong> is the account that you transfer funds from
 The balance of a cash ISA is held by ClearBank and can be viewed only via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
 
 <Callout colour="blue">
-Funds can also be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
+Funds be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
 </Callout>
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
@@ -82,7 +80,7 @@ If the account balance is not zero, the request will be rejected. **Account clos
 To close a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
-> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has gained interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
 4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
 
@@ -102,9 +100,9 @@ Money must have already been deposited into the cash ISA. If no money has been d
 To cancel a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
-> This process is asynchronous. Once the request is accepted, the account will remain open until the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be cancelled.
-3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
-4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until the last interest payment, if there is one, is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been cancelled.
+4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account cancellation process has completed.
 
 The process is shown in this message flow diagram:
 
