@@ -426,7 +426,7 @@ We use at-least-once delivery when sending webhooks. This means to ensure you ha
 
 Duplicate webhooks can generally be determined by looking at the EventType, Timestamp and Id within the payload. If the values are the same, the webhook is a duplicate.
 
-No matter how many times we send a webhook, you must respond to it every time, and you must respond the same way every time. You should not send different responses as we will send different retries.
+You must be able to handle duplicate webhooks idempotently. This means you should always respond in the appropriate format even if you have detected a duplicated or retried webhook. If you don't, we won't be able to verify the webhook was successfully received and will therefore will retry delivery.
 
 ### Set up and test webhook listener URLs
 
