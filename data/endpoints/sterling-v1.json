@@ -1329,7 +1329,185 @@
         }
       }
     },
-    "/v1/Accounts/{accountId}": {
+    "/v1/isas/{accountId}/transfer-outs/rejection": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "This endpoint is used to reject a transfer out of the cash ISA.",
+        "operationId": "V1InstitutionsByInstitutionIdIsasByAccountIdTransfer-outsRejectionPost",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to reject the transfer out the cash ISA.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.RejectTransferOutIsaAccountRequest"
+              }
+            }
+          },
+          "x-bodyName": "request"
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountRejectTransferOutResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/accounts/{accountId}": {
       "patch": {
         "tags": [
           "Accounts"
@@ -4191,6 +4369,50 @@
           }
         },
         "description": "Information representing the cash ISA transfer out response."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.RejectTransferOutIsaAccountRequest": {
+        "type": "object",
+        "description": "Information that is used to create a cash ISA transfer out rejected request."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountRejectTransferOutResponse": {
+        "type": "object",
+        "properties": {
+          "isaAccountRejectTransferOut": {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountRejectTransferOutResponseDto"
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "Information representing the cash ISA rejected transfer out response and associated hypermedia links."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.IsaAccountRejectTransferOutResponseDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "The identifier of the account.",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "transferOutStatus": {
+            "type": "string",
+            "description": "The Status of the Transfer Out.",
+            "example": "Rejected"
+          },
+          "transferOutRejectionDate": {
+            "type": "string",
+            "description": "The date the Transfer out was rejected.",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00+00:00"
+          }
+        },
+        "description": "Information representing the account rejected transfer out request."
       },
       "ClearBank.FI.API.Accounts.Versions.V1.Models.Binding.Accounts.PatchAccountRequest": {
         "type": "object",

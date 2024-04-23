@@ -111,16 +111,14 @@ The process is shown in this message flow diagram:
 ### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
-During the transfer process, you move funds to a transfer out account created during onboarding. If the transfer out is successful, you can then move the funds from the transfer out account to the new provider's account. If the transfer out fails, the new provider will return funds to the transfer account. The new provider will provide you a reason the transfer failed. You can then initiate the transfer out again with these corrections.
+During the transfer process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period. If you requested an account closure on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
 
-If the transfer out fails after the second attempt, you can recredit the funds to the cash ISA and the account will continue to exist.
-
-There is a mandatory 15 day waiting period. If you requested an account closure on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
+If the transfer out fails, the new provider will provide you a reason the transfer failed and will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) to let ClearBank know the transfer out was unsuccessful and to unfreeze the account.
 
 To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
 > The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be withdrawn from the account.
-2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out account created during onboarding.
+2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub created during onboarding. From there, you can send the funds to the new provider.
 3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
 4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
 5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
@@ -193,6 +191,17 @@ The process is shown in this message flow diagram:
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Transfer out rejected"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-outs/rejection",
       version: "1.0.Sterling",
     }
   ]}
