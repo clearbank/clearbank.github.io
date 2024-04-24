@@ -10,7 +10,7 @@ import WebhookSummary from 'src/components/webhook-summary'
 
 ## Cheques
 
-ClearBank accounts can support inbound cheques. If you'd like access to this product, please speak to your relationship manager.
+ClearBank accounts can support cheque deposits. If you'd like access to this product, please speak to your relationship manager.
 
 You can submit cheques as image files using the [POST /v1/submitDeposit](#Submit-a-cheque) endpoint.
 
@@ -23,19 +23,20 @@ You can submit a cheque image in either TIFF or JPEG file format.
 Cheques take up to three working days to process. If the cheque passes processing, is submitted to the ICS scheme, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
 
 Scenarios where the cheque wouldn't process successfully include:
-- If a decision is made by the issuing bank to not pay the cheque, or the check fails at the ICS scheme, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 - If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
-- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, on day 2 or 3 you will receive a manual response from ClearBank on Freshdesk.
+- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality or missing signature, you will receive a 400 response when you submit the cheque.
+- If or the check fails at the ICS scheme, you will receive the transaction failed report from ClearBank on Freshdesk.
+- If a decision is made by the issuing bank to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 
 #### Image requirements
 For cheque images to successfully validate, they must satisfy the following requirements:
-- Bitonal TIFF or JPEG, as base64 encoded string
-- Image resolution of 200DPI
-- CCITT Group 4 compression
-- Front image compressed size: 600 to 90,000 bytes
-- Rear image compressed size: 58 to 90,000 bytes.
 
-Cheque images must also be clear, uncrumpled, and without folded corners.
+| File type | Encoding | Resolution | Front image size | Back image size| 
+|--|--|--|--|--|
+| Bitonal JPEG | Base64 encoded string | 200DPI | 600 to 800,000 byes | 58 to 90,000 bytes |
+| Bitonal TIFF | Base64 encoded string | 200DPI | 600 to 90,000 byes | 58 to 90,000 bytes |
+
+Cheque images must also be clear, uncrumpled, have visible edges, and without folded corners.
 
 <EndpointBlock
   type="post"
