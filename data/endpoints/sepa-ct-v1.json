@@ -5,12 +5,13 @@
         "version": "1.0-SEPA-CT"
     },
     "paths": {
-        "/v1/payments/sepa": {
+        "/v1/{institutionId}/payment": {
             "post": {
                 "tags": [
                     "Sepa CT Payments"
                 ],
-                "summary": "This endpoint will send a SEPA CT payment.",
+                "summary": "Creates Outbound SEPA CT Payment",
+                "description": "Creates Outbound SEPA CT Payment",
                 "operationId": "Payment.Create",
                 "parameters": [
                     {
@@ -35,26 +36,49 @@
                 },
                 "responses": {
                     "202": {
-                        "description": "Accepted"
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateSepaOutboundPaymentResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                                }
+                            }
+                        }
                     },
                     "409": {
-                        "description": "Conflict"
+                        "description": "Conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/v1/payments/sepa/{paymentId}/recall-response": {
+        "/v1/{institutionId}/payments/{sepaPaymentId}/recall-of-inbound": {
             "post": {
                 "tags": [
-                    "This endpoint will approve or reject a request for a SEPA CT inbound payment."
+                    "Sepa CT Payments"
                 ],
+                "summary": "Recall request result for a SEPA CT inbound payment",
+                "description": "Approves or rejects the request for recall of a SEPA CT inbound payment",
                 "operationId": "Payments.Inbound.RecallRequestResult",
                 "parameters": [
                     {
-                        "name": "paymentId",
+                        "name": "sepaPaymentId",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -87,18 +111,19 @@
                         "description": "Accepted"
                     },
                     "400": {
-                        "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "409": {
-                        "description": "Conflict"
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/v1/payments/sepa/{paymentId}/recall": {
+        "/v1/{institutionId}/payments/{paymentId}/recall": {
             "post": {
                 "tags": [
                     "Sepa CT Payments"
@@ -141,10 +166,62 @@
                         "description": "Accepted"
                     },
                     "400": {
-                        "description": "Bad Request"
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                                }
+                            }
+                        }
                     },
                     "409": {
                         "description": "Conflict"
+                    }
+                }
+            }
+        },
+        "/v1/{institutionId}/payments/{sepaPaymentId}/return-of-inbound": {
+            "post": {
+                "tags": [
+                    "Sepa CT Payments"
+                ],
+                "summary": "Customer initiated return for a SEPA CT inbound payment",
+                "description": "Customer endpoint for initiating a return of a SEPA CT inbound payment",
+                "operationId": "Payments.Inbound.ReturnOfInboundPayment",
+                "parameters": [
+                    {
+                        "name": "institutionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "sepaPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -153,30 +230,25 @@
     "components": {
         "schemas": {
             "CreateSepaOutboundPaymentRequest": {
-                "required": [
-                    "creditor",
-                    "creditorAgent",
-                    "debtor",
-                    "endToEndId",
-                    "remittanceInformationUnstructured"
-                ],
                 "type": "object",
                 "properties": {
                     "endToEndId": {
-                        "maxLength": 35,
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Unique identification, as assigned by the originating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+                        "nullable": true,
+                        "example": "End2EndId"
                     },
                     "amount": {
-                        "maximum": 10000000000000,
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
                         "type": "number",
-                        "format": "double"
+                        "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges.",
+                        "format": "double",
+                        "example": "2.99"
                     },
                     "currency": {
                         "type": "string",
-                        "nullable": true
+                        "description": "An active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.",
+                        "nullable": true,
+                        "example": "EUR"
                     },
                     "debtor": {
                         "$ref": "#/components/schemas/Debtor"
@@ -188,29 +260,40 @@
                         "$ref": "#/components/schemas/CreditorAgent"
                     },
                     "remittanceInformationUnstructured": {
-                        "maxLength": 140,
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts receivable system, in an unstructured form",
+                        "nullable": true,
+                        "example": "My remittance information."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreateSepaOutboundPaymentResponse": {
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true,
+                        "example": "1bfb7a86-7d9b-45ff-9d5c-34048efc4c8a"
                     }
                 },
                 "additionalProperties": false
             },
             "Creditor": {
-                "required": [
-                    "accountIban",
-                    "name",
-                    "postalAddress"
-                ],
                 "type": "object",
                 "properties": {
                     "name": {
-                        "maxLength": 70,
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name used to identify the legal owner of the account from which to credit funds.",
+                        "nullable": true,
+                        "example": "John Doe"
                     },
                     "accountIban": {
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer.",
+                        "nullable": true,
+                        "example": "GB33BUKB20201555555555"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/PostalAddress"
@@ -222,14 +305,13 @@
                 "additionalProperties": false
             },
             "CreditorAgent": {
-                "required": [
-                    "bic"
-                ],
                 "type": "object",
                 "properties": {
                     "bic": {
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+                        "nullable": true,
+                        "example": "BUKBGB20"
                     }
                 },
                 "additionalProperties": false
@@ -239,33 +321,34 @@
                 "properties": {
                     "dateOfBirth": {
                         "type": "string",
+                        "description": "Date of birth of a person.",
                         "format": "date-time",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "2004-05-15"
                     },
                     "placeOfBirth": {
-                        "maxLength": 35,
                         "type": "string",
-                        "nullable": true
+                        "description": "Place of birth of a person",
+                        "nullable": true,
+                        "example": "Birth Town"
                     }
                 },
                 "additionalProperties": false
             },
             "Debtor": {
-                "required": [
-                    "accountIban",
-                    "name",
-                    "postalAddress"
-                ],
                 "type": "object",
                 "properties": {
                     "name": {
-                        "maxLength": 70,
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name used to identify the legal owner of the account from which to debit funds.",
+                        "nullable": true,
+                        "example": "John Doe"
                     },
                     "accountIban": {
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
+                        "nullable": true,
+                        "example": "GB33BUKB20201555555555"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/PostalAddress"
@@ -275,6 +358,44 @@
                     }
                 },
                 "additionalProperties": false
+            },
+            "HttpValidationProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "detail": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "instance": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "nullable": true,
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": {}
             },
             "Identification": {
                 "type": "object",
@@ -293,60 +414,51 @@
                 "properties": {
                     "bic": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+                        "nullable": true,
+                        "example": "BUKBGB20"
                     }
                 },
                 "additionalProperties": false
             },
             "PostalAddress": {
-                "required": [
-                    "country",
-                    "streetName"
-                ],
                 "type": "object",
                 "properties": {
                     "streetName": {
-                        "maxLength": 70,
-                        "minLength": 1,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Name of a street or thoroughfare.",
+                        "nullable": true,
+                        "example": "My Street"
                     },
                     "buildingNumber": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Number that identifies the position of a building on a street.",
+                        "nullable": true,
+                        "example": "1"
                     },
                     "townName": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Name of a built-up area, with defined boundaries, and a local government.",
+                        "nullable": true,
+                        "example": "London"
                     },
                     "postCode": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+                        "nullable": true,
+                        "example": "XX99 9XX"
                     },
                     "countrySubdivision": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Identifies a subdivision of a country such as state, region, county.",
+                        "nullable": true,
+                        "example": "London"
                     },
                     "country": {
-                        "maxLength": 2,
-                        "minLength": 1,
                         "type": "string",
-                        "allOf": [
-                            {
-                                "pattern": "^[A-Z]{2}$"
-                            },
-                            {
-                                "pattern": "^[A-Z]{2}$"
-                            },
-                            {
-                                "pattern": "^[A-Z]{2}$"
-                            },
-                            {
-                                "pattern": "^[A-Z]{2}$"
-                            },
-                            {
-                                "pattern": "^[A-Z]{2}$"
-                            }
-                        ]
+                        "description": "Nation with its own government.",
+                        "nullable": true,
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
@@ -359,7 +471,9 @@
                     },
                     "other": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Unique identification of a person, as assigned by an institution, using an identification scheme.",
+                        "nullable": true,
+                        "example": "Other identification."
                     }
                 },
                 "additionalProperties": false
@@ -368,33 +482,39 @@
                 "type": "object",
                 "properties": {
                     "recallResponseAccepted": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Accept or reject a request for recall of a SEPA CT inbound payment",
+                        "example": "True"
                     },
                     "rejectCode": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Reason code required if recall request is rejected ",
+                        "nullable": true,
+                        "example": "CUST"
                     },
                     "additionalInfo": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Additional information",
+                        "nullable": true,
+                        "example": "Additional details."
                     }
                 },
                 "additionalProperties": false
             },
             "RecallOfOutboundPaymentRequest": {
-                "required": [
-                    "recallCode"
-                ],
                 "type": "object",
                 "properties": {
                     "recallCode": {
-                        "maxLength": 4,
-                        "minLength": 4,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Reason code to recall an Outbound SEPA CT Payment",
+                        "nullable": true,
+                        "example": "CUST"
                     },
                     "additionalInfo": {
                         "type": "string",
-                        "nullable": true
+                        "description": "Additional Information",
+                        "nullable": true,
+                        "example": "Some additional information."
                     }
                 },
                 "additionalProperties": false
