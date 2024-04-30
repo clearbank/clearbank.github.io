@@ -18,7 +18,7 @@ A cash ISA (Individual Savings Account) is a real savings deposit account held w
 A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the cash ISA.
 </Callout>
 
-The balance of a cash ISA is held by ClearBank and can only be viewed via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number.
+The balance of a cash ISA is held by ClearBank and can only be viewed via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number and confirm they are a UK resident.
 
 <Callout colour="blue">
 Funds can be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
@@ -80,7 +80,7 @@ If the account balance is not zero, the request will be rejected. **Account clos
 To close a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
-> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has gained interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has accrued interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
 4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
 
@@ -100,7 +100,7 @@ Money must have already been deposited into the cash ISA. If no money has been d
 To cancel a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
-> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has gained interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
+> This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has accrued interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
 3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been cancelled.
 4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account cancellation process has completed.
 
@@ -111,14 +111,14 @@ The process is shown in this message flow diagram:
 ### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
-During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period. If you requested an account closure on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
+During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
 
-If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account. Once the account is unfrozen, transfer the funds and accrued interest, if any, back into the cash ISA. The cash ISA will continue to exist.
+If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
 
 To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
-> The cash ISA is now frozen. Only interest will be credited to the account, and only a full withdrawal can be withdrawn from the account.
-2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub created during onboarding. From there, you can send the funds to the new provider.
+> The cash ISA is now frozen. Only accrued interest, if any, can be credited to the account, and only the full balance can be withdrawn from the account.
+2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub account created during onboarding. From there, you can send the funds to the new provider.
 3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
 4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
 5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
@@ -198,7 +198,7 @@ The process is shown in this message flow diagram:
 
 <EndpointBlock
   type="post"
-  title="Transfer out rejected"
+  title="Cash ISA transfer out rejected"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs/rejection",
