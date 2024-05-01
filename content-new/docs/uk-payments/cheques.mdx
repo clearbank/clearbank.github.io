@@ -24,9 +24,9 @@ Cheques take up to three working days to process. If the cheque passes processin
 
 Scenarios where the cheque wouldn't process successfully include:
 - If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
-- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality or missing signature, you will receive a 400 response when you submit the cheque.
-- If the cheque fails at the ICS scheme, you will receive the transaction failed report from ClearBank on Freshdesk.
-- If a decision is made by the issuing bank to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
+- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, you will receive a 400 response when you submit the cheque.
+- If the cheque is successfully submitted, but there is missing information, you will receive the transaction rejected report from ClearBank on Freshdesk.
+- If a decision is made by the issuing bank through ICS to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 
 #### Image requirements
 For cheque images to successfully validate, they must satisfy the following requirements:
@@ -36,7 +36,11 @@ For cheque images to successfully validate, they must satisfy the following requ
 | Bitonal JPEG | Base64 encoded string | 200DPI | 600 to 800,000 byes | 58 to 90,000 bytes |
 | Bitonal TIFF | Base64 encoded string | 200DPI | 600 to 90,000 byes | 58 to 90,000 bytes |
 
-Cheque images must also be clear, uncrumpled, have visible edges, and without folded corners.
+Cheque images must be:
+- Clear
+- Uncrumpled
+- Without folded corners and have visible edges
+- Free from shadows
 
 <EndpointBlock
   type="post"
