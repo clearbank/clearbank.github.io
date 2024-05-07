@@ -27,8 +27,8 @@ Responding to a CoP request from an external participant requires us to complete
 -	Operating nature of the account: Single or Joint
 
 For your real and virtual accounts to be CoP-ready, you will need to use the following PATCH endpoints to update your accounts:  
--	[PATCH /v1/Accounts/{accountId}](/docs/gbp-accounts/#amend-an-account-real)
--	[PATCH /v1/Accounts/{accountId}/Virtual/{virtualAccountId}](/docs/gbp-accounts/#amend-an-account-virtual)
+-	[PATCH /v1/Accounts/{accountId}](../gbp-accounts/manage-accounts#amend-an-account-real)
+-	[PATCH /v1/Accounts/{accountId}/Virtual/{virtualAccountId}](../gbp-accounts/manage-accounts#amend-an-account-virtual)
 
 If you have chosen to use the ClearBank CoP service, all your real and virtual accounts will be opted in by default, at the time of account creation. 
 
@@ -82,6 +82,27 @@ If the CoP Check requires SRD, then it must be entered in the SecondaryIdentific
 
 Supporting SRD-validated CoP checks is mandatory, however the integration that is required to support the SRD Validate endpoint, which is called ahead of the CoP check being sent is optional. Although not mandatory, this will inform your customers as to whether they need the secondary data ahead of sending the CoP check, making for a more streamlined and informed journey.
 
+### Owner name formatting requirements
+
+The **OwnerName** field is used to identify the owner of the account. The name must be provided in a structured or unstructured comma-delimited format. Both formats consist of three parts separated by commas. For simplicity, we recommend using the **unstructured** format for all CoP name verification requests.
+
+- The unstructured format is valid for personal, business, and joint accounts. The full owner name string is populated in the third part.
+- The structured format is only valid for personal accounts. The salutation, forename(s), and surname are separated by commas.
+
+<Callout colour="blue">
+Commas must be included, if omitted, it may cause delays in receiving the outcome of the verification from the external participant.
+</Callout>
+
+For reference, the following table gives examples of how the owner name should be formatted for different types of accounts:
+
+| Format | Account type | Example |
+|--------|--------------|---------|
+| Unstructured | Personal | ``,,Mr John Smith``<br /> ``,,Mr John Andrew Smith``<br /> ``Mr John A Smith``  |
+| Unstructured | Business | ``,,ClearBank Ltd``|
+| Unstructured | Joint | ``,,John Smith and Jane MacDonald``<br /> ``Mr and Mrs J Smith``|
+| Structured | Personal | ``Mr, John, Smith``<br /> ``Mr, John Andrew, Smith``<br /> ``Mr, John A, Smith``|
+
+
 <EndpointBlock
   type="post"
   title="Check payee account name"
@@ -109,7 +130,7 @@ Supporting SRD-validated CoP checks is mandatory, however the integration that i
 As part of your onboarding journey for CoPaaS, you will need to:
 
 - Use the [Get CSR file](#get-csr-file) endpoint to get the Certificate Signing Request (CSR) .csr file. The softwareStatementID and certificateType inputs are required. The `{softwareStatementId}` URL parameter is the unique ID of a CoP software statement on your Open Banking Directory entry.
-- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM .pem format. This is the signed PEM you can download from the Open Banking Directory after uploading the certificate signing request returned from the Get certificate type endpoint. Line breaks must be removed from the PEM before submission to ClearBank.
+- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM .pem format. This is the signed PEM you can download from the Open Banking Directory after uploading the certificate signing request returned from the Get CSR file endpoint. Line breaks must be removed from the PEM before submission to ClearBank.
 
 <Callout colour="blue">
 These endpoints are only applicable if you are using CoPaaS.

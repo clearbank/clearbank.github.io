@@ -278,7 +278,7 @@
       "ParametersOpenapi_RequestIdentifier": {
         "name": "X-Request-Id",
         "in": "header",
-        "description": "A unique identifier that provides an idempotency check. This must be unique for any subsequent requests sent for at least 24 hours after the initial request was sent.",
+        "description": "A unique identifier for the request.",
         "required": true,
         "schema": {
           "$ref": "#/components/schemas/ApiHeadersSchema_RequestIdentifierType"
@@ -436,19 +436,19 @@
         "type": "object",
         "properties": {
           "instructionIdentification": {
-            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "endToEndIdentification": {
-            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "instructedAmount": {
-            "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.",
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
             "type": "object",
             "required": [
               "amount",
@@ -460,7 +460,9 @@
               },
               "currency": {
                 "type": "string",
-                "pattern": "^[A-Z]{3}$"
+                "pattern": "^[A-Z]{3}$",
+                "description":"Set to 'GBP' as other currencies are not supported.",
+                "example": "GBP"
               }
             }
           },
@@ -607,19 +609,19 @@
         "type": "object",
         "properties": {
           "instructionIdentification": {
-            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "endToEndIdentification": {
-            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "instructedAmount": {
-            "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.",
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
             "type": "object",
             "required": [
               "amount",
@@ -631,7 +633,9 @@
               },
               "currency": {
                 "type": "string",
-                "pattern": "^[A-Z]{3}$"
+                "pattern": "^[A-Z]{3}$",
+                "description":"Set to 'GBP' as other currencies are not supported.",
+                "example": "GBP"
               }
             }
           },
@@ -910,7 +914,9 @@
               },
               "currency": {
                 "type": "string",
-                "pattern": "^[A-Z]{3}$"
+                "pattern": "^[A-Z]{3}$",
+                "description":"Set to 'GBP' as other currencies are not supported.",
+                "example": "GBP"
               }
             }
           },
@@ -947,7 +953,9 @@
           },
           "currency": {
             "type": "string",
-            "pattern": "^[A-Z]{3}$"
+            "pattern": "^[A-Z]{3}$",
+            "description":"Set to 'GBP' as other currencies are not supported.",
+            "example": "GBP"
           }
         },
         "additionalProperties": false
@@ -1053,24 +1061,24 @@
         ],
         "properties": {
           "detail": {
-            "description": "A human-readable description of the problem unique to the instance of the problem. The reader must be able to discern the cause of the problem from this information.\n",
+            "description": "A human-readable description of the problem unique to the instance of the problem.",
             "type": "string"
           },
           "errors": {},
           "instance": {
-            "description": "A URI that uniquely identifies the problem being reported. This value should be consistent and deterministic in order to promote automated processing when read in client software\n",
+            "description": "A URI that uniquely identifies the problem being reported. ",
             "type": "string"
           },
           "status": {
-            "description": "The HTTP response code returned by the API. This is returned to allow for processing by distributed software agents and MUST match that reported in the transport layer\n",
+            "description": "The HTTP response code returned by the API. ",
             "type": "string"
           },
           "title": {
-            "description": "A short, human-readable summary of the problem type that should not change between different occurrences of a given problem",
+            "description": "A short, human-readable summary of the problem type.",
             "type": "string"
           },
           "type": {
-            "description": "A URI that uniquely identifies the problem type being reported",
+            "description": "A URI that uniquely identifies the problem type being reported.",
             "type": "string"
           }
         }
