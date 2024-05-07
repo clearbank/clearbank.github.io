@@ -30,7 +30,7 @@ The latest versions of the CHAPS endpoints support the new ISO20022 payment mess
 | `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as Account Holder Name** <br /> This the Creditor’s name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
 | `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information.  |
 
-Pattern: The character set has been extended to include all SWIFT allowed characters. Alphanumeric (uppercase and lowercase) and special characters shown in this table:<br />
+The character set defined by the pattern for the `name` and `reference` fields includes all SWIFT allowed characters. These are alphanumeric (uppercase and lowercase) and the special characters shown in this table:<br />
 
 |Special character|Description|Special character|Description|
 |---|----|---|---|
@@ -62,19 +62,10 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
         'payment-message-validation-failed-webhook-v1',
+        'outbound-held-transaction-v1',
         'transaction-rejected-v2'
         ]
     },
-    {
-        path: "/v3/Payments/CHAPS",
-        version: "3.0.Chaps-payment",
-        webhooks: [
-        'transaction-settled-webhook-v6',
-        'payment-message-assessment-failed-webhook-v1',
-        'payment-message-validation-failed-webhook-v1',
-        'transaction-rejected-v2'
-        ]
-    }
     ]}
 />
 
@@ -106,6 +97,7 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
         'payment-message-validation-failed-webhook-v1',
+        'outbound-held-transaction-v1',
         'transaction-rejected-v2'
         ]
     }
@@ -116,6 +108,8 @@ Pattern: The character set has been extended to include all SWIFT allowed charac
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
 <WebhookPlaceholder render='transaction-rejected-v2' />
+<WebhookPlaceholder render='inbound-held-transaction-v1' />
+<WebhookPlaceholder render='outbound-held-transaction-v1' />
 
 ## CHAPS simulation endpoints
 

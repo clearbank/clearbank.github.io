@@ -1,0 +1,48 @@
+---
+title: "Statement Ready For Download webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies you that a requested statement is ready for download.
+
+#### Request body
+
+```json
+{
+    "Type":"Statements.ReadyForDownload",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MessageId`                   | **Required**<br /> Unique identifier of the statement requested as assigned by ClearBank.<br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `string`<br />                                         |
+| `TotalPages`        | **Required**<br /> Total number of pages available for download.<br /> Type: `int32`<br /> Format: `int32`<br />                                                                |
+| `StartDateTime`                  | **Required**<br /> Start date and time for the statement requested in UTC.<br /> Type: `date-time`<br /> Min. Length: `1`<br /> Format: `date-time`<br />                                                          |
+| `EndDateTime`                 | **Required**<br /> End date and time for the statement requested in UTC.<br /> Type: `date-time`<br /> Min. Length: `1`<br /> Format: `date-time`<br /> |
+
+#### Example account statement webhook request body
+
+```json
+{
+    "MessageId":"1234567891234567891234567891234",
+    "TotalPages":"1",
+    "StartDateTime":"2024-03-01T00:00:00.000Z",
+    "EndDateTime":"2023-06-22T23:59:59.000Z"
+},
+{
+    "Nonce":748391298
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748391298
+}
+```

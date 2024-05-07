@@ -1,0 +1,430 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Accounts API",
+      "description": "Accounts and Virtual Accounts",
+      "contact": {
+        "name": "Support",
+        "email": "fiapisupport@clear.bank"
+      },
+      "version": "2.0.MCCY-ACC"
+    },
+    "paths": {
+      "/mccy/v2/Accounts": {
+        "post": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "This endpoint is used to create a new real multi-currency account.",
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API Token, retrieved from the web portal.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Data to create the account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAccountRequest"
+          
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccountResponse"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccountResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Client Error",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              },
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Server Error",
+              "headers": {
+                "X-Correlation-Id": {
+                  "description": "A unique identifier which should be referenced in any issue with any API call.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "AccountIdentifier": {
+          "required": [
+            "identifier",
+            "kind"
+          ],
+          "type": "object",
+          "properties": {
+            "identifier": {
+              "maxLength": 50,
+              "minLength": 1,
+              "type": "string",
+              "description": "Unique account identifier value that corresponds to the specified account identifier kind. When the Kind field is set to Descriptor, the identifier can be any string."
+            },
+            "kind": {
+              "minLength": 1,
+              "type": "string",
+              "description": "The kind of account identifier provided. This can either be IBAN, BBAN, or Descriptor (another kind of identifier)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "AccountResponse": {
+          "required": [
+            "currencies",
+            "id",
+            "identifiers",
+            "kind",
+            "label",
+            "name",
+            "owner",
+            "status",
+            "type"
+          ],
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the account held with ClearBank.",
+              "format": "uuid",
+              "example": "98efba88-c43e-41c5-9d47-0938f2fe7192"
+            },
+            "name": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Name of the account.",
+              "example": "Gen Seg Eco Bank"
+            },
+            "label": {
+              "type": "string",
+              "description": "Friendly label for the account.",
+              "example": "Mid tier asset funds"
+            },
+            "owner": {
+              "type": "string",
+              "description": "The name used to identify the legal owner of the account.",
+              "example": "Eco Bank"
+            },
+            "kind": {
+              "type": "string",
+              "description": "The type of funds the account will hold.",
+              "example": "GeneralSegregated",
+              "enum": [
+                "YourFunds",
+                "GeneralSegregated",
+                "DesignatedSegregated",
+                "GeneralClient",
+                "DesignatedClient"
+              ]
+            },
+            "currencies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Currencies supported by the account. This is the three-letter ISO currency code."
+            },
+            "productId": {
+              "type": "string",
+              "description": "The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.",
+              "format": "uuid",
+              "nullable": true,
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "customerId": {
+              "type": "string",
+              "description": "Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.",
+              "format": "uuid",
+              "nullable": true,
+              "example": "190e5d1d-7016-4efe-9988-3ebfecb21192"
+            },
+            "identifiers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AccountIdentifier"
+              },
+              "description": "List of identifiers."
+            },
+            "status": {
+              "type": "string",
+              "description": "Current status of the account. Valid options include: Active, Suspended, Closed.",
+              "example": "Active"
+            },
+            "statusReason": {
+              "$ref": "#/components/schemas/AccountStatusReason"
+            },
+            "statusInformation": {
+              "type": "string",
+              "description": "Additional information to support the specified status reason.",
+              "nullable": true,
+              "example": "Received documentation"
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of account.",
+              "example": "Customer",
+              "enum": [
+                "Customer",
+                "Operating"
+            ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "AccountStatusReason": {
+          "enum": [
+            "Other",
+            "AccountHolderBankrupt",
+            "DissatisfiedCustomer",
+            "FinancialCrime",
+            "FraudFirstParty",
+            "FraudThirdParty",
+            "AccountHolderDeceased",
+            "AccountSwitched",
+            "CompanyNoLongerTrading",
+            "DuplicateAccount"
+          ],
+          "type": "string",
+          "description": "Reason for why the current status of the account is Closed or Suspended."
+        },
+        "CreateAccountRequest": {
+          "required": [
+            "bankIdentifierCode",
+            "currencies",
+            "kind",
+            "label",
+            "owner"
+          ],
+          "type": "object",
+          "properties": {
+            "label": {
+              "maxLength": 100,
+              "minLength": 1,
+              "pattern": "^[^<>;\"]*$",
+              "type": "string",
+              "description": "Friendly label for the account.",
+              "example": "Mid tier asset funds"
+            },
+            "owner": {
+              "maxLength": 140,
+              "minLength": 1,
+              "pattern": "^[^<>;\"]*$",
+              "type": "string",
+              "description": "The name used to identify the legal owner of the account.",
+              "example": "Eco Bank"
+            },
+            "kind": {
+              "type": "string",
+              "description": "The type of funds the account will hold.",
+              "example": "GeneralSegregated",
+              "enum": [
+                "YourFunds",
+                "GeneralSegregated",
+                "DesignatedSegregated",
+                "GeneralClient",
+                "DesignatedClient"
+              ]
+            },
+            "currencies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Currencies supported by the account. This is the three-letter ISO currency code."
+            },
+            "identifiers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AccountIdentifier"
+              },
+              "description": "List of identifiers. If the account identifier of kind IBAN is not specified, it will be generated automatically.",
+              "nullable": true
+            },
+            "bankIdentifierCode": {
+              "type": "string",
+              "description": "The 8 or 11 character BIC under which the new account should be created. If using a UK BIC, a routing code will also be required.",
+              "nullable": true,
+              "example": "CLRBGB99"
+            },
+            "routingCode": {
+              "type": "string",
+              "description": "Routing code for the new account. For example, 010203. When creating a UK account, a routing code (sort code) is required.",
+              "nullable": true,
+              "example": "010203"
+            },
+            "productId": {
+              "type": "string",
+              "description": "The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.",
+              "format": "uuid",
+              "nullable": true,
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "customerId": {
+              "type": "string",
+              "description": "Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.",
+              "format": "uuid",
+              "nullable": true,
+              "example": "725a5f09-595a-4db1-946a-8330d423da34"
+            }
+          },
+          "additionalProperties": false
+        },
+        "ProblemDetails": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "nullable": true
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "status": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "detail": {
+              "type": "string",
+              "nullable": true
+            },
+            "instance": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "additionalProperties": { }
+        }
+      }
+    }
+  }

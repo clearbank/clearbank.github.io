@@ -4,7 +4,7 @@
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["get", "post", "patch", "delete", "request"],
+    "methods": ["get", "post", "patch", "put", "delete"],
     "body": "<p>Your API token retrieved from the portal.</p>",
     "example": "curl -v -X GET https://institution-api-sim.clearbank.co.uk/v3/Accounts \\ \n -H \"Authorization: Bearer <<your api token>> \""
   },
@@ -13,7 +13,7 @@
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["post", "patch", "delete", "request"],
+    "methods": ["post", "patch", "put"],
     "body": "<p>This is a hash of the request body signed with your private key.</p>",
     "example": null
   },
@@ -22,8 +22,8 @@
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["post", "patch", "delete", "request"],
-    "body": "<p>This is what we use for idempotency and enables a duplication check. You generate this identifier which must be unique (max length 83) for any subsequent requests sent for at least 24 hours after the initial request was sent.</p><p> If an <code>X-Request-Id</code> Header is not supplied, or is invalid, a <code>400</code>:Bad Request HTTP status code response will be returned.</p><p>If ClearBank detects a duplicate, a <code>409</code>: Conflict HTTP status code response will be returned.<p>",
+    "methods": ["post", "patch", "put", "delete"],
+    "body": "<p>This is used to check for duplicate requests. You generate this identifier which must be unique (max length 83) for any subsequent requests sent for at least 24 hours after the initial request was sent.</p><p> If an <code>X-Request-Id</code> Header is not supplied, or is invalid, a <code>400</code>:Bad Request HTTP status code response will be returned.</p><p>If ClearBank detects a duplicate, a <code>409</code>: Conflict HTTP status code response will be returned.<p>",
     "example": null
   },
   "xCorrelationId": {
