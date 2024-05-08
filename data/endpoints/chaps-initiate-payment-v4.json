@@ -237,12 +237,14 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "description": "Unique identification, as assigned by you, to unambiguously identify the payment instruction."
                     },
                     "endToEndIdentification": {
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
                         "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. "
                     },
                     "instructedAmount": {
@@ -250,7 +252,7 @@
                     },
                     "sourceAccount": {
                         "$ref": "#/components/schemas/AccountIdentificationDtoV4",
-                        "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
+                        "description": "The ClearBank account that will be debited based on the successful completion of the payment instruction. You need to include EITHER the iban field OR the schemeName and identification fields in this object."
                     },
                     "debtorAccount": {
                         "$ref": "#/components/schemas/AccountIdentificationDtoV4",
@@ -271,10 +273,17 @@
                             "properties": {
                                 "name": {
                                     "minLength": 1,
+                                    "maxLength": 140,
                                     "type": "string",
                                     "description": "Name of the party"
                                 },
                                 "postalAddress": {
+                                    "required": [
+                                        "townName",
+                                        "country",
+                                        "postCode"
+                                    ],
+                                    "description": "The creditor's address. If using this object, then TownName, Country, and PostCode must be populated.",
                                         "type": "object",
                                         "properties": {
                                             "buildingNumber": {
@@ -299,13 +308,13 @@
                                                 "maxLength": 35,
                                                 "minLength": 1,
                                                 "type": "string",
-                                                "description": "Name of a built-up area, with defined boundaries, and a local government. If the Creditor PostalAddress object is populated, then this field is required."
+                                                "description": "Name of a built-up area, with defined boundaries, and a local government."
                                             },
                                             "country": {
                                                 "minLength": 1,
                                                 "pattern": "[A-Z]{2,2}",
                                                 "type": "string",
-                                                "description": "Nation with its own government. If the Creditor PostalAddress object is populated, then this field is required."
+                                                "description": "Nation with its own government."
                                             },
                                             "postCode": {
                                                 "maxLength": 16,
@@ -317,6 +326,7 @@
                                         "additionalProperties": false
                                 },
                                 "lei": {
+                                    "pattern": "^[0-9]{4,4}00[A-Z0-9]{12,12}[0-9]{2,2}$",
                                     "type": "string",
                                     "description": "Legal Entity Identifier of the party"
                                 }
@@ -410,7 +420,7 @@
                                 "$ref": "#/components/schemas/AccountIdentificationOtherDtoV4"
                             }
                         ],
-                        "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction."
+                        "description": "The ClearBank account that will be debited based on the successful completion of the payment instruction."
                     },
                     "debtor": {
                         "$ref": "#/components/schemas/PartyDetailsDtoV4"
@@ -568,24 +578,28 @@
                     "buildingNumber": {
                         "maxLength": 16,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Number that identifies the position of a building on a street."
                     },
                     "buildingName": {
                         "maxLength": 35,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Name of the building or house."
                     },
                     "streetName": {
                         "maxLength": 70,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Name of a street or thoroughfare."
                     },
                     "townName": {
                         "maxLength": 35,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Name of a built-up area, with defined boundaries, and a local government."
                     },
@@ -598,6 +612,7 @@
                     "postCode": {
                         "maxLength": 16,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
                     }
@@ -612,7 +627,9 @@
                 "type": "object",
                 "properties": {
                     "name": {
+                        "maxLength": 140,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Name of the party"
                     },
@@ -620,6 +637,7 @@
                         "$ref": "#/components/schemas/PartyAddressDetailsDtoV4"
                     },
                     "lei": {
+                        "pattern": "^[0-9]{4,4}00[A-Z0-9]{12,12}[0-9]{2,2}$",
                         "type": "string",
                         "description": "Legal Entity Identifier of the party"
                     }
@@ -667,6 +685,7 @@
                     "creditorReferenceInformation": {
                         "maxLength": 35,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification."
                     }
@@ -680,6 +699,7 @@
                     "unstructured": {
                         "maxLength": 140,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form."
                     }
