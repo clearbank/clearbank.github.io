@@ -1,0 +1,277 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "ClearBank cheque endpoint.",
+    "version": "1.0Cheques"
+  },
+  "paths": {
+    "/payments/cheques/v1/submit-deposit": {
+      "post": {
+        "tags": [
+          "Deposit a cheque"
+        ],
+        "description": "Submit deposit.",
+        "operationId": "submitDeposit",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit cheque deposit request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/submitDepositRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Submit deposit response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/submitDepositResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/problemDetails"
+                  }
+              }
+          }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/problemDetails"
+                  }
+              }
+            },
+            "x-ms-summary": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "beneficiary": {
+        "required": [
+          "accountNumber",
+          "sortCode",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "string",
+            "description": "Beneficiary's account number.",
+            "pattern": "^\\d{8}&"          },
+          "sortCode": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6,
+            "description": "Beneficiary's sort code.",
+            "pattern": "^\\d{6}&"
+          },
+          "names": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": {
+              "type": "string",
+              "maxLength": 140,
+              "minLength": 1,
+              "pattern" : "^.{1,140}$"
+            },
+            "description": "Names of the beneficiaries that are on the cheque."
+          }
+        },
+        "description": "Information about the cheque's beneficiary."
+      },
+      "chequeImages": {
+        "required": [
+          "frontImage",
+          "backImage",
+          "imageType"
+        ],
+        "type": "object",
+        "properties": {
+          "frontImage": {
+            "type": "string",
+            "description": "Base64 representation of the front image of the cheque."
+          },
+          "backImage": {
+            "type": "string",
+            "description": "Base64 representation of the back image of the cheque."
+          },
+          "imageType": {
+            "type": "string",
+            "enum": [
+              "tiff",
+              "jpeg"
+            ],
+            "description": "Image format. Only 'TIFF' and 'JPEG' formats are supported."
+          }
+        },
+        "description": "Cheque image information."
+      },
+      "deposit": {
+        "required": [
+          "beneficiary",
+          "chequeAmount",
+          "currency",
+          "chequeImages"
+        ],
+        "type": "object",
+        "properties": {
+          "beneficiary": {
+            "$ref": "#/components/schemas/beneficiary"
+          },
+          "chequeAmount": {
+            "type": "number",
+            "description": "Cheque amount in pounds sterling, up to two decimal places.",
+            "format": "decimal",
+            "default": 0,
+            "pattern": "^\\d+(\\.\\d{1,2})?$"
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
+            "pattern" : "^GBP$"
+          },
+          "chequeImages": {
+            "$ref": "#/components/schemas/chequeImages"
+          }
+        },
+        "description": "Deposit details."
+      },
+      "list_string": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of error messages."
+      },
+      "submitDepositRequest": {
+        "required": [
+          "deposit",
+          "messageId"
+        ],
+        "type": "object",
+        "properties": {
+          "deposit": {
+            "$ref": "#/components/schemas/deposit"
+          },
+          "messageId": {
+            "type": "string",
+            "maxLength": 35,
+            "minLength": 1,
+            "description": "The unique identifier for the message.",
+            "pattern": "^\\S{1,35}$"
+          }
+        },
+        "description": "Submit cheque deposit request."
+      },
+      "submitDepositResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "The unique identifier for the message."
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "rejected",
+              "error"
+            ],
+            "type": "string",
+            "description": "Status of the submit deposit request."
+          }
+        },
+        "description": "Submit cheque deposit response."
+      },
+      "problemDetails": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/list_string"
+            },
+            "description": "The validation errors associated with this instance of problem details."
+          },
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4)."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+          },
+          "messageId": {
+            "type": "string",
+            "description": "The unique identifier for the message."
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "A string that represents an error code."
+          }
+        },
+        "description": "Problem details."
+      }
+    }
+  }
+}
