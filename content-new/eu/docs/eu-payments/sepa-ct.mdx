@@ -1,5 +1,5 @@
 ---
-title: "SEPA CT"
+title: "Sepa CT"
 order: 2
 showPageMenu: true
 ---
@@ -11,13 +11,15 @@ import Callout from "src/components/callout";
 
 ## SEPA CT
 
-SEPA CT, also known as the Single Euro Payments Area Credit Transfer, enables you to move Euros across participating countries.
+SEPA CT, also known as the Single Euro Payments Area Credit Transfer, enables you to move Euros across participating countries. Transactions are capped at €999,999,999 per payment.
 
-You can send a SEPA CT payment using the [/v1/payments/sepa](#send-a-sepa-ct-payment) endpoint. To recall a payment, use the [/v1/payments/sepa/{paymentId}/recall](#recall-a-sepa-ct-payment) endpoint.
+Outbound SEPA CT payments are available on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted, it will be placed in a queue until outbound payments open again.
+
+You can send a SEPA CT payment using the [/v1/payments/sepa](#send-a-sepa-ct-payment) endpoint. You will receive the  To recall a payment, use the [/v1/payments/sepa/{paymentId}/recall](#recall-a-sepa-ct-payment) endpoint. 
 
 ### Incoming SEPA CT recall requests
 
-You may recieve a recall request via the [Recall Request webhook](). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-SEPA-CT-payment-recall-request) endpoint.
+You may recieve a recall request via the [Recall Request webhook](). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-sepa-CT-payment-recall-request) endpoint.
 
 You may only return the full amount. Partial refunds are not accepted.
 
@@ -40,10 +42,10 @@ If you accept the recall, a pacs.004 payment will be automatically initiated. Yo
 
 <EndpointBlock
   type="post"
-  title="Return a SEPA CT payment"
+  title="Respond to an inbound SEPA CT payment request"
   endpoints={[
     {
-      path: "/v1/{institutionId}/payments/{sepaPaymentId}/return-of-inbound",
+      path: "/v1/{institutionId}/payments/{sepaPaymentId}/recall-of-inbound",
       version: "1.0-SEPA-CT"
     }
   ]}
@@ -51,7 +53,7 @@ If you accept the recall, a pacs.004 payment will be automatically initiated. Yo
 
 <EndpointBlock
   type="post"
-  title="Recall a SEPA CT payment"
+  title="Request an outbound SEPA CT payment recall"
   endpoints={[
     {
       path: "/v1/{institutionId}/payments/{paymentId}/recall",
@@ -60,13 +62,4 @@ If you accept the recall, a pacs.004 payment will be automatically initiated. Yo
   ]}
 />
 
-<EndpointBlock
-  type="post"
-  title="Respond to a SEPA CT payment recall request"
-  endpoints={[
-    {
-      path: "/v1/{institutionId}/payments/{sepaPaymentId}/recall-of-inbound",
-      version: "1.0-SEPA-CT"
-    }
-  ]}
-/>
+<WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
