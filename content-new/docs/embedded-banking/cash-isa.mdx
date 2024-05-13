@@ -38,7 +38,7 @@ To set up a cash ISA:
 
 1. Use the [POST /v1/isas](#create-an-cash-isa) endpoint to create the account
 > You cannot deposit funds into the cash ISA before the nominated account has been defined. 
-2. Use the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint to define the nominated account for the cash ISA
+2. After receiving the Account Created webhook, use the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint to define the nominated account for the cash ISA
 > You can now deposit funds into the cash ISA.
 
 The process is shown in this message flow diagram:
@@ -137,6 +137,9 @@ The process is shown in this message flow diagram:
     {
       path: "/v1/isas",
       version: "1.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
     }
   ]}
 />
@@ -170,6 +173,10 @@ The process is shown in this message flow diagram:
     {
       path: "/v1/accounts/{accountId}/closure",
       version: "1.0.Sterling",
+      webhooks: [
+        'account-closure-completed-webhook-v1',
+        'account-closure-failed-webhook-v1'
+      ]
     }
   ]}
 />
@@ -181,6 +188,10 @@ The process is shown in this message flow diagram:
     {
       path: "/v1/isas/{accountId}/cancellation",
       version: "1.0.Sterling",
+      webhooks: [
+        'account-closure-completed-webhook-v1',
+        'account-closure-failed-webhook-v1'
+      ]
     }
   ]}
 />
@@ -209,7 +220,7 @@ The process is shown in this message flow diagram:
 
 <EndpointBlock
   type="get"
-  title="Check cash ISA closure status"
+  title="Get cash ISA closure status"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",
@@ -220,5 +231,6 @@ The process is shown in this message flow diagram:
 
 ## Cash ISA webhooks
 
+<WebhookPlaceholder render='account-created-webhook-v1' />
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
