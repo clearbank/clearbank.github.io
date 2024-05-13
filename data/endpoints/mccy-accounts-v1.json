@@ -18,6 +18,15 @@
         "summary": "This endpoint is used to retrieve a list of all the accounts associated with your institution, excluding virtual accounts.",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "pageNumber",
             "in": "query",
             "description": "The page number to control returned results into manageable sets. Default if not supplied: 1.",
@@ -258,6 +267,15 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -357,6 +375,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -598,6 +625,15 @@
             }
           },
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "DigitalSignature",
             "in": "header",
             "description": "Signed hash of the body of the request. The hash is signed by your private key.",
@@ -727,6 +763,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -882,6 +927,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1134,6 +1188,15 @@
         "summary": "This endpoint is used to retrieve details related to a virtual account.",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "virtualAccountId",
             "in": "path",
             "description": "The unique identifier for the virtual account.",
@@ -1253,6 +1316,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -1529,6 +1601,15 @@
             }
           },
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "DigitalSignature",
             "in": "header",
             "description": "Signed hash of the body of the request. The hash is signed by your private key.",
@@ -1567,6 +1648,18 @@
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
                 "schema": {
                   "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualAccountResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualAccountResponse"
                 }
               }
             }
@@ -1770,19 +1863,27 @@
       },
       "AccountStatusReason": {
         "enum": [
-          "Other",
           "AccountHolderBankrupt",
-          "DissatisfiedCustomer",
-          "FinancialCrime",
-          "FraudFirstParty",
-          "FraudThirdParty",
           "AccountHolderDeceased",
           "AccountSwitched",
           "CompanyNoLongerTrading",
-          "DuplicateAccount"
+          "DissatisfiedCustomer",
+          "DuplicateAccount",
+          "FinancialCrime",
+          "FraudConfirmed",
+          "FraudFirstParty",
+          "FraudThirdParty",
+          "InternallyDormant",
+          "KYCRequired",
+          "LegallyDisputed",
+          "PotentialSanctionedIndividual",
+          "SanctionedIndividual",
+          "SuspectMoneyLaundering",
+          "TransactionDispute",
+          "Other"
         ],
         "type": "string",
-        "description": "Reason for why the current status of the account is Closed or Suspended. Valid options include: Other, AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount."
+        "description": "Reason for why the current status of the account is Closed or Suspended."
       },
       "AddCurrencyRequest": {
         "required": [
@@ -2008,13 +2109,37 @@
         "type": "object",
         "properties": {
           "status": {
+            "enum": [
+              "Active",
+              "Suspended"
+            ],
             "type": "string",
-            "description": "Desired status of the account. Valid options include: Active, Suspended.",
+            "description": "Desired status of the account.",
             "example": "Suspended"
           },
           "statusReason": {
+            "enum": [
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateAccount",
+              "FinancialCrime",
+              "FraudConfirmed",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "InternallyDormant",
+              "KYCRequired",
+              "LegallyDisputed",
+              "PotentialSanctionedIndividual",
+              "SanctionedIndividual",
+              "SuspectMoneyLaundering",
+              "TransactionDispute",
+              "Other"
+            ],
             "type": "string",
-            "description": "Reason to support the desired status of the account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, Other.",
+            "description": "Reason to support the desired status of the account.",
             "nullable": true,
             "example": "FinancialCrime"
           },
@@ -2052,13 +2177,37 @@
         "type": "object",
         "properties": {
           "status": {
+            "enum": [
+              "Active",
+              "Suspended"
+            ],
             "type": "string",
-            "description": "Desired status of the virtual account. Valid options include: Active, Suspended.",
+            "description": "Desired status of the virtual account.",
             "example": "Suspended"
           },
           "statusReason": {
+            "enum": [
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateAccount",
+              "FinancialCrime",
+              "FraudConfirmed",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "InternallyDormant",
+              "KYCRequired",
+              "LegallyDisputed",
+              "PotentialSanctionedIndividual",
+              "SanctionedIndividual",
+              "SuspectMoneyLaundering",
+              "TransactionDispute",
+              "Other"
+            ],
             "type": "string",
-            "description": "Reason to support the desired status of the virtual account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, Other.",
+            "description": "Reason to support the desired status of the virtual account.",
             "nullable": true,
             "example": "FinancialCrime"
           },
