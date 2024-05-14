@@ -1,5 +1,5 @@
 ---
-title: "SEPA Instant Recall Request Rejected webhook"
+title: "SEPA Instant Recall Request Received webhook"
 version: 1
 webhook: true
 ---
@@ -10,7 +10,7 @@ This webhook confirms an outgoing SEPA recall request has been rejected.
 
 ```json
 {
-    "Type":"SepaInstantRecallRequestRejected",
+    "Type":"SepaInstantRecallRequestReceived",
     "Version":1,
     "Payload": {...},
     "Nonce":
@@ -20,8 +20,8 @@ This webhook confirms an outgoing SEPA recall request has been rejected.
 #### Payload
 | Element                 | Description     |
 |-------------------------|-----------------|
-|`AssignmentId` |**Required**<br />Unique identifier of the investigation assignment as assigned by the initiating party.<br/>Type: `string`<br/>Max. Length: `3`<br/>Min. Length: `3` |
+|`CancellationId` |**Required**<br />Unique identifier of the recall request as assigned by the initiating party.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
 |`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
-|`RejectionCode` |**Required**<br />The reason for rejecting the recall.<br/>Type: `string`|
-|`TimestampRejected` |**Required**<br />Date and time the recall was rejected, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+|`ReasonCode` |**Required**<br />The reason code used to recall the payment.<br/>Type: `string`|
+|`TimestampCreated` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
 |`AdditionalInformation` |Additional information provided by the initiating party about the rejection<br/>Type: `array` or `null`<br />Type: `string`|
