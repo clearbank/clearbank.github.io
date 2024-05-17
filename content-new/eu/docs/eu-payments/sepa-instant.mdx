@@ -15,7 +15,19 @@ SEPA Instant enables you to move Euros across participating countries.
 
 SEPA Instant has a transaction limit of €100,000 per transaction. Payments can be sent at any time, including bank holidays and weekends.
 
-To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. 
+To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the SEPA Instant Outbound Payment Settled webhook and the EU Transaction Settled webhook.
+
+### SEPA Instant recall requests
+
+You can send SEPA Instant recall requests using the [Request a SEPA Instant recall](request-a-sepa-instant-recall) endpoint. Depending on the reason code, 
+
+You may recieve a recall request via the [SEPA Instant Recall Request webhook](). To respond to the recall request, use the [/v1/payments/sepa-instant/{paymentId}/recall-response](#) endpoint.
+
+You may only return the full amount. Partial refunds are not accepted.
+
+<Callout colour="blue">
+If you accept the recall, a pacs.004 payment will be automatically initiated. You do not need to use the send a payment endpoint.
+</Callout>
 
 <EndpointBlock
   type="post"
@@ -28,4 +40,33 @@ To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-insta
   ]}
 />
 
-<WebhookPlaceholder render='sepa-instant-recall-request-rejected-v1' />
+<EndpointBlock
+  type="post"
+  title="Request a SEPA Instant recall"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-instant/{paymentId}/recall",
+      version: "1.0-SEPA-INSTANT"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Respond to a SEPA instant recall request"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-instant/{paymentId}/recall-response",
+      version: "1.0-SEPA-INSTANT"
+    }
+  ]}
+/>
+
+### SEPA instant payment webhooks
+<WebhookPlaceholder render='sepa-instant-payment-settled-v1' />
+
+### SEPA instant recall webhooks
+<WebhookPlaceholder render='sepa-instant-recall-payment-created-v1' />
+<WebhookPlaceholder render='sepa-instant-recall-payment-settled-v1' />
+<WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v1' />
+
