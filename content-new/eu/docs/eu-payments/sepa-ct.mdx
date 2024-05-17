@@ -11,9 +11,9 @@ import Callout from "src/components/callout";
 
 ## SEPA CT
 
-SEPA CT, also known as the Single Euro Payments Area Credit Transfer, enables you to move Euros across participating countries. Transactions are capped at €999,999,999 per payment.
+SEPA CT, also known as the Single Euro Payments Area Credit Transfer, enables you to move Euros across scheme participants. Transactions are capped at €999,999,999 per payment.
 
-Outbound SEPA CT payments are available on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted, it will be placed in a queue until outbound payments open again.
+Outbound SEPA CT payments are available on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
 
 You can send a SEPA CT payment using the [/payments/sepa-ct/v1/customer-payments](#send-a-sepa-ct-payment) endpoint. You will receive the SEPA CT Outbound Payment Completed webhook and the EU Transaction Settled webhook.
 
@@ -21,9 +21,9 @@ Inbound SEPA CT payments are available on Netherlands business days between 02:3
 
 ### SEPA CT recall requests
 
-You can send SEPA recall requests using the [Request a SEPA CT payment recall](request-a-SEPA-CT-payment-recall) endpoint. **Do recalls take a certain amount of time? Can they request any payment to be recalled?**
+You can send SEPA recall requests using the [Request a SEPA CT payment recall](request-a-SEPA-CT-payment-recall) endpoint. Recalls can take up to 15 working days.
 
-You may recieve a recall request via the [Recall Request webhook](Request a SEPA CT payment recall). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-sepa-CT-payment-recall-request) endpoint.
+You may recieve a recall request via the [Recall Request webhook](Request a SEPA CT payment recall). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-sepa-CT-payment-recall-request) endpoint. If after 15 working days you do not accept the recall, ClearBank will automatically reject the recall request.
 
 You may only return the full amount. Partial refunds are not accepted.
 

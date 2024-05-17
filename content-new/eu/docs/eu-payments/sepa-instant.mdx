@@ -17,11 +17,19 @@ SEPA Instant has a transaction limit of €100,000 per transaction. Payments can
 
 To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the SEPA Instant Outbound Payment Settled webhook and the EU Transaction Settled webhook.
 
-### SEPA Instant recall requests
+### SEPA Instant recalls
 
-You can send SEPA Instant recall requests using the [Request a SEPA Instant recall](request-a-sepa-instant-recall) endpoint. Depending on the reason code, 
+SEPA Instant payments can be recalled by the sender. Recalls can be requested using the following reason codes:
 
-You may recieve a recall request via the [SEPA Instant Recall Request webhook](). To respond to the recall request, use the [/v1/payments/sepa-instant/{paymentId}/recall-response](#) endpoint.
+| Reason | Description|Time limit to send recall request|
+|------|-----------|---------------------------------|
+| DUPL |Duplicate sending|10 buiness days| 
+|TECH |Technical problems resulting in an erroneous SEPA Instant Transaction|10 buiness days|
+|FRAD | Fraudulent originated SEPA Instant Instruction|13 Months|
+
+You can send SEPA Instant recall requests using the [Request a SEPA Instant recall](request-a-sepa-instant-recall) endpoint. 
+
+You may recieve a recall request via the [SEPA Instant Recall Request webhook](). To respond to the recall request, use the [/v1/payments/sepa-instant/{paymentId}/recall-response](#) endpoint. Recall requests must be responded to within 15 business days. If after 15 working days you do not accept the recall, ClearBank will automatically reject the recall request.
 
 You may only return the full amount. Partial refunds are not accepted.
 
