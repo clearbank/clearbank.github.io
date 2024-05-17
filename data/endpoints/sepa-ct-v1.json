@@ -13,7 +13,16 @@
                 "summary": "Creates Outbound SEPA CT Payment",
                 "description": "Creates Outbound SEPA CT Payment",
                 "operationId": "Payment.Create",
-                "parameters": [],
+                "parameters": [
+                    {
+                      "name": "X-Correlation-Id",
+                      "in": "header",
+                      "schema": {
+                        "type": "string",
+                        "format": "uuid"
+                      }
+                    }
+                  ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -46,14 +55,7 @@
                         }
                     },
                     "409": {
-                        "description": "Conflict",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                        "description": "Conflict"
                     }
                 }
             }
@@ -157,14 +159,7 @@
                         "description": "Accepted"
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                        "description": "Bad Request"
                     }
                 }
             }
