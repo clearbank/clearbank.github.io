@@ -10,17 +10,36 @@
                 "tags": [
                     "Sepa CT Payments"
                 ],
-                "summary": "Creates Outbound SEPA CT Payment",
-                "description": "Creates Outbound SEPA CT Payment",
+                "summary": "This endpoint is used to create an outbound SEPA CT payment.",
+                "description": "This endpoint is used to create an outbound SEPA CT payment.",
                 "operationId": "Payment.Create",
                 "parameters": [
                     {
-                      "name": "X-Correlation-Id",
-                      "in": "header",
-                      "schema": {
-                        "type": "string",
-                        "format": "uuid"
-                      }
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                   ],
                 "requestBody": {
@@ -65,10 +84,38 @@
                 "tags": [
                     "Sepa CT Payments"
                 ],
-                "summary": "Recall request result for a SEPA CT inbound payment",
-                "description": "Approves or rejects the request for recall of a SEPA CT inbound payment",
+                "summary": "This endpoint is used to approve or reject a recall request of an inbound SEPA CT payment.",
+                "description": "This endpoint is used to approve or reject a recall request of an inbound SEPA CT payment.",
                 "operationId": "Payments.Inbound.RecallRequestResult",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -101,10 +148,38 @@
                 "tags": [
                     "Sepa CT Payments"
                 ],
-                "summary": "Recalls Outbound SEPA CT Payment",
-                "description": "Recalls Outbound SEPA CT Payment",
+                "summary": "This endpoint is used to request a recall for an outbound SEPA CT payment.",
+                "description": "This endpoint is used to request a recall for an outbound SEPA CT payment.",
                 "operationId": "Payment.Recall",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -143,7 +218,34 @@
                 "summary": "Customer initiated return for a SEPA CT inbound payment",
                 "description": "Customer endpoint for initiating a return of a SEPA CT inbound payment",
                 "operationId": "Payments.Inbound.ReturnOfInboundPayment",
-                "parameters": [],
+                "parameters": [  
+                    {
+                    "name": "Authorization",
+                    "in": "header",
+                    "description": "Your API Token, retrieved from the web portal.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "DigitalSignature",
+                    "in": "header",
+                    "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "X-Request-Id",
+                    "in": "header",
+                    "description": "A unique identifier for the request.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
                 "requestBody": {
                     "content": {
                         "application/json": {
