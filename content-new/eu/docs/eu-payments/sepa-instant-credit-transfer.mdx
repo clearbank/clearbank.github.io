@@ -20,13 +20,13 @@ SEPA Instant Credit Transfers (SEPA ICT) is a payment scheme that enables custom
 
 You can:
 - [send SEPA ICT payments](#sending-a-sepa-ict-payment)
+- [recall SEPA ICT payments](#sepa-ict-recalls)
+> Integrating with recall payments is required
 - receive SEPA ICT payments
 > You are notified of incoming SEPA ICT payments via the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
-- [recall SEPA ICT payments](#sepa-ict-recalls)
-> Integrating with recall payments is required.
 
 <Callout colour="blue">
-It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds may be sent to your suspense account. The source will only be on that webhook.
+It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
 </Callout>
 
 ## Sending a SEPA ICT payment
@@ -34,9 +34,6 @@ It is essential to integrate with the <a href="#customer-accounts-transaction-co
 To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 ![A message flow diagram explaining how to send a SEPA ICT payment](/assets/images/send-a-sepa-ict-payment.svg)
-
-<Callout colour="blue">You must integrate with the customer accounts transaction settled webhook to use this product. When you have a payment that lands in your suspense account, you won't know where it's originated unless you've integrated with the customer accounts transaction completed webhook.
-</Callout>
 
 <EndpointBlock
   type="post"
