@@ -17,16 +17,16 @@ A DDI can be submitted to ClearBank by service users in two ways:
 - Electronically via the Bacs Automated Direct Debit Instruction Service (AUDDIS), or,
 - Sent as a paper instruction to your address to be entered via the ClearBank API after you have validated it.
 
-A DDI can be set up against a real or virtual account held with ClearBank. It cannot be set up against a General Segregated Account, your Bacs Suspense Account, or your Minimum Mandated Balance account. You will receive the [Bacs Mandate Initiated webhook](./webhooks/#bacs-mandate-initiated-webhook) once the DDI is present in our system.
+A DDI can be set up against a real or virtual account held with ClearBank. It cannot be set up against a General Segregated Account, your Bacs Suspense Account, or your Minimum Mandated Balance account. You will receive the [Bacs Mandate Initiated webhook](#bacs-mandate-initiated-webhook) once the DDI is present in our system.
 
 If you are transferring an existing sort code to ClearBank that already has DDIs set up, you will need to use the API to inform us of these.
 
 Once a DDI has been set up against an account via AUDDIS, payments may be collected from the account from the third day; for paper instructions, payments may be collected from the following day.
 The timing of the payment is in the control of the service user and does not necessarily follow immediately.
 
-To receive feedback during DDI management, subscribe to the relevant webhooks which are listed here: [BACS DDI webhooks](./webhooks/#bacs-direct-debit-instructions).
+To receive feedback during DDI management, subscribe to the relevant webhooks which are listed here: [BACS DDI webhooks](#bacs-ddi-webhooks).
 
-**Note**: Occasionally you might receive a [Bacs Mandate Cancellation Failed webhook](./webhooks/#bacs-mandate-cancellation-failed-webhook), after having cancelled a Direct Debit Instruction through the `DELETE` endpoints.  This does not necessarily mean a real failure. This situation can arise as in the following example:<br/>
+**Note**: Occasionally you might receive a [Bacs Mandate Cancellation Failed webhook](#bacs-mandate-cancellation-failed-webhook), after having cancelled a Direct Debit Instruction through the `DELETE` endpoints.  This does not necessarily mean a real failure. This situation can arise as in the following example:<br/>
 
 An end-customer cancels their phone contract with "FabuPhone". FabuPhone immediately cancel the DDI through the Bacs system. The end-customer also requests that you cancel the DDI, and you attempt to do so using the `DELETE` endpoint. As the instruction was already cancelled, it no longer exists and cannot be found. You will then receive a Bacs Mandate Cancellation Failed webhook.<br/> 
 You can use the `GET endpoint (GET /{vn}/Accounts/{accountId}/Mandates)` to check the DDIs in place for the account and verify that everything is as it should be.
