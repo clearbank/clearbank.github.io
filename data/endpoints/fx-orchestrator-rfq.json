@@ -1,0 +1,481 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "FX Orchestrator API",
+		"version": "1.FXRFQ"
+	},
+	"servers": [
+		{
+			"url": "/9f0a128f-cf1a-4503-b126-09dd2ae1e24f/133535775647469590"
+		}
+	],
+	"paths": {
+		"/fx/v1/order": {
+			"post": {
+				"tags": [
+					"Fx Orders"
+				],
+				"summary": "Creates FX Order",
+				"operationId": "Order.Create",
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Your API token, obtained from the ClearBank Portal.",
+						"required": true,
+						"schema": {
+						  "type": "string"
+						}
+					  },
+					  {
+						"name": "DigitalSignature",
+						"in": "header",
+						"description": "Signed hash of the body of the request. The hash is signed by your private key.",
+						"required": true,
+						"schema": {
+						  "type": "string"
+						}
+					  },
+					  {
+						"name": "X-Request-Id",
+						"in": "header",
+						"description": "A unique identifer for the request; valid for 24 hours, max length 83.",
+						"required": true,
+						"schema": {
+						  "type": "string"
+						}
+					  }
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFxOrderRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/fx/v1/quote": {
+			"post": {
+				"tags": [
+					"CreateFxQuoteEndpoint"
+				],
+				"summary": "Requests a quote for a specified FX trade.",
+				"operationId": "Order.Create",
+				"parameters": [
+					{
+					  "name": "Authorization",
+					  "in": "header",
+					  "description": "Your API token, obtained from the ClearBank Portal.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					},
+					{
+					  "name": "DigitalSignature",
+					  "in": "header",
+					  "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					},
+					{
+					  "name": "X-Request-Id",
+					  "in": "header",
+					  "description": "A unique identifer for the request; valid for 24 hours, max length 83.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					}
+				  ],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFxQuoteRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateFxQuoteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CreateFxOrderRequest": {
+				"required": [
+					"customerInformation",
+					"tradeInformation"
+				],
+				"type": "object",
+				"properties": {
+					"customerInformation": {
+						"$ref": "#/components/schemas/RequestCustomerInfo"
+					},
+					"tradeInformation": {
+						"$ref": "#/components/schemas/RequestTradeInfo"
+					}
+				},
+				"additionalProperties": false,
+				"description": "FX Trade Creation Model"
+			},
+			"CreateFxQuoteRequest": {
+				"required": [
+                    "valueDate",
+                    "instructedAmount",
+                    "fixedSide",
+                    "sellCurrency",
+                    "buyCurrency"
+                ],
+				"type": "object",
+				"properties": {
+					"valueDate": {
+						"type": "string",
+						"description": "Settlement date for the proposed FX trade in the format yyyy-MM-ddTHH:mm:ssZ.",
+						"format": "date-time",
+						"example": "2024-08-24T14:15:22Z"
+					},
+					"instructedAmount": {
+						"type": "decimal",
+						"description": "Amount instructed to buy or sell.",
+						"format": "double",
+						"example": "1000.00"
+					},
+					"fixedSide": {
+						"type": "string",
+						"description": "The side of the trade to be fixed.",
+						"nullable": true,
+						"enum": ["buy", "sell"],
+						"example": "buy"
+					},
+					"sellCurrency": {
+						"type": "string",
+						"description": "Three-letter ISO 4217 currency code for the currency to sell.",
+						"nullable": true,
+						"example": "EUR",
+						"minLength": 3,
+						"maxLength": 3
+					},
+					"buyCurrency": {
+						"type": "string",
+						"description": "Three-letter ISO 4217 currency code for the currency to buy.",
+						"nullable": true,
+						"example": "USD",
+						"minLength": 3,
+						"maxLength": 3
+					},
+					"margin": {
+						"type": "decimal",
+						"description": "The optional margin (as a percentage) from the trade to be credited to a margin account. Must be below 0.05 (for example, 0.002 = 0.2% margin).",
+						"format": "double",
+						"minimum": 0,
+						"maximum": 0.05,
+						"example": "0.05"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateFxQuoteResponse": {
+				"required": [
+					"quoteId",
+					"valueDate",
+					"currencyPair",
+					"exchangeRate",
+                    "sellCurrency",
+					"sellAmount",
+					"buyCurrency",
+					"buyAmount",
+					"createdAt",
+					"expiresAt"
+				],
+				"type": "object",
+				"properties": {
+					"quoteRequest": {
+						"$ref": "#/components/schemas/CreateFxQuoteRequest",
+						"description":"Details of the request received from you."
+					},
+					"quoteId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Unique identifier for the quote provided by ClearBank.",
+						"example": "d4f23e64-276c-48b1-9b8c-5c4e1c395a82"
+					},
+					"valueDate": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Settlement date for the FX trade in the format yyyy-MM-ddTHH:mm:ssZ.",
+						"example": "2024-08-24T14:15:22Z"
+					},
+					"currencyPair": {
+						"type": "string",
+						"nullable": true,
+						"description": "Currency pair for the FX trade, composed of three letter ISO 4217 currency codes and a slash for example 'GBP/USD'",
+						"example": "EUR/USD"
+					},
+					"exchangeRate": {
+						"type": "decimal",
+						"format": "double",
+						"description": "The exchange rate ClearBank is providing for the quote.",
+						"example":"1.2745"
+					},
+					"sellCurrency": {
+						"type": "string",
+						"nullable": true,
+						"description": "Three-letter ISO 4217 currency code for the currency to sell.",
+						"example": "EUR"
+					},
+					"sellAmount": {
+						"type": "decimal",
+						"format": "double",
+						"description": "The amount of the sell currency the customer would be charged.",
+						"example": "1000.00"
+					},
+					"buyCurrency": {
+						"type": "string",
+						"nullable": true,
+						"description": "Three-letter ISO 4217 currency code for the currency to buy.",
+						"example": "USD"
+					},
+					"buyAmount": {
+						"type": "decimal",
+						"format": "double",
+						"description": "The amount of the buy currency the customer would receive.",
+						"example": "930.90"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date and time the quote was created in the format yyyy-MM-ddTHH:mm:ssZ.",
+						"example": "2024-08-24T14:15:23Z"
+					},
+					"expiresAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date and time the quote will expire in the format yyyy-MM-ddTHH:mm:ssZ.",
+						"example": "2024-08-24T14:16:08Z"
+					},
+					"marginAmount": {
+						"type": "decimal",
+						"format": "double",
+						"description": "The amount of the calculated margin.",
+						"example": "46.50"
+						
+					},
+					"marginCurrency": {
+						"type": "string",
+						"nullable": true,
+						"description": "Three-letter ISO 4217 currency code of the margin.",
+						"example": "USD"
+					}
+				},
+				"additionalProperties": false
+			},
+			"ProblemDetails": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"nullable": true
+					},
+					"title": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"detail": {
+						"type": "string",
+						"nullable": true
+					},
+					"instance": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": {}
+			},
+			"RequestAccountInfo": {
+				"required": [
+					"owner"
+				],
+				"type": "object",
+				"properties": {
+					"owner": {
+						"maxLength": 140,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z \\-]+$",
+						"type": "string",
+						"description": "The account owner name",
+						"example": "FX4U Ltd"
+					},
+					"iban": {
+						"type": "string",
+						"description": "The IBAN of the account.",
+						"minLength": 1,
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+						"nullable": true,
+						"example": "GB57CLRB04040100057354"
+					}
+				},
+				"additionalProperties": false,
+				"description": "The account information"
+			},
+			"RequestCustomerInfo": {
+				"required": [
+					"attestation",
+					"buyAccount",
+					"sellAccount"
+				],
+				"type": "object",
+				"properties": {
+					"sellAccount": {
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					},
+					"buyAccount": {
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					},
+					"attestation": {
+						"type": "string",
+						"description": "Confirmation accounts are owned by the same person (Must be Y)"
+					}
+				},
+				"additionalProperties": false,
+				"description": "The customer info od FX trade"
+			},
+			"RequestMarginInfo": {
+				"required": [
+					"account"
+				],
+				"type": "object",
+				"properties": {
+					"amount": {
+						"maximum": 0.05,
+						"exclusiveMaximum": true,
+						"minimum": 0,
+						"type": "number",
+						"description": "The optional margin (as a percentage) from the trade to be credited to a margin account. Must be below 0.05 (for example, 0.002 = 0.2% margin).",
+						"format": "double",
+						"example": "0.05"
+					},
+					"account": {
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					}
+				},
+				"additionalProperties": false
+			},
+			"RequestTradeDetails": {
+				"required": [
+					"buyCurrency",
+					"fixedSide",
+					"sellCurrency"
+				],
+				"type": "object",
+				"properties": {
+					"instructedAmount": {
+						"type": "number",
+						"description": "Amount",
+						"format": "double",
+						"example": "1000.00"
+					},
+					"fixedSide": {
+						"minLength": 1,
+						"type": "string",
+						"description": "Fixed side buy or sell"
+					},
+					"sellCurrency": {
+						"minLength": 1,
+						"type": "string",
+						"description": "SellCurrency"
+					},
+					"buyCurrency": {
+						"minLength": 1,
+						"type": "string",
+						"description": "BuyCurrency"
+					}
+				},
+				"additionalProperties": false,
+				"description": "Information about FX trade"
+			},
+			"RequestTradeInfo": {
+				"required": [
+					"details",
+					"endToEndId"
+				],
+				"type": "object",
+				"properties": {
+					"valueDate": {
+						"type": "string",
+						"description": "The date info of FX trade in the format yyyy-MM-ddTHH:mm:ssZ",
+						"format": "date-time"
+					},
+					"details": {
+						"$ref": "#/components/schemas/RequestTradeDetails"
+					},
+					"margin": {
+						"$ref": "#/components/schemas/RequestMarginInfo"
+					},
+					"endToEndId": {
+						"maxLength": 35,
+						"minLength": 1,
+						"pattern": "[A-z0-9/\\-?:().,\" + ]",
+						"type": "string",
+						"description": "Customer assigned unique ID"
+					},
+					"unstructuredInformation": {
+						"maxLength": 140,
+						"type": "string",
+						"description": "Free-form reference or other information",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false,
+				"description": "The payment info of FX trade"
+			}
+		}
+	}
+}

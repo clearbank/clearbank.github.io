@@ -1,0 +1,163 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "ClearBank.Fx.Orchestrator.V2.Api",
+		"version": "1.1FXRFQ"
+	},
+	"paths": {
+		"/fx/v1/ExecuteQuote": {
+			"post": {
+				"tags": [
+					"ExecuteFxQuoteEndpoint"
+				],
+				"summary": "Execute a trade using the quoted rate.",
+				"operationId": "Execute.Quote",
+				"parameters": [
+					{
+					  "name": "Authorization",
+					  "in": "header",
+					  "description": "Your API token, obtained from the ClearBank Portal.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					},
+					{
+					  "name": "DigitalSignature",
+					  "in": "header",
+					  "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					},
+					{
+					  "name": "X-Request-Id",
+					  "in": "header",
+					  "description": "A unique identifer for the request; valid for 24 hours, max length 83.",
+					  "required": true,
+					  "schema": {
+						"type": "string"
+					  }
+					},
+					{
+						"name": "institutionId",
+						"in": "path",
+						"description": "A unique identifer for the ClearBank institution.",
+						"required": true,
+						"style": "simple",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/QuoteExecutionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					},
+					"400": {
+						"description": "Bad Request"
+					},
+					"409": {
+						"description": "Conflict"
+					},
+					"423": {
+						"description": "Locked"
+					},
+					"503": {
+						"description": "Service Unavailable"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"QuoteExecutionRequest": {
+				"required": [
+                    "quoteId",
+                    "customerInformation",
+					"sellAccount",
+					"buyAccount",
+					"attestation"
+                ],
+				"type": "object",
+				"properties": {
+					"quoteId": {
+						"type": "string",
+						"description": "ID of the quoted rate to be executed in the trade",
+						"format": "uuid",
+						"nullable": true,
+						"example": "d4f23e64-276c-48b1-9b8c-5c4e1c395a82"
+
+					},
+					"customerInformation": {
+						"$ref": "#/components/schemas/RequestCustomerInfo"
+					},
+					"marginAccount": {
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					}
+				},
+				"additionalProperties": false
+			},
+			"RequestAccountInfo": {
+				"type": "object",
+				"properties": {
+					"owner": {
+						"type": "string",
+						"description":"The name of the legal entity that owns the account",
+						"nullable": true,
+						"pattern": "^[a-zA-Z \\-]+$",
+						"minLength": 1,
+						"maxLength": 140,
+						"example": "FX4U Ltd"
+					
+					},
+					"iban": {
+						"type": "string",
+						"description": "The IBAN of the account.",
+						"minLength": 1,
+                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+						"nullable": true,
+						"example": "GB57CLRB04040100057354"
+						
+					}
+				},
+				"additionalProperties": false
+			},
+			"RequestCustomerInfo": {
+				"type": "object",
+				"properties": {
+					"sellAccount": {
+						"description": "Details of the account on the sell side of the trade",
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					},
+					"buyAccount": {
+						"description": "Details of the account on the buy side of the trade",
+						"$ref": "#/components/schemas/RequestAccountInfo"
+					},
+					"attestation": {
+						"type": "string",
+						"description": "Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.",
+						"minLength": 1,
+						"enum": ["Y", "N"],
+						"nullable": true,
+						"example": "Y"
+					}
+				},
+				"additionalProperties": false
+			}
+		}
+	}
+}
