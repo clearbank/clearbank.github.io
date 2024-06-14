@@ -1,0 +1,77 @@
+---
+title: "Savings accounts"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Savings accounts
+
+ClearBank supports savings accounts. If you'd like access to this product, please speak to your relationship manager.
+
+You can choose how much interest to pay customers. ClearBank will then calculate the daily accruals and post the monthly interest payments.
+
+To create a savings account, use the [POST /v1/savings](#create-a-savings-account) endpoint. You must also set a nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
+
+<Callout colour="blue">
+A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the savings account.
+</Callout>
+
+### Please imagine a really beautiful message flow diagram here
+
+Once you have opened a savings account, you can submit and withdraw payments using the usual payment endpoints.
+
+## Savings accounts endpoints
+
+<EndpointBlock
+  type="post"
+  title="Create a savings account"
+  endpoints={[
+    {
+      path: "/v1/savings",
+      version: "1.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Set up a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Closing a savings account
+
+To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint. The process is asynchronous. Accrued interest, if any, will be deposited into the nominated account.
+
+### Please imagine another really beautiful message flow diagram here
+
+<EndpointBlock
+  type="post"
+  title="Close a savings account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Savings account webhooks
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
+<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
