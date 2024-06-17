@@ -258,6 +258,7 @@
       },
       "CreateRequestForRecallRequest": {
         "required": [
+          "amount",
           "reasonCodeForRecall"
         ],
         "type": "object",
@@ -295,6 +296,7 @@
       },
       "CreateSepaOutboundPaymentRequest": {
         "required": [
+          "amount",
           "creditor",
           "creditorAgent",
           "debtor",
@@ -551,12 +553,15 @@
         "additionalProperties": {}
       },
       "RecallResponseReceived": {
+        "required": [
+          "approve"
+        ],
         "type": "object",
         "properties": {
           "approve": {
             "type": "boolean",
-            "description": "In order to accept a recall, please set the the value of the to true, please leave rejection code field empty.",
-            "example": "true"
+            "description": "To accept a recall, set the value to true. To reject a recall, set the value to false.",
+            "example": "false"
           },
           "rejectionCode": {
             "type": "string",
@@ -583,7 +588,7 @@
             },
             "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
             "nullable": true,
-            "example": "[ \r\n \"NLKBGB20\" \r\n ]"
+            "example": "NLKBGB20"
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -607,7 +612,7 @@
             },
             "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
             "nullable": true,
-            "example": "[ \r\n \"NLKBGB20\" \r\n ]"
+            "example": "NLKBGB20"
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
