@@ -22,11 +22,11 @@ To create a savings account, use the [POST /v1/savings](#create-a-savings-accoun
 A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the savings account.
 </Callout>
 
-### Please imagine a really beautiful message flow diagram here
+![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
 Once you have opened a savings account, you can submit and withdraw payments using the usual payment endpoints.
 
-## Savings accounts endpoints
+## Open a savings account
 
 <EndpointBlock
   type="post"
@@ -41,6 +41,8 @@ Once you have opened a savings account, you can submit and withdraw payments usi
     }
   ]}
 />
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
 
 <EndpointBlock
   type="put"
@@ -72,6 +74,5 @@ To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-sa
 
 ## Savings account webhooks
 
-<WebhookPlaceholder render='account-created-webhook-v1' />
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
