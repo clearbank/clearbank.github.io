@@ -106,7 +106,7 @@ To cancel a cash ISA:
 
 The process is shown in this message flow diagram:
 
-![Message flow diagream of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
+![Message flow diagram of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
 
 ### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
@@ -231,9 +231,13 @@ The process is shown in this message flow diagram:
 
 ## Transfers in
 
-ClearBank supports full or partial transfers in of cash ISAs. 
+ClearBank supports full or partial transfers in of cash ISAs. The cash ISA must have already been opened using the endpoints above.
 
-To transfer in a cash ISA, use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint. 
+To transfer in a cash ISA, use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint. This begins the transfer in process. Use the [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](#submit-a-transfer-history-form) to submit the transfer history form.
+
+To check the status of a transfer in, use [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in).
+
+![Message flow diagram of the transfer in process, as detailed above.](/assets/images/cash-isa-transfer-in.svg)
 
 <EndpointBlock
   type="post"
@@ -246,8 +250,56 @@ To transfer in a cash ISA, use the [POST /v1/isas/{accountId}/transfer-in](#tran
   ]}
 />
 
+<EndpointBlock
+  type="put"
+  title="Submit a transfer history form"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get infomation on a transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Setting customer eligibility
+
+When you update a customer's profile using the [FSCS protected deposits endpoints](../embedded-banking/fscs-protected-deposits), if their [ISA eligibility](https://www.gov.uk/individual-savings-accounts/if-you-move-abroad) changes, ClearBank will automatically update the customer's profile and unsubscribe them from their ISA.
+
+<Callout colour="blue">
+Unsubscription means a customer cannot deposit money into their ISA. They can still withdraw money and recieve UK tax relief on funds held in it.
+</Callout>
+
+If the customer becomes eligible again and wants to resubscribe, you should:
+1. Update their profile with that information using the [customer profile endpoints](../embedded-banking/fscs-protected-deposits)
+2. Resubscribe to an ISA using the [POST /v1/isas/{accountId}/declaration endpoint](#set-a-clients-eligiblity).
+
+<EndpointBlock
+  type="post"
+  title="Set a client's eligibility"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/declaration",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
 ## Cash ISA webhooks
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='transaction-rejected-v2' />
+<WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
