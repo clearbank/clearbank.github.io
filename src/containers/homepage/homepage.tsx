@@ -4,12 +4,12 @@ import { Layout } from 'src/components'
 import Article from './article'
 import ClientSection from './client-section'
 
-import GetStartedIcon from '../../../static/assets/images/get-started-icon.png'
-import ApiIcon from '../../../static/assets/images/api-icon.png'
-import CodeIcon from '../../../static/assets/images/Code.png'
-import LinkIcon from '../../../static/assets/images/Link.png'
-// import CheckIcon from '../../../static/assets/images/Check.png'
-import GHIcon from '../../../static/assets/images/GitHub-Mark 1.png'
+import GetStartedIcon from '../../../static/assets/images/get-started-icon.svg'
+import ApiIcon from '../../../static/assets/images/api-icon.svg'
+import CodeIcon from '../../../static/assets/images/code-icon.svg'
+import LinkIcon from '../../../static/assets/images/link-icon.svg'
+// import CheckIcon from '../../../static/assets/images/check-icon.svg'
+import GHIcon from '../../../static/assets/images/github-icon.png'
 
 import * as Styles from './homepage.styles'
 
@@ -64,7 +64,7 @@ const Homepage: React.FC<any> = (props) => {
           <>
             <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
             <Styles.GitHubSectionContainer>
-              <img src={GHIcon} alt="github icon" />
+              <img src={GHIcon} alt="GitHub icon" />
               <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
             </Styles.GitHubSectionContainer>
 
