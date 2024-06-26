@@ -178,7 +178,7 @@
 						"example": "2024-08-24T14:15:22Z"
 					},
 					"instructedAmount": {
-						"type": "decimal",
+						"type": "number",
 						"description": "Amount instructed to buy or sell.",
 						"format": "double",
 						"example": "1000.00"
@@ -207,12 +207,12 @@
 						"maxLength": 3
 					},
 					"margin": {
-						"type": "decimal",
+						"type": "number",
 						"description": "The optional margin (as a percentage) from the trade to be credited to a margin account. Must be below 0.05 (for example, 0.002 = 0.2% margin).",
 						"format": "double",
 						"minimum": 0,
-						"maximum": 0.05,
-						"example": "0.05"
+						"maximum": 0.0499,
+						"example": "0.01"
 					}
 				},
 				"additionalProperties": false
@@ -255,10 +255,10 @@
 						"example": "EUR/USD"
 					},
 					"exchangeRate": {
-						"type": "decimal",
+						"type": "number",
 						"format": "double",
 						"description": "The exchange rate ClearBank is providing for the quote.",
-						"example":"1.2745"
+						"example":"1.214021494"
 					},
 					"sellCurrency": {
 						"type": "string",
@@ -267,7 +267,7 @@
 						"example": "EUR"
 					},
 					"sellAmount": {
-						"type": "decimal",
+						"type": "number",
 						"format": "double",
 						"description": "The amount of the sell currency the customer would be charged.",
 						"example": "1000.00"
@@ -279,10 +279,10 @@
 						"example": "USD"
 					},
 					"buyAmount": {
-						"type": "decimal",
+						"type": "number",
 						"format": "double",
 						"description": "The amount of the buy currency the customer would receive.",
-						"example": "930.90"
+						"example": "1214.02"
 					},
 					"createdAt": {
 						"type": "string",
@@ -297,10 +297,10 @@
 						"example": "2024-08-24T14:16:08Z"
 					},
 					"marginAmount": {
-						"type": "decimal",
+						"type": "number",
 						"format": "double",
 						"description": "The amount of the calculated margin.",
-						"example": "46.50"
+						"example": "12.29"
 						
 					},
 					"marginCurrency": {
@@ -351,13 +351,12 @@
 						"pattern": "^[a-zA-Z \\-]+$",
 						"type": "string",
 						"description": "The account owner name",
-						"example": "FX4U Ltd"
+						"example": "FX Service Ltd"
 					},
 					"iban": {
 						"type": "string",
 						"description": "The IBAN of the account.",
 						"minLength": 1,
-                        "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
 						"nullable": true,
 						"example": "GB57CLRB04040100057354"
 					}
@@ -394,13 +393,13 @@
 				"type": "object",
 				"properties": {
 					"amount": {
-						"maximum": 0.05,
+						"maximum": 0.0499,
 						"exclusiveMaximum": true,
 						"minimum": 0,
 						"type": "number",
 						"description": "The optional margin (as a percentage) from the trade to be credited to a margin account. Must be below 0.05 (for example, 0.002 = 0.2% margin).",
 						"format": "double",
-						"example": "0.05"
+						"example": "0.01"
 					},
 					"account": {
 						"$ref": "#/components/schemas/RequestAccountInfo"

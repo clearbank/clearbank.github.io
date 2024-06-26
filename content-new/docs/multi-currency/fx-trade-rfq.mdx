@@ -24,7 +24,7 @@ Once you receive the response with the quote, the rate is held for **45 seconds*
 <br />
 <br />
 
- This message flow diagram shows the flow of requesting a rate quote, an attempt to execute the trade outside the held rate period, and the associated trade cancelled webhook.
+ This message flow diagram shows the flow of requesting a rate quote, an attempt to execute the trade outside the held rate period, and the associated 400 error.
 
 <br />
 <br />
@@ -38,7 +38,7 @@ Once you receive the response with the quote, the rate is held for **45 seconds*
 
 You can use our FX trade functionality to perform FX trades between accounts which belong to the same owner. For example, let’s assume that you want to sell **GBP** from **Account A** to purchase **EUR** for **Account B** – in doing so, you will need to ensure that the owner of both accounts is the same. This applies to two accounts that belong to you, that is, the financial institution or your customers.
 
-### Example: Specifying the sell amount with margin
+#### Example: Specifying the sell amount with margin
 
 **Trade Request:**
 
@@ -56,7 +56,7 @@ You can use our FX trade functionality to perform FX trades between accounts whi
 - Credit to the buyAccount: USD 1386 [USD 1.4 x (1-0.01) x 1000]
 - Credit to the specified margin account: USD 14
 
-### Example: Specifying the buy amount with margin
+#### Example: Specifying the buy amount with margin
 
 **Trade Request:**
 
@@ -83,11 +83,14 @@ You can use our FX trade functionality to perform FX trades between accounts whi
  
  For more information about cut-off times, please speak to your relationship manager.
 
- The following message flow diagram shows the flow of requesting a quote and successfully executing a trade within the held rate period and the associated settled webhook.
+**FX trades minimum values:**
+
+FX trades have minimum trading values defined for each currency. If you try to request a trade below these values, you will receive a 400 error response. For the full list of minimum trade values per currency, see [Foreign exchange trade](#fx-trade).
+
 
 <EndpointBlock
   type="post"
-  title="Create a FX Request For Quote"
+  title="Create an RFQ request"
   endpoints={[
     {
       path: "/fx/v1/quote",
@@ -98,7 +101,7 @@ You can use our FX trade functionality to perform FX trades between accounts whi
 
 <EndpointBlock
   type="post"
-  title="Create a buy or sell order using a quote"
+  title="Executing an RFQ request using a quote"
   endpoints={[
     {
       path: "/fx/v1/ExecuteQuote",
