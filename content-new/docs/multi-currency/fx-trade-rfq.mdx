@@ -19,7 +19,7 @@ Once you receive the response with the quote, the rate is held for **45 seconds*
 <br />
 <br />
 
-![Image showing camt.053 statement message flow](/assets/images/rfq-flow-diagram-success.svg "successful rfq trade message flow")
+![A message flow diagram detailing a successful quote request and quote execution. The customer uses the POST /fx/v1/quote endpoint to request an FX trade quote from ClearBank. ClearBank sends a 200 OK response which contains the quoted rate and a quoteId. The customer uses the POST /fx/v1/ExecuteQuote endpoint within the 45 second held rate period to execute the trade using the quoted amount. As the trade was executed within the held rate period, the customer receives a 202 Accepted response. This results in a successful trade, evidenced by the customer receiving an FX Trade Executed and FX Trade Settled webhook. This is the end of the message flow.](/assets/images/rfq-flow-diagram-success.svg "successful rfq trade message flow")
 
 <br />
 <br />
@@ -29,7 +29,7 @@ Once you receive the response with the quote, the rate is held for **45 seconds*
 <br />
 <br />
 
-![Image showing camt.053 statement message flow](/assets/images/rfq-flow-diagram-cancelled.svg "cancelled rfq trade message flow")
+![A message flow diagram detailing a successful quote request but followed by an unsuccessful quote execution. The customer uses the POST /fx/v1/quote endpoint to request an FX trade quote from ClearBank. ClearBank sends a 200 OK response which contains the quoted rate and a quoteId. The customer uses the POST /fx/v1/ExecuteQuote endpoint outside of the 45 second held rate period. ClearBank sends a 400 Bad Request response. This is the end of the message flow.](/assets/images/rfq-flow-diagram-cancelled.svg "cancelled rfq trade message flow")
 
 <br />
 <br />
