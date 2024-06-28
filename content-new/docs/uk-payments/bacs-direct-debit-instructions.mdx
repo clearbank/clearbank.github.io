@@ -161,37 +161,11 @@ If a Direct Debit is cancelled due to dormancy but is still required, the servic
 
 The following webhooks relate to managing Direct Debit Instructions. The webhooks can occur in response to an endpoint (as detailed below) but also if we receive a DDI from the Bacs payment service. The webhooks returned are the same regardless of whether a real or virtual account endpoint is used. Note that the webhook names include the term "mandate". This reflects the code, but should be understood to mean "Direct Debit Instruction".
 
-<WebhookSummary
-  description='Create a DDI for a real account'
-  endpoint='/bacs-direct-debits/#create-ddi-for-a-real-account'
-  method='post'
-  webhooks={[
-    'bacs-mandate-initiated-webhook-v2',
-    'bacs-mandate-initiation-failed-webhook-v1'
-  ]}
-/>
-
-
-<WebhookSummary
-  description='Cancel a DDI for a real or virtual account'
-  endpoint='/bacs-direct-debits/#cancel-a-ddi-for-a-real-account'
-  method='delete'
-  webhooks={[
-    'bacs-mandate-cancelled-webhook-v2',
-    'bacs-mandate-cancellation-failed-webhook-v1'
-  ]}
-/>
-
-
-<WebhookSummary
-  description='Return a DDI for an account'
-  endpoint='/bacs-direct-debits/#return-ddi-for-an-account'
-  method='post'
-  webhooks={[
-    'bacs-mandate-returned-webhook-v1',
-    'bacs-mandate-return-failed-webhook-v1'
-  ]}
-/>
+| Event | Associated webhooks |
+|---------|------------|
+| [Create a DDI for a real account](#create-a-ddi-real-account) OR [Create a DDI for a virtual account](#create-a-ddi-virtual-account) | <ul><li>[Bacs Mandate Initiated webhook](#bacs-mandate-initiated-webhook)</li> <li>[Bacs Mandate Initiation Failed webhook](#bacs-mandate-initiation-failed-webhook)</li></ul> |
+| [Cancel a DDI for a real account](#cancel-a-ddi-real-account) OR [Cancel a DDI for a virtual account](#cancel-a-ddi-virtual-account) | <ul><li>[Bacs Mandate Cancelled webhook](#bacs-mandate-cancelled-webhook)</li> <li>[Bacs Mandate Cancellation Failed webhook](#bacs-mandate-cancellation-failed-webhook)</li></ul> |
+| [Return a DDI for a real account](#return-a-ddi-real-account) OR [Return a DDI for a virtual account](#return-a-ddi-virtual-account) | <ul><li>[Bacs Mandate Returned webhook](#bacs-mandate-returned-webhook)</li> <li>[Bacs Mandate Return Failed webhook](#bacs-mandate-return-failed-webhook)</li></ul> |
 
 You may also receive a [Bacs Mandate Migrated webhook](#bacs-mandate-migrated-webhook) which is prompted by information received from Bacs.
 
