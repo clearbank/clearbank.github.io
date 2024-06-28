@@ -1,6 +1,6 @@
 ---
 title: "Savings accounts"
-order: 2
+order: 3
 showPageMenu: true
 ---
 
@@ -16,17 +16,23 @@ ClearBank supports savings accounts. If you'd like access to this product, pleas
 
 You can choose how much interest to pay customers. ClearBank will then calculate the daily accruals and post the monthly interest payments.
 
-To create a savings account, use the [POST /v1/savings](#create-a-savings-account) endpoint. You must also set a nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
-
-<Callout colour="blue">
-A <strong>nominated account</strong> is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the savings account.
-</Callout>
+To create a savings account, use the [POST /v1/savings](#create-a-savings-account) endpoint.
 
 ![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
-Once you have opened a savings account, you can submit and withdraw payments using the usual payment endpoints.
+Once you have opened a savings account, you can deposit and withdraw payments using the usual payment endpoints.
 
-## Open a savings account
+To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint. The process is asynchronous. Accrued interest, if any, will be deposited into the nominated account.
+
+Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
+
+<Callout colour="blue">
+A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the savings account.
+</Callout>
+
+You can optionally check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+
+![To close an account, set up a nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
 
 <EndpointBlock
   type="post"
@@ -55,12 +61,6 @@ Once you have opened a savings account, you can submit and withdraw payments usi
   ]}
 />
 
-## Closing a savings account
-
-To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint. The process is asynchronous. Accrued interest, if any, will be deposited into the nominated account.
-
-### Please imagine another really beautiful message flow diagram here
-
 <EndpointBlock
   type="post"
   title="Close a savings account"
@@ -72,7 +72,16 @@ To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-sa
   ]}
 />
 
-## Savings account webhooks
+<EndpointBlock
+  type="get"
+  title="Get account closure status"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
