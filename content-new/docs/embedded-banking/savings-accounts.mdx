@@ -16,7 +16,11 @@ ClearBank supports savings accounts. If you'd like access to this product, pleas
 
 You can choose how much interest to pay customers. ClearBank will then calculate the daily accruals and post the monthly interest payments.
 
-To create a savings account, use the [POST /v1/savings](#create-a-savings-account) endpoint.
+To create a savings account, first use the [POST /v1/savings](#create-a-savings-account) endpoint, then set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
+
+<Callout colour="blue">
+A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the savings account.
+</Callout>
 
 ![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
@@ -24,15 +28,11 @@ Once you have opened a savings account, you can deposit and withdraw payments us
 
 To close a savings account, use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint. The process is asynchronous. Accrued interest, if any, will be deposited into the nominated account.
 
-Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
-
-<Callout colour="blue">
-A <strong>nominated account</strong> is the account that any remaining funds and interest will be transferred into upon closure of the savings account.
-</Callout>
-
 You can optionally check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
 
-![To close an account, set up a nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
+If the account closure fails, it may be because the nominated account details are incorrect. Before contacting ClearBank, re-enter the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint, then re-call the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+
+![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
 
 <EndpointBlock
   type="post"
