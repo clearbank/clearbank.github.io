@@ -63,7 +63,7 @@ You can send SEPA recall requests using the [POST /payments/sepa-ct/v1/recall](#
 
 If your recall request has been accepted, you will be notified via the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook) and [Customer Accounts Transaction Settled webhook](#customer-accounts-transaction-completed-webhook).
 
-#### Recall reason codes
+#### Recall request reason codes
 
 Recalls can be requested using the following reason codes:
 
@@ -93,18 +93,24 @@ Recalls can be requested using the following reason codes:
 
 You may receive a recall request via the [Recall Request webhook](#respond-to-sepa-ct-recall-request). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-sepa-ct-recall-request) endpoint.
 
-#### Recall reason codes
+#### Recall response reason codes
+
+Recalls can be accepted with the following reason code:
+| Reason | Description|
+|------|-----------|
+|FOCR |Following cancellation request|
 
 Recalls can be rejected for the following reason codes:
 
-| Reason | Description|Time limit to send recall request|
-|------|-----------|---------------------------------|
-|DUPL |Duplicate sending|10 buiness days| 
-|TECH |Technical problems resulting in an erroneous SEPA Instant Transaction|10 buiness days|
-|FRAD |Fraudulent originated SEPA Instant Instruction|13 months|
-|AC03 |Wrong account number in original transfer|13 months|
-|AM09 |Wrong amount in original transfer|13 months|
-|CUST |Requested by customer|13 months|
+| Reason | Description|
+|------|-----------|
+|AC04 |Closed account number|
+|NOOR |No original transaction received|
+|AM04 |Insufficient funds|
+|ARDT |Already returned transaction|
+|NOAS |No answer from customer|
+|LEGL |Legal decision|
+|CUST |Customer decision|
 
 Recall requests should be responded to within 15 business days.
 
