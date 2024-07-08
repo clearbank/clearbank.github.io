@@ -10,19 +10,20 @@ import Callout from "src/components/callout";
 
 ## GBP Cross-Border
 
-Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
+Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
 
 There is no limit to the amount that can be sent using this service.
 
-You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v1/payments](#send-a-gpb-cross-border-payment) endpoint. 
+You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v2/payments](#send-a-gpb-cross-border-payment) endpoint. 
 
 Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
 
 Things to note:
 
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent after this window closes will be rejected with a 400 Bad Request response.
-- You'll need to include a GBP Direct Participant in the intermediary agent field.
+- If you use version 2, you do not need to provide the details of the intermediary agent. Instead, we'll use the details of the creditor to identify the correct intermediary agent on your behalf. We recommend using version 2 due to this benefit.
+- If you use version 1 of the endpoint, you'll need to include a GBP Direct Participant in the intermediary agent field.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
 
 
@@ -64,6 +65,16 @@ The character set defined by the pattern for the `name` and `reference` fields i
     type="post"
     title="Send a GBP cross-border payment"
     endpoints={[
+      {
+      path: "/payments/cross-border-sterling/v2/payments",
+        version: "2.0GBPCrossBorder",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'outbound-held-transaction-v1',
+        'transaction-rejected-v2'
+        ]
+    },
     {
         path: "/payments/cross-border-sterling/v1/payments",
         version: "1.0GBPCrossBorder",
