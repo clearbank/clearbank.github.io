@@ -21,6 +21,28 @@ The statement is populated with transaction activity across all of your accounts
 We complete internal reconciliation for the previous business day in the early hours of the morning and will generate a statement for that period once reconciliation is complete (intraday statements are not available).
 </Callout>
 
+### UK time zone examples
+The following examples highlight the differences in startDateTimeUtc and endDateTimeUtc depending on the current UK time zone including specific examples of the first day of a new time zone. See the diagram for a visual representation of these changes.
+
+In these examples, the following parameters remain constant:
+- ClearBank completes its reconciliation based on the current UK timezone
+- The endpoint request must be in UTC time
+
+|Scenario|startDateTimeUtc|endDateTimeUtc|Notes|
+|--------|----------------|--------------|-----|
+|**Requesting a statement in winter**<br /> It's 5 February 2024 <br /> I want to request yesterday's statement (4 February 2024) <br /> Yesterday and today's time zone: GMT (UTC+0) |2024-02-04T00:00:00Z|2024-02-05T00:00:00Z|GMT is equivalent to UTC so no adjustments are required to the times in the request.|
+|**Requesting a statement in summer**<br /> It's 5 July 2024 <br /> I want to request yesterday's statement (4 July 2024) <br /> Yesterday and today's time zone: BST (UTC+**1 hour**) |2024-07-03T23:00:00Z|2024-07-04T23:00:00Z|BST is 1 hour ahead of UTC, therefore the times in the request must each be reduced by 1 hour.|
+|**Requesting a statement after the time zone changes from GMT to BST**<br /> It's 1 April 2024 <br /> I want to request yesterday's statement (31 March 2024) <br /> Yesterday's time zone: GMT (UTC+0) and today's time zone: BST (UTC+**1 hour**) |2024-03-31T00:00:00Z|2024-03-31T23:00:00Z|When the time zone changes from GMT to BST on 31 March, the clocks go forward 1 hour making it a **23-hour day**.<br /> This means the start and end date of the request will both be 31 March.|
+|**Requesting a statement after the time zone changes from BST to GMT**<br /> It's 2 November 2024 <br /> I want to request yesterday's statement (1 November 2024) <br /> Yesterday's time zone: BST (UTC+**1 hour**) and today's time zone: GMT (UTC+0) |2024-10-31T23:00:00Z|2024-11-02T00:00:00Z|When the time zone changes from BST to GMT on 1 November, the clocks go back 1 hour making it a **25-hour day**.<br /> This means the start and end date range of the request is from 31 October to 2 November.|
+
+
+<br />
+<br />
+
+![Image showing when the UK time zone changes from GMT to BST and the effect the time zone change has on the 24-hour clock.](/assets/images/camt053-time-zone-graphic.svg "time zones for camt.053 statement requests")
+
+<br />
+
 ### How to request and download your statement
 Use the **POST /v1/statementrequests** endpoint to request the generation of a camt.053 statement for a specific time range.
 
@@ -33,10 +55,11 @@ The process is shown in this message flow diagram:
 
 <br />
 
-Once the statement has been generated, you will receive a **Statements Ready For Download** webhook containing a unique **MessageId** and a **TotalPages** value. The statement is divided into pages and each page is assigned a **PageNumber** value. If a page reaches the maximum number of transactions (5000), the statement is continued on a new page. Each page is a complete XML file starting with a group header. 
+Once the statement has been generated, you will receive a **Statement Ready For Download** webhook containing a unique **MessageId** and a **TotalPages** value. The statement is divided into pages and each page is assigned a **PageNumber** value. If a page reaches the maximum number of transactions (5000), the statement is continued on a new page. Each page is a complete XML file starting with a group header. 
 
 <Callout colour="blue">
-The time taken to generate a statement varies depending on the number of settled transactions included in the request. 
+Note that you will observe an expected delay in receiving the Statement Ready For Download webhook. The time taken to generate a statement varies depending on the number of settled transactions included in the request.
+If the endDateTimeUtc exceeds T00:00:00Z (includes the next calendar day), the statement will not be available until reconciliation has been completed for both days.
 Once generated, statements are retained for 2 weeks.
 </Callout>
 
