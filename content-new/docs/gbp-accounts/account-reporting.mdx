@@ -58,8 +58,10 @@ The process is shown in this message flow diagram:
 Once the statement has been generated, you will receive a **Statement Ready For Download** webhook containing a unique **MessageId** and a **TotalPages** value. The statement is divided into pages and each page is assigned a **PageNumber** value. If a page reaches the maximum number of transactions (5000), the statement is continued on a new page. Each page is a complete XML file starting with a group header. 
 
 <Callout colour="blue">
-Note that you will observe an expected delay in receiving the Statement Ready For Download webhook. The time taken to generate a statement varies depending on the number of settled transactions included in the request.
-If the endDateTimeUtc exceeds T00:00:00Z (includes the next calendar day), the statement will not be available until reconciliation has been completed for both days.
+Note that you will observe an expected delay in receiving the Statement Ready For Download webhook. The time taken to generate a statement varies depending on the number of settled transactions included in the request. <br />
+<br />
+If the endDateTimeUtc exceeds midnight UK time, then two calendar days will be included in the request. The statement will not be available until reconciliation has been completed for both days. This means that if you are requesting a statement for yesterday, but you include an hour of today, you won't get the statement until tomorrow. <br />
+<br />
 Once generated, statements are retained for 2 weeks.
 </Callout>
 
