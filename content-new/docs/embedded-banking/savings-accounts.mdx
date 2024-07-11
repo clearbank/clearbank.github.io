@@ -16,13 +16,11 @@ ClearBank supports savings accounts. A savings account is an FSCS-protected acco
 
 You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments.
 
-If you would like to create a customer current account, refer to [Create an account](./retail-customers#create-an-account).
-
 **To create a savings account:**
-1. If not already present, create a retail customer using the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Use the [POST /v1/savings](#create-a-savings-account) endpoint to create the account.
+1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
+2. Use the [POST /v1/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
-> A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
+> **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
 
 ![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
@@ -48,7 +46,7 @@ Webhooks are not instant and may take up to the following day to arrive. Wait un
 
 Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
 
-**To close the account if the nominated account was not correct:**
+**To close the savings account if the nominated account was incorrect:**
 1. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-up-a-nominated-account) endpoint.
 3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
 > The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
