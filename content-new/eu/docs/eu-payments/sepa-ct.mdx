@@ -19,11 +19,7 @@ You can:
 - [Return a SEPA CT payment](#sepa-credit-transfer-returns)
 > Integrating with recall and return is required.
 - Receive a SEPA CT payment
-> You will be notified of incoming SEPA CT payments via the [SEPA CT Payment Settled](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks.
-
-<Callout colour="blue">
-It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
-</Callout>
+> You will be notified of incoming SEPA CT payments via the [SEPA CT Payment Settled](#sepa-instant-payment-settled-webhook) webhook.
 
 ### Opening hours
 
@@ -33,7 +29,7 @@ Outbound SEPA CT payments can be sent on Netherlands business days between 07:00
 
 ## Sending a SEPA Credit Transfer payment
 
-To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a-sepa-ct-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook) and the [Customer Accounts Transaction Settled webhook](#customer-accounts-transaction-completed-webhook).
+To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a-sepa-ct-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook).
 
 ![A message flow diagram explaining how to send a SEPA CT payment](/assets/images/send-a-sepa-ct-payment.svg)
 
@@ -46,8 +42,7 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
       version: "1.0-SEPA-CT",
       webhooks: [
         'sepa-ct-outbound-payment-completed-v1',
-        'sepa-ct-outbound-payment-failed-v1',
-        'eu-customer-accounts-transaction-completed-v1'
+        'sepa-ct-outbound-payment-failed-v1'
       ]
     }
   ]}
@@ -55,13 +50,12 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
-<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 ## Recall a SEPA CT Payment
 
 You can send SEPA recall requests using the [POST /payments/sepa-ct/v1/recall](#request-a-sepa-ct-payment-recall) endpoint. Recalls can take up to 15 business days.
 
-If your recall request has been accepted, you will be notified via the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook) and [Customer Accounts Transaction Settled webhook](#customer-accounts-transaction-completed-webhook).
+If your recall request has been accepted, you will be notified via the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook).
 
 #### Recall request reason codes
 
@@ -164,7 +158,7 @@ You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#
 
 ## Receive SEPA CT returns
 
-You will be notified of a successful SEPA CT return via the [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) and [SEPA CT Inbound Payment Return Completed webhook
+You will be notified of a successful SEPA CT return via the [SEPA CT Inbound Payment Return Completed webhook
 ](#sepa-ct-inbound-payment-return-completed-webhook) webhooks.
 
 You will be notified of a failed return via the [SEPA CT Inbound Payment Return Failed webhook](#sepa-ct-inbound-payment-return-failed-webhook).
