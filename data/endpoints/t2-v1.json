@@ -2,7 +2,12 @@
     "openapi": "3.0.1",
     "info": {
         "title": "ClearBank.Target2.Orchestrator.Api",
-        "version": "T2-1.0"
+        "contact": {
+            "name": "API Support",
+            "url": "https://clear.bank",
+            "email": "fiapisupport@clear.bank"
+          },
+        "version": "1.0-T2"
     },
     "paths": {
         "/payments/t2-rtgs/v1/institution-payments": {
@@ -11,7 +16,35 @@
                     "T2-RTGS Institution Payment"
                 ],
                 "description": "This endpoint will send a T2 institution payment (pacs.009).",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -51,7 +84,35 @@
                     "T2-RTGS Payment Return"
                 ],
                 "description": "This endpoint will send a payment return request (pacs.004).",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -101,7 +162,35 @@
                     "T2-RTGS Customer Payment"
                 ],
                 "description": "This endpoint will send a T2 customer payment (pacs.008).",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API Token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -1460,12 +1549,12 @@
                         "$ref": "#/components/schemas/PaymentStatus.FailureReason"
                     },
                     "lastModifiedTimestamp": {
-                        "description": "Last modified timestamp, expressed in either UTC time format (YYYY-MM-DDThh:mm:ss.sssZ), local time with UTC offset format (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm), or local time format (YYYY-MM-DDThh:mm:ss.sss).",
+                        "description": "Last modified timestamp, expressed in either UTC time format (YYYY-MM-DDThh:mm:ss.sssZ) or local time with UTC offset format (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm).",
                         "type": "string",
                         "format": "date-time"
                     },
                     "createdTimestamp": {
-                        "description": "Created timestamp, expressed in either UTC time format (YYYY-MM-DDThh:mm:ss.sssZ), local time with UTC offset format (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm), or local time format (YYYY-MM-DDThh:mm:ss.sss).",
+                        "description": "Created timestamp, expressed in either UTC time format (YYYY-MM-DDThh:mm:ss.sssZ) or local time with UTC offset format (YYYY-MM-DDThh:mm:ss.sss+/-hh:mm).",
                         "type": "string",
                         "format": "date-time"
                     }
