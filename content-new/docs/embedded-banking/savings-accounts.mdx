@@ -1,0 +1,113 @@
+---
+title: "Savings accounts"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Savings accounts
+
+ClearBank supports savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your relationship manager.
+
+You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments.
+
+**To create a savings account:**
+1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
+2. Use the [POST /v1/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
+3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+> **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
+
+![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
+
+<Callout colour="blue">
+Always note down the X-Request-Id when creating an account. If you receive a 500 response, resubmitting the request with the same X-Request-Id will avoid creating a duplicate account.
+</Callout>
+
+Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
+
+**To close a savings account:**
+1. Withdraw all funds from the account.
+2. Verify that a nominated account has been defined.
+3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
+> The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
+4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+
+![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
+
+<Callout colour="blue">
+Webhooks are not instant and may take up to the following day to arrive. Wait until you recieve a webhook before trying to close the account again.
+</Callout>
+
+Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
+
+**To reset the nominated account and close the account:**
+1. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
+> The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
+4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+
+![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close-fail-nominated-account.svg)
+
+<EndpointBlock
+  type="post"
+  title="Create a savings account"
+  endpoints={[
+    {
+      path: "/v1/savings",
+      version: "1.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+
+<EndpointBlock
+  type="put"
+  title="Set a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Close a savings account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+         webhooks: [
+        'account-closure-completed-webhook-v1',
+        'account-closure-failed-webhook-v1',
+
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get account closure status"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
+<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
