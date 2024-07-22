@@ -241,6 +241,8 @@ ClearBank supports full or partial transfers in of cash ISAs. You must have alre
 
 During the transfer in process, you transfer the cash ISA funds to a transfer hub account created during onboarding. Once the transfer in is approved, you can then move the funds from the hub account into the cash ISA.
 
+If you want to reject a transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
+
 To transfer in a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint.
 > You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter the transfer hub.
@@ -285,26 +287,13 @@ To transfer in a cash ISA:
   ]}
 />
 
-## Setting customer eligibility
-
-When you update a customer's profile using the [FSCS protected deposits endpoints](../embedded-banking/fscs-protected-deposits), if their [ISA eligibility](https://www.gov.uk/individual-savings-accounts/if-you-move-abroad) changes, ClearBank will automatically update the customer's profile and set them as ineligible.
-
-<Callout colour="blue">
-<p>A customer is ineligible if their date of birth or national insurance number are invalid, or if their country of residence is not GBR. They will not be able to make any further subscriptions to the ISA until they update their date of birth or NI number or confirm they are are a UK resident.</p>
-
-<p>If a customer is a UK resident, but has an address outside the UK, they will be able to subscribe for the remainder of the tax year, but will have to update their address and redeclare to subscribe in the following tax year.</p>
-</Callout>
-
-If the customer becomes eligible again and wants to resubscribe to an ISA, you should:
-1. Update their profile with that information using the [customer profile endpoints](../embedded-banking/fscs-protected-deposits)
-2. Resubscribe to an ISA using the [POST /v1/isas/{accountId}/declaration endpoint](#set-a-clients-eligiblity)
 
 <EndpointBlock
   type="post"
-  title="Set a client's eligibility"
+  title="Reject a transfer in"
   endpoints={[
     {
-      path: "/v1/isas/{accountId}/declaration",
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/rejection",
       version: "1.0.Sterling",
     }
   ]}
