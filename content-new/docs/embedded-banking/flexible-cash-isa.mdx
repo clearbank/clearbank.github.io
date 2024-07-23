@@ -32,7 +32,7 @@ The sections below explain how to:
 - [Transfer in a cash ISA](#transfers-in)
 - [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
 
-## Set up a cash ISA
+### Set up a cash ISA
 
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
 
@@ -53,7 +53,7 @@ The process is shown in this message flow diagram:
 
 The account is now open and fully operational. You can return details of a cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
 
-## End of life for a cash ISA
+### End of life for a cash ISA
 
 There are several ways you can close a cash ISA. You need to choose the appropriate one based on what's happened in the account journey so far and what the customer wants to do with the account next.
 
@@ -72,7 +72,7 @@ The sections below explain how to:
 - [Cancel a cash ISA](#cancel)
 - [Transfer out a cash ISA](#transfer-out)
 
-### Close
+#### Close
 When closing a cash ISA, you must first withdraw funds before closing the account.
 
 <Callout colour="blue">
@@ -96,7 +96,7 @@ The process is shown in this message flow diagram:
 
 ![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
 
-### Cancel
+#### Cancel
 When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
 
 The cancellation period is based on the acceptance date field. For example, an account with the acceptance date of the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
@@ -114,7 +114,7 @@ The process is shown in this message flow diagram:
 
 ![Message flow diagram of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
 
-### Transfer out
+#### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
 During the transfer out process, you move funds to a transfer hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
@@ -134,8 +134,6 @@ The process is shown in this message flow diagram:
 
 ![Message flow diagram of the transfer out path, as detailed above.](/assets/images/cash-isa-transfer-out.svg)
 
-## Cash ISA endpoints
-
 <EndpointBlock
   type="post"
   title="Create a cash ISA"
@@ -149,6 +147,8 @@ The process is shown in this message flow diagram:
     }
   ]}
 />
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
 
 <EndpointBlock
   type="put"
@@ -208,7 +208,7 @@ The process is shown in this message flow diagram:
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
-      version: "1.0.Sterling",
+      version: "1.0.Sterling"
     }
   ]}
 />
@@ -234,6 +234,9 @@ The process is shown in this message flow diagram:
     }
   ]}
 />
+
+<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
+<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 ## Transfers in
 
@@ -298,12 +301,3 @@ To transfer in a cash ISA:
     }
   ]}
 />
-
-## Cash ISA webhooks
-
-<WebhookPlaceholder render='account-created-webhook-v1' />
-<WebhookPlaceholder render='transaction-settled-webhook-v6' />
-<WebhookPlaceholder render='transaction-rejected-v2' />
-<WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
-<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
-<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
