@@ -1,0 +1,344 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "FxTradeSettled",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "SellAccountOwner",
+    "SellAccountIban",
+    "BuyAccountOwner",
+    "BuyAccountIban",
+    "Attestation",
+    "ValueDate",
+    "InstructedAmount",
+    "FixedSide",
+    "BuyCurrency",
+    "SellCurrency",
+    "EndToEndId",
+    "DebitTransactionId",
+    "DebitAmount",
+    "DebitCurrency",
+    "DebitCreatedAt",
+    "DebitSettledAt",
+    "CreditTransactionId",
+    "CreditAmount",
+    "CreditCurrency",
+    "CreditCreatedAt",
+    "CreditSettledAt"
+  ],
+  "properties": {
+    "SellAccountOwner": {
+      "title": "Sell Account Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to debit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "SellAccountIban": {
+      "title": "Sell Account Iban",
+      "type": "string",
+      "description": "International Bank Account Number associated with the sellAccount.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "BuyAccountOwner": {
+      "title": "Buy Account Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account in which to credit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "BuyAccountIban": {
+      "title": "Buy Account Iban",
+      "type": "string",
+      "description": "International Bank Account Number associated with the buyAccount.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Attestation": {
+      "title": "Attestation",
+      "type": "string",
+      "description": "Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.",
+      "maxLength": 1,
+      "minLength": 1
+    },
+    "ValueDate": {
+      "title": "Value Date",
+      "type": "string",
+      "description": "Settlement date for the FX trade.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "InstructedAmount": {
+      "title": "Instructed Amount",
+      "type": "number",
+      "description": "Amount instructed to buy or sell.",
+      "format": "decimal"
+    },
+    "FixedSide": {
+      "title": "Fixed Side",
+      "type": "string",
+      "description": "The side of the trade to be fixed. This can either be buy or sell.",
+      "maxLength": 4,
+      "minLength": 3
+    },
+    "BuyCurrency": {
+      "title": "Buy Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency to buy.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "SellCurrency": {
+      "title": "Sell Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency to sell.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "Margin": {
+      "title": "Margin",
+      "type": "number",
+      "description": "The optional margin (as a percentage) from the trade to be credited to a margin account.",
+      "format": "decimal"
+    },
+    "MarginAccountIban": {
+      "title": "Margin Account Iban",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "International Bank Account Number associated with the account in which the margin amount is to be deposited.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "EndToEndId": {
+      "title": "End To End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for the FX trade.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "UnstructuredInformation": {
+      "title": "Unstructured Information",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Additional, optional information about the FX trade.",
+      "maxLength": 140
+    },
+    "DebitTransactionId": {
+      "title": "Debit Transaction Id",
+      "type": "string",
+      "description": "Unique identifier defined by ClearBank for each debit transaction.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "DebitAmount": {
+      "title": "Debit Amount",
+      "type": "number",
+      "description": "Amount that has been debited from the sell account.",
+      "format": "decimal"
+    },
+    "DebitCurrency": {
+      "title": "Debit Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the debit transaction.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "DebitTransactionIdentifiers": {
+      "title": "Debit Transaction Identifiers",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional identifiers assigned to the debit transaction.",
+      "items": {
+        "$ref": "#/definitions/TransactionIdentifier"
+      }
+    },
+    "DebitAdditionalProperties": {
+      "title": "Debit Additional Properties",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional properties assigned to the debit transaction which relate to the FX Trade.",
+      "items": {
+        "$ref": "#/definitions/AdditionalProperty"
+      }
+    },
+    "DebitCreatedAt": {
+      "title": "Debit Created At",
+      "type": "string",
+      "description": "Date and time for when the debit transaction was created.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "DebitSettledAt": {
+      "title": "Debit Settled At",
+      "type": "string",
+      "description": "Date and time for when the debit transaction was settled.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "CreditTransactionId": {
+      "title": "Credit Transaction Id",
+      "type": "string",
+      "description": "Unique identifier defined by ClearBank for each credit transaction.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "CreditAmount": {
+      "title": "Credit Amount",
+      "type": "number",
+      "description": "Amount that has been credited to the buy account.",
+      "format": "decimal"
+    },
+    "CreditCurrency": {
+      "title": "Credit Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the credit transaction.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "CreditTransactionIdentifiers": {
+      "title": "Credit Transaction Identifiers",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional identifiers assigned to the credit transaction.",
+      "items": {
+        "$ref": "#/definitions/TransactionIdentifier"
+      }
+    },
+    "CreditAdditionalProperties": {
+      "title": "Credit Additional Properties",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional properties assigned to the credit transaction which relate to the FX Trade.",
+      "items": {
+        "$ref": "#/definitions/AdditionalProperty"
+      }
+    },
+    "CreditCreatedAt": {
+      "title": "Credit Created At",
+      "type": "string",
+      "description": "Date and time for when the credit transaction was created.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "CreditSettledAt": {
+      "title": "Credit Settled At",
+      "type": "string",
+      "description": "Date and time for when the credit transaction was settled.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "MarginTransactionId": {
+      "title": "Margin Transaction Id",
+      "type": "string",
+      "description": "Unique identifier defined by ClearBank for each margin transaction.",
+      "format": "guid"
+    },
+    "MarginAmount": {
+      "title": "Margin Amount",
+      "type": "number",
+      "description": "The margin amount credited to the margin account.",
+      "format": "decimal"
+    },
+    "MarginCurrency": {
+      "title": "Margin Currency",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Three-letter ISO currency code for the margin transaction.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "MarginTransactionIdentifiers": {
+      "title": "Margin Transaction Identifiers",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional identifiers assigned to the margin transaction.",
+      "items": {
+        "$ref": "#/definitions/TransactionIdentifier"
+      }
+    },
+    "MarginAdditionalProperties": {
+      "title": "Margin Additional Properties",
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional properties assigned to the margin transaction which relate to the FX Trade",
+      "items": {
+        "$ref": "#/definitions/AdditionalProperty"
+      }
+    },
+    "MarginCreatedAt": {
+      "title": "Margin Created At",
+      "type": "string",
+      "description": "Date and time for when the margin transaction was created.",
+      "format": "date-time"
+    },
+    "MarginSettledAt": {
+      "title": "Margin Settled At",
+      "type": "string",
+      "description": "Date and time for when the margin transaction was settled.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "TransactionIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Scope": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Name": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Identifier": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "AdditionalProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Value": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

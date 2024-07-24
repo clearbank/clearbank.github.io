@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectCreditInboundPaymentHeldV3",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ServiceUserInformation": {
+      "title": "Service User Information",
+      "description": "Bacs Service User",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "BeneficiaryDetails": {
+      "title": "Beneficiary Details",
+      "description": "Details of where the payment is being applied",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Payment Transaction Reference",
+      "maxLength": 35,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Date Processed.",
+      "format": "date-time"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Transaction Code",
+      "maxLength": 2,
+      "minLength": 0,
+      "pattern": "(99|Z4|Z5|86)"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Origination of the endpoint",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsEventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Id",
+      "type": "string",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Integrator?s Unique Identifier registered with Bacs",
+      "maxLength": 6,
+      "minLength": 0
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    },
+    "BacsEventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

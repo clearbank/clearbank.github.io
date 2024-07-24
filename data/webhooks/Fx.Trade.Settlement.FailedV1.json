@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "FxTradeSettlementFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "SellAccountOwner",
+    "SellAccountIban",
+    "BuyAccountOwner",
+    "BuyAccountIban",
+    "Attestation",
+    "ValueDate",
+    "InstructedAmount",
+    "FixedSide",
+    "BuyCurrency",
+    "SellCurrency",
+    "EndToEndId",
+    "CancellationCode",
+    "CancellationReason",
+    "WillBeRetried",
+    "ReversalFee",
+    "ReversalFeeCurrency"
+  ],
+  "properties": {
+    "SellAccountOwner": {
+      "title": "Sell Account Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to debit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "SellAccountIban": {
+      "title": "Sell Account Iban",
+      "type": "string",
+      "description": "International Bank Account Number associated with the sellAccount.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "BuyAccountOwner": {
+      "title": "Buy Account Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account in which to credit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "BuyAccountIban": {
+      "title": "Buy Account Iban",
+      "type": "string",
+      "description": "International Bank Account Number associated with the buyAccount.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Attestation": {
+      "title": "Attestation",
+      "type": "string",
+      "description": "Confirmation that the sellAccount and buyAccount are owned by the same legal owner. Options that can be specified are Y and N. Must be Y for the FX trade to be created successfully.",
+      "maxLength": 1,
+      "minLength": 1
+    },
+    "ValueDate": {
+      "title": "Value Date",
+      "type": "string",
+      "description": "Settlement date for the FX trade.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "InstructedAmount": {
+      "title": "Instructed Amount",
+      "type": "number",
+      "description": "Amount instructed to buy or sell.",
+      "format": "decimal"
+    },
+    "FixedSide": {
+      "title": "Fixed Side",
+      "type": "string",
+      "description": "The side of the trade to be fixed. This can either be buy or sell.",
+      "maxLength": 4,
+      "minLength": 3
+    },
+    "BuyCurrency": {
+      "title": "Buy Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency to buy.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "SellCurrency": {
+      "title": "Sell Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency to sell.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "Margin": {
+      "title": "Margin",
+      "type": "number",
+      "description": "The optional margin (as a percentage) from the trade to be credited to a margin account.",
+      "format": "decimal"
+    },
+    "MarginAccountIban": {
+      "title": "Margin Account Iban",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "International Bank Account Number associated with the account in which the margin amount is to be deposited.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "EndToEndId": {
+      "title": "End To End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for the FX trade.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "UnstructuredInformation": {
+      "title": "Unstructured Information",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Additional, optional information about the FX trade.",
+      "maxLength": 140
+    },
+    "CancellationCode": {
+      "title": "Cancellation Code",
+      "type": "string",
+      "description": "Cancellation code.",
+      "minLength": 1
+    },
+    "CancellationReason": {
+      "title": "Cancellation Reason",
+      "type": "string",
+      "description": "Reason FX order was cancelled.",
+      "minLength": 1
+    },
+    "WillBeRetried": {
+      "title": "Will Be Retried",
+      "type": "boolean",
+      "description": "Whether the settlement will be retried"
+    },
+    "ReversalFee": {
+      "title": "Reversal Fee",
+      "type": "number",
+      "description": "Fee incurred due to reversal of executed trade",
+      "format": "decimal"
+    },
+    "ReversalFeeCurrency": {
+      "title": "Reversal Fee Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency of the reversal fee.",
+      "maxLength": 3,
+      "minLength": 3
+    }
+  }
+}

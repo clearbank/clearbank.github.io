@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Accounts.VirtualAccountUpdated.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "VirtualAccountId",
+    "AccountId",
+    "Owner",
+    "Status",
+    "Identifiers",
+    "TimestampCreated",
+    "TimestampModified"
+  ],
+"properties": {
+    "VirtualAccountId": {
+      "title": "Virtual Account ID",
+      "type": "string",
+      "description": "Account identifier used to uniquely identify the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "AccountId": {
+      "title": "Account ID",
+      "type": "string",
+      "description": "Unique identifier for the real account associated with the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "Owner": {
+      "title": "Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the virtual account.",
+      "minLength": 1,
+      "maxLength": 140      
+    },
+    "Status": {
+      "title": "Status",
+      "type": "string",
+      "description": "The current status of the virtual account.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountStatus"
+        }
+      ]
+    },
+    "Identifiers": {
+      "title": "Virtual Account Identifiers",
+      "type": "array",
+      "description": "List of identifiers.",
+      "items": {
+        "$ref": "#/definitions/AccountIdentifier"
+      }
+    },
+    "TimestampCreated": {
+      "title": "Virtual Account Creation Time",
+      "type": "string",
+      "description": "Date and time the virtual account was created. Time in UTC.",
+      "format": "date-time"
+    },
+    "TimestampModified": {
+      "title": "Virtual Account Last Modification Time",
+      "type": "string",
+      "description": "Date and time the virtual account was last modified. Time in UTC.",
+      "format": "date-time"
+    },
+    "StatusReason": {
+      "title": "Status Reason",
+      "description": "Reason for changing the current status of the virtual account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount, Other.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/StatusReason"
+        }
+      ]
+    },
+    "StatusInformation": {
+      "title": "Status Information",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Additional information to support the specified status reason.",
+      "minLength": 0,
+      "maxLength": 100
+    }
+  },
+  "definitions": {
+    "AccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Identifier": {
+          "title": "Identifier",
+          "type": "string",
+          "description": "Unique virtual account identifier value that corresponds to the specified virtual account identifier kind.",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "Kind": {
+          "title": "Kind",
+          "type": "string",
+          "description": "The kind of virtual account identifier provided to uniquely identify the virtual account.",
+          "minLength": 1,
+          "maxLength": 50
+        }
+      }
+    },
+    "AccountStatus": {
+      "type": "string",
+      "description": "Current status of the virtual account.",
+      "minLength": 1,
+      "maxLength": 20,
+      "x-enumNames": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ],
+      "enum": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ]
+    },
+    "StatusReason": {
+      "type": "string",
+      "description": "Reason for changing the status of the virtual account.",
+      "minLength": 1,
+      "maxLength": 30,
+      "x-enumNames": [
+        "AccountHolderBankrupt",
+        "DissatisfiedCustomer",
+        "FinancialCrime",
+        "FraudFirstParty",
+        "FraudThirdParty",
+        "FraudConfirmed",
+        "InternallyDormant",
+        "KYCRequired",
+        "LegallyDisputed",
+        "PotentialSanctionedIndividual",
+        "SanctionedIndividual",
+        "SuspectMoneyLaundering",
+        "TransactionDispute",
+        "AccountHolderDeceased",
+        "AccountSwitched",
+        "CompanyNoLongerTrading",
+        "DuplicateAccount",
+        "Other"
+      ],
+      "enum": [
+        "AccountHolderBankrupt",
+        "DissatisfiedCustomer",
+        "FinancialCrime",
+        "FraudFirstParty",
+        "FraudThirdParty",
+        "FraudConfirmed",
+        "InternallyDormant",
+        "KYCRequired",
+        "LegallyDisputed",
+        "PotentialSanctionedIndividual",
+        "SanctionedIndividual",
+        "SuspectMoneyLaundering",
+        "TransactionDispute",
+        "AccountHolderDeceased",
+        "AccountSwitched",
+        "CompanyNoLongerTrading",
+        "DuplicateAccount",
+        "Other"
+      ]
+    }
+  }
+}

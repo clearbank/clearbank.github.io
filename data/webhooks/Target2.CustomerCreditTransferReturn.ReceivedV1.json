@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Target2CustomerCreditTransferReturnReceived",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "SchemePaymentMethod",
+    "Uetr",
+    "EndToEndId",
+    "Debtor",
+    "Creditor",
+    "SettlementAmount",
+    "SettlementCurrencyCode"
+  ],
+  "properties": {
+    "SchemePaymentMethod": {
+      "title": "Payment method",
+      "type": "string",
+      "description": "Payment scheme used for submitting the transaction. Values: Target2.",
+      "maxLength": 50,
+      "minLength": 1
+    },
+    "Uetr": {
+      "title": "Unique end-to-end reference",
+      "type": "string",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "description": "Universally unique UUID v4 identifier randomly generated to provide an end-to-end reference of a payment transaction."
+    },
+    "EndToEndId": {
+      "title": "End to End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Debtor": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Debtor"
+        }
+      ]
+    },
+    "Creditor": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Creditor"
+        }
+      ]
+    },
+    "SettlementAmount": {
+      "title": "Settlement amount",
+      "type": "number",
+      "description": "Settlement payment amount.",
+      "format": "decimal"
+    },
+    "SettlementCurrencyCode": {
+      "title": "Settlement currency code",
+      "type": "string",
+      "description": "Currency of the settlement amount.",
+      "maxLength": 3,
+      "minLength": 3
+    }
+  },
+  "definitions": {
+    "Debtor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "Iban"
+      ],
+      "properties": {
+        "Name": {
+          "title": "Debtor name",
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to debit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "Iban": {
+          "title": "Debtor IBAN",
+          "type": "string",
+          "description": "International Bank Account Number associated with the debtor.",
+          "maxLength": 35,
+          "minLength": 1
+        }
+      }
+    },
+    "Creditor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "Iban"
+      ],
+      "properties": {
+        "Name": {
+          "title": "Creditor name",
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to credit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "Iban": {
+          "title": "Creditor IBAN",
+          "type": "string",
+          "description": "International Bank Account Number associated with the creditor.",
+          "maxLength": 35,
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

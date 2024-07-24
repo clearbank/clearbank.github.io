@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectCreditInboundPaymentHeld",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ServiceUserInformation": {
+      "title": "Service User Information",
+      "description": "Service User Details",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "BeneficiaryDetails": {
+      "title": "Beneficiary Details",
+      "description": "Beneficiary Details",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Payment Transaction Reference",
+      "maxLength": 35,
+      "minLength": 0
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Date Transaction Processed.",
+      "format": "date-time"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Transaction Code",
+      "maxLength": 2,
+      "minLength": 0,
+      "pattern": "(99|Z4|Z5|86)"
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

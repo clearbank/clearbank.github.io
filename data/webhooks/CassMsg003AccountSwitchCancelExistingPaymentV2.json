@@ -1,0 +1,416 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountSwitchCancelExistingPaymentV01",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Refs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/References82"
+        }
+      ]
+    },
+    "OdAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/CashAccount202"
+        }
+      ]
+    },
+    "CdtInstrDtls": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/CreditInstructionDetails11"
+      }
+    },
+    "DrctDbtInstrDtls": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/DirectDebitInstructionDetails11"
+      }
+    }
+  },
+  "definitions": {
+    "References82": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MsgId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/MessageIdentification12"
+            }
+          ]
+        },
+        "AcctSwtchDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountSwitchDetails12"
+            }
+          ]
+        }
+      }
+    },
+    "MessageIdentification12": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CreDtTm": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AccountSwitchDetails12": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "UnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RtgUnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SwtchRcvdDtTm": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchRcvdDtTmSpecified": {
+          "type": "boolean"
+        },
+        "SwtchDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchDtSpecified": {
+          "type": "boolean"
+        },
+        "SwtchTp": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchTp2"
+        },
+        "SwtchSts": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchSts2"
+        },
+        "SwtchStsSpecified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AccountSwitchDetails1SwtchTp2": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "FULL",
+        "PART"
+      ],
+      "enum": [
+        "FULL",
+        "PART"
+      ]
+    },
+    "AccountSwitchDetails1SwtchSts2": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ],
+      "enum": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ]
+    },
+    "CashAccount202": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentification4Choice2"
+            }
+          ]
+        },
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Svcr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/BranchAndFinancialInstitutionIdentification42"
+            }
+          ]
+        }
+      }
+    },
+    "AccountIdentification4Choice2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericAccountIdentification12"
+            }
+          ]
+        }
+      }
+    },
+    "GenericAccountIdentification12": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "BranchAndFinancialInstitutionIdentification42": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FinInstnId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FinancialInstitutionIdentification72"
+            }
+          ]
+        }
+      }
+    },
+    "FinancialInstitutionIdentification72": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ClrSysMmbId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ClearingSystemMemberIdentification22"
+            }
+          ]
+        }
+      }
+    },
+    "ClearingSystemMemberIdentification22": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MmbId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "CreditInstructionDetails11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CdtrAcct": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CashAccount202"
+            }
+          ]
+        },
+        "OthrDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OtherDetailsCode12"
+            }
+          ]
+        }
+      }
+    },
+    "OtherDetailsCode12": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Cd": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "StartDtTm": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "DirectDebitInstructionDetails11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MndtId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Cdtr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PartyIdentification321"
+            }
+          ]
+        },
+        "LastColltnDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastColltnDtSpecified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PartyIdentification321": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/Party6Choice1"
+            }
+          ]
+        }
+      }
+    },
+    "Party6Choice1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OrgId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OrganisationIdentification41"
+            }
+          ]
+        }
+      }
+    },
+    "OrganisationIdentification41": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericOrganisationIdentification11"
+            }
+          ]
+        }
+      }
+    },
+    "GenericOrganisationIdentification11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

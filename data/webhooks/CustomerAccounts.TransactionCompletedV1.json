@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "TransactionCompleted",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "TransactionId",
+    "EndToEndIdentification",
+    "CreatedDateTime",
+    "CompletedDateTime",
+    "DebitCreditCode",
+    "Amount",
+    "Currency",
+    "DebtorAccount",
+    "CreditorAccount"
+  ],
+  "properties": {
+    "TransactionId": {
+      "type": "string",
+      "format": "guid"
+    },
+    "EndToEndIdentification": {
+      "type": "string"
+    },
+    "CreatedDateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "CompletedDateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ClearingChannel": {
+      "type": "string"
+    },
+    "DebitCreditCode": {
+      "type": "string"
+    },
+    "Amount": {
+      "type": "number",
+      "format": "decimal"
+    },
+    "Currency": {
+      "type": "string"
+    },
+    "RemittanceInformation": {
+      "type": "string"
+    },
+    "DebtorAccount": {
+      "$ref": "#/definitions/AccountDetails"
+    },
+    "CreditorAccount": {
+      "$ref": "#/definitions/AccountDetails"
+    }
+  },
+  "definitions": {
+    "AccountDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Iban": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Bban": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Descriptor": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

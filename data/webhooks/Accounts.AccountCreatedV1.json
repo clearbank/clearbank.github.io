@@ -1,0 +1,202 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Accounts.AccountCreated.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "AccountId",
+    "Name",
+    "Label",
+    "Owner",
+    "Kind",
+    "Currencies",
+    "Status",
+    "Identifiers",
+    "TimestampCreated",
+    "Type"
+  ],
+  "properties": {
+    "AccountId": {
+      "title": "Account ID",
+      "type": "string",
+      "description": "Unique identifier for the account held with ClearBank.",
+      "format": "guid"
+    },
+    "Name": {
+      "title": "Name",
+      "type": "string",
+      "description": "Name of the account.",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "Label": {
+      "title": "Label",
+      "type": "string",
+      "description": "Friendly label for the account.",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "Owner": {
+      "title": "Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account.",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "Kind": {
+      "title": "Kind",
+      "type": "string",
+      "description": "The type of funds the account will hold.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountKind"
+        }
+      ]
+    },
+    "Currencies": {
+      "title": "Currencies",
+      "type": "array",
+      "description": "Currencies supported by the account. This is the three-letter ISO currency code.",
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 3,
+        "pattern": "^[A-Z]{3}$"
+      }
+    },
+    "Status": {
+      "title": "Status",
+      "type": "string",
+      "description": "Current status of the account.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountStatus"
+        }
+      ]
+    },
+    "ProductId": {
+      "title": "Product ID",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.",
+      "format": "guid"
+    },
+    "CustomerId": {
+      "title": "Customer ID",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.",
+      "format": "guid"
+    },
+    "Identifiers": {
+      "title": "Identifiers",
+      "type": "array",
+      "description": "List of identifiers.",
+      "items": {
+        "$ref": "#/definitions/AccountIdentifier"
+      }
+    },
+    "TimestampCreated": {
+      "title": "Timestamp Created",
+      "type": "string",
+      "description": "Date and time the account was created. Time in UTC.",
+      "format": "date-time"
+    },
+    "Type": {
+      "title": "Type",
+      "type": "string",
+      "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountType"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "AccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Identifier": {
+          "title": "Identifier",
+          "type": "string",
+          "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "Kind": {
+          "title": "Kind",
+          "type": "string",
+          "description": "The kind of account identifier provided to uniquely identify the account.",
+          "minLength": 1,
+          "maxLength": 50
+        }
+      }
+    },
+    "AccountKind": {
+      "type": "string",
+      "description": "The type of funds the account will hold.",
+      "minLength": 1,
+      "maxLength": 50,
+      "x-enumNames": [
+        "YourFunds",
+        "GeneralSegregated",
+        "DesignatedSegregated",
+        "GeneralClient",
+        "DesignatedClient"
+      ],
+      "enum": [
+        "YourFunds",
+        "GeneralSegregated",
+        "DesignatedSegregated",
+        "GeneralClient",
+        "DesignatedClient"
+      ]
+    },
+    "AccountStatus": {
+      "type": "string",
+      "description": "Current status of the account.",
+      "minLength": 1,
+      "maxLength": 20,
+      "x-enumNames": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ],
+      "enum": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ]
+    },
+    "AccountType": {
+      "type": "string",
+      "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.",
+      "minLength": 1,
+      "maxLength": 50,
+      "x-enumNames": [
+        "Institution",
+        "MinimumMandatedBalance",
+        "Treasury",
+        "Operating",
+        "Customer",
+        "HeldSuspense",
+        "RepairSuspense"
+      ],
+      "enum": [
+        "Institution",
+        "MinimumMandatedBalance",
+        "Treasury",
+        "Operating",
+        "Customer",
+        "HeldSuspense",
+        "RepairSuspense"
+      ]
+    }
+  }
+}

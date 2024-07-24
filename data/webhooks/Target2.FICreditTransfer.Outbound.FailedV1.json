@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Target2FICreditTransferOutboundFailedWebHook",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "InstructionId",
+    "Uetr",
+    "PaymentId",
+    "ErrorCode",
+    "AdditionalInformation"
+  ],
+  "properties": {
+    "InstructionId": {
+      "title": "Customer internal identification",
+      "type": "string",
+      "Pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
+      "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+    },
+    "Uetr": {
+      "title": "Unique end-to-end reference",
+      "type": "string",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "description": "Universally unique UUID v4 identifier randomly generated to provide an end-to-end reference of a payment transaction."
+    },
+    "PaymentId": {
+      "title": "Payment id",
+      "type": "string",
+      "pattern": "[a-zA-Z0-9_-]{0,50}",
+      "description": "ClearBank internal identifier for this payment."
+    },
+    "ErrorCode": {
+      "title": "Error Code",
+      "type": "string",
+      "description": "ISO20022/ClearBank code for why the payment failed",
+      "maxLength": 4,
+      "minLength": 1
+    },
+    "AdditionalInformation": {
+      "title": "Additional Information",
+      "type": "string",
+      "description": "Text description of why the payment failed."
+    }
+  }
+}

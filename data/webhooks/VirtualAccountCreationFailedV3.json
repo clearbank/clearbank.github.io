@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "VirtualAccountCreationFailedV3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "AccountId",
+    "VirtualAccountId",
+    "AccountIdentifier",
+    "Errors",
+    "Timestamp"
+  ],
+  "properties": {
+    "AccountId": {
+      "title": "Unique Account Id",
+      "type": "string",
+      "description": "Unique identifier for the real account associated with the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "VirtualAccountId": {
+      "title": "Unique Virtual Account Id",
+      "type": "string",
+      "description": "Account identifier used to uniquely identify the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "AccountIdentifier": {
+      "title": "Virtual Account Identifier",
+      "description": "Virtual account identifier details.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountIdentifiersDto"
+        }
+      ]
+    },
+    "OwnerName": {
+      "title": "Account Owner Name",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Name of the owner of the virtual account.",
+      "maxLength": 140,
+      "minLength": 0
+    },
+    "Errors": {
+      "title": "Virtual Account Creation Errors",
+      "type": "object",
+      "description": "Error(s) which caused the virtual account creation to fail.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "Timestamp": {
+      "title": "Virtual Account Creation Failure Time",
+      "type": "string",
+      "description": "The date and time the virtual account creation failed.",
+      "format": "date-time",
+      "minLength": 1
+    }
+  },
+  "definitions": {
+    "AccountIdentifiersDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Iban": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "IBAN associated with the virtual account.",
+          "pattern": "^([A-Z]{2})([0-9]{2})([A-Za-z]{4})([0-9]{6})([0-9]{8})$"
+        },
+        "Bban": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "BBAN associated with the virtual account.",
+          "pattern": "^([A-Za-z]{4})([0-9]{6})([0-9]{8})$"
+        },
+        "ExternalIdentifier": {
+          "title": "External Virtual Account Identifier",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Unique identifier specified at the time of creating a virtual account.",
+          "maxLength": 50,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

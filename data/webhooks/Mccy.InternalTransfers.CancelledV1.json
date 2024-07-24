@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MccyInternalTransfersCancelled",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "InstructedAmount",
+    "InstructedCurrency",
+    "EndToEndId",
+    "CancellationCode",
+    "FailureReasons"
+  ],
+  "properties": {
+    "DebitAccountIban": {
+      "title": "Debit account iban",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "International Bank Account Number for the debtor account."
+    },
+    "DebitAccountOther": {
+      "title": "Debit Account Other",
+      "description": "The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentifier"
+        }
+      ]
+    },
+    "CreditAccountIban": {
+      "title": "Credit account iban",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "International Bank Account Number for the creditor account."
+    },
+    "CreditAccountOther": {
+      "title": "Credit Account Other",
+      "description": "The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentifier"
+        }
+      ]
+    },
+    "InstructedAmount": {
+      "title": "Instructed Amount",
+      "type": "number",
+      "description": "Instructed internal transfer amount.",
+      "format": "decimal"
+    },
+    "InstructedCurrency": {
+      "title": "Instructed Currency",
+      "type": "string",
+      "description": "Currency of the instructed internal transfer. This is the 3-letter ISO currency code.",
+      "maxLength": 3,
+      "minLength": 3,
+      "pattern": "^[A-z]{3}$"
+    },
+    "EndToEndId": {
+      "title": "EndToEndId",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "minLength": 1,
+      "maxLength": 35
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Reference provided by the debtor for the internal transfer.",
+      "minLength": 0,
+      "maxLength": 140
+    },
+    "CancellationCode": {
+      "title": "Cancellation Code",
+      "$ref": "#/definitions/CancellationCode"
+    },
+    "FailureReasons": {
+      "title": "Failure Reasons",
+      "type": "array",
+      "description": "Reasons the internal transfer was cancelled.",
+      "items": {
+        "type": "string",
+        "minItems": 1
+      }
+    }
+  },
+  "definitions": {
+    "AccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Kind",
+        "Identifier"
+      ],
+      "properties": {
+        "Kind": {
+          "title": "Account kind",
+          "type": "string",
+          "description": "The kind of account identifier provided. This can only be AccountId.",
+          "minLength": 1
+        },
+        "Identifier": {
+          "title": "Account identifier",
+          "type": "string",
+          "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+          "minLength": 1,
+          "maxLength": 36
+        }
+      }
+    },
+    "CancellationCode": {
+      "type": "string",
+      "description": "The cancellation code for the internal transfer. Valid options include: ValidationFailed, AssessmentFailed.",
+      "x-enumNames": [
+        "ValidationFailed",
+        "AssessmentFailed"
+      ],
+      "enum": [
+        "ValidationFailed",
+        "AssessmentFailed"
+      ]
+    }
+  }
+}

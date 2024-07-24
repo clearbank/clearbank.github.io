@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectDebitReturnCreatedWebHookPayloadV4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "PayerInformation",
+    "OriginatorInformation",
+    "ReasonCode",
+    "Reference",
+    "Amount",
+    "TransactionCode",
+    "Source",
+    "BacsTransactionId",
+    "ProcessingDate",
+    "ServiceUserNumber",
+    "OriginalBacsTransactionId",
+    "OriginalBacsTransactionSun"
+  ],
+  "properties": {
+    "PayerInformation": {
+      "title": "Payer Information",
+      "description": "Details of the payer account from which the Direct Debit is to be returned.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "OriginatorInformation": {
+      "title": "Originator Information",
+      "description": "Details of the originating account as specified in the original Direct Debit transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "ReasonCode": {
+      "title": "Reason Code",
+      "type": "string",
+      "description": "Reason code to denote the reason why the Direct Debit transaction is being returned. For more information about reason codes, refer to the 'The Paying Payment Service Provider?s Guide and Rules to the Direct Debit Scheme' or The Service User?s Guide and Rules to the Direct Debit Scheme.",
+      "maxLength": 1,
+      "minLength": 0,
+      "pattern": "^(0|1|2|3|4|5|6|7|8|9|A|B)$"
+    },
+    "Reference": {
+      "title": "Payment Reference",
+      "type": "string",
+      "description": "Reference for the Direct Debit transaction being returned.",
+      "maxLength": 18,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Amount of the Direct Debit transaction being returned.",
+      "format": "decimal"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": "string",
+      "description": "Transaction code for the Direct Debit transaction being returned. For more information about transaction codes, refer to the 'The Paying Payment Service Provider's Guide and Rules to the Direct Debit Scheme'.",
+      "maxLength": 2,
+      "minLength": 2,
+      "pattern": "^(U1|U7|U8|U9)$"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Source of the transaction being returned. For example: Undefined, Portal, Api, ClearBank or Bacs.",
+      "maxLength": 9,
+      "minLength": 3,
+      "oneOf": [
+        {
+          "$ref": "#/definitions/EventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Identifier",
+      "type": "string",
+      "description": "Internal identifier for the Direct Debit transaction being returned.",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 36
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Processing date of the original Direct Debit transaction being returned.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": "string",
+      "description": "Service User Number used to return the item.",
+      "maxLength": 6,
+      "minLength": 6,
+      "pattern": "^[0-9]*$"
+    },
+    "OriginalBacsTransactionId": {
+      "title": "Original Bacs Transaction Identifier",
+      "type": "string",
+      "description": "Internal identifier for the original Direct Debit transaction.",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 36
+    },
+    "OriginalBacsTransactionSun": {
+      "title": "Service User Number",
+      "type": "string",
+      "description": "Service User Number for the original Direct Debit transaction.",
+      "maxLength": 6,
+      "minLength": 6,
+      "pattern": "^[0-9]*$"
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "AccountNumber",
+        "SortCode",
+        "AccountName"
+      ],
+      "properties": {
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 8,
+          "pattern": "^[0-9]*$"
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": "string",
+          "maxLength": 6,
+          "minLength": 6,
+          "pattern": "^[0-9]*$"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 0,
+          "pattern": "^([A-Z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+        }
+      }
+    },
+    "EventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

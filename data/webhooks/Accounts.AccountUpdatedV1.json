@@ -1,0 +1,258 @@
+
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Accounts.AccountUpdated.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "AccountId",
+    "Name",
+    "Label",
+    "Owner",
+    "Kind",
+    "Currencies",
+    "Status",
+    "Identifiers",
+    "TimestampCreated",
+    "TimestampModified",
+    "Type"
+  ],
+  "properties": {
+    "AccountId": {
+      "title": "Account ID",
+      "type": "string",
+      "description": "Unique identifier for the account held with ClearBank.",
+      "format": "guid"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Name of the account.",
+      "maxLength": 500,
+      "minLength": 1
+    },
+    "Label": {
+      "type": "string",
+      "description": "Friendly label for the account.",
+      "maxLength": 100,
+      "minLength": 1
+    },
+    "Owner": {
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "Kind": {
+      "type": "string",
+      "description": "The type of funds the account will hold.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountKind"
+        }
+      ]
+    },
+    "Currencies": {
+      "type": "array",
+      "description": "Currencies supported by the account. It is an array of strings with each currency represented by a three-letter ISO currency code.",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      }
+    },
+    "Status": {
+      "type": "string",
+      "description": "Current status of the account.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountStatus"
+        }
+      ]
+    },
+    "ProductId": {
+      "title": "Product ID",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "The product identifier used to determine the behaviour of the account. Only applicable for FSCS accounts.",
+      "format": "guid"
+    },
+    "CustomerId": {
+      "title": "Customer ID",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Unique identifier for the customer that the account is associated with. Only applicable for FSCS accounts.",
+      "format": "guid"
+    },
+    "Identifiers": {
+      "type": "array",
+      "description": "List of identifiers. It is an array of objects with an Identifier and Kind.",
+      "items": {
+        "$ref": "#/definitions/AccountIdentifier"
+      }
+    },
+    "TimestampCreated": {
+      "type": "string",
+      "description": "Date and time the account was created. Time in UTC.",
+      "format": "date-time"
+    },
+    "TimestampModified": {
+      "type": "string",
+      "description": "Date and time the account was last modified. Time in UTC.",
+      "format": "date-time"
+    },
+    "StatusReason": {
+      "description": "Reason for changing the current status of the account. Valid options include: AccountHolderBankrupt, DissatisfiedCustomer, FinancialCrime, FraudFirstParty, FraudThirdParty, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DuplicateAccount, Other.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountStatusReason"
+        }
+      ]
+    },
+    "StatusInformation": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Additional information to support the specified status reason.",
+      "maxLength": 100,
+      "minLength": 0
+    },
+    "Type": {
+      "title": "Type",
+      "type": "string",
+      "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountType"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "AccountKind": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "YourFunds",
+        "GeneralSegregated",
+        "DesignatedSegregated",
+        "GeneralClient",
+        "DesignatedClient"
+      ],
+      "enum": [
+        "YourFunds",
+        "GeneralSegregated",
+        "DesignatedSegregated",
+        "GeneralClient",
+        "DesignatedClient"
+      ]
+    },
+    "AccountStatus": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ],
+      "enum": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ]
+    },
+    "AccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Identifier": {
+          "type": "string",
+          "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "Kind": {
+          "type": "string",
+          "description": "The kind of account identifier provided to uniquely identify the account.",
+          "maxLength": 50,
+          "minLength": 1
+        }
+      }
+    },
+    "AccountStatusReason": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Other",
+        "AccountHolderBankrupt",
+        "DissatisfiedCustomer",
+        "FinancialCrime",
+        "FraudFirstParty",
+        "FraudThirdParty",
+        "FraudConfirmed",
+        "InternallyDormant",
+        "KYCRequired",
+        "LegallyDisputed",
+        "PotentialSanctionedIndividual",
+        "SanctionedIndividual",
+        "SuspectMoneyLaundering",
+        "TransactionDispute",
+        "AccountHolderDeceased",
+        "AccountSwitched",
+        "CompanyNoLongerTrading",
+        "DuplicateAccount"
+      ],
+      "enum": [
+        "Other",
+        "AccountHolderBankrupt",
+        "DissatisfiedCustomer",
+        "FinancialCrime",
+        "FraudFirstParty",
+        "FraudThirdParty",
+        "FraudConfirmed",
+        "InternallyDormant",
+        "KYCRequired",
+        "LegallyDisputed",
+        "PotentialSanctionedIndividual",
+        "SanctionedIndividual",
+        "SuspectMoneyLaundering",
+        "TransactionDispute",
+        "AccountHolderDeceased",
+        "AccountSwitched",
+        "CompanyNoLongerTrading",
+        "DuplicateAccount"
+      ]
+    },
+    "AccountType": {
+      "type": "string",
+      "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense, Institution.",
+      "minLength": 1,
+      "maxLength": 50,
+      "x-enumNames": [
+        "Institution",
+        "MinimumMandatedBalance",
+        "Treasury",
+        "Operating",
+        "Customer",
+        "HeldSuspense",
+        "RepairSuspense"
+      ],
+      "enum": [
+        "Institution",
+        "MinimumMandatedBalance",
+        "Treasury",
+        "Operating",
+        "Customer",
+        "HeldSuspense",
+        "RepairSuspense"
+      ]
+    }
+  }
+}

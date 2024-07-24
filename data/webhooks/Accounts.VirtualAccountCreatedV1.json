@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Accounts.VirtualAccountCreated.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "VirtualAccountId",
+    "AccountId",
+    "BatchId",
+    "Owner",
+    "Status",
+    "Identifiers",
+    "TimestampCreated"
+  ],
+"properties": {
+    "VirtualAccountId": {
+      "title": "Virtual Account ID",
+      "type": "string",
+      "description": "Account identifier used to uniquely identify the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "AccountId": {
+      "title": "Account ID",
+      "type": "string",
+      "description": "Unique identifier for the real account associated with the virtual account.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "BatchId": {
+      "title": "Batch Identifier",
+      "type": "string",
+      "description": "Unique batch identifier specified while creating a batch of virtual accounts.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "Owner": {
+      "title": "Owner",
+      "type": "string",
+      "description": "The name used to identify the legal owner of the virtual account.",
+      "minLength": 1,
+      "maxLength": 140      
+    },
+    "Status": {
+      "title": "Status",
+      "type": "string",
+      "description": "The current status of the virtual account.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountStatus"
+        }
+      ]
+    },
+    "Identifiers": {
+      "title": "Virtual Account Identifiers",
+      "type": "array",
+      "description": "List of identifiers.",
+      "items": {
+        "$ref": "#/definitions/AccountIdentifier"
+      }
+    },
+    "TimestampCreated": {
+      "title": "Virtual Account Creation Time",
+      "type": "string",
+      "description": "Date and time the virtual account was created. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "AccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Identifier": {
+          "title": "Identifier",
+          "type": "string",
+          "description": "Unique virtual account identifier value that corresponds to the specified virtual account identifier kind.",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "Kind": {
+          "title": "Kind",
+          "type": "string",
+          "description": "The kind of virtual account identifier provided to uniquely identify the virtual account.",
+          "minLength": 1,
+          "maxLength": 50
+        }
+      }
+    },
+    "AccountStatus": {
+      "type": "string",
+      "description": "Current status of the virtual account.",
+      "minLength": 1,
+      "maxLength": 20,
+      "x-enumNames": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ],
+      "enum": [
+        "Active",
+        "Suspended",
+        "Closed"
+      ]
+    }
+  }
+}

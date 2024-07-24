@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "VirtualAccountCreationFailedV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "VirtualAccountIdentifiers"
+  ],
+  "properties": {
+    "VirtualAccountId": {
+      "title": "Virtual Account Id",
+      "type": "string",
+      "description": "Unique Identification of the Virtual Account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "ClientMoneyAccountId": {
+      "title": "Client Money Account Id",
+      "type": "string",
+      "description": "Unique Identification of the General Segregated account or General Client account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "VirtualAccountIdentifiers": {
+      "title": "Virtual Account Identifiers",
+      "$ref": "#/definitions/AccountIdentifiers"
+    },
+    "Errors": {
+      "title": "Errors",
+      "type": [
+        "null",
+        "object"
+      ],
+      "description": "One or more errors that occurred during the processing of the request.\r\n- None\r\n- ClientMoneyAccount\r\n- ClientMoneyAccountId\r\n- ClientMoneyAccountIban\r\n- InstitutionId\r\n- AccountIban\r\n- AccountIbanSortCode\r\n- AccountIbanAccountNumber\r\n- AccountBban\r\n- AccountBbanSortCode\r\n- AccountBbanAccountNumber\r\n- AccountIdentifiers\r\n- AccountName\r\n- AccountHolderLabel\r\n- AccountCuid\r\n- AccountUpic\r\n- AccountIbanBankCode\r\n- AccountBbanBankCode\r\n- ClientMoneyAccountIdMissing\r\n- InstitutionIdMissing\r\n- VirtualAccountIdMissing\r\n- AccountModulusFailed\r\n- SortCodeDoesNotBelongToInstitution\r\n- SortCodeTypeIsIncorrect",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "Timestamp": {
+      "title": "Timestamp",
+      "type": "string",
+      "description": "Date and Time. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "AccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "AccountHolderLabel": {
+          "title": "Account Holder Label",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 100,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

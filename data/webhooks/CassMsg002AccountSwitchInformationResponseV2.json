@@ -1,0 +1,672 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountSwitchInformationResponseV01",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Refs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/References81"
+        }
+      ]
+    },
+    "NewAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/CashAccount201"
+        }
+      ]
+    },
+    "OdAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/CashAccount201"
+        }
+      ]
+    },
+    "CdtInstrDtls": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/CreditInstructionDetails1"
+      }
+    },
+    "DrctDbtInstrDtls": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/DirectDebitInstructionDetails1"
+      }
+    }
+  },
+  "definitions": {
+    "References81": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MsgId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/MessageIdentification11"
+            }
+          ]
+        },
+        "AcctSwtchDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountSwitchDetails11"
+            }
+          ]
+        }
+      }
+    },
+    "MessageIdentification11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CreDtTm": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AccountSwitchDetails11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "UnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RtgUnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SwtchRcvdDtTm": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchRcvdDtTmSpecified": {
+          "type": "boolean"
+        },
+        "SwtchDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchDtSpecified": {
+          "type": "boolean"
+        },
+        "SwtchTp": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchTp1"
+        },
+        "SwtchSts": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchSts1"
+        },
+        "SwtchStsSpecified": {
+          "type": "boolean"
+        },
+        "BalTrfWndw": {
+          "$ref": "#/definitions/AccountSwitchDetails1BalTrfWndw1"
+        },
+        "BalTrfWndwSpecified": {
+          "type": "boolean"
+        },
+        "Rspn": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/ResponseDetails1"
+          }
+        }
+      }
+    },
+    "AccountSwitchDetails1SwtchTp1": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "FULL",
+        "PART"
+      ],
+      "enum": [
+        "FULL",
+        "PART"
+      ]
+    },
+    "AccountSwitchDetails1SwtchSts1": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ],
+      "enum": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ]
+    },
+    "AccountSwitchDetails1BalTrfWndw1": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "EARL",
+        "DAYH"
+      ],
+      "enum": [
+        "EARL",
+        "DAYH"
+      ]
+    },
+    "ResponseDetails1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "RspnCd": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "AddtlDtls": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "CashAccount201": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentification4Choice1"
+            }
+          ]
+        },
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Svcr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/BranchAndFinancialInstitutionIdentification41"
+            }
+          ]
+        }
+      }
+    },
+    "AccountIdentification4Choice1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericAccountIdentification11"
+            }
+          ]
+        }
+      }
+    },
+    "GenericAccountIdentification11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "BranchAndFinancialInstitutionIdentification41": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FinInstnId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FinancialInstitutionIdentification71"
+            }
+          ]
+        }
+      }
+    },
+    "FinancialInstitutionIdentification71": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BIC": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ClrSysMmbId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ClearingSystemMemberIdentification21"
+            }
+          ]
+        }
+      }
+    },
+    "ClearingSystemMemberIdentification21": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MmbId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "CreditInstructionDetails1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Tp": {
+          "$ref": "#/definitions/CreditInstructionDetails1TP"
+        },
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Trfbl": {
+          "type": "boolean"
+        },
+        "TaxRateMrkr": {
+          "$ref": "#/definitions/CreditInstructionDetails1TaxRateMrkr"
+        },
+        "TaxRateMrkrSpecified": {
+          "type": "boolean"
+        },
+        "CdtrAcct": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CashAccount201"
+            }
+          ]
+        },
+        "Frqcy": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/Frequency1"
+          }
+        },
+        "OthrDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OtherDetailsCode11"
+            }
+          ]
+        }
+      }
+    },
+    "CreditInstructionDetails1TP": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "BILP",
+        "STDO",
+        "FUTR"
+      ],
+      "enum": [
+        "BILP",
+        "STDO",
+        "FUTR"
+      ]
+    },
+    "CreditInstructionDetails1TaxRateMrkr": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "GRSS",
+        "ALPR",
+        "ALIT"
+      ],
+      "enum": [
+        "GRSS",
+        "ALPR",
+        "ALIT"
+      ]
+    },
+    "Frequency1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Seq": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "StartDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "EndPtChc": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/EndPointChoice1"
+            }
+          ]
+        },
+        "ReqdFrqcyPttrn": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/RequestedFrequencyTarget1"
+            }
+          ]
+        },
+        "CcyAmt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActiveCurrencyAndAmount1"
+            }
+          ]
+        }
+      }
+    },
+    "EndPointChoice1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Item": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "RequestedFrequencyTarget1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Prtry": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "ActiveCurrencyAndAmount1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ccy": {
+          "$ref": "#/definitions/ActiveCurrencyCode1"
+        },
+        "Value": {
+          "type": "number",
+          "format": "decimal"
+        }
+      }
+    },
+    "ActiveCurrencyCode1": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "GBP"
+      ],
+      "enum": [
+        "GBP"
+      ]
+    },
+    "OtherDetailsCode11": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Cd": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Desc": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "DirectDebitInstructionDetails1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MndtId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "AutomtdDrctDbtInstr": {
+          "type": "boolean"
+        },
+        "DrctDbtTrfbl": {
+          "type": "boolean"
+        },
+        "Cdtr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PartyIdentification32"
+            }
+          ]
+        },
+        "LastColltnCcyAmt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActiveOrHistoricCurrencyAndAmount"
+            }
+          ]
+        },
+        "LastColltnDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastColltnDtSpecified": {
+          "type": "boolean"
+        },
+        "OthrDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OtherDetailsCode11"
+            }
+          ]
+        }
+      }
+    },
+    "PartyIdentification32": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/Party6Choice"
+            }
+          ]
+        }
+      }
+    },
+    "Party6Choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Item": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OrganisationIdentification4"
+            }
+          ]
+        }
+      }
+    },
+    "OrganisationIdentification4": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericOrganisationIdentification1"
+            }
+          ]
+        }
+      }
+    },
+    "GenericOrganisationIdentification1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "ActiveOrHistoricCurrencyAndAmount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ccy": {
+          "$ref": "#/definitions/ActiveOrHistoricCurrencyCode"
+        },
+        "Value": {
+          "type": "number",
+          "format": "decimal"
+        }
+      }
+    },
+    "ActiveOrHistoricCurrencyCode": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "GBP"
+      ],
+      "enum": [
+        "GBP"
+      ]
+    }
+  }
+}

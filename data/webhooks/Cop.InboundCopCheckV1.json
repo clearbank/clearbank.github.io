@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "InboundCopCheck",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "MessageId",
+    "InteractionId",
+    "RequestName",
+    "RequestSortCode",
+    "RequestAccountNumber",
+    "RequestAccountType",
+    "MatchResult",
+    "ClientName",
+    "RequestTimeStampUTC"
+  ],
+  "properties": {
+    "MessageId": {
+      "type": "string",
+      "title": "Message Identifier",
+      "description": "Unique identifier of the inbound cop check as assigned by ClearBank.",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "maxLength": 36,
+      "minLength": 36
+    },
+    "InteractionId": {
+      "type": "string",
+      "title": "Interaction Identifier",
+      "description": "Interaction identifier of the inbound cop check.",
+      "format": "string",
+      "maxLength": 256,
+      "minLength": 0
+    },
+    "RequestName": {
+      "type": "string",
+      "title": "Request Name",
+      "description": "Name that the requestor is trying to get CoP on.",
+      "maxLength": 140,
+      "minLength": 0
+    },
+    "RequestSortCode": {
+      "type": "string",
+      "title": "Request Sort Code",
+      "description": "Sort code that is entered on the request.",
+      "maxLength": 6,
+      "minLength": 6
+    },
+    "RequestAccountNumber": {
+      "type": "string",
+      "title": "Request Account Number",
+      "description": "Account Number entered on the request.",
+      "maxLength": 8,
+      "minLength": 8
+    },
+    "RequestAccountType": {
+      "type": "string",
+      "title": "Request Account Type",
+      "description": "Account type that is entered (Personal or Business).",
+      "maxLength": 128,
+      "minLength": 0
+    },
+    "OwnerName": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "title": "Owner Name",
+      "description": "Actual owner name with ClearBank (where possible).",
+      "maxLength": 140,
+      "minLength": 0
+    },
+    "MatchResult": {
+      "type": "boolean",
+      "title": "Match Result",
+      "description": "Cop match: true or false"
+    },
+    "ReasonCode": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "title": "Reason Code",
+      "description": "Specific code (e.g.: BAMM, ANNM etc. IF MatchResult: TRUE, then no reason code is needed).",
+      "maxLength": 128,
+      "minLength": 0
+    },
+    "ClientName": {
+      "type": "string",
+      "title": "Client Name",
+      "description": "Name of the institution requesting the CoP.",
+      "maxLength": 256,
+      "minLength": 0
+    },
+    "RequestTimeStampUTC": {
+      "type": "string",
+      "title": "Request timestamp UTC",
+      "description": "Time when the request was made.",
+      "format": "date-time"
+    }
+  }
+}

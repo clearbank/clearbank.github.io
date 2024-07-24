@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Target2CustomerCreditTransferReturnSendFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "SchemePaymentMethod",
+    "Uetr",
+    "EndToEndId",
+    "FailureCode"
+  ],
+  "properties": {
+    "SchemePaymentMethod": {
+      "title": "Payment method",
+      "type": "string",
+      "description": "Payment scheme used for submitting the transaction. Values: Target2.",
+      "maxLength": 50,
+      "minLength": 1
+    },
+    "Uetr": {
+      "title": "Unique end-to-end reference",
+      "type": "string",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "description": "Universally unique UUID v4 identifier randomly generated to provide an end-to-end reference of a payment transaction."
+    },
+    "EndToEndId": {
+      "title": "End to End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "FailureCode": {
+      "title": "Failure code",
+      "type": "string",
+      "description": "Failure code.",
+      "minLength": 1
+    }
+  }
+}

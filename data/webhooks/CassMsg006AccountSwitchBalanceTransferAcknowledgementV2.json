@@ -1,0 +1,489 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountSwitchBalanceTransferAcknowledgementV01",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Refs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/References85"
+        }
+      ]
+    },
+    "OdAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/CashAccount205"
+        }
+      ]
+    },
+    "OdAcctBal": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AmountAndDirection5"
+        }
+      ]
+    },
+    "BalTrfMtd": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/SettlementMethod1Choice"
+      }
+    }
+  },
+  "definitions": {
+    "References85": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MsgId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/MessageIdentification15"
+            }
+          ]
+        },
+        "AcctSwtchDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountSwitchDetails15"
+            }
+          ]
+        }
+      }
+    },
+    "MessageIdentification15": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CreDtTm": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AccountSwitchDetails15": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "UnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RtgUnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SwtchRcvdDtTm": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchRcvdDtTmSpecified": {
+          "type": "boolean"
+        },
+        "SwtchDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchDtSpecified": {
+          "type": "boolean"
+        },
+        "SwtchTp": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchTp5"
+        },
+        "SwtchSts": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchSts5"
+        },
+        "SwtchStsSpecified": {
+          "type": "boolean"
+        },
+        "BalTrfWndw": {
+          "$ref": "#/definitions/AccountSwitchDetails1BalTrfWndw4"
+        },
+        "BalTrfWndwSpecified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AccountSwitchDetails1SwtchTp5": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "FULL",
+        "PART"
+      ],
+      "enum": [
+        "FULL",
+        "PART"
+      ]
+    },
+    "AccountSwitchDetails1SwtchSts5": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ],
+      "enum": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ]
+    },
+    "AccountSwitchDetails1BalTrfWndw4": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "EARL",
+        "DAYH"
+      ],
+      "enum": [
+        "EARL",
+        "DAYH"
+      ]
+    },
+    "CashAccount205": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentification4Choice5"
+            }
+          ]
+        },
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Svcr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/BranchAndFinancialInstitutionIdentification45"
+            }
+          ]
+        }
+      }
+    },
+    "AccountIdentification4Choice5": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericAccountIdentification15"
+            }
+          ]
+        }
+      }
+    },
+    "GenericAccountIdentification15": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "BranchAndFinancialInstitutionIdentification45": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FinInstnId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FinancialInstitutionIdentification75"
+            }
+          ]
+        }
+      }
+    },
+    "FinancialInstitutionIdentification75": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ClrSysMmbId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ClearingSystemMemberIdentification25"
+            }
+          ]
+        }
+      }
+    },
+    "ClearingSystemMemberIdentification25": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MmbId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "AmountAndDirection5": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Amt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActiveCurrencyAndAmount3"
+            }
+          ]
+        },
+        "CdtDbt": {
+          "$ref": "#/definitions/CreditDebitCode"
+        }
+      }
+    },
+    "ActiveCurrencyAndAmount3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ccy": {
+          "$ref": "#/definitions/ActiveCurrencyCode3"
+        },
+        "Value": {
+          "type": "number",
+          "format": "decimal"
+        }
+      }
+    },
+    "ActiveCurrencyCode3": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "GBP"
+      ],
+      "enum": [
+        "GBP"
+      ]
+    },
+    "CreditDebitCode": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "CRDT",
+        "DBIT"
+      ],
+      "enum": [
+        "CRDT",
+        "DBIT"
+      ]
+    },
+    "SettlementMethod1Choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Item": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CreditTransferTransactionInformation14"
+            }
+          ]
+        },
+        "ItemElementName": {
+          "$ref": "#/definitions/ItemChoiceType"
+        }
+      }
+    },
+    "CreditTransferTransactionInformation14": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PmtId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PaymentIdentification1"
+            }
+          ]
+        },
+        "Amt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActiveCurrencyAndAmount3"
+            }
+          ]
+        },
+        "CdtrAgt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/BranchAndFinancialInstitutionIdentification5"
+            }
+          ]
+        },
+        "CdtrAcct": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CashAccount16"
+            }
+          ]
+        }
+      }
+    },
+    "PaymentIdentification1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EndToEndId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "BranchAndFinancialInstitutionIdentification5": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FinInstnId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FinancialInstitutionIdentification8"
+            }
+          ]
+        }
+      }
+    },
+    "FinancialInstitutionIdentification8": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ClrSysMmbId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ClearingSystemMemberIdentification25"
+            }
+          ]
+        }
+      }
+    },
+    "CashAccount16": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentification4Choice5"
+            }
+          ]
+        },
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "ItemChoiceType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Cdt",
+        "Dbt"
+      ],
+      "enum": [
+        "Cdt",
+        "Dbt"
+      ]
+    }
+  }
+}

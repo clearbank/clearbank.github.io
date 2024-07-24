@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "VirtualAccountCreatedV2",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ClientMoneyAccountId": {
+      "title": "Client Money Account Id",
+      "type": "string",
+      "description": "Unique Identification of the General Segregated account or General Client account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "VirtualAccountIdentifiers": {
+      "title": "Virtual Account Identifiers",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentifiers"
+        }
+      ]
+    },
+    "VirtualAccountId": {
+      "title": "Virtual Account Id",
+      "type": "string",
+      "description": "Unique Identification of the Virtual Account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "TimestampCreated": {
+      "title": "Timestamp Created",
+      "type": "string",
+      "description": "Date and Time Virtual Account Created. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "AccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "AccountHolderLabel": {
+          "title": "Account Holder Label",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 100,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

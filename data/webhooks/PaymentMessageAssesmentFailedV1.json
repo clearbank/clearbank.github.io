@@ -1,0 +1,194 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PaymentMessageAssesmentFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "MessageId": {
+      "title": "Message Id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Unique Identification of the Message",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "PaymentMethodType": {
+      "title": "Payment Method Type",
+      "description": "Payment Type (Optional)",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/PaymentMethodType"
+        }
+      ]
+    },
+    "AssesmentFailure": {
+      "title": "Assesment Failure",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/PaymentMessageAssesmentFailures"
+      }
+    },
+    "AccountIdentification": {
+      "title": "Account Identification",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentification"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PaymentMethodType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Transfer",
+        "FasterPayments",
+        "Bacs",
+        "Chaps"
+      ],
+      "enum": [
+        "Transfer",
+        "FasterPayments",
+        "Bacs",
+        "Chaps"
+      ]
+    },
+    "PaymentMessageAssesmentFailures": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EndToEndId": {
+          "title": "End To End Id",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Unique Identifier supplied by you in your API request.",
+          "maxLength": 35,
+          "minLength": 0
+        },
+        "Reasons": {
+          "title": "Reasons",
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Reasons why ClearBank will not accept the payment message.\r\n- Insufficient Funds",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AccountIdentification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Debtor"
+      ],
+      "properties": {
+        "Debtor": {
+          "title": "Debtor",
+          "$ref": "#/definitions/AccountIdentifiers"
+        },
+        "Creditors": {
+          "title": "Creditors",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/CreditorAccountIdentifiers"
+          }
+        }
+      }
+    },
+    "AccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        }
+      }
+    },
+    "CreditorAccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Reference": {
+          "title": "Reference",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 140,
+          "minLength": 0
+        },
+        "Amount": {
+          "title": "Amount",
+          "type": [
+            "null",
+            "number"
+          ],
+          "format": "decimal"
+        },
+        "CurrencyCode": {
+          "title": "Currency Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Currency Code (Optional)\r\n- (GBP)",
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MccyPayloadValidationFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Errors",
+    "UltimateDebtorAccount",
+    "UltimateDebtorAccountIdentifier",
+    "UltimateDebtorAddressLine1",
+    "UltimateDebtorPostCode",
+    "UltimateDebtorCountryCode",
+    "InstructedAmount",
+    "InstructedCurrency",
+    "Reference",
+    "BatchId",
+    "EndToEndId",
+    "UltimateCreditorName",
+    "UltimateCreditorAddressLine1",
+    "UltimateCreditorPostCode",
+    "UltimateCreditorCountryCode",
+    "TransactionId"
+  ],
+  "properties": {
+    "Errors": {
+      "title": "Validation Errors",
+      "type": "array",
+      "description": "Error(s) which caused the payment validation to fail.",
+      "items": {
+        "type": "string",
+        "maxLength": 140,
+        "minLength": 1
+      }
+    },
+    "UltimateDebtorName": {
+      "title": "Ultimate Debtor Name",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Name of the ultimate debtor making the payment.",
+      "maxLength": 143,
+      "minLength": 0
+    },
+    "UltimateDebtorAccount": {
+      "title": "Ultimate Debtor Account",
+      "type": "string",
+      "description": "Account details of the ultimate debtor making the payment.",
+      "maxLength": 36,
+      "minLength": 5
+    },
+    "UltimateDebtorAccountIdentifier": {
+      "title": "Ultimate Debtor Account Identifier Kind",
+      "type": "string",
+      "description": "Account identifier used to uniquely identify the ultimate debtor. Valid values are IBAN or AccountId",
+      "minLength": 1
+    },
+    "UltimateDebtorAddressLine1": {
+      "title": "Ultimate Debtor Address Line 1",
+      "type": "string",
+      "description": "First line of the ultimate debtor's address.",
+      "maxLength": 70,
+      "minLength": 1
+    },
+    "UltimateDebtorAddressLine2": {
+      "title": "Ultimate Debtor Address Line 2",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Second line of the ultimate debtor's address.",
+      "maxLength": 35,
+      "minLength": 0
+    },
+    "UltimateDebtorAddressLine3": {
+      "title": "Ultimate debtor address line 3",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Third line of the ultimate debtor's address.",
+      "maxLength": 35,
+      "minLength": 0
+    },
+    "UltimateDebtorPostCode": {
+      "title": "Ultimate Debtor Post Code",
+      "type": "string",
+      "description": "Postcode of the ultimate debtor.",
+      "maxLength": 16,
+      "minLength": 1
+    },
+    "UltimateDebtorCountryCode": {
+      "title": "Ultimate Debtor Country Code",
+      "type": "string",
+      "description": "Country code for the ultimate debtor's address. This is the 2-letter ISO country code.",
+      "maxLength": 2,
+      "minLength": 2,
+      "pattern": "^[A-Z]{2}$"
+    },
+    "InstructedAmount": {
+      "title": "Instructed Amount",
+      "type": "number",
+      "description": "Instructed payment amount.",
+      "format": "decimal"
+    },
+    "InstructedCurrency": {
+      "title": "Instructed Currency",
+      "type": "string",
+      "description": "Currency of the instructed payment. This is the 3-letter ISO currency code.",
+      "maxLength": 3,
+      "minLength": 3,
+      "pattern": "^[A-z]{3}$"
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": "string",
+      "description": "Reference provided by the ultimate debtor for the payment.",
+      "maxLength": 143,
+      "minLength": 1
+    },
+    "BatchId": {
+      "title": "Batch Id",
+      "type": "string",
+      "description": "Unique identifier for the batch in which the payment was submitted.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "EndToEndId": {
+      "title": "End to End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "SchemeEndToEndId": {
+      "title": "Scheme End to End Id",
+      "type": "string",
+      "description": "Unique identifier created by ClearBank for each payment.",
+      "minLength": 0
+    },
+    "UltimateCreditorIBAN": {
+      "title": "Ultimate Creditor IBAN",
+       "type": [
+        "null",
+        "string"
+      ],
+      "description": "IBAN for the ultimate creditor. Mandatory only if Ultimate Creditor Account Number is not provided.",
+      "maxLength": 34,
+      "minLength": 0
+    },
+    "UltimateCreditorAccountNumber": {
+      "title": "Ultimate Creditor Account Number",
+       "type": [
+        "null",
+        "string"
+      ],
+      "description": "Account Number used to uniquely identify the ultimate creditor's account. Mandatory only if Ultimate Creditor IBAN is not provided.",
+      "maxLength": 34,
+      "minLength": 0
+    },
+    "UltimateCreditorBic": {
+      "title": "Ultimate Creditor BIC",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "BIC for the ultimate creditor.",
+      "maxLength": 11,
+      "minLength": 8,
+      "pattern": "^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$"
+    },
+    "UltimateCreditorName": {
+      "title": "Ultimate Creditor Name",
+      "type": "string",
+      "description": "Name of the ultimate creditor.",
+      "maxLength": 143,
+      "minLength": 1
+    },
+    "UltimateCreditorAddressLine1": {
+      "title": "Ultimate Creditor Address Line 1",
+      "type": "string",
+      "description": "First line of the ultimate creditor's address.",
+      "maxLength": 70,
+      "minLength": 1
+    },
+    "UltimateCreditorAddressLine2": {
+      "title": "Ultimate Creditor Address Line 2",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Second line of the ultimate creditor's address.",
+      "maxLength": 35,
+      "minLength": 0
+    },
+    "UltimateCreditorAddressLine3": {
+      "title": "Ultimate Creditor Address Line 3",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Third line of the ultimate creditor's address.",
+      "maxLength": 35,
+      "minLength": 0
+    },
+    "UltimateCreditorPostCode": {
+      "title": "Ultimate Creditor Post Code",
+      "type": "string",
+      "description": "Postcode of the ultimate creditor.",
+      "maxLength": 16,
+      "minLength": 1
+    },
+    "UltimateCreditorCountryCode": {
+      "title": "Ultimate Creditor Country Code",
+      "type": "string",
+      "description": "Country code for the ultimate creditor's address. This is the 2-letter ISO country code.",
+      "maxLength": 2,
+      "minLength": 2,
+      "pattern": "^[A-Z]{2}$"
+    },
+    "TransactionId": {
+      "title": "Transaction Id",
+      "type": "string",
+      "description": "Unique identifier defined by ClearBank for each payment.",
+      "format": "guid",
+      "minLength": 1
+    }
+  }
+}

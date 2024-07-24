@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectCreditRecalledWebHookPayload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "CreditorInformation",
+    "DebtorInformation",
+    "RecallingAccountInformation",
+    "ServiceUserName",
+    "ServiceUserNumber",
+    "Amount",
+    "PaymentReference",
+    "TransactionCode",
+    "Status",
+    "ProcessingDate",
+    "SettlementDate",
+    "TransactionType",
+    "Source",
+    "BacsTransactionId",
+    "SuspenseAccountId",
+    "RecallReference"
+  ],
+  "properties": {
+    "CreditorInformation": {
+      "title": "Creditor Information",
+      "description": "Creditor account details for the original direct credit transaction being recalled.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "DebtorInformation": {
+      "title": "Debtor Information",
+      "description": "Debtor account details for the original direct credit transaction being recalled.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "RecallingAccountInformation": {
+      "title": "Recalling Account Information",
+      "description": "Account details for which we will be posting the money too.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "ServiceUserName": {
+      "title": "Service User Name",
+      "type": "string",
+      "description": "Service user name for the original direct credit transaction being recalled.",
+      "maxLength": 36,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": "string",
+      "description": "Service user number for the original direct credit transaction being recalled.",
+      "maxLength": 6,
+      "minLength": 6,
+      "pattern": "^[0-9]*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Amount of the transaction being recalled.",
+      "format": "decimal"
+    },
+    "PaymentReference": {
+      "title": "Payment Reference",
+      "type": "string",
+      "description": "Payment reference for the original direct credit transaction being recalled.",
+      "maxLength": 18,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": "string",
+      "description": "Transaction code for the original direct credit transaction being recalled. For more information about transaction codes, refer to the Payment Service Provider's Guide and Rules to the Bacs Direct Credit Scheme.",
+      "maxLength": 2,
+      "minLength": 2,
+      "pattern": "(99|Z4|Z5|86)"
+    },
+    "Status": {
+      "title": "Status",
+      "description": "Status of the original direct credit transaction being recalled, always going to be Recalled.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsTransactionStatus"
+        }
+      ]
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Processing date of the original direct credit transaction being recalled. ",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "SettlementDate": {
+      "title": "Settlement Date",
+      "type": "string",
+      "description": "Settlement date of the original direct credit transaction being recalled. ",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "TransactionType": {
+      "title": "Transaction Type",
+      "type": "string",
+      "description": "Transaction type of the original direct credit transaction being recalled, always going to be DirectCredit",
+      "maxLength": 25,
+      "minLength": 0,
+      "pattern": "^([a-z]*[A-Z]*)*$"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Source of the transaction being recalled",
+      "maxLength": 9,
+      "minLength": 3,
+      "oneOf": [
+        {
+          "$ref": "#/definitions/EventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Identifier",
+      "type": "string",
+      "description": "Internal identifier for the direct credit transaction being recalled",
+      "format": "guid",
+      "minLength": 1
+    },
+    "SuspenseAccountId": {
+      "title": "Suspense Account Identifier",
+      "type": "string",
+      "description": "Internal identifier for the suspense account for which we will be transferring money from",
+      "format": "guid",
+      "minLength": 1
+    },
+    "RecallReference": {
+      "title": "Recall Reference",
+      "type": "string",
+      "description": "Payment reference for the recalled transaction",
+      "maxLength": 18,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "AccountNumber",
+        "SortCode",
+        "AccountName"
+      ],
+      "properties": {
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 8,
+          "pattern": "^[0-9]*$"
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": "string",
+          "maxLength": 6,
+          "minLength": 6,
+          "pattern": "^[0-9]*$"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 0,
+          "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+        }
+      }
+    },
+    "BacsTransactionStatus": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Recalled"
+      ],
+      "enum": [
+        "Undefined",
+        "Recalled"
+      ]
+    },
+    "EventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}
