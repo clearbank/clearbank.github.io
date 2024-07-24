@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectDebitInboundPaymentCreatedV2",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "PayerInformation": {
+      "title": "Payer Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "OriginatorInformation": {
+      "title": "Originator Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Collection Reference",
+      "maxLength": 18,
+      "minLength": 0
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Date Processed.",
+      "format": "date-time"
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Integrator’s Unique Identifier registered with Bacs",
+      "maxLength": 6,
+      "minLength": 0
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Transaction Code",
+      "maxLength": 2,
+      "minLength": 0,
+      "pattern": "(01|17|18|19)"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Origination of the endpoint",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsEventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Id",
+      "type": "string",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    },
+    "BacsEventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

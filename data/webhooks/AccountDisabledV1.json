@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountDisabled",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "AccountId": {
+      "title": "Account Id",
+      "type": "string",
+      "description": "Unique identification of the account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "DisabledReason": {
+      "title": "Disabled Reason",
+      "description": "Reason account is disabled",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/AccountDisabledReason"
+        }
+      ]
+    },
+    "DisabledTimestamp": {
+      "title": "Disabled Timestamp",
+      "type": "string",
+      "description": "Date and Time account disabled. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "AccountDisabledReason": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "AccountClosed",
+        "AccountSuspended",
+        "AccountHoldersDeceased",
+        "AccountHoldersBankrupt",
+        "AccountSwitched"
+      ],
+      "enum": [
+        "AccountClosed",
+        "AccountSuspended",
+        "AccountHoldersDeceased",
+        "AccountHoldersBankrupt",
+        "AccountSwitched"
+      ]
+    }
+  }
+}

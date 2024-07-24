@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsUnpaidDirectDebitReceivedV3",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "CreditorInformation": {
+      "title": "Creditor Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "DebtorInformation": {
+      "title": "Debtor Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Payment Transaction Reference",
+      "maxLength": 18,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Date Processed.",
+      "format": "date-time"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "TransactionCode\r\n- U1 – to return Direct Debit sent with ‘01’\r\n- U7 – to return Direct Debit sent with ‘17’\r\n- U8 – to return Direct Debit sent with ‘18’\r\n- U9 – to return Direct Debit sent with ‘19’",
+      "maxLength": 2,
+      "minLength": 0,
+      "pattern": "(U1|U7|U8|U9)"
+    },
+    "Status": {
+      "title": "Status",
+      "$ref": "#/definitions/BacsTransactionStatusType"
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Integrator’s Unique Identifier registered with BACS",
+      "maxLength": 6,
+      "minLength": 0
+    },
+    "ReasonCode": {
+      "title": "Reason Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "ReasonCode\r\n- 0 – Refer to payer\r\n- 1 – Instruction cancelled\r\n- 2 – Payer deceased\r\n- 3 – Account transferred\r\n- 4 – Advance notice disputed\r\n- 5 – No account (OR wrong account type)\r\n- 6 – No Instruction\r\n- 7 – Amount differs\r\n- 8 – Amount not yet due\r\n- 9 – Presentation overdue\r\n- A – Service user differs\r\n- B – Account closed\r\nFor more information about reason codes, refer to Section 10 of The Paying Payment Service Provider’s Guide and Rules to the Direct Debit Scheme.",
+      "maxLength": 1,
+      "minLength": 0,
+      "pattern": "([0-9]|A|B)"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Origination of the endpoint",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsEventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Id",
+      "type": "string",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 18,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    },
+    "BacsTransactionStatusType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Pending",
+        "Processed"
+      ],
+      "enum": [
+        "Pending",
+        "Processed"
+      ]
+    },
+    "BacsEventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

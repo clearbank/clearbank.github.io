@@ -1,0 +1,700 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountSwitchInformationRequestV01",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Refs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/References8"
+        }
+      ]
+    },
+    "NewAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/NewAccount1"
+        }
+      ]
+    },
+    "OdAcct": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/CashAccount20"
+        }
+      ]
+    },
+    "BalTrfFndgLmt": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BalanceTransferFundingLimit1"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "References8": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MsgId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/MessageIdentification1"
+            }
+          ]
+        },
+        "AcctSwtchDtls": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountSwitchDetails1"
+            }
+          ]
+        }
+      }
+    },
+    "MessageIdentification1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CreDtTm": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AccountSwitchDetails1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "UnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RtgUnqRefNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SwtchRcvdDtTm": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchRcvdDtTmSpecified": {
+          "type": "boolean"
+        },
+        "SwtchDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "SwtchDtSpecified": {
+          "type": "boolean"
+        },
+        "SwtchTp": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchTp"
+        },
+        "SwtchSts": {
+          "$ref": "#/definitions/AccountSwitchDetails1SwtchSts"
+        },
+        "SwtchStsSpecified": {
+          "type": "boolean"
+        },
+        "BalTrfWndw": {
+          "$ref": "#/definitions/AccountSwitchDetails1BalTrfWndw"
+        },
+        "BalTrfWndwSpecified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AccountSwitchDetails1SwtchTp": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "FULL",
+        "PART"
+      ],
+      "enum": [
+        "FULL",
+        "PART"
+      ]
+    },
+    "AccountSwitchDetails1SwtchSts": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ],
+      "enum": [
+        "REQS",
+        "ACCT",
+        "REJT",
+        "REDT",
+        "TERM",
+        "BTRQ",
+        "BTRS",
+        "COMP",
+        "REDE"
+      ]
+    },
+    "AccountSwitchDetails1BalTrfWndw": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "EARL",
+        "DAYH"
+      ],
+      "enum": [
+        "EARL",
+        "DAYH"
+      ]
+    },
+    "NewAccount1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Acct": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CashAccount20"
+            }
+          ]
+        },
+        "AcctPty": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/IndividualPerson19"
+          }
+        },
+        "Org": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/Organisation8"
+            }
+          ]
+        }
+      }
+    },
+    "CashAccount20": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentification4Choice"
+            }
+          ]
+        },
+        "Nm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Svcr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/BranchAndFinancialInstitutionIdentification4"
+            }
+          ]
+        }
+      }
+    },
+    "AccountIdentification4Choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Othr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/GenericAccountIdentification1"
+            }
+          ]
+        }
+      }
+    },
+    "GenericAccountIdentification1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "BranchAndFinancialInstitutionIdentification4": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FinInstnId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/FinancialInstitutionIdentification7"
+            }
+          ]
+        }
+      }
+    },
+    "FinancialInstitutionIdentification7": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ClrSysMmbId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ClearingSystemMemberIdentification2"
+            }
+          ]
+        }
+      }
+    },
+    "ClearingSystemMemberIdentification2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MmbId": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "IndividualPerson19": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CurNm": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/IndividualPersonNameLong1"
+            }
+          ]
+        },
+        "BirthDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "CtryAndResdtlSts": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CountryAndResidentialStatusType1"
+            }
+          ]
+        },
+        "PstlAdr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PostalAddress6"
+            }
+          ]
+        },
+        "CtznshInf": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CitizenshipInformation1"
+            }
+          ]
+        },
+        "OthrDtls": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/OtherDetailsCode1"
+          }
+        }
+      }
+    },
+    "IndividualPersonNameLong1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NmPrfx": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/NamePrefix1Choice"
+            }
+          ]
+        },
+        "Srnm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "GvnNm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "MddlNm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "NamePrefix1Choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "XtndedNmPrfx": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "CountryAndResidentialStatusType1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ctry": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ResdtlSts": {
+          "$ref": "#/definitions/CountryAndResidentialStatusType1ResdtlSts"
+        }
+      }
+    },
+    "CountryAndResidentialStatusType1ResdtlSts": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "RESI",
+        "PRES",
+        "NRES"
+      ],
+      "enum": [
+        "RESI",
+        "PRES",
+        "NRES"
+      ]
+    },
+    "PostalAddress6": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AdrTp": {
+          "$ref": "#/definitions/AddressType2Code"
+        },
+        "AdrTpSpecified": {
+          "type": "boolean"
+        },
+        "StrtNm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "PstCd": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Ctry": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "AdrLine": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AddressType2Code": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "MLTO",
+        "HOME"
+      ],
+      "enum": [
+        "MLTO",
+        "HOME"
+      ]
+    },
+    "CitizenshipInformation1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ntlty": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "OtherDetailsCode1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Cd": {
+          "$ref": "#/definitions/OtherDetailsCode1CD"
+        },
+        "Prtry": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "OtherDetailsCode1CD": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "AcctPtyTp",
+        "AuthrtyInd",
+        "Last5PanDgts",
+        "DbtCardInd"
+      ],
+      "enum": [
+        "AcctPtyTp",
+        "AuthrtyInd",
+        "Last5PanDgts",
+        "DbtCardInd"
+      ]
+    },
+    "Organisation8": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FullLglNm": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "OrgLglSts": {
+          "$ref": "#/definitions/Organisation8OrgLglSts"
+        },
+        "EstblishdDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "EstblishdDtSpecified": {
+          "type": "boolean"
+        },
+        "RegnNb": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "RegnDt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "RegnDtSpecified": {
+          "type": "boolean"
+        },
+        "BrdRsltnInd": {
+          "type": "boolean"
+        },
+        "BrdRsltnIndSpecified": {
+          "type": "boolean"
+        },
+        "BizAdr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PostalAddress6"
+            }
+          ]
+        },
+        "OprlAdr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PostalAddress6"
+            }
+          ]
+        },
+        "LglAdr": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PostalAddress6"
+            }
+          ]
+        }
+      }
+    },
+    "Organisation8OrgLglSts": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "IAPS",
+        "PCLS",
+        "PCLG",
+        "PCLC",
+        "CICC",
+        "CIOC",
+        "SOLE",
+        "GENP",
+        "LLPP",
+        "LIMP",
+        "UNLC",
+        "UNLT",
+        "CHAR"
+      ],
+      "enum": [
+        "IAPS",
+        "PCLS",
+        "PCLG",
+        "PCLC",
+        "CICC",
+        "CIOC",
+        "SOLE",
+        "GENP",
+        "LLPP",
+        "LIMP",
+        "UNLC",
+        "UNLT",
+        "CHAR"
+      ]
+    },
+    "BalanceTransferFundingLimit1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CcyAmt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/ActiveCurrencyAndAmount"
+            }
+          ]
+        }
+      }
+    },
+    "ActiveCurrencyAndAmount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Ccy": {
+          "$ref": "#/definitions/ActiveCurrencyCode"
+        },
+        "Value": {
+          "type": "number",
+          "format": "decimal"
+        }
+      }
+    },
+    "ActiveCurrencyCode": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "GBP"
+      ],
+      "enum": [
+        "GBP"
+      ]
+    }
+  }
+}

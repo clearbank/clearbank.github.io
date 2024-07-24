@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ChequeNotPaid",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "TransactionSetId",
+    "CreditItemId",
+    "Account",
+    "DebitItemId",
+    "ChequeAmount",
+    "CounterpartAccount",
+    "ChequeSerialNumber",
+    "NoPayReasonCode",
+    "MessageId",
+    "TimestampCreated"
+  ],
+  "properties": {
+    "TransactionSetId": {
+      "title": "ICS Transaction Set ID",
+      "type": "string",
+      "description": "Unique Transaction Set ID used for Image Clearing System (ICS) processing.",
+      "maxLength": 22,
+      "minLength": 1,
+      "pattern": "^[0-9]*$"
+    },
+    "CreditItemId": {
+      "title": "Credit Item - ICS Item ID",
+      "type": "string",
+      "description": "Unique Credit Item ID used for Image Clearing System (ICS) processing.",
+      "maxLength": 25,
+      "minLength": 1      
+    },
+    "Account": {
+      "title": "Credit Item - Beneficiary Account",
+      "description": "Account details of the beneficiary associated with the cheque.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Account"
+        }
+      ]
+    },
+    "DebitItemId": {
+      "title": "Debit Item (Cheque) - ICS Item ID",
+      "type": "string",
+      "description": "Unique Debit Item ID used for Image Clearing System (ICS) processing.",
+      "maxLength": 25,
+      "minLength": 1      
+    },
+    "ChequeAmount": {
+      "title": "Debit Item (Cheque) - Amount",
+      "type": "number",
+      "description": "Amount for the cheque debit item in the transaction, in sterling.",
+      "format": "decimal"
+    },
+    "CounterpartAccount": {
+      "title": "Debit Item (Cheque) - Counterpart Account",
+      "description": "Account details for the cheque debit item in the transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Account"
+        }
+      ]
+    },
+    "ChequeSerialNumber": {
+      "title": "Debit Item (Cheque) - Cheque Serial Number",
+      "type": "string",
+      "description": "Cheque Serial Number for the cheque debit item in the transaction.",
+      "maxLength": 6,
+      "minLength": 1,
+      "pattern": "^[0-9]*$"
+    },
+    "NoPayReasonCode": {
+      "title": "Debit Item (Cheque) - No Pay Reason Code",
+      "type": "string",
+      "description": "Reason code to specify why the cheque has not been paid by the paying bank.",
+      "maxLength": 4,
+      "minLength": 1,
+      "pattern": "^[0-9]*$"
+    },
+    "SwitchedSortCode": {
+      "title": "Debit Item (Cheque) - Switched Sort Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Account switching scenario - switched sort code of the cheque.",
+      "maxLength": 6,
+      "minLength": 6,
+      "pattern": "^[0-9]*$"
+    },
+    "SwitchedAccountNumber": {
+      "title": "Debit Item (Cheque) - Switched Account Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Account switching scenario - switched account number of the cheque.",
+      "maxLength": 8,
+      "minLength": 8,
+      "pattern": "^[0-9]*$"
+    },
+    "MessageId": {
+      "title": "Message ID",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "maxLength": 36,
+      "minLength": 1
+    },
+    "MessageSourceId": {
+      "title": "Message Source ID",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "ClearBank client identifier.",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "TimestampCreated": {
+      "title": "Timestamp Created",
+      "type": "string",
+      "description": "Date and time when the webhook was created within ClearBank. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "Account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "SortCode",
+        "AccountNumber"
+      ],
+      "properties": {
+        "SortCode": {
+          "title": "Sort Code",
+          "type": "string",
+          "maxLength": 6,
+          "minLength": 6,
+          "pattern": "^[0-9]*$"
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 8,
+          "pattern": "^[0-9]*$"
+        }
+      }
+    }
+  }
+}

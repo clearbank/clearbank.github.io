@@ -1,0 +1,290 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaOutboundPaymentSettled",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "EndToEndId",
+    "Amount",
+    "Reference",
+    "Debtor",
+    "Creditor",
+    "CreditorAgent",
+    "TimestampCreated",
+    "TimestampSettled"
+  ],
+  "properties": {
+    "EndToEndId": {
+      "type": "string",
+      "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Amount": {
+      "type": "number",
+      "description": "Amount of money to be moved between the debtor and creditor.",
+      "format": "decimal"
+    },
+    "Reference": {
+      "type": "string",
+      "description": "Reference provided by the debtor for the sepa transfer.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "Debtor": {
+      "description": "The debtor information to which a debit entry will be made as a result of the transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Debtor"
+        }
+      ]
+    },
+    "Creditor": {
+      "description": "The creditor information to which a debit entry will be made as a result of the transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Creditor"
+        }
+      ]
+    },
+    "CreditorAgent": {
+      "description": "Unambiguous identification of the account of the creditor agent.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/OrganisationIdentification"
+        }
+      ]
+    },
+    "TimestampCreated": {
+      "type": "string",
+      "description": "Date and time transaction was created. Time in UTC.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "TimestampSettled": {
+      "type": "string",
+      "description": "Date and time transaction was settled. Time in UTC.",
+      "format": "date-time",
+      "minLength": 1
+    }
+  },
+  "definitions": {
+    "Debtor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "AccountIban",
+        "PostalAddress",
+        "Identification"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to debit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "AccountIban": {
+          "type": "string",
+          "description": "International Bank Account Number associated with the debtor to which a debit entry will be made as a result of the transaction.",
+          "maxLength": 35,
+          "minLength": 1
+        },
+        "PostalAddress": {
+          "description": "Debtor address that locates and identifies a specific address, as defined by postal services.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PostalAddress"
+            }
+          ]
+        },
+        "Identification": {
+          "description": "Unique and unambiguous way to identify a debtor.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Identification"
+            }
+          ]
+        }
+      }
+    },
+    "PostalAddress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "StreetName": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Name of a street or thoroughfare."
+        },
+        "BuildingNumber": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Number that identifies the position of a building on a street."
+        },
+        "PostCode": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+          "maxLength": 16,
+          "minLength": 1
+        },
+        "TownName": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Name of a built-up area, with defined boundaries, and a local government."
+        },
+        "CountrySubdivision": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Identifies a subdivision of a country. This could be a state, region, or county, i.e. Surrey."
+        },
+        "Country": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Country of the address."
+        }
+      }
+    },
+    "Identification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OrganisationIdentification": {
+          "description": "Unique and unambiguous way to identify an organisation.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/OrganisationIdentification"
+            }
+          ]
+        },
+        "PrivateIdentification": {
+          "description": "Unique and unambiguous identification of a person.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/PrivateIdentification"
+            }
+          ]
+        }
+      }
+    },
+    "OrganisationIdentification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Bic"
+      ],
+      "properties": {
+        "Bic": {
+          "type": "string",
+          "description": "Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 'Banking - Banking telecommunication messages - Business identifier code(BIC)'.",
+          "minLength": 1
+        }
+      }
+    },
+    "PrivateIdentification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "DateAndPlaceOfBirth": {
+          "description": "Date and place of birth of a person.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/DateAndPlaceOfBirth"
+            }
+          ]
+        },
+        "Other": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Unique identification of a person, as assigned by an institution, using an identification scheme."
+        }
+      }
+    },
+    "DateAndPlaceOfBirth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "DateOfBirth",
+        "PlaceOfBirth"
+      ],
+      "properties": {
+        "DateOfBirth": {
+          "type": "string",
+          "description": "Date on which a person is born.",
+          "format": "date-time",
+          "minLength": 1
+        },
+        "PlaceOfBirth": {
+          "type": "string",
+          "description": "Place where a person was born.",
+          "minLength": 1
+        }
+      }
+    },
+    "Creditor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "AccountIban",
+        "PostalAddress",
+        "Identification"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to credit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "AccountIban": {
+          "type": "string",
+          "description": "International Bank Account Number associated with the creditor to which a credit entry will be posted as a result of the payment transaction.",
+          "maxLength": 35,
+          "minLength": 1
+        },
+        "PostalAddress": {
+          "description": "Creditor address that locates and identifies a specific address, as defined by postal services.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PostalAddress"
+            }
+          ]
+        },
+        "Identification": {
+          "description": "Unique and unambiguous way to identify a creditor.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Identification"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

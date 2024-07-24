@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountCreated",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "AccountId": {
+      "title": "Account Id",
+      "type": "string",
+      "description": "Unique identification of the account",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "AccountName": {
+      "title": "Account Name",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Name of the account",
+      "maxLength": 128,
+      "minLength": 0
+    },
+    "AccountHolderLabel": {
+      "title": "Account Holder Label",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "The account description",
+      "maxLength": 140,
+      "minLength": 0
+    },
+    "AccountIdentifiers": {
+      "title": "Account Identifiers",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentifiers"
+        }
+      ]
+    },
+    "TimestampCreated": {
+      "title": "Timestamp Created",
+      "type": "string",
+      "description": "Date and Time account created. Time in UTC.",
+      "format": "date-time"
+    },
+    "AccountType": {
+      "title": "Account Type",
+      "$ref": "#/definitions/AccountType"
+    }
+  },
+  "definitions": {
+    "AccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        }
+      }
+    },
+    "AccountType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "CurrentAccount",
+        "DepositAccount",
+        "ControlAccount",
+        "SegregatedClientAccount",
+        "InstitutionAccount"
+      ],
+      "enum": [
+        "CurrentAccount",
+        "DepositAccount",
+        "ControlAccount",
+        "SegregatedClientAccount",
+        "InstitutionAccount"
+      ]
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaPaymentSucceeded",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "DebtorName",
+    "DebtorAddress",
+    "DebtorIBAN",
+    "EndToEndId",
+    "InstructedAmount",
+    "CreditorName",
+    "CreditorAddress",
+    "CreditorIBAN",
+    "Reference"
+  ],
+  "properties": {
+    "DebtorName": {
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to debit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "DebtorAddress": {
+      "description": "Debtor address that locates and identifies a specific address, as defined by postal services.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/PostalAddress"
+        }
+      ]
+    },
+    "DebtorBIC": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Debtor Business Identifier Code if initiating party is an organization."
+    },
+    "DebtorPrivateIdentification": {
+      "description": "Either 'Date and Place of Birth' or one occurrence of 'Other' is allowed if initiating party is an individual.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/PrivateIdentification"
+        }
+      ]
+    },
+    "DebtorIBAN": {
+      "type": "string",
+      "description": "International Bank Account Number associated with the debtor to which a debit entry will be made as a result of the transaction.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "DebtorAgentBIC": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Debtor Agent Business Identifier Code."
+    },
+    "EndToEndId": {
+      "type": "string",
+      "description": "Unique identification assigned by the initiating party to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "InstructedAmount": {
+      "type": "number",
+      "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+      "format": "decimal"
+    },
+    "CreditorName": {
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to credit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "CreditorAddress": {
+      "description": "Creditor address that locates and identifies a specific address, as defined by postal services.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/PostalAddress"
+        }
+      ]
+    },
+    "CreditorBIC": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Financial institution servicing an account for the creditor"
+    },
+    "CreditorPrivateIdentification": {
+      "description": "Unique and unambiguous identification of a person.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/PrivateIdentification"
+        }
+      ]
+    },
+    "CreditorIBAN": {
+      "type": "string",
+      "description": "International Bank Account Number associated with the creditor to which a credit entry will be posted as a result of the payment transaction.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Reference": {
+      "type": "string",
+      "description": "Reference provided by the debtor for the sepa transfer.",
+      "maxLength": 140,
+      "minLength": 1
+    }
+  },
+  "definitions": {
+    "PostalAddress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "StreetName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "BuildingNumber": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "TownName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "CountrySubdivision": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Country": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "PrivateIdentification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "DateOfBirth": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "format": "date-time"
+        },
+        "PlaceOfBirth": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Other": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

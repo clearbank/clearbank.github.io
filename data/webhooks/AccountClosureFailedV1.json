@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AccountClosureFailedV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "AccountId",
+    "ClosureReason",
+    "ClosureFailureReasons",
+    "AccountModifiedDateTime" 
+  ],
+  "properties": {
+    "AccountId": {
+      "title": "Unique Account Id",
+      "type": "string",
+      "description": "Unique identifier for the account that failed to close.",
+      "maxLength": 36,
+      "minLength": 36,
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+    },
+    "ClosureReason": {
+      "title": "Account Closure Reason",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Reason that the account was closed."
+    },
+    "ClosureFailureReasons": {
+      "type": "array",
+      "description": "Reasons why the account failed to close.",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "AccountModifiedDateTime": {
+      "type": "string",
+      "description": "Date and time the account was last modified. Time in UTC.",
+      "format": "date-time"
+    }
+  }
+}

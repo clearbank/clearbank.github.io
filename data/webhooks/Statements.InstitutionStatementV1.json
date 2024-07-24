@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Institution.Statement.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Uri",
+    "ValidUntilDate",
+    "Year",
+    "Month",
+    "Currency",
+    "Format"
+  ],
+  "properties": {
+    "Uri": {
+      "title": "URI",
+      "type": "string",
+      "description": "URI for downloading a statement for all accounts associated with your institution",
+      "format": "uri",
+      "minLength": 1
+    },
+    "ValidUntilDate": {
+      "title": "Valid Until Date",
+      "type": "string",
+      "description": "Date and time the URL will remain valid until. Time in UTC.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "Year": {
+      "title": "Year",
+      "type": "integer",
+      "description": "Year for which the statement has been generated in the Four Digit Year format (e.g., 2021).",
+      "format": "int32"
+    },
+    "Month": {
+      "title": "Month",
+      "type": "integer",
+      "description": "Month for which the statement has been generated in the 1 - 12 format (e.g., 1 for January and 12 for December).",
+      "format": "int32",
+      "maximum": 12,
+      "minimum": 1
+    },
+    "Currency": {
+      "title": "Currency",
+      "type": "string",
+      "description": "Three-letter ISO currency code for the currency of the accounts for which the statement has been generated.",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "Format": {
+      "title": "Format",
+      "type": "string",
+      "description": "File format in which the statement has been generated.",
+      "maxLength": 3,
+      "minLength": 3
+    }
+  }
+}

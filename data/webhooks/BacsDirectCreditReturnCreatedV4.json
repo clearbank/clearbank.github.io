@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectCreditReturnCreatedWebHookPayloadV4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "SuspenseAccount",
+    "BeneficiaryDetails",
+    "ServiceUserInformation",
+    "ReasonCode",
+    "Reference",
+    "Amount",
+    "TransactionCode",
+    "Source",
+    "BacsTransactionId",
+    "OriginalBacsTransactionId",
+    "OriginalBacsTransactionSun"
+  ],
+  "properties": {
+    "SuspenseAccount": {
+      "title": "Suspense Account",
+      "description": "Details of the suspense account from which the Bacs Direct Credit is to be returned.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ClearBankAccountIdentifier"
+        }
+      ]
+    },
+    "BeneficiaryDetails": {
+      "title": "Beneficiary Details",
+      "description": "Details of the beneficiary account to which the Bacs Direct Credit is being returned.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "ServiceUserInformation": {
+      "title": "Service User Information",
+      "description": "Details of the Service User's account as specified in the original Bacs Direct Credit transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "ReasonCode": {
+      "title": "Reason Code",
+      "type": "string",
+      "description": "Reason code to denote the reason why the Bacs Direct Credit transaction is being returned. For more information about reason codes, refer to the 'The Payment Service Provider's Guide and Rules to the Bacs Direct Credit Scheme'.",
+      "maxLength": 1,
+      "minLength": 0,
+      "pattern": "(0|2|3|5|B|C)"
+    },
+    "Reference": {
+      "title": "Payment Reference",
+      "type": "string",
+      "description": "Reference for the Bacs Direct Credit transaction being returned.",
+      "maxLength": 18,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Amount of the Bacs Direct Credit transaction being returned.",
+      "format": "decimal"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": "string",
+      "description": "Transaction code for the Bacs Direct Credit transaction being returned. It is always going to be RA. The transaction code RA means that funds associated with an unapplied credit are being returned using an ARUCS payment instruction via Bacs. ",
+      "maxLength": 2,
+      "minLength": 2,
+      "pattern": "RA"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Source of the transaction being returned. For example: Undefined, Portal, Api, ClearBank or Bacs.",
+      "maxLength": 9,
+      "minLength": 3,
+      "oneOf": [
+        {
+          "$ref": "#/definitions/EventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Identifier",
+      "type": "string",
+      "description": "Internal identifier for the Bacs Direct Credit transaction being returned.",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 36
+    },
+    "OriginalBacsTransactionId": {
+      "title": "Original Bacs Transaction Identifier",
+      "type": "string",
+      "description": "Internal identifier for the original Bacs Direct Credit transaction.",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 36
+    },
+    "OriginalBacsTransactionSun": {
+      "title": "Service User Number",
+      "type": "string",
+      "description": "Service User Number for the original Bacs Direct Credit transaction.",
+      "maxLength": 6,
+      "minLength": 6,
+      "pattern": "^[0-9]*$"
+    }
+  },
+  "definitions": {
+    "ClearBankAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "AccountNumber",
+        "SortCode",
+        "AccountName"
+      ],
+      "properties": {
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 8,
+          "pattern": "^[0-9]*$"
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": "string",
+          "maxLength": 6,
+          "minLength": 6,
+          "pattern": "^[0-9]*$"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 0,
+          "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+        }
+      }
+    },
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "AccountNumber",
+        "SortCode",
+        "AccountName"
+      ],
+      "properties": {
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 8,
+          "pattern": "^[0-9]*$"
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": "string",
+          "maxLength": 6,
+          "minLength": 6,
+          "pattern": "^[0-9]*$"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 0,
+          "pattern": "^([A-Z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+        }
+      }
+    },
+    "EventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

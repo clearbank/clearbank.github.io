@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "InboundHeldTransaction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Scheme",
+    "Account",
+    "CounterpartAccount"
+  ],
+  "properties": {
+    "TimestampCreated": {
+      "title": "Timestamp Created",
+      "type": "string",
+      "description": "Date and Time the inbound transaction was held. Time in UTC.",
+      "format": "date-time"
+    },
+    "Scheme": {
+      "title": "Scheme",
+      "description": "Scheme Type",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/PaymentMethodType"
+        }
+      ]
+    },
+    "Account": {
+      "title": "Account",
+      "$ref": "#/definitions/TransactionAccount"
+    },
+    "CounterpartAccount": {
+      "title": "Counterpart Account",
+      "$ref": "#/definitions/TransactionAccount"
+    },
+    "TransactionAmount": {
+      "title": "Transaction Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "PaymentReference": {
+      "title": "Payment Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Payment Transaction Reference (Optional). To simulate an inbound held transaction webhook in the simulation environment, enter 6a41a29eafcf455493 in the PaymentReference field.",
+      "maxLength": 140,
+      "minLength": 0
+    },
+    "EndToEndTransactionId": {
+      "title": "End To End Transaction Id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Unique Identifier supplied by you in your API request. For inbound transactions, this identifier may not be unique.",
+      "maxLength": 35,
+      "minLength": 0
+    }
+  },
+  "definitions": {
+    "PaymentMethodType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Transfer",
+        "FasterPayments",
+        "Chaps",
+        "Bacs"
+      ],
+      "enum": [
+        "Transfer",
+        "FasterPayments",
+        "Chaps",
+        "Bacs"
+      ]
+    },
+    "TransactionAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

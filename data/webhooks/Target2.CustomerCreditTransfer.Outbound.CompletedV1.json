@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Target2CustomerCreditTransferOutboundCompletedWebHook",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "InstructionId",
+    "Uetr",
+    "TransactionId",
+    "PaymentId"
+  ],
+  "properties": {
+    "InstructionId": {
+      "title": "Customer internal identification",
+      "type": "string",
+      "Pattern": "[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,'\\+])",
+      "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+    },
+    "Uetr": {
+      "title": "Unique end-to-end reference",
+      "type": "string",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "description": "Universally unique UUID v4 identifier randomly generated to provide an end-to-end reference of a payment transaction."
+    },
+    "TransactionId": {
+      "title": "Transaction id",
+      "type": "string",
+      "format": "guid",
+      "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+      "description": "ID of the transaction used to move funds for this payment."
+    },
+    "PaymentId": {
+      "title": "Payment id",
+      "type": "string",
+      "pattern": "[a-zA-Z0-9_-]{0,50}",
+      "description": "ClearBank internal identifier for this payment."
+    }
+  }
+}

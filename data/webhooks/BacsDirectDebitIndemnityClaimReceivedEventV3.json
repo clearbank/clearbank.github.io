@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsDirectDebitIndemnityClaimReceivedEventV3",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "CreditorInformation": {
+      "title": "Creditor Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "DebtorInformation": {
+      "title": "Debtor Information",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Payment Transaction Reference",
+      "maxLength": 35,
+      "minLength": 0,
+      "pattern": "^([A-Z]*[a-z]*[0-9]*\\.*\\&*\\/*-*\\s*)*$"
+    },
+    "Amount": {
+      "title": "Amount",
+      "type": "number",
+      "description": "Transaction Amount",
+      "format": "decimal"
+    },
+    "ProcessingDate": {
+      "title": "Processing Date",
+      "type": "string",
+      "description": "Date Processed.",
+      "format": "date-time"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "maxLength": 2,
+      "minLength": 0,
+      "pattern": "(01|17|18|19)"
+    },
+    "Status": {
+      "title": "Status",
+      "description": "Status\r\n- Pending\r\n- Processed\r\n- Returned\r\n- Recalled (Payer has recalled a transaction so has not been applied to the beneficiary account)\r\n- ContraNotReceived (A transaction is unable to settle as a contra has not been received)",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsTransactionStatusType"
+        }
+      ]
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Integrator’s Unique Identifier registered with BACS",
+      "maxLength": 6,
+      "minLength": 0
+    },
+    "ReasonCode": {
+      "title": "Reason Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "maxLength": 1,
+      "minLength": 0,
+      "pattern": "([0-9]|A|B)"
+    },
+    "SettlementDate": {
+      "title": "Settlement Date",
+      "type": "string",
+      "description": "Date Settled.",
+      "format": "date-time"
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Origination of the endpoint",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsEventSource"
+        }
+      ]
+    },
+    "BacsTransactionId": {
+      "title": "Bacs Transaction Id",
+      "type": "string",
+      "format": "guid",
+      "maxLength": 36,
+      "minLength": 0
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    },
+    "BacsTransactionStatusType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Pending",
+        "Processed",
+        "Returned",
+        "Recalled",
+        "ContraNotReceived"
+      ],
+      "enum": [
+        "Pending",
+        "Processed",
+        "Returned",
+        "Recalled",
+        "ContraNotReceived"
+      ]
+    },
+    "BacsEventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

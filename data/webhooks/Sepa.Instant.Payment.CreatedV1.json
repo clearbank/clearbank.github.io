@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaInstantPaymentCreated",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "TransactionId",
+    "EndToEndId",
+    "DebtorName",
+    "DebtorAccount",
+    "CreditorName",
+    "CreditorAccount",
+    "InstructedAmount",
+    "InstructedCurrency",
+    "SchemePaymentMethod",
+    "TimestampCreated"
+  ],
+  "properties": {
+    "TransactionId": {
+      "type": "string",
+      "description": "Unique identifier as assigned by ClearBank.",
+      "format": "uuid"
+    },
+    "EndToEndId": {
+      "type": "string",
+      "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "DebtorName": {
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to debit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "DebtorAccount": {
+      "type": "string",
+      "description": "International Bank Account Number associated with the account to which a debit entry will be made as a result of the transaction.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "CreditorName": {
+      "type": "string",
+      "description": "The name used to identify the legal owner of the account from which to credit funds.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "CreditorAccount": {
+      "type": "string",
+      "description": "International Bank Account Number associated with the account to which a credit entry will be posted as a result of the payment transaction.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "InstructedAmount": {
+      "type": "number",
+      "description": "Instructed payment amount.",
+      "format": "decimal"
+    },
+    "InstructedCurrency": {
+      "type": "string",
+      "description": "Currency of the instructed payment. This is the 3-letter ISO currency code.",
+      "pattern": "^[A-z]{3}$",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "SchemePaymentMethod": {
+      "type": "string",
+      "description": "Payment scheme used to submit the transaction."
+    },
+    "TimestampCreated": {
+      "type": "string",
+      "description": "Date and time transaction was created, in UTC.",
+      "format": "date-time"
+    },
+    "AdditionalPaymentProperties": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/AdditionalPaymentProperties"
+      }
+    }
+  },
+  "definitions": {
+    "AdditionalPaymentProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Value": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

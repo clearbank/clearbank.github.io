@@ -1,0 +1,290 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PaymentMessageValidationFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "PaymentMethodType"
+  ],
+  "properties": {
+    "MessageId": {
+      "title": "Message Id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Unique Identification of the message",
+      "maxLength": 36,
+      "minLength": 0
+    },
+    "PaymentMethodType": {
+      "title": "Payment Method Type",
+      "description": "Scheme Type",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/PaymentMethodType"
+        }
+      ]
+    },
+    "ValidationFailure": {
+      "title": "Validation Failure",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/PaymentMessageValidationFailure"
+      }
+    },
+    "AccountIdentification": {
+      "title": "Account Identification",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/AccountIdentification"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "PaymentMethodType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Transfer",
+        "FasterPayments",
+        "Bacs",
+        "Chaps"
+      ],
+      "enum": [
+        "Transfer",
+        "FasterPayments",
+        "Bacs",
+        "Chaps"
+      ]
+    },
+    "PaymentMessageValidationFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EndToEndId": {
+          "title": "End To End Id",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Unique Identifier supplied by you in your API request.",
+          "maxLength": 35,
+          "minLength": 0
+        },
+        "Reasons": {
+          "title": "Reasons",
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Examples of possible reasons for failure:\r\n- Creditor name must only contain valid Faster Payments characters\r\n- Creditor name contains invalid characters\r\n- Creditor reference must only contain valid Faster Payments characters\r\n- Creditor reference contains invalid characters",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AccountIdentification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Debtor": {
+          "title": "Debtor",
+          "description": "Debtor Information",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AccountIdentifiers"
+            }
+          ]
+        },
+        "Creditors": {
+          "title": "Creditors",
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Creditor(s) Information",
+          "items": {
+            "$ref": "#/definitions/CreditorAccountIdentifiers"
+          }
+        }
+      }
+    },
+    "AccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "CUID": {
+          "title": "CUID",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "CUID (Optional. The CHIPS UID is assigned by the New York Clearing House)"
+        },
+        "UPIC": {
+          "title": "UPIC",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "UPIC (Optional. Identifier used by the New York Clearing House)"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "AccountName (Optional)",
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "AccountHolderLabel": {
+          "title": "Account Holder Label",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "AccountHolderLabel (Optional)",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "InstitutionName": {
+          "title": "Institution Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "InstitutionName (Optional)",
+          "maxLength": 128,
+          "minLength": 0
+        }
+      }
+    },
+    "CreditorAccountIdentifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Reference": {
+          "title": "Reference",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Payment reference specified by the debtor",
+          "maxLength": 140,
+          "minLength": 0
+        },
+        "Amount": {
+          "title": "Amount",
+          "type": [
+            "null",
+            "number"
+          ],
+          "format": "decimal"
+        },
+        "CurrencyCode": {
+          "title": "Currency Code",
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "BBAN": {
+          "title": "BBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "IBAN": {
+          "title": "IBAN",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 34,
+          "minLength": 0
+        },
+        "CUID": {
+          "title": "CUID",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "CUID (Optional. The CHIPS UID is assigned by the New York Clearing House)"
+        },
+        "UPIC": {
+          "title": "UPIC",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "UPIC (Optional. Identifier used by the New York Clearing House)"
+        },
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "AccountName (Optional)",
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "AccountHolderLabel": {
+          "title": "Account Holder Label",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "AccountHolderLabel (Optional)",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "InstitutionName": {
+          "title": "Institution Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "InstitutionName (Optional)",
+          "maxLength": 128,
+          "minLength": 0
+        }
+      }
+    }
+  }
+}

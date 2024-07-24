@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MccyPayloadTransactionCreated",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "TransactionId",
+    "BatchId",
+    "EndToEndId",
+    "AccountId",
+    "Reference",
+    "UltimateCreditorName",
+    "UltimateCreditorAccountIdentifiers",
+    "UltimateDebtorName",
+    "UltimateDebtorAccountIdentifiers",
+    "InstructedAmount",
+    "InstructedCurrency",
+    "SchemePaymentMethod",
+    "TimestampCreated",
+    "Identifiers",
+    "AdditionalProperties"
+  ],
+  "properties": {
+    "TransactionId": {
+      "title": "Transaction Id",
+      "type": "string",
+      "description": "Unique identifier defined by ClearBank for each payment.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "BatchId": {
+      "title": "Batch Id",
+      "type": "string",
+      "description": "Unique identifier for the batch in which the payment was submitted.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "EndToEndId": {
+      "title": "End to End Id",
+      "type": "string",
+      "description": "Unique identifier provided to ClearBank for each payment.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "SchemeEndToEndId": {
+      "title": "Scheme End to End Id",
+      "type": "string",
+      "description": "Unique identifier created by ClearBank for each payment.",
+      "minLength": 0
+    },
+    "AccountId": {
+      "title": "Account Id",
+      "type": "string",
+      "description": "Unique identifier for the account held with ClearBank.",
+      "format": "guid",
+      "minLength": 1
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": "string",
+      "description": "Reference provided by the ultimate debtor for the payment.",
+      "maxLength": 143,
+      "minLength": 1
+    },
+    "UltimateCreditorName": {
+      "title": "Ultimate Creditor Name",
+      "type": "string",
+      "description": "Name of the ultimate creditor.",
+      "maxLength": 143,
+      "minLength": 1
+    },
+    "UltimateCreditorAccountIdentifiers": {
+      "title": "Ultimate Creditor Account Identifiers",
+      "type": "array",
+      "description": "List of account identifiers used to uniquely identify the ultimate creditor.",
+      "items": {
+        "$ref": "#/definitions/TransactionAccountIdentifier"
+      }
+    },
+    "UltimateDebtorName": {
+      "title": "Ultimate Debtor Name",
+      "type": "string",
+      "description": "Name of the ultimate debtor.",
+      "maxLength": 143,
+      "minLength": 1
+    },
+    "UltimateDebtorAccountIdentifiers": {
+      "title": "Ultimate Debtor Account Identifiers",
+      "type": "array",
+      "description": "List of account identifiers used to uniquely identify the ultimate debtor.",
+      "items": {
+        "$ref": "#/definitions/TransactionAccountIdentifier"
+      }
+    },
+    "InstructedAmount": {
+      "title": "Instructed Amount",
+      "type": "number",
+      "description": "Instructed payment amount.",
+      "format": "decimal"
+    },
+    "InstructedCurrency": {
+      "title": "Instructed Currency",
+      "type": "string",
+      "description": "Currency of the instructed payment. This is the 3-letter ISO currency code.",
+      "maxLength": 3,
+      "minLength": 3,
+      "pattern": "^[A-z]{3}$"
+    },
+    "SchemePaymentMethod": {
+      "title": "Payment Method",
+      "type": "string",
+      "description": "Payment scheme used for submitting the transaction.",
+      "maxLength": 50,
+      "minLength": 1
+    },
+    "TimestampCreated": {
+      "title": "Timestamp transaction created",
+      "type": "string",
+      "description": "Date and time transaction was created. Time in UTC.",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "Identifiers": {
+      "title": "Identifiers",
+      "type": "array",
+      "description": "List of identifiers.",
+      "items": {
+        "$ref": "#/definitions/TransactionIdentifier"
+      }
+    },
+    "AdditionalProperties": {
+      "title": "Additional Properties",
+      "type": "array",
+      "description": "List of additional information.",
+      "items": {
+        "$ref": "#/definitions/TransactionAdditionalProperty"
+      }
+    }
+  },
+  "definitions": {
+    "TransactionAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Kind",
+        "Identifier"
+      ],
+      "properties": {
+        "Kind": {
+          "title": "Account Identifier Kind",
+          "type": "string",
+          "description": "The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).",
+          "maxLength": 10,
+          "minLength": 1
+        },
+        "Identifier": {
+          "title": "Account Identifier",
+          "type": "string",
+          "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+          "maxLength": 36,
+          "minLength": 1
+        }
+      }
+    },
+    "TransactionIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Scope",
+        "Name",
+        "Identifier"
+      ],
+      "properties": {
+        "Scope": {
+          "title": "Scope",
+          "type": "string",
+          "description": "Scope.",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "Name": {
+          "title": "Name",
+          "type": "string",
+          "description": "Name.",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "Identifier": {
+          "title": "Identifier",
+          "type": "string",
+          "description": "Identifier.",
+          "maxLength": 250,
+          "minLength": 1
+        }
+      }
+    },
+    "TransactionAdditionalProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Key",
+        "Value"
+      ],
+      "properties": {
+        "Key": {
+          "title": "Key",
+          "type": "string",
+          "description": "Key.",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "Value": {
+          "title": "Value",
+          "type": "string",
+          "description": "value.",
+          "maxLength": 250,
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

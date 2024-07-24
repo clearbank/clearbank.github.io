@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaInstantRecallRequestReceived",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "CancellationId",
+    "OriginalTransactionId",
+    "ReasonCode",
+    "TimestampCreated"
+  ],
+  "properties": {
+    "CancellationId": {
+      "type": "string",
+      "description": "Unique identifier of the recall request as assigned by the initiating party.",      
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "OriginalTransactionId": {
+      "type": "string",
+      "description": "Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "ReasonCode": {
+      "type": "string",
+      "description": "The reason code used to recall the payment."
+    },
+    "TimestampCreated": {
+      "type": "string",
+      "description": "Date and time the recall was requested, in UTC.",
+      "format": "date-time"
+    },
+    "AdditionalInformation": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional information provided by the initiating party about the recall.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

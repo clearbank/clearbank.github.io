@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BacsMandateCancellationFailed",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ReasonCode": {
+      "title": "Reason Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Reason for failed cancellation\r\n- 6 – No instruction; no match can be made, or a matched item is already cancelled",
+      "maxLength": 1,
+      "minLength": 0,
+      "pattern": "(6)"
+    },
+    "TransactionCode": {
+      "title": "Transaction Code",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Transaction Code"
+    },
+    "OriginatorInformation": {
+      "title": "Originator Information",
+      "description": "Originator Details",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "PayerInformation": {
+      "title": "Payer Information",
+      "description": "Payer Details",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/BacsAccountIdentifier"
+        }
+      ]
+    },
+    "ServiceUserNumber": {
+      "title": "Service User Number",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Integrator’s Unique Identifier registered with Bacs",
+      "maxLength": 6,
+      "minLength": 0
+    },
+    "Reference": {
+      "title": "Reference",
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "Bacs Mandate Reference",
+      "maxLength": 18,
+      "minLength": 0
+    },
+    "Source": {
+      "title": "Source",
+      "description": "Origination of the endpoint",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/BacsEventSource"
+        }
+      ]
+    },
+    "EventDate": {
+      "title": "Event Date",
+      "type": "string",
+      "description": "The date the mandate was returned. Time in UTC.",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "BacsAccountIdentifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AccountName": {
+          "title": "Account Name",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 128,
+          "minLength": 0
+        },
+        "SortCode": {
+          "title": "Sort Code",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 6,
+          "minLength": 0
+        },
+        "AccountNumber": {
+          "title": "Account Number",
+          "type": [
+            "null",
+            "string"
+          ],
+          "maxLength": 8,
+          "minLength": 0
+        }
+      }
+    },
+    "BacsEventSource": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ],
+      "enum": [
+        "Undefined",
+        "Portal",
+        "Api",
+        "ClearBank",
+        "Bacs"
+      ]
+    }
+  }
+}

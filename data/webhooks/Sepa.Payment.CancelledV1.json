@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaPaymentCancelled",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "EndToEndId",
+    "Amount",
+    "Reference",
+    "CancellationDetails",
+    "Debtor",
+    "Creditor"
+  ],
+  "properties": {
+    "EndToEndId": {
+      "type": "string",
+      "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "Amount": {
+      "type": "number",
+      "description": "Amount of money to be moved between the debtor and creditor.",
+      "format": "decimal"
+    },
+    "Reference": {
+      "type": "string",
+      "description": "Reference provided by the debtor for the sepa transfer.",
+      "maxLength": 140,
+      "minLength": 1
+    },
+    "CancellationDetails": {
+      "type": "array",
+      "description": "Details of sepa outbound payment cancellation.",
+      "items": {
+        "$ref": "#/definitions/CancellationDetail"
+      }
+    },
+    "Debtor": {
+      "description": "The debtor information to which a debit entry will be made as a result of the transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Debtor"
+        }
+      ]
+    },
+    "Creditor": {
+      "description": "The creditor information to which a debit entry will be made as a result of the transaction.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Creditor"
+        }
+      ]
+    },
+    "AdditionalPaymentProperties": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/AdditionalPaymentProperties"
+      }
+    }
+  },
+  "definitions": {
+    "CancellationDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Code",
+        "Reason"
+      ],
+      "properties": {
+        "Code": {
+          "type": "string",
+          "description": "Cancellation code.",
+          "minLength": 1
+        },
+        "Reason": {
+          "type": "string",
+          "description": "Reason Sepa payment was cancelled.",
+          "minLength": 1
+        }
+      }
+    },
+    "Debtor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "AccountIban",
+        "PostalAddress"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to debit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "AccountIban": {
+          "type": "string",
+          "description": "International Bank Account Number associated with the debtor to which a debit entry will be made as a result of the transaction.",
+          "maxLength": 35,
+          "minLength": 1
+        },
+        "PostalAddress": {
+          "type": "array",
+          "description": "Debtor address that locates and identifies a specific address, as defined by postal services.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Creditor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Name",
+        "AccountIban",
+        "PostalAddress"
+      ],
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "The name used to identify the legal owner of the account from which to credit funds.",
+          "maxLength": 140,
+          "minLength": 1
+        },
+        "AccountIban": {
+          "type": "string",
+          "description": "International Bank Account Number associated with the creditor to which a credit entry will be posted as a result of the payment transaction.",
+          "maxLength": 35,
+          "minLength": 1
+        },
+        "PostalAddress": {
+          "type": "array",
+          "description": "Creditor address that locates and identifies a specific address, as defined by postal services.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AdditionalPaymentProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "Value": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

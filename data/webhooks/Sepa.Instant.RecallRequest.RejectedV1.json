@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SepaInstantRecallRequestRejected",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "AssignmentId",
+    "OriginalTransactionId",
+    "RejectionCode",
+    "TimestampRejected"
+  ],
+  "properties": {
+    "AssignmentId": {
+      "type": "string",
+      "description": "Unique identifier of the investigation assignment as assigned by the initiating party.",      
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "OriginalTransactionId": {
+      "type": "string",
+      "description": "Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.",
+      "maxLength": 35,
+      "minLength": 1
+    },
+    "RejectionCode": {
+      "type": "string",
+      "description": "The reason for rejecting the recall."
+    },
+    "TimestampRejected": {
+      "type": "string",
+      "description": "Date and time the recall was rejected, in UTC.",
+      "format": "date-time"
+    },
+    "AdditionalInformation": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Additional information provided by the initiating party about the rejection.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
