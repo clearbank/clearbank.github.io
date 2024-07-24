@@ -145,9 +145,16 @@ const WebhookBlockPayload: React.FunctionComponent<Types.WebhookBlockPayloadProp
                               <DataRow.AdditionalAttributeValue
                                 isComplexType={isComplexType}
                               >
-                                {isComplexType
-                                  ? attributeValue.join(", ")
-                                  : attributeValue}
+                                  {attributeKey === 'Pattern' && (
+                                    <code>{attributeValue}</code>
+                                  )}
+
+
+                                {attributeKey === 'Pattern'
+                                  ? null
+                                  : isComplexType
+                                    ? attributeValue.join(", ")
+                                    : attributeValue}
                               </DataRow.AdditionalAttributeValue>
                             </DataRow.AdditionalAttributesList>
                           )
