@@ -26,8 +26,6 @@ Funds can be transferred in from either the nominated account or another ClearBa
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
-As cash ISAs have a maximum deposit limit per tax year, if you are trying to deposit funds that go over that limit, you will receive the [Transaction Rejected webhook](#transaction-rejected-webhook).
-
 The sections below explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
 - [Close, cancel, or transfer out a cash ISA](#end-of-life-for-a-cash-isa)
@@ -198,8 +196,6 @@ The process is shown in this message flow diagram:
   ]}
 />
 
-<WebhookPlaceholder render='transaction-rejected-v2' />
-
 ## Transfer in
 
 ClearBank supports full or partial transfers in of cash ISAs.
@@ -211,11 +207,11 @@ If you want to reject a transfer in request, use the [POST /v1/isas/{accountId}/
 To transfer in a cash ISA:
 1. If a cash ISA doesn't already exist, you'll need to [set up a cash ISA](#set-up-a-cash-isa) first.
 2. Use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint.
-> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds leave the transfer hub.
-3. The previous manager of the cash ISA will move funds into the transfer hub and send you the transfer history form.
+> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter or leave the transfer hub.
+3. When the previous manager of the cash ISA moves funds into the transfer hub, you will receive the [Transaction Settled webhook](#transaction-settled-webhook). They will also send you the transfer history form. 
 4. Use the [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](#submit-a-transfer-history-form) endpoint to submit the transfer history form to us.
 > OPTIONAL To check the status of a transfer in, use the [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in) endpoint.
-5. Once the transfer in has been approved, move the funds from the transfer hub to the cash ISA and reconcile them (identified by the `PaymentReference` field).
+5. Once the transfer in has been approved, move the funds from the transfer hub to the cash ISA.
 
 ![Message flow diagram of the transfer in process, as detailed above.](/assets/images/cash-isa-transfer-in.svg)
 
@@ -225,7 +221,7 @@ To transfer in a cash ISA:
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-in",
-      version: "1.0.Sterling",
+      version: "1.0.Sterling"
     }
   ]}
 />
