@@ -26,12 +26,12 @@ There are three endpoints you can use to submit or return T2 payments:
 |--------------|--------------|----------------------------|-------------------|
 | **[/payments/t2-rtgs/v1/customer-payments](#send-a-t-2-payment)** | Send a T2 payment (pacs.008) | [T2 Customer Credit Transfer Outbound Completed webhook](#t-2-customer-credit-transfer-outbound-completed-webhook)| [T2 Customer Credit Transfer Outbound Failed webhook](#t-2-customer-credit-transfer-outbound-failed-webhook)|
 | **[/payments/t2-rtgs/v1/payment-returns](#send-a-t-2-payment-to-an-institution)** | Return a T2 payment (pacs.004) | [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook)| [T2  Payment Return Outbound Failed webhook](#t-2-payment-return-outbound-failed-webhook)|
-| **[/payments/t2-rtgs/v1/institution-payments](#send-a-t-2-payment-to-an-institution)** | Send a T2 payment to an institution (pacs.009) | [T2 Financial Institution Outbound Credit Transfer Completed webhook](#t-2-fi-outbound-credit-transfer-completed-webhook)| [T2 Financial Institution Outbound Credit Transfer Failed webhook](#t-2-fi-outbound-credit-transfer-failed-webhook)|
+| **[/payments/t2-rtgs/v1/institution-payments](#send-a-t-2-payment-to-an-institution)** | Send a T2 payment to an institution (pacs.009) | [T2 Financial Institution Outbound Credit Transfer Completed webhook](#t-2-financial-institution-credit-transfer-outbound-completed-webhook)| [T2 Financial Institution Outbound Credit Transfer Failed webhook](#t-2-financial-institution-credit-transfer-outbound-failed-webhook)|
 
 There are also webhooks for incoming payments:
 - The [T2 Customer Credit Transfer Inbound Completed webhook](#t-2-customer-credit-transfer-inbound-completed-webhook) is for incoming customer payments
 - The [T2 Payment Return Inbound Completed webhook](#t-2-payment-return-inbound-completed-webhook) is for incoming returns
-- The [T2 Financial Institution Inbound Transfer Completed webhook](#t-2-fi-inbound-transfer-completed-webhook) is for incoming payments from financial institutions
+- The [T2 Financial Institution Inbound Transfer Completed webhook](#t-2-financial-institution-credit-transfer-inbound-completed-webhook) is for incoming payments from financial institutions
 
 #### Operating hours
 
@@ -49,7 +49,11 @@ T2 does not operate on the following days:
 
 ## Sending a T2 payment
 
-![T2 message flow diagram](/assets/images/t2-send-payment.svg)
+To send a T2 payment, use the [/payments/t2-rtgs/v1/customer-payments](#send-a-t2-payment) endpoint. You will receive the [T2 Customer Credit Transfer Outbound Completed webhook](#t-2-customer-credit-transfer-outbound-completed-webhook) when the payment successfully goes through.
+
+![T2 send a payment message flow diagram](/assets/images/t2-send-payment.svg)
+
+If the payment fails, you will receive the [T2 Customer Credit Transfer Outbound Failed webhook](#t-2-customer-credit-transfer-outbound-failed-webhook).
 
 <EndpointBlock
   type="post"
@@ -67,6 +71,12 @@ T2 does not operate on the following days:
 
 ## Returning a T2 payment
 
+To return a T2 payment, use the [/payments/t2-rtgs/v1/payment-returns](#return-a-t2-payment) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook) when the return successfully goes through.
+
+![T2 return a payment message flow diagram](/assets/images/t2-return-payment.svg)
+
+If the return fails, you will receive the [T2 Payment Return Outbound Failed webhook](#t-2-payment-return-outbound-failed-webhook).
+
 <EndpointBlock
   type="post"
   title="Return a T2 payment"
@@ -82,6 +92,12 @@ T2 does not operate on the following days:
 <WebhookPlaceholder render='t2-payment-return-outbound-failed-v1' />
 
 ## Sending a T2 payment to an institution
+
+To send a T2 payment to an institution, use the [/payments/t2-rtgs/v1/institution-payments](#send-a-t2-payment-to-an-institution) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-financial-institution-credit-transfer-outbound-completed-webhook) when the payment successfully goes through.
+
+![T2 send an FI payment message flow diagram](/assets/images/t2-send-FI-payment.svg)
+
+If the payment fails, you will receive the [T2 Payment Return Outbound Completed webhook](#t-2-financial-institution-credit-transfer-outbound-failed-webhook).
 
 <EndpointBlock
   type="post"
@@ -117,7 +133,7 @@ These endpoints can be used to simulate payments. You can also use them for auto
   endpoints={[
     {
       path: "/payments/t2-rtgs/v1/inbound/customer-payments",
-      version: "T2-sim-1.0",
+      version: "1.0-sim-t2",
     }
   ]}
 />
@@ -127,19 +143,19 @@ These endpoints can be used to simulate payments. You can also use them for auto
   title="Simulate a return T2 payment"
   endpoints={[
     {
-      path: "/payments/t2-rtgs/v1/inbound/customer-payments",
-      version: "T2-sim-1.0",
+      path: "/payments/t2-rtgs/v1/inbound/payment-returns",
+      version: "1.0-sim-t2",
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Simulate a T2 bank-to-bank payment"
+  title="Simulate a T2 FI payment"
   endpoints={[
     {
-      path: "/payments/t2-rtgs/v1/inbound/payment-returns",
-      version: "T2-sim-1.0",
+      path: "/payments/t2-rtgs/v1/inbound/institution-payments",
+      version: "1.0-sim-t2",
     }
   ]}
 />
