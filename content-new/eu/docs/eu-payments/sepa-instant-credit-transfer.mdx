@@ -33,7 +33,7 @@ It is essential to integrate with the <a href="#customer-accounts-transaction-co
 
 To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
-![A message flow diagram explaining how to send a SEPA ICT payment](/assets/images/send-a-sepa-ict-payment.svg)
+![A message flow diagram explaining how to send a SEPA ICT payment](/assets/images/sepa-ict-send-payment.svg)
 
 <EndpointBlock
   type="post"
@@ -63,7 +63,9 @@ You can both send and receive recalls. Recall requests remain valid for a maximi
 
 ### Responding to recall requests
 
-You can send SEPA ICT recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#request-a-sepa-instant-recall) endpoint. You will receive confirmation via the [SEPA ICT Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](r#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks.
+You can send SEPA Instant recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#request-a-sepa-instant-recall) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](r#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks.
+
+![A message flow diagram explaining how to send a SEPA ICT recall](/assets/images/sepa-ict-send-recall.svg)
 
 <EndpointBlock
   type="post"
@@ -109,6 +111,8 @@ Recall requests should be responded to within 15 business days. If after 15 busi
 <Callout colour="blue">
 If you accept the recall, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.
 </Callout>
+
+![A message flow diagram explaining how to send a SEPA ICT recall](/assets/images/sepa-ict-receive-recall.svg)
 
 <WebhookPlaceholder render='sepa-instant-recall-request-received-v1' />
 
