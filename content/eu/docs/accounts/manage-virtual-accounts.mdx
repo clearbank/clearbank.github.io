@@ -1,0 +1,88 @@
+---
+title: "Manage virtual accounts"
+order: 3
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Manage virtual accounts
+
+Virtual accounts are publicly addressable accounts with their own IBAN. Also known as shadow accounts, virtual accounts are linked to real accounts and are used to separate out funds held in real accounts for the purposes of improved reconciliation and liquidity management. The responsibility of managing and reconciling virtual accounts rests with you, giving you complete control of such accounts.
+
+Virtual accounts are only compatible with General Segregated Accounts, and can be created, suspended or activated, and closed via our API. 
+
+To comply with the Funds Transfer Regulation, it is important that the naming of virtual accounts reflects the legal name of the customer.
+
+<EndpointBlock
+  type="post"
+  title="Create an account (virtual)"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='mccy-virtual-account-created-webhook-v1' />
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (virtual)"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend the properties of an account (virtual)"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='mccy-virtual-account-updated-webhook-v1' />
+
+<EndpointBlock
+  type="patch"
+  title="Update the status of an account (virtual)"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/status",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Close an account (virtual)"
+  endpoints={[
+    {
+      path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-virtual-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>

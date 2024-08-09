@@ -1,0 +1,132 @@
+---
+title: "SEPA Instant CT"
+order: 3
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+import Callout from "src/components/callout";
+
+## SEPA Instant Credit Transfer
+
+SEPA Instant Credit Transfers (SEPA ICT) is a payment scheme that enables customers to make and receive payments, up to a maximum value of €100,000 within a 10 second period. Payments can be sent at any time, including bank holidays and weekends.
+
+<Callout colour="blue">
+<p>SEPA ICT is currently an optional scheme. New regulation means that by January 2025 all participants that offer SEPA CT must also offer SEPA ICT.</p>
+<p>In the event that a payment is initiated and the beneficiary's bank does not yet participate in SEPA ICT, the payment will be rejected.</p>
+</Callout>
+
+You can:
+- [send SEPA ICT payments](#sending-a-sepa-ict-payment)
+- [recall SEPA ICT payments](#sepa-ict-recalls)
+> Integrating with recall payments is required
+- receive SEPA ICT payments
+> You are notified of incoming SEPA ICT payments via the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+
+<Callout colour="blue">
+It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
+</Callout>
+
+## Sending a SEPA ICT payment
+
+To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+
+![A message flow diagram explaining how to send a SEPA ICT payment](/assets/images/sepa-ict-send-payment.svg)
+
+<EndpointBlock
+  type="post"
+  title="Send a SEPA ICT payment"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-instant",
+      version: "1.0-SEPA-INSTANT",
+      webhooks: [
+        'sepa-instant-payment-created-v1',
+        'sepa-instant-payment-settled-v1',
+        'sepa-instant-payment-cancelled-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='sepa-instant-payment-created-v1' />
+<WebhookPlaceholder render='sepa-instant-payment-settled-v1'/>
+<WebhookPlaceholder render='sepa-instant-payment-cancelled-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+
+## SEPA ICT recalls
+
+You can both send and receive recalls. Recall requests remain valid for a maximimum of 15 business days. You can also receive incoming recall requests that you can accept or reject. If you do not respond to incoming recall requests, they will be automatically rejected.
+
+### Responding to recall requests
+
+You can send SEPA Instant recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#request-a-sepa-instant-recall) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](r#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks.
+
+![A message flow diagram explaining how to send a SEPA ICT recall](/assets/images/sepa-ict-send-recall.svg)
+
+<EndpointBlock
+  type="post"
+  title="Request a SEPA ICT recall"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-instant/{paymentId}/recall",
+      version: "1.0-SEPA-INSTANT",
+      webhooks: [
+        'sepa-instant-recall-payment-created-v1',
+        'sepa-instant-recall-payment-settled-v1',
+        'sepa-instant-recall-payment-cancelled-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='sepa-instant-recall-payment-created-v1' />
+<WebhookPlaceholder render='sepa-instant-recall-payment-settled-v1' />
+<WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v1' />
+<WebhookPlaceholder render='sepa-instant-recall-request-rejected-v1' />
+
+### Recall reason codes
+
+Recalls can be requested using the following reason codes:
+
+| Reason | Description|Time limit to send recall request|
+|------|-----------|---------------------------------|
+|DUPL |Duplicate sending|10 buiness days| 
+|TECH |Technical problems resulting in an erroneous SEPA ICT Transaction|10 buiness days|
+|FRAD |Fraudulent originated SEPA ICT Instruction|13 months|
+|AC03 |Wrong account number in original transfer|13 months|
+|AM09 |Wrong amount in original transfer|13 months|
+|CUST |Requested by customer|13 months|
+
+## Receiving recalls
+
+You may receive an inbound recall request via the [SEPA Instant Recall Request Received webhook](#sepa-instant-recall-request-received-webhook). To respond to the recall request, use the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sepa-instant-recall-request) endpoint.
+
+Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
+
+<Callout colour="blue">
+If you accept the recall, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.
+</Callout>
+
+![A message flow diagram explaining how to send a SEPA ICT recall](/assets/images/sepa-ict-receive-recall.svg)
+
+<WebhookPlaceholder render='sepa-instant-recall-request-received-v1' />
+
+<EndpointBlock
+  type="post"
+  title="Respond to a SEPA instant recall request"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-instant/{paymentId}/recall-response",
+      version: "1.0-SEPA-INSTANT",
+      webhooks:[
+        'sepa-instant-recall-request-received-v1',
+        'sepa-instant-recall-request-rejected-v1'
+      ]
+    }
+  ]}
+/>

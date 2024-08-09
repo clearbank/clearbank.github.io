@@ -1,0 +1,27 @@
+---
+title: "SEPA Instant Recall Request Rejected webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms an outgoing SEPA recall request has been rejected.
+
+#### Request body
+
+```json
+{
+    "Type":"SepaInstantRecallRequestRejected",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description     |
+|-------------------------|-----------------|
+|`AssignmentId` |**Required**<br />Unique identifier of the investigation assignment as assigned by the initiating party.<br/>Type: `string`<br/>Max. Length: `3`<br/>Min. Length: `3` |
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
+|`RejectionCode` |**Required**<br />The reason for rejecting the recall.<br/>Type: `string`|
+|`TimestampRejected` |**Required**<br />Date and time the recall was rejected, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+|`AdditionalInformation` |Additional information provided by the initiating party about the rejection<br/>Type: `array` or `null`<br />Type: `string`|
