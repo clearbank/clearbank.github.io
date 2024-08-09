@@ -4,12 +4,12 @@ import { Layout } from 'src/components'
 import Article from './article'
 import ClientSection from './client-section'
 
-import GetStartedIcon from '../../../static/assets/images/get-started-icon.png'
-import ApiIcon from '../../../static/assets/images/api-icon.png'
-import CodeIcon from '../../../static/assets/images/Code.png'
-import LinkIcon from '../../../static/assets/images/Link.png'
-import CheckIcon from '../../../static/assets/images/Check.png'
-import GHIcon from '../../../static/assets/images/GitHub-Mark 1.png'
+import GetStartedIcon from '../../../static/assets/images/get-started-icon.svg'
+import ApiIcon from '../../../static/assets/images/api-icon.svg'
+import CodeIcon from '../../../static/assets/images/code-icon.svg'
+import LinkIcon from '../../../static/assets/images/link-icon.svg'
+// import CheckIcon from '../../../static/assets/images/check-icon.svg'
+import GHIcon from '../../../static/assets/images/github-icon.png'
 
 import * as Styles from './homepage.styles'
 
@@ -61,48 +61,48 @@ const Homepage: React.FC<any> = (props) => {
           <ClientSection/>
         </Styles.Row>
 
-        <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
-        <Styles.SectionContainer>
+            <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
+            <Styles.SectionContainer>
           {GUIDES.map(item => (
-            <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
-          ))}
-        </Styles.SectionContainer>
-
-        <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
-        <Styles.GitHubSectionContainer>
-          <img src={GHIcon} alt="github icon" />
-          <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
-        </Styles.GitHubSectionContainer>
+                <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+              ))}
+            </Styles.SectionContainer>
         
-        <Styles.TableWrapper>
-          <Styles.Table>
-            <tbody>
+            <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
+            <Styles.GitHubSectionContainer>
+          <img src={GHIcon} alt="GitHub icon" />
+              <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>
+            </Styles.GitHubSectionContainer>
+
+            <Styles.TableWrapper>
+              <Styles.Table>
+                <tbody>
               {
                 props.data.github.repository.pullRequests.nodes
                   .filter(node => node.state === 'MERGED')
                   .map(node => (
-                    <tr key={node.title}>
-                      <Styles.TableTitleCell>
-                        <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
-                      </Styles.TableTitleCell>
-                      <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
-                    </tr>
+                      <tr key={node.title}>
+                        <Styles.TableTitleCell>
+                          <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
+                        </Styles.TableTitleCell>
+                        <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
+                      </tr>
                   ))
               }
-            </tbody>
-          </Styles.Table>
-        </Styles.TableWrapper>
-
-        <Styles.SectionContainer>
+                </tbody>
+              </Styles.Table>
+            </Styles.TableWrapper>
+        
+          <Styles.SectionContainer>
           {ARTICLES.map(item =>
-            <Article
-              href={item.slug}
-              key={item.title}
-              title={item.title}
-              subtitle={item.subtitle}
-            />
-          )}
-        </Styles.SectionContainer>
+              <Article
+                href={item.slug}
+                key={item.title}
+                title={item.title}
+                subtitle={item.subtitle}
+              />
+            )}
+          </Styles.SectionContainer>
       </Styles.Page>
     </Layout>
   )

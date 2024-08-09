@@ -2,7 +2,7 @@ import React from 'react'
 
 import * as Styles from './client-section.styles'
 
-import arrowRight from '../../../static/assets/images/Arrow Right.png'
+import arrowRight from '../../../static/assets/images/arrow-right.png'
 
 interface IClientSectionProps {
 }
