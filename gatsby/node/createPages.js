@@ -80,8 +80,8 @@ module.exports = async ({ graphql, actions, reporter }) => {
     context: {
       menuItems: ukMenuItems,
       articles: ukHomeContent.articles,
+      guides: ukHomeContent.guides,
       pullRequests,
-      guides: [],
     },
   })
 
@@ -91,8 +91,8 @@ module.exports = async ({ graphql, actions, reporter }) => {
     context: {
       menuItems: euMenuItems,
       articles: euHomeContent.articles,
+      guides: euHomeContent.guides,
       pullRequests,
-      guides: [],
     },
   })
 
