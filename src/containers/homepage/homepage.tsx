@@ -54,7 +54,7 @@ const Homepage: React.FC<any> = (props) => {
             <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
             <Styles.SectionContainer>
               {pageContext.guides.map(item => (
-                <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
+                <Article href={item.slug} title={item.title} iconSrc={item.iconSrc === 'CodeIcon' ? CodeIcon : item.iconSrc === 'LinkIcon' ? LinkIcon : ''} variant="secondary" key={item.title}/>
               ))}
             </Styles.SectionContainer>
           </>
