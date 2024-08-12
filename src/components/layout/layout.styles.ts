@@ -31,9 +31,9 @@ export const Wrapper = styled.div`
 
   @media screen and (min-width: ${breakpoints.large}) {
     grid-template-areas:
-      'header header  header'
+      'header header header'
       'content content sidebarRight'
-      'footer footer  footer';
+      'footer footer footer';
     grid-template-rows:
       ${heights.header}
       1fr
@@ -86,10 +86,11 @@ export const ContentWrapper = styled.article`
 
   ${Callout.Container} {
     margin-bottom: 30px;
+    max-width: ${widths.content};
   }
 
   ${EndpointBlock.Container} {
-    max-width: 970px;
+    max-width: ${widths.content};
   }
 
   ${WebHookPlaceholder.Container} {

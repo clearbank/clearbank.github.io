@@ -24,24 +24,11 @@ export default Home
 // TODO: Use fragments for these page queries
 // and share them between the doc template and this homepage
 export const pageQuery = graphql`
-  query($repositoryName: String!, $repositoryOwner: String!) {
+  query {
     site {
       siteMetadata {
         title
         docsLocation
-      }
-    }
-    github {
-      repository(name: $repositoryName, owner: $repositoryOwner) {
-        pullRequests(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
-          totalCount
-          nodes {
-            title
-            state
-            createdAt
-            url
-          }
-        }
       }
     }
   }

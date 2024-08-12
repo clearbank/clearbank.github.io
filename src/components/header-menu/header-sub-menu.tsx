@@ -17,17 +17,13 @@ const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) 
           }
         </Styles.TitleContainer>
         <Styles.List>
-          {item.subMenuItems?.map(subMenuItem => {
-            const link = subMenuItem.node.fields.slug
-
-            return (
-              <li key={subMenuItem.node.fields.id}>
-                <Styles.ListItem to={link}>
-                  {subMenuItem.node.fields.title}
-                </Styles.ListItem>
-              </li>
-            )
-          })}
+          {item.subMenuItems?.map(subMenuItem => (
+            <li key={subMenuItem.node.fields.id}>
+              <Styles.ListItem to={subMenuItem.node.fields.slug}>
+                {subMenuItem.node.fields.title}
+              </Styles.ListItem>
+            </li>
+          ))}
         </Styles.List>
       </Styles.Container>
     )

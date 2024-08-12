@@ -6,6 +6,10 @@ const colours = {
   blue: {
     background: colors.bonusBlue,
     border: colors.businessBlue
+  },
+  green: {
+    background: colors.brandSecondary,
+    border: colors.brandSecondaryDarker
   }
 }
 
