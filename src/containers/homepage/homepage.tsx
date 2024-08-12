@@ -53,13 +53,13 @@ const Homepage: React.FC<any> = (props) => {
           <>
             <Styles.SectionTitle>Helpful quick reference guides</Styles.SectionTitle>
             <Styles.SectionContainer>
-              {pageContext.Guides.map(item => (
+              {pageContext.guides.map(item => (
                 <Article href={item.slug} title={item.title} iconSrc={item.iconSrc} variant="secondary" key={item.title}/>
               ))}
             </Styles.SectionContainer>
           </>
         )}
-        
+
         {pageContext?.pullRequests?.length > 0 && (
           <>
             <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
@@ -83,9 +83,9 @@ const Homepage: React.FC<any> = (props) => {
               </Styles.Table>
             </Styles.TableWrapper>
           </>
-          
+
         )}
-        
+
         {pageContext?.articles?.length > 0 && (
           <Styles.SectionContainer>
             {pageContext.articles.map(item =>
