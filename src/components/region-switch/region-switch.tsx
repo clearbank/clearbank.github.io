@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Toggle from 'react-toggle';
-import { navigate } from '@reach/router';
+import { navigate } from 'gatsby';
 import './region-switch.styles.css'
 
 export default function RegionSwitch({ location }) {
