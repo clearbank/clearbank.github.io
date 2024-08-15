@@ -59,7 +59,7 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 
 You can send SEPA recall requests using the [POST /payments/sepa-ct/v1/recall](#request-a-sepa-ct-payment-recall) endpoint. Recalls can take up to 15 business days.
 
-If your recall request has been accepted, you will be notified via the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook).
+If your recall request has been accepted, you will be notified via the [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) and the [SEPA CT Outbound Payment Return Completed](#sepa-ct-outbound-payment-return-completed-webhook) webhooks.
 
 ![A message flow diagram explaining how to send a SEPA CT recall request](/assets/images/sepa-ct-recall-request.svg)
 
@@ -82,12 +82,16 @@ Recalls can be requested using the following reason codes:
   endpoints={[
     {
       path: "/payments/sepa-ct/v1/recall",
-      version: "1.0-SEPA-CT"
+      version: "1.0-SEPA-CT",
+      webhooks: [
+        'sepa-ct-outbound-payment-return-completed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
 
-<WebhookPlaceholder render='sepa-ct-inbound-payment-completed-v1' />
+<WebhookPlaceholder render='sepa-ct-outbound-payment-return-completed-v1' />
 
 ## Responding to a SEPA CT recall request
 
@@ -146,6 +150,8 @@ You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#
 
 ![A message flow diagram explaining how to send a SEPA CT return](/assets/images/sepa-ct-return.svg)
 
+Once the return has been processed, you will either receive the [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) and [SEPA CT Inbound Payment Return Completed](#sepa-ct-inbound-payment-return-completed-webhook) webhooks or the [SEPA CT Inbound Payment Return Failed](#sepa-ct-inbound-payment-return-failed-webhook) webhook.
+
 <EndpointBlock
   type="post"
   title="Return a SEPA CT payment"
@@ -154,8 +160,8 @@ You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#
       path: "/payments/sepa-ct/v1/payment-returns",
       version: "1.0-SEPA-CT",
       webhooks: [
-        'sepa-ct-outbound-payment-return-completed-v1',
-        'sepa-ct-outbound-payment-failed-v1',
+        'sepa-ct-inbound-payment-return-completed-v1',
+        'sepa-ct-inbound-payment-return-failed-v1',
         'eu-customer-accounts-transaction-completed-v1'
       ]
     }
