@@ -145,7 +145,7 @@ The response shows results from the test call
 ```
 
 To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank (if you are subscribed to it).
-We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Test Webhooks](/webhooks/) for more information.
+We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Test Webhooks](#set-up-and-test-webhook-listener-urls) for more information.
 
 <EndpointBlock
   type="get"
@@ -200,7 +200,7 @@ When you send a request, the response will include an HTTP status code to indica
 
 
 #### 5xx status codes
-If you receive a 5xx error code, you should retry your request as these are service errors. A request that returns these errors may, in exceptional circumstances, result in being processed regardless. Following which, you will receive a notification (webhook) delivered to you as expected. 
+If you receive a 5xx error code, you should retry your request as these are service errors. A request that returns these errors may, in exceptional circumstances, result in being processed regardless. Following which, you will receive a notification (webhook) delivered to you as expected.
 
 To avoid any duplication, always retry all such requests with exactly the same request ID header and payload. If the initial request is successful, the retry request will trigger a notification (HTTP response or webhook) to confirm that it has not been processed as it was identified as a duplicate.
 
@@ -360,7 +360,7 @@ Webhook responses contain a `200` HTTP status code which includes a `Nonce` numb
 
 ### IP address ranges
 
-The ranges of IP addresses that ClearBank webhooks are sent from are different for the simulation and production environments. All the IP addresses listed here should be included on your allow list so that webhooks are not blocked by your security. 
+The ranges of IP addresses that ClearBank webhooks are sent from are different for the simulation and production environments. All the IP addresses listed here should be included on your allow list so that webhooks are not blocked by your security.
 
 The ranges of public IP addresses to support your interaction with ClearBank webhooks are:
 - Simulation public IP address ranges: `20.238.170.48/28`, `20.56.46.192/28`, `68.219.189.112/28`, `98.71.253.192/28`
@@ -394,7 +394,7 @@ We have provided an example C# controller in the [ClearBank fi-api-101 Github Re
 **If you are not able to verify** the webhook source then you should respond with a reasonable status code/error code to signify that the webhook should be treated as failed.
 
 <Callout colour="blue">
-  A webhook response must be sent in less than 5 seconds. Any response received more than 5 seconds after the webhook was sent is ignored, and the webhook will be considered to have failed. 
+  A webhook response must be sent in less than 5 seconds. Any response received more than 5 seconds after the webhook was sent is ignored, and the webhook will be considered to have failed.
 </Callout>
 
 ClearBank will retry failed webhooks every 15 minutes for 24 hours or until you return a successful response.
