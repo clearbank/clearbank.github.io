@@ -25,6 +25,9 @@ export enum SectionTypeEnum {
 
 export enum BlockStatusColourEnum {
   'Success' = '#678D4B',
+  'OK' = '#678D4B',
+  'Created' = '#678D4B',
+  'Accepted' = '#678D4B',
   'Bad Request' = '#F00000',
   'Request' = '#000000',
   'Default' = '#000000'

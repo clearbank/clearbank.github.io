@@ -1,0 +1,27 @@
+---
+title: "SEPA Instant Recall Request Received webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms an outgoing SEPA recall request has been received.
+
+#### Request body
+
+```json
+{
+    "Type":"Sepa.Instant.RecallRequest.Received",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description     |
+|-------------------------|-----------------|
+|`CancellationId` |**Required**<br />Unique identifier of the recall request as assigned by the initiating party.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
+|`ReasonCode` |**Required**<br />The reason code used to recall the payment.<br/>Type: `string`|
+|`TimestampCreated` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+|`AdditionalInformation` |Additional information provided by the initiating party about the rejection<br/>Type: `array` or `null`<br />Type: `string`|

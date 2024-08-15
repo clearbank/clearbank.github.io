@@ -36,14 +36,16 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
       </Styles.LogoWrapper>
 
       <Styles.Copywrite className='long-primer'>
-        Copyright © ClearBank Ltd {new Date().getFullYear()}. All rights reserved.
-        <br/>
-        Copyright ClearBank Ltd. Authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority (Financial Services Register number: 754568). Registered Address: ClearBank, Borough Yards, 13 Dirty Lane, London, SE1 9PA.
-        <br/>
-        ClearBank® provides customers with a Definitive Services Agreement, which covers the provision of indirect access services. &nbsp;
-        <a href="https://www.wearepay.uk/what-we-do/payment-systems/access-to-payment-systems/code-of-conduct-for-indirect-access-providers/" target="_blank" rel="noopener noreferrer">
-          Code of Conduct for Indirect Access Providers.        
-        </a>
+        <h5>Copyright © ClearBank Limited {new Date().getFullYear()}. All rights reserved.</h5>
+
+        ClearBank Limited is authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority (FRN: 754568). Registered in England and Wales under Company Number 09736376. Registered Address: ClearBank Limited, Borough Yards, 13 Dirty Lane, London, SE1 9PA.
+
+        <br/><br/>ClearBank Limited is a subscriber to the <a href="https://www.wearepay.uk/what-we-do/payment-systems/access-to-payment-systems/code-of-conduct-for-indirect-access-providers/" target="_blank" rel="noopener noreferrer">
+          Code of Conduct for Indirect Access Providers
+        </a> in respect of the indirect access services which it provides to its customers.
+        <br/><br/>
+        ClearBank Europe N.V. is authorised by the European Central Bank and regulated by De Nederlandsche Bank. ClearBank Europe N.V. is registered at the Chamber of Commerce Amsterdam Trade Registry under number 89463366. Registered address: ClearBank Europe N.V., Keizersgracht 391A, 1016 EJ Amsterdam. VAT ID is NL864989829B01.
+
       </Styles.Copywrite>
     </Styles.CopywriteWrapper>
   </Styles.Container>

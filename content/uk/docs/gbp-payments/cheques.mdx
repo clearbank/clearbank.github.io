@@ -1,0 +1,65 @@
+---
+title: "Cheques"
+order: 6
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Cheques
+
+ClearBank accounts can support cheque deposits. If you'd like access to this product, please speak to your relationship manager.
+
+You can submit cheques as image files using the [POST /v1/submitDeposit](#Submit-a-cheque) endpoint.
+
+The message flow for cheques submitted via the endpoint is shown here.
+
+![alt text](/assets/images/cheque_endpoint.svg "Message flow diagram explaining how to submit cheques via the endpoint. This is explained in the text below.")
+
+You can submit a cheque image in either TIFF or JPEG file format.
+
+Cheques can be submitted any time and may take up to three working days to process. If the cheque passes processing, is submitted to the ICS scheme, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
+
+Scenarios where the cheque wouldn't process successfully include:
+- If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
+- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, you will receive a 400 response when you submit the cheque.
+- If the cheque is successfully submitted, but there is missing information, you will receive the transaction rejected report from ClearBank on Freshdesk.
+- If a decision is made by the issuing bank through ICS to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
+
+#### Image requirements
+For cheque images to successfully validate, they must satisfy the following requirements:
+
+| File type | Encoding | Resolution | Front image size | Back image size| 
+|--|--|--|--|--|
+| Bitonal JPEG | Base64 encoded string | 200DPI | 600 to 800,000 byes | 58 to 90,000 bytes |
+| Bitonal TIFF | Base64 encoded string | 200DPI | 600 to 90,000 byes | 58 to 90,000 bytes |
+
+Cheque images must be:
+- Clear
+- Uncrumpled
+- Without folded corners and have visible edges
+- Free from shadows
+
+<EndpointBlock
+  type="post"
+  title="Submit a cheque"
+  endpoints={[
+    {
+      path: "/payments/cheques/v1/submit-deposit",
+      version: "1.0Cheques",
+       webhooks: [
+        'cheque-paid-webhook-v1',
+        'cheque-not-paid-webhook-v1',
+        'cheque-reconciled-webhook-v1',
+        'transaction-settled-webhook-v6'
+       ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='cheque-paid-webhook-v1' />
+<WebhookPlaceholder render='cheque-not-paid-webhook-v1' />
+<WebhookPlaceholder render='cheque-reconciled-webhook-v1' />
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />

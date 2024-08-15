@@ -1,0 +1,157 @@
+---
+title: "Manage sterling accounts"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+
+## Real GBP accounts
+
+A real account is a physical account held with ClearBank and can be used to send and/or receive payments.
+
+**Before creating an account, please ensure that you know which [account type](./account-types) you need to create.** If you are unsure, please get in touch.
+
+The balance of a real account is also held by ClearBank and can be viewed via the Institution portal and the ClearBank API. Real accounts are reconciled for you by ClearBank.
+
+<EndpointBlock
+  type="get"
+  title="Get all accounts (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling"
+    },
+    {
+      path: "/v2/Accounts",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create an account (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (real)"
+  endpoints={[
+    {
+      path: "/v3/Accounts/{accountId}",
+      version: "3.0.Sterling"
+    },
+    {
+      path: "/v2/Accounts/{accountId}",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an account (real)"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+## Virtual GBP accounts
+
+A virtual account held with ClearBank is a shadow account which should mirror an account held on your platform.
+Each virtual account is linked to a real account held at ClearBank. You can use a virtual account to send and/or receive payments by means of its association with this real account.
+The responsibility of managing and reconciling virtual accounts rests with you, which gives you complete control of such accounts.
+
+<EndpointBlock
+  type="get"
+  title="Get accounts (virtual)"
+  endpoints={[
+    {
+      path: "/v1/accounts/virtual",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create accounts (virtual)"
+  description="This endpoint uses accountIdentifier as a duplicate check."
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual",
+      version: "2.0.Sterling",
+      webhooks: [
+        'virtual-account-created-v3',
+        'virtual-account-creation-failed-v3'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='virtual-account-created-v3' />
+<WebhookPlaceholder render='virtual-account-creation-failed-v3' />
+
+<EndpointBlock
+  type="get"
+  title="Get all virtual accounts for a real account"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (virtual)"
+  endpoints={[
+    {
+      path: "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}",
+      version: "2.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an account (virtual)"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/virtual/{virtualAccountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Disable an account (virtual)"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/virtual/{virtualAccountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+

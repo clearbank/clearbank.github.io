@@ -94,8 +94,8 @@ export const colors = {
   brandLight: '#fff',
 
   // Primary
-  brandPrimary: '#FF9A00',
-  brandPrimaryDark: '#259098',
+  brandPrimary: '#000000', //black
+  brandPrimaryDark: '#8e8e8e', //dark grey
   brandPrimaryDarker: '#C95D00',
   brandPrimaryDarkest: '#000',
   brandPrimaryLight: '#000',
@@ -103,9 +103,9 @@ export const colors = {
   brandPrimaryLightest: '#000',
 
   // Secondary
-  brandSecondary: '#6B99DD', // V2
-  brandSecondaryDark: '#3389D7',
-  brandSecondaryDarker: '#6C7F98',
+  brandSecondary: '#b1fefd', // light blue
+  brandSecondaryDark: '#59fadc', //aqua
+  brandSecondaryDarker: '#259098', //teal
   brandSecondaryDarkest: '#000000',
   brandSecondaryLight: '#B4D8F1',
   brandSecondaryLighter: '#000',
@@ -123,7 +123,7 @@ export const colors = {
   // Gray
   brandGray: '#E0E0E0',
   brandGrayDark: '#8F9DB0',
-  brandGrayDarker: '#6C7F98',
+  brandGrayDarker: '#6C6c6c',
   brandGrayDarkest: '#0B2145',
   brandGrayLight: '#F8F8F8',
   brandGrayLighter: '#EBF1F5',

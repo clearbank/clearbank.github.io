@@ -1,0 +1,25 @@
+---
+title: "T2 Customer Credit Transfer Outbound Failed webhook"
+version: 1
+webhook: true
+---
+
+#### Request body
+
+```json
+{
+    "Type": "Target2.CustomerCreditTransfer.Outbound.Failed",
+    "Version": 1,                                                         
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                    | Description                |
+|----------------------------|----------------------------|
+| `InstructionId` |**Required**<br /> Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.<br/>Type: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
+| `Uetr`          |**Required**<br /> Randomly generated UUID to provide an end-to-end reference of a payment transaction.<br/>Format: `guid`<br/> Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`   |
+| `PaymentId`     |**Required**<br /> ClearBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
+| `ErrorCode`     |**Required**<br /> ISO 20022/ClearBank code for why the payment failed.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`|
+| `AdditionalInformation` |**Required**<br /> Text description of why the payment failed.<br/>Type: `string`|

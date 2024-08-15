@@ -1,0 +1,644 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Sepa Orchestrator API",
+    "version": "1.0-SEPA-INSTANT"
+  },
+  "paths": {
+    "/v1/payments/sepa-instant": {
+      "post": {
+        "tags": [
+          "Sepa Instant Payments"
+        ],
+        "summary": "This endpoint is used to create an outbound SEPA ICT payment.",
+        "operationId": "Payment.Create",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSepaOutboundPaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payments/sepa-instant/{paymentId}/recall-response": {
+      "post": {
+        "tags": [
+          "Sepa Instant Payment Recalls"
+        ],
+        "summary": "This endpoint is used to accept or reject an incoming SEPA ICT recall request.",
+        "operationId": "sepa-instant-recall-response",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+        {
+          "name": "Authorization",
+          "in": "header",
+          "description": "Your API Token, retrieved from the web portal.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "DigitalSignature",
+          "in": "header",
+          "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "X-Request-Id",
+          "in": "header",
+          "description": "A unique identifier for the request.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecallResponseReceived"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payments/sepa-instant/{paymentId}/recall": {
+      "post": {
+        "tags": [
+          "Sepa Instant Payment Recalls"
+        ],
+        "summary": "This endpoint is used to create a recall request for an outbound payment.",
+        "operationId": "Payment.RequestForRecall",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestForRecallRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Agent": {
+        "required": [
+          "bic"
+        ],
+        "type": "object",
+        "properties": {
+          "bic": {
+            "maxLength": 11,
+            "minLength": 8,
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$"
+              },
+              {
+                "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$"
+              }
+            ],
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "example": "BUKBGB20"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateRequestForRecallRequest": {
+        "required": [
+          "amount",
+          "reasonCodeForRecall"
+        ],
+        "type": "object",
+        "properties": {
+          "originalInstructedAmount": {
+            "maximum": 100000,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money moved between the debtor and creditor (EUR)",
+            "format": "double",
+            "example": "1000"
+          },
+          "reasonCodeForRecall": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Value must be one of \"DUPL, FRAD, TECH, CUST, AC03, AM09\". DUPL = Duplicate, FRAD = Fraud, TECH = Technical problem, AC03 = Invalid creditor number, CUST = Requested by customer, AM09 = Wrong amount",
+            "example": "DUPL"
+          },
+          "additionalInformation": {
+            "maxLength": 105,
+            "type": "string",
+            "description": "Can only be used for  \"FRAD, CUST, AC03, AM09\". Further details on the cancellation request reason.",
+            "nullable": true,
+            "example": "Lorem ipsum"
+          },
+          "originalInstructedDate": {
+            "type": "string",
+            "description": "Original date of transaction",
+            "format": "date-time",
+            "example": "19/06/2015 10:35:50"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSepaOutboundPaymentRequest": {
+        "required": [
+          "amount",
+          "creditor",
+          "creditorAgent",
+          "debtor",
+          "endToEndId"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "maximum": 100000,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR). ",
+            "format": "double",
+            "example": 10.00
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/Creditor"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/Agent"
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/Debtor"
+          },
+          "endToEndId": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "type": "string",
+            "description": "Unique identification, as assigned by the originating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "example": "0947eaf6-2b51-496b-afba-969a0a712d1"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system",
+            "nullable": true,
+            "example": "INV-00002 2020-01-21"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/UltimateCreditor"
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/UltimateDebtor"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Creditor": {
+        "required": [
+          "accountIban",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name used to identify the legal owner of the account from which to debit funds.",
+            "example": "John Doe"
+          },
+          "accountIban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+              },
+              {
+                "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+              }
+            ],
+            "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
+            "example": "NL51ABNA5993159871"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/Identification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DateAndPlaceOfBirth": {
+        "type": "object",
+        "properties": {
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Date of birth of a person",
+            "format": "date-time",
+            "nullable": true,
+            "example": "1991-02-21"
+          },
+          "placeOfBirth": {
+            "type": "string",
+            "description": "Place of birth of a person",
+            "nullable": true,
+            "example": "Birth Town"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Debtor": {
+        "required": [
+          "accountIban",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name used to identify the legal owner of the account from which to debit funds.",
+            "example": "John Doe"
+          },
+          "accountIban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+              },
+              {
+                "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+              }
+            ],
+            "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
+            "example": "NL51ABNA5993159871"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "identification": {
+            "$ref": "#/components/schemas/Identification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Identification": {
+        "type": "object",
+        "properties": {
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PrivateIdentification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganisationIdentification": {
+        "required": [
+          "bic"
+        ],
+        "type": "object",
+        "properties": {
+          "bic": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
+            "type": "string",
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "example": "BUKBGB20"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreated": {
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "format": "guid",
+            "description": "UUID used to uniquely identify a single payment/recall. All recalls will be linked to a single PaymentId so they both share that same paymentID.",
+            "example": "1fd63af1-83e2-3a8a-1014-3daa0e1c5f28"
+          }
+        }
+      },
+      "PostalAddress": {
+        "type": "object",
+        "properties": {
+          "streetName": {
+            "type": "string",
+            "description": "Name of a street or thoroughfare.",
+            "nullable": true,
+            "example": "Morissette Union"
+          },
+          "buildingNumber": {
+            "type": "string",
+            "description": "Number that identifies the position of a building on a street.",
+            "nullable": true,
+            "example": "99"
+          },
+          "townName": {
+            "type": "string",
+            "description": "Name of a built-up area, with defined boundaries,and a local government.",
+            "nullable": true,
+            "example": "Sipesville"
+          },
+          "postCode": {
+            "type": "string",
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "nullable": true,
+            "example": "RV7 4IS"
+          },
+          "countrySubdivision": {
+            "type": "string",
+            "description": "Identifies a subdivision of a country such as state, region, county.",
+            "nullable": true,
+            "example": "Buckinghamshire"
+          },
+          "country": {
+            "type": "string",
+            "description": "Nation with its own government.",
+            "nullable": true,
+            "example": "GB"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrivateIdentification": {
+        "type": "object",
+        "properties": {
+          "dateAndPlaceOfBirth": {
+            "$ref": "#/components/schemas/DateAndPlaceOfBirth"
+          },
+          "other": {
+            "type": "string",
+            "description": "Unique identification of a person, as assigned by an institution, using an identification scheme.",
+            "nullable": true,
+            "example": "Other identification."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RecallResponseReceived": {
+        "required": [
+          "approve"
+        ],
+        "type": "object",
+        "properties": {
+          "approve": {
+            "type": "boolean",
+            "description": "To accept a recall, set the value to true. To reject a recall, set the value to false.",
+            "example": "false"
+          },
+          "rejectionCode": {
+            "type": "string",
+            "description": "Value must be one of \"AC04, NOOR, AM04, ARDT, NOAS, LEGL, CUST\". AC04 = Closed account,\r\nNOOR = No Original Transaction Received,\r\nAM04 = insufficient funds,\r\nARDT = The transaction has already been returned,\r\nNOAS = No answer from customer,\r\nLEGL = Legal decision,\r\nCUST = Requested by customer.Rejection codes should only be set when rejecting the recall. In order to reject a recall, please set the the value of the Approve field to false",
+            "nullable": true,
+            "example": "AM04"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UltimateCreditor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate creditor is populated.",
+            "nullable": true,
+            "example": "John Doe"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
+            "nullable": true,
+            "example": "NLKBGB20"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UltimateDebtor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate debtor is populated.",
+            "nullable": true,
+            "example": "John Doe"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
+            "nullable": true,
+            "example": "NLKBGB20"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

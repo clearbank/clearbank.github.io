@@ -28,7 +28,7 @@ export default class Doc extends Component {
               </Button>
             </Link>
           </Styles.Content>
-          <img src='/assets/images/404-disconnected-image.png' alt='' />
+          <img src='/assets/images/disconnect-icon.svg' alt='image of a broken link' />
         </Styles.ContentWrapper>
       </Styles.Container>
     )

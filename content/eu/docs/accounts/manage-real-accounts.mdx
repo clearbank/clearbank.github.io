@@ -1,0 +1,121 @@
+---
+title: "Manage real accounts"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+import Callout from 'src/components/callout'
+
+## Manage real accounts
+
+<Callout colour="green"><h2>Accounts are coming soon</h2><p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our European simulation environment.</p>
+</Callout>
+
+A real account held with ClearBank and can be used to send and/or receive payments. The balance of a real account is also held by ClearBank.
+
+**Before creating an account, please ensure that you know which [account type](./account-types) you need to create.** If you are unsure, please get in touch.
+
+<Callout colour="blue">
+At this time, you can only hold euro (EUR) balances in a european real account. When you create the account, set <strong>currencies</strong> to <strong>EUR</strong>.
+</Callout>
+
+GBP payments to and from a european account are not allowed and would be rejected and returned automatically. For more information about currencies supported by ClearBank accounts, please speak to your Relationship Manager.
+
+- To create and manage virtual accounts, refer to [Manage accounts](./manage-virtual-accounts).
+
+<EndpointBlock
+  type="post"
+  title="Create a new account (real)"
+  endpoints={[
+        {
+      path: "/mccy/v2/Accounts",
+      version: "2.0.MCCY-ACC",
+      webhooks: [
+        'mccy-account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+
+<WebhookPlaceholder render='mccy-account-created-webhook-v1' />
+
+<EndpointBlock
+  type="get"
+  title="Get all accounts (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts",
+      version: "1.0.MCCY-Transactions"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get information for an account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}",
+      version: "1.0.MCCY-Transactions"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend the properties of an account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='mccy-account-updated-webhook-v1' />
+
+<EndpointBlock
+  type="patch"
+  title="Update the status of an account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}/status",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get the balance of an account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}/balances",
+      version: "1.0.MCCY-ACC"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Close an existing account (real)"
+  endpoints={[
+    {
+      path: "/mccy/v1/Accounts/{accountId}",
+      version: "1.0.MCCY-ACC",
+      webhooks: [
+        'mccy-account-updated-webhook-v1'
+      ]
+    }
+  ]}
+/>

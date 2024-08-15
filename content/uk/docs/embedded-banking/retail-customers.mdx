@@ -1,0 +1,63 @@
+---
+title: "Retail customers"
+order: 1
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as CONSTANTS from "./retail-customers.constants";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+
+## Retail customers
+
+FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-protected deposit is a physical account held with ClearBank and is only available to our embedded banking customers for the purpose of sending and/or receiving payments. The balance of an FSCS-protected deposit is held by ClearBank and can be viewed via the ClearBank Portal and the API. Additionally, FSCS-protected deposits are reconciled for you by ClearBank.
+
+<EndpointBlock
+  type="post"
+  title="Create a retail customer"
+  description={CONSTANTS.postCustomersRetailDescription}
+  endpoints={[
+    {
+      path: "/v1/customers/retail",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create an account"
+  endpoints={[
+    {
+      path: "/v4/Accounts",
+      version: "4.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing retail customer’s personal information"
+  endpoints={[
+    {
+      path: "/v1/customers/retail/{customerId}",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Update an existing retail customer’s address"
+  endpoints={[
+    {
+      path: "/v1/customers/retail/{customerId}/currentaddress",
+      version: "1.0.Retail"
+    }
+  ]}
+/>

@@ -7,7 +7,7 @@ const config = {
   header: {
     logo: './src/assets/images/logo-cb-developer.inline.svg',
     logoLink: '/',
-    title: 'ClearBank® Developer Portal',
+    title: 'ClearBank Developer Portal',
     githubUrl: 'https://github.com/clearbank/',
     githubDocsRoot: 'https://github.com/clearbank/docs/blob/master/content',
     helpUrl: '',
@@ -28,8 +28,8 @@ const config = {
     ignoreIndex: true
   },
   siteMetadata: {
-    title: 'ClearBank® Developer Portal',
-    description: 'ClearBank® Developer Portal',
+    title: 'ClearBank Developer Portal',
+    description: 'ClearBank Developer Portal - our API documentation',
     ogImage: null,
     docsLocation: 'https://github.com/clearbank/docs/tree/master/content/docs',
     favicon: '/assets/images/favicon-32x32.png'

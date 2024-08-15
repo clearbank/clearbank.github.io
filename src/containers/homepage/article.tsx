@@ -1,6 +1,6 @@
 import React from 'react'
 
-import arrowRight from '../../../static/assets/images/Arrow Right.png'
+import arrowRight from '../../../static/assets/images/arrow-right.png'
 
 import * as Styles from './article.styles'
 import * as Types from './article.types'

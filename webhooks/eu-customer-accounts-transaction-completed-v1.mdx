@@ -1,0 +1,51 @@
+---
+title: "Customer Accounts Transaction Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms a transaction has completed.
+
+#### Request body
+
+```json
+{
+    "Type": "CustomerAccounts.TransactionCompleted",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Customer Accounts Transaction Completed webhook payload
+| Element                       | Description  |
+|-------------------------------|---------------|
+| `TransactionId`|**Required**<br />Unique identification, assigned by ClearBank, to unambiguously identify the transaction.<br/>Type: `string`|
+| `InstitutionId` |**Required**<br />Unique identification, assigned by ClearBank, to unambiguously identify the institution the transaction belongs to.<br/>Type: `string`|
+| `EndToEndIdentification` |**Required**<br />The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction.<br/>Type: `string`|
+| `CreatedDateTime`         |**Required**<br />The date time in which the transaction was created in ClearBank's system.<br/>Type: `string`|
+| `CompletedDateTime`         |**Required**<br />The date time on which the amount of money ceases to be available or becomes available to the account in ClearBank's system.<br/>Type: `string`|
+| `ClearingChannel`         |**Required**<br />The clearing channel to be used to process the transaction.<br/>Type: `string`|
+| `DebitCreditCode`         |**Required**<br />Movement of transaction.<br/>Type: `string`|
+| `Amount`         |**Required**<br />Amount of money to be moved between the debtor and creditor.<br/>Type: `string`|
+| `Currency`         |**Required**<br />Unit of currency is explicit and compliant with ISO 4217.<br/>Type: `string`|
+| `RemittanceInformation`         |**Required**<br />Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system. Unstructured data or flattened version of the structured data.<br/>Type: `string`|
+| `CreditorAccount`         |**Required**<br />Unambiguous identification of the account of the debtor to which a debit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitary account descriptor.<br/>Type: `string`|
+| `DebtorAccount`         |**Required**<br />Unambiguous identification of the account of the creditor to which a credit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitary account descriptor.<br/>Type: `string`|
+
+
+#### Example Customer Accounts Transaction Completed webhook request body
+
+```json
+{
+"Type": "CustomerAccountsTransactionCompleted",
+"Version": 1,
+}
+```
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1804374592
+}
+```

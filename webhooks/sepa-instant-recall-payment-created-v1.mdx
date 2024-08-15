@@ -1,0 +1,26 @@
+---
+title: "SEPA Instant Recall Payment Created webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms an outgoing SEPA recall payment has been created.
+
+#### Request body
+
+```json
+{
+    "Type":"Sepa.Instant.RecallPayment.Created",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description     |
+|-------------------------|-----------------|
+|`TransactionId` |**Required**<br />Unique identifier of the recall request as assigned by the initiating party.<br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `35`<br/>Min. Length: `1` |
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
+|`TotalReturnedAmount` |**Required**<br />The amount of money returned.<br/>Type: `string`|
+|`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
