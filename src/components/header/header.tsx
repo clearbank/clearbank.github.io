@@ -8,7 +8,7 @@ import IconClose from 'src/assets/svgs/close.inline.svg'
 import IconMenu from 'src/assets/svgs/menu.inline.svg'
 
 import Logo from 'src/components/logo'
-import RegionSwitch from 'src/components/region-switch/region-switch';
+import RegionSwitch from 'src/components/region-switch';
 
 const Header: React.FunctionComponent<Types.HeaderProps> = () => {
   const [showMobileNav, setShowMobileNav] = useState(false)
