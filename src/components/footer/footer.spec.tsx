@@ -37,7 +37,7 @@ describe('Component', () => {
   })
 
   test('has offical company name in text', () => {
-    expect(root.textContent.includes('Copyright ClearBank Ltd.')).toBeTruthy()
+    expect(root.textContent.includes('Copyright © ClearBank Limited')).toBeTruthy()
   })
 
   test('is not empty', () => {
