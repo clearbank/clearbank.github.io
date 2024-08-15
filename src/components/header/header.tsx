@@ -34,7 +34,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ( { location } ) => {
           </Styles.Button>
         </Styles.BurgerIconWrapper>
         <Styles.SwitchContainer>
-          <RegionSwitch />
+          <RegionSwitch location={location} />
         </Styles.SwitchContainer>
       </Styles.Container>
     </div>
