@@ -63,5 +63,6 @@ export const Copywrite = styled.p`
   margin-left: 50px;
   margin-right: auto;
   text-align: left;
-  color: ${colors.brandSecondaryDarker};
+  font-size: 0.8em;
+  color: ${colors.brandPrimary};
 `

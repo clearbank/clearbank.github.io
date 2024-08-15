@@ -13,9 +13,9 @@ export default function RegionSwitch() {
 
   let region;
   if (activeOption){
-    region = 'Europe API docs';
+    region = 'Europe API';
   } else{
-    region = 'UK API docs'
+    region = 'UK API'
   }
 
   return (

@@ -31,7 +31,7 @@ export const LinkContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: 14px;
+  bottom: 35px;
   left: 17px;
 `
 

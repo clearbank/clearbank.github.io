@@ -32,21 +32,18 @@ const Homepage: React.FC<any> = (props) => {
               Let’s get your API journey going.
             </Styles.IntroductionTitle>
             <Styles.IntroductionContentWrapper>
-              <Article
-                iconSrc={GetStartedIcon}
-                title="Getting Started"
-                href="/uk/docs/api/getting-started"
-                subtitle="Everything you need to know if you’re just starting your API development journey with us"
-              />
-              <Article
-                iconSrc={ApiIcon}
-                title="ClearBank API"
-                href="/uk/docs/api/overview"
-                subtitle="Find out more about our market disrupting API"
-              />
+              {pageContext.intros.map(item =>
+                <Article
+                  href={item.href}
+                  key={item.title}
+                  title={item.title}
+                  subtitle={item.subtitle}
+                  iconSrc={item.iconSrc === 'GetStartedIcon' ? GetStartedIcon : item.iconSrc === 'ApiIcon' ? ApiIcon : ''}
+                />
+              )}
             </Styles.IntroductionContentWrapper>
           </Styles.IntroductionContainer>
-          <ClientSection/>
+          <ClientSection />
         </Styles.Row>
 
         {pageContext.guides?.length > 0 && (
@@ -62,7 +59,7 @@ const Homepage: React.FC<any> = (props) => {
 
         {pageContext?.pullRequests?.length > 0 && (
           <>
-            <Styles.SectionTitle>Existing user? Pickup where you left off</Styles.SectionTitle>
+            <Styles.SectionTitle>Existing user? Pick up where you left off</Styles.SectionTitle>
             <Styles.GitHubSectionContainer>
               <img src={GHIcon} alt="GitHub icon" />
               <Styles.GitHubSectionDescription>Latest GitHub pull requests</Styles.GitHubSectionDescription>

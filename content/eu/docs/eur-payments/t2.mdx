@@ -67,13 +67,19 @@ If the payment fails, you will receive the [T2 Customer Credit Transfer Outbound
   endpoints={[
     {
       path: "/payments/t2-rtgs/v1/customer-payments",
-      version: "1.0-T2"
+      version: "1.0-T2",
+      webhooks: [
+        't2-customer-credit-transfer-outbound-completed-v1',
+        't2-customer-credit-transfer-outbound-failed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
 
 <WebhookPlaceholder render='t2-customer-credit-transfer-outbound-completed-v1' />
 <WebhookPlaceholder render='t2-customer-credit-transfer-outbound-failed-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 ## Returning a T2 payment
 
@@ -90,6 +96,11 @@ If the return fails, you will receive the [T2 Payment Return Outbound Failed web
     {
       path: "/payments/t2-rtgs/v1/payment-returns",
       version: "1.0-T2",
+      webhooks: [
+        't2-payment-return-outbound-completed-v1',
+        't2-payment-return-outbound-failed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
@@ -112,6 +123,11 @@ If the payment fails, you will receive the [T2 Payment Return Outbound Completed
     {
       path: "/payments/t2-rtgs/v1/institution-payments",
       version: "1.0-T2",
+      webhooks: [
+        't2-FI-credit-transfer-outbound-completed-v1',
+        't2-FI-credit-transfer-outbound-failed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
@@ -140,6 +156,10 @@ These endpoints can be used to simulate payments. You can also use them for auto
     {
       path: "/payments/t2-rtgs/v1/inbound/customer-payments",
       version: "1.0-sim-t2",
+      webhooks: [
+        't2-customer-credit-transfer-inbound-completed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
@@ -151,6 +171,10 @@ These endpoints can be used to simulate payments. You can also use them for auto
     {
       path: "/payments/t2-rtgs/v1/inbound/payment-returns",
       version: "1.0-sim-t2",
+      webhooks: [
+        't2-payment-return-inbound-completed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />
@@ -162,6 +186,10 @@ These endpoints can be used to simulate payments. You can also use them for auto
     {
       path: "/payments/t2-rtgs/v1/inbound/institution-payments",
       version: "1.0-sim-t2",
+      webhooks: [
+        't2-FI-credit-transfer-inbound-completed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
     }
   ]}
 />

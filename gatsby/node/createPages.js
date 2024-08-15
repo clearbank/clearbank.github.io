@@ -81,6 +81,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
       menuItems: ukMenuItems,
       articles: ukHomeContent.articles,
       guides: ukHomeContent.guides,
+      intros: ukHomeContent.intros,
       pullRequests,
     },
   })
@@ -92,6 +93,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
       menuItems: euMenuItems,
       articles: euHomeContent.articles,
       guides: euHomeContent.guides,
+      intros: euHomeContent.intros,
       pullRequests,
     },
   })

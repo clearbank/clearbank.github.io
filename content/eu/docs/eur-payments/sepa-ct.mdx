@@ -45,7 +45,8 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
       version: "1.0-SEPA-CT",
       webhooks: [
         'sepa-ct-outbound-payment-completed-v1',
-        'sepa-ct-outbound-payment-failed-v1'
+        'sepa-ct-outbound-payment-failed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
@@ -53,6 +54,7 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 ## Recall a SEPA CT Payment
 
@@ -143,7 +145,7 @@ SEPA CT payments can also be returned to the payment originator.
 
 You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#return-a-sepa-ct-payment) endpoint. You can only return a payment after receving the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook). Returns must be sent within three business days of the original payment's settlement date.
 
-![A message flow diagram explaining how to send a SEPA CT return](/assets/images/return-a-sepa-ct-payment.svg)
+![A message flow diagram explaining how to send a SEPA CT return](/assets/images/sepa-ct-return.svg)
 
 <EndpointBlock
   type="post"

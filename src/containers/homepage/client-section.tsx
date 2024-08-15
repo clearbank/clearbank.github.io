@@ -17,12 +17,9 @@ const ClientSection: React.FC<IClientSectionProps> = () => {
         Experience the ClearBank difference.
       </Styles.Subtitle>
       <Styles.LinkContainer>
-        <Styles.PrimaryLink href="https://clear.bank/eligibility-assessment-criteria" target="_blank" rel="noopener noreferrer">
+        <Styles.PrimaryLink href="https://clear.bank/begin" target="_blank" rel="noopener noreferrer">
           Apply now
         </Styles.PrimaryLink>
-        <Styles.SecondaryLink href="https://clear.bank/" target="_blank" rel="noopener noreferrer">
-          Click here to learn more <Styles.LinkIcon src={arrowRight} alt="arrow right"/>
-        </Styles.SecondaryLink>
       </Styles.LinkContainer>
     </Styles.ClientSection>
   )
