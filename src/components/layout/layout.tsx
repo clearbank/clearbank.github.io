@@ -28,7 +28,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
       <MDXProvider components={mdxComponents}>
         <Styles.Wrapper>
           <Styles.HeaderWrapper>
-            <Header />
+            <Header location={location} />
             <HeaderMenu items={pageContext.menuItems} />
           </Styles.HeaderWrapper>
           <Styles.ContentWrapper>

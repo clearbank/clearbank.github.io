@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import Toggle from 'react-toggle';
+import { navigate } from 'gatsby';
 import './region-switch.styles.css'
 
-export default function RegionSwitch() {
-  const [activeOption, setActiveOption] = useState<boolean>(document?.location.href.includes('/eu'));
+export default function RegionSwitch({ location }) {
+  const [activeOption, setActiveOption] = useState<boolean>(location?.pathname?.includes('/eu'));
 
   const handleSwitchClick = () => {
     setActiveOption(!activeOption);
 
-    setTimeout(() => {
-        if (typeof document !== undefined) {
-            document.location.href = !activeOption ? '/eu' : '/uk';
-        }
-    }, 300);
+    setTimeout(() => navigate(!activeOption ? '/eu' : '/uk'), 300);
   };
 
   let region;

@@ -10,7 +10,7 @@ import IconMenu from 'src/assets/svgs/menu.inline.svg'
 import Logo from 'src/components/logo'
 import RegionSwitch from 'src/components/region-switch';
 
-const Header: React.FunctionComponent<Types.HeaderProps> = () => {
+const Header: React.FunctionComponent<Types.HeaderProps> = ( { location } ) => {
   const [showMobileNav, setShowMobileNav] = useState(false)
 
   const toggleMobileNav = () => {
@@ -22,7 +22,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = () => {
   return (
     <div className='header'>
       <Styles.Container>
-        <Styles.LogoWrapper to={document?.location.href.includes('/eu') ? '/eu' : '/uk'}>
+        <Styles.LogoWrapper to={location?.pathname?.includes('/eu') ? '/eu' : '/uk'}>
           <Logo inverted />
         </Styles.LogoWrapper>
         <Styles.BurgerIconWrapper isMenuOpen={showMobileNav} data-cy='burger-menu'>
@@ -34,7 +34,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = () => {
           </Styles.Button>
         </Styles.BurgerIconWrapper>
         <Styles.SwitchContainer>
-          <RegionSwitch />
+          <RegionSwitch location={location} />
         </Styles.SwitchContainer>
       </Styles.Container>
     </div>
