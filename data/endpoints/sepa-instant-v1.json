@@ -52,7 +52,14 @@
         },
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreated"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -468,6 +475,17 @@
           }
         },
         "additionalProperties": false
+      },
+      "PaymentCreated": {
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "format": "guid",
+            "description": "UUID used to uniquely identify a single payment/recall. All recalls will be linked to a single PaymentId so they both share that same paymentID.",
+            "example": "1fd63af1-83e2-3a8a-1014-3daa0e1c5f28"
+          }
+        }
       },
       "PostalAddress": {
         "type": "object",
