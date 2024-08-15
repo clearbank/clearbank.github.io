@@ -8,7 +8,11 @@ export default function RegionSwitch() {
   const handleSwitchClick = () => {
     setActiveOption(!activeOption);
 
-    setTimeout(() => document?.location.href = !activeOption ? '/eu' : '/uk', 300);
+    setTimeout(() => {
+        if (typeof document !== undefined) {
+            document.location.href = !activeOption ? '/eu' : '/uk';
+        }
+    }, 300);
   };
 
   let region;
