@@ -22,7 +22,7 @@ const Header: React.FunctionComponent<Types.HeaderProps> = () => {
   return (
     <div className='header'>
       <Styles.Container>
-        <Styles.LogoWrapper to={document.location.href.includes('/eu') ? '/eu' : '/uk'}>
+        <Styles.LogoWrapper to={document?.location.href.includes('/eu') ? '/eu' : '/uk'}>
           <Logo inverted />
         </Styles.LogoWrapper>
         <Styles.BurgerIconWrapper isMenuOpen={showMobileNav} data-cy='burger-menu'>
