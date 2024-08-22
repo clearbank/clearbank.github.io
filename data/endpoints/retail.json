@@ -345,17 +345,20 @@
                     "firstName": {
                         "type": "string",
                         "description": "The first name of the retail customer.",
-                        "maxLength": 255
+                        "maxLength": 255,
+                        "example": "John"
                     },
                     "middleName": {
                         "type": "string",
                         "description": "The middle name of the retail customer.",
-                        "maxLength": 255
+                        "maxLength": 255,
+                        "example": "Henry"
                     },
                     "surname": {
                         "type": "string",
                         "description": "The surname name of the retail customer.",
-                        "maxLength": 255
+                        "maxLength": 255,
+                        "example": "Smith"
                     },
                     "dateOfBirth": {
                         "type": "string",
@@ -368,6 +371,7 @@
                         "format": "email"
                     },
                     "idCountryOfIssue": {
+                        "example": "GBR",
                         "allOf": [
                             {
                                 "description": "ISO Alpha3 representation of the country where the Id was issued."
@@ -398,14 +402,12 @@
                         "description": "The expiry date of the identification document provided by the retail customer. Optional unless information for other ID fields such as idCountryOfIssue, IdType and/or idNumber is specified."
                     },
                     "currentAddress": {
-                        "allOf": [
+                        "type": "array",
+                        "items":
                             {
-                                "$ref": "#/components/schemas/ClearBank.FI.API.Versions.V1.Models.Binding.Customers.AddressRequest"
-                            },
-                            {
+                                "$ref": "#/components/schemas/ClearBank.FI.API.Versions.V1.Models.Binding.Customers.AddressRequest",
                                 "description": "The current address of the retail customer."
                             }
-                        ]
                     },
                     "previousAddresses": {
                         "type": "array",
@@ -543,6 +545,7 @@
             "ClearBank.FI.API.Versions.V1.Models.Binding.Customers.AddressRequest": {
                 "description": "The previous address of the retail customer.",
                 "required": [
+                    "addressType",
                     "countryCode",
                     "streetName",
                     "postalCode",
