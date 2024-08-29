@@ -172,7 +172,7 @@
             "name": "batchId",
             "in": "path",
             "required": true,
-            "description": "This must match the batch ID submitted in the payment request.",
+            "description": "This must match the batch ID submitted in the payment request. (GUID format 128-bit label)",
             "schema": {
               "type": "string"
             }
@@ -282,7 +282,7 @@
             "name": "batchId",
             "in": "path",
             "required": true,
-            "description": "This must match the batch ID submitted in the payment request.",
+            "description": "This must match the batch ID submitted in the payment request. (GUID format 128-bit label)",
             "schema": {
               "type": "string"
             }
@@ -291,6 +291,7 @@
             "name": "endToEndId",
             "in": "path",
             "required": true,
+            "pattern": "[A-z0-9/\\-?:.,\"+ ]",
             "description": "This must match the end-to-end ID submitted in the payment request.",
             "schema": {
               "type": "string"
@@ -405,7 +406,8 @@
             "type": "string",
             "description": "Creditor’s name.",
             "minLength": 1,
-            "maxLength": 140
+            "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "address": {
             "type": "object",
@@ -421,33 +423,38 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 70,
-                "description": "First line of the creditor’s address."
+                "description": "First line of the creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "addressLine2": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 35,
-                "description": "Second line of the creditor’s address."
+                "description": "Second line of the creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "addressLine3": {
                 "type": "string",
                 "minLength": 0,
                 "maxLength": 35,
                 "description": "Third line of the creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "postCode": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 16,
-                "description": "Creditor’s postcode."
+                "description": "Creditor’s postcode.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "country": {
                 "minLength": 2,
                 "maxLength": 2,
                 "type": "string",
                 "description": "Two-letter ISO country code for the creditor’s address.",
-                "pattern": "^[A-Z]{2}$"
+                "pattern": "^[A-Z]{2}$",
+                "example": "GB"
               }
             }
           },
@@ -473,6 +480,7 @@
                         "description": "Creditor's non-SWIFT BIC organisation identification, as assigned by an identification scheme.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "schemeName": {
@@ -484,6 +492,7 @@
                             "description": "Name of the identification scheme in coded form, as specified in the ExternalOrganisationIdentification1Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
                             "minLength": 0,
                             "maxLength": 4,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           },
                           "proprietary": {
@@ -491,6 +500,7 @@
                             "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
                             "minLength": 0,
                             "maxLength": 35,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           }
                         }
@@ -500,6 +510,7 @@
                         "description": "Entity/authority/body responsible for issuing the identification.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       }
                     }
@@ -516,7 +527,7 @@
                     "properties": {
                       "dateOfBirth": {
                         "type": "string",
-                        "description": "Creditor’s date of birth.",
+                        "description": "Creditor’s date of birth. Must be less than the current UTC date.",
                         "format": "date",
                         "nullable": true
                       },
@@ -525,6 +536,7 @@
                         "description": "Creditor’s city of birth.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "countryOfBirth": {
@@ -533,6 +545,7 @@
                         "minLength": 0,
                         "maxLength": 2,
                         "pattern": "^[A-Z]{2}$",
+                        "example": "GB",
                         "nullable": true
                       }
                     }
@@ -546,6 +559,7 @@
                         "description": "Creditor's personal identification, as assigned by an identification scheme.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "schemeName": {
@@ -557,6 +571,7 @@
                             "description": "Name of the identification scheme in coded form, as specified in the PersonalIdentification1Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
                             "minLength": 0,
                             "maxLength": 4,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           },
                           "proprietary": {
@@ -564,6 +579,7 @@
                             "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
                             "minLength": 0,
                             "maxLength": 35,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           }
                         }
@@ -580,6 +596,7 @@
             "minLength": 0,
             "maxLength": 2,
             "pattern": "^[A-Z]{2}$",
+            "example": "GB",
             "nullable": true
           },
           "contactDetails": {
@@ -591,6 +608,7 @@
                 "description": "Creditor’s contact name.",
                 "minLength": 0,
                 "maxLength": 140,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "emailAddress": {
@@ -612,7 +630,8 @@
             "description": "Creditor’s Account Number. Mandatory only if iban is not specified.",
             "nullable": true,
             "minLength": 0,
-            "maxLength": 34
+            "maxLength": 34,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "schemeName": {
             "type": "object",
@@ -623,6 +642,7 @@
                 "description": "Name of the identification scheme in coded form. No need to specify if you are providing this name in free-form text (i.e., proprietary). Valid options include: CASH, CHAR, COMM, TAXE, CISH, TRAS, SACC, CACC, SVGS, ONDP, MGLD, NREX,MOMA, LOAN, SLRY, ODFT.",
                 "minLength": 0,
                 "maxLength": 4,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "proprietary": {
@@ -630,6 +650,7 @@
                 "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
                 "minLength": 0,
                 "maxLength": 35,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               }
             }
@@ -686,6 +707,7 @@
                 "description": "Intermediary agent’s American Bankers Association (ABA) routing number. No need to specify if you are providing the intermediary agent’s Business Identifier Code (BIC).",
                 "minLength": 0,
                 "maxLength": 35,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "name": {
@@ -693,6 +715,7 @@
                 "description": "Intermediary agent’s name.",
                 "minLength": 0,
                 "maxLength": 140,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "addressDetails": {
@@ -708,6 +731,7 @@
                     "minLength": 0,
                     "maxLength": 70,
                     "description": "First line of the intermediary agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "addressLine2": {
@@ -715,6 +739,7 @@
                     "minLength": 0,
                     "maxLength": 35,
                     "description": "Second line of the intermediary agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "addressLine3": {
@@ -722,6 +747,7 @@
                     "minLength": 0,
                     "maxLength": 35,
                     "description": "Third line of the intermediary agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "postCode": {
@@ -729,6 +755,7 @@
                     "minLength": 0,
                     "maxLength": 16,
                     "description": "Intermediary agent’s postcode.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "country": {
@@ -736,7 +763,8 @@
                     "maxLength": 2,
                     "type": "string",
                     "description": "Two-letter ISO country code for the intermediary agent’s address. Mandatory only when the intermediary agent’s details are being provided.",
-                    "pattern": "^[A-Z]{2}$"
+                    "pattern": "^[A-Z]{2}$",
+                    "example": "GB"
                   }
                 }
               }
@@ -770,6 +798,7 @@
                 "description": "Creditor agent’s American Bankers Association (ABA) routing number. No need to specify if you are providing the creditor agent’s Business Identifier Code (BIC) or Clearing System Id Code.",
                 "minLength": 0,
                 "maxLength": 35,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "clearingSystemIdCode": {
@@ -777,6 +806,7 @@
                 "type": "string",
                 "minLength": 0,
                 "maxLength": 35,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "memberId": {
@@ -784,13 +814,15 @@
                 "type": "string",
                 "nullable": true,
                 "minLength": 0,
-                "maxLength": 35
+                "maxLength": 35,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "name": {
                 "type": "string",
                 "description": "Creditor agent’s name.",
                 "minLength": 1,
-                "maxLength": 140
+                "maxLength": 140,
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "addressDetails": {
                 "type": "object",
@@ -805,6 +837,7 @@
                     "minLength": 0,
                     "maxLength": 70,
                     "description": "First line of the creditor agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "addressLine2": {
@@ -812,6 +845,7 @@
                     "minLength": 0,
                     "maxLength": 35,
                     "description": "Second line of the creditor agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "addressLine3": {
@@ -819,6 +853,7 @@
                     "minLength": 0,
                     "maxLength": 35,
                     "description": "Third line of the creditor agent’s address.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "postCode": {
@@ -826,6 +861,7 @@
                     "minLength": 0,
                     "maxLength": 16,
                     "description": "Creditor agent’s postcode.",
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "country": {
@@ -833,7 +869,8 @@
                     "maxLength": 2,
                     "type": "string",
                     "description": "Two-letter ISO country code for the creditor agent’s address. Mandatory only when the creditor agent’s details are being provided.",
-                    "pattern": "^[A-Z]{2}$"
+                    "pattern": "^[A-Z]{2}$",
+                    "example": "GB"
                   }
                 }
               }
@@ -845,6 +882,7 @@
             "description": "Creditor agent’s unique branch Id.",
             "minLength": 0,
             "maxLength": 35,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
             "nullable": true
           }
         },
@@ -860,6 +898,7 @@
             "description": "Purpose of the transaction in coded form, as specified in the Purpose11Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
             "minLength": 0,
             "maxLength": 4,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
             "nullable": true
           },
           "proprietary": {
@@ -867,6 +906,7 @@
             "description": "Purpose of the transaction in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
             "minLength": 0,
             "maxLength": 35,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
             "nullable": true
           }
         },
@@ -882,6 +922,7 @@
             "description": "Additional remittance information in free-form text, to compliment the structured remittance information.",
             "minLength": 0,
             "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
             "nullable": true
           }
         },
@@ -900,7 +941,8 @@
             "type": "string",
             "description": "Ultimate creditor’s name.",
             "minLength": 1,
-            "maxLength": 140
+            "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "address": {
             "type": "object",
@@ -915,6 +957,7 @@
                 "minLength": 0,
                 "maxLength": 70,
                 "description": "First line of the ultimate creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "addressLine2": {
@@ -922,6 +965,7 @@
                 "minLength": 0,
                 "maxLength": 35,
                 "description": "Second line of the ultimate creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "addressLine3": {
@@ -929,6 +973,7 @@
                 "minLength": 0,
                 "maxLength": 35,
                 "description": "Third line of the ultimate creditor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "postCode": {
@@ -936,6 +981,7 @@
                 "minLength": 0,
                 "maxLength": 16,
                 "description": "Ultimate creditor’s postcode.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "country": {
@@ -943,7 +989,8 @@
                 "maxLength": 2,
                 "type": "string",
                 "description": "Two-letter ISO country code for the ultimate creditor’s address. Mandatory only when the ultimate creditor’s details are being provided.",
-                "pattern": "^[A-Z]{2}$"
+                "pattern": "^[A-Z]{2}$",
+                "example": "GB"
               }
             }
           },
@@ -970,6 +1017,7 @@
                         "description": "The ultimate creditor's non-SWIFT BIC organisation identification, as assigned by an identification scheme. Customarily the account number/IBAN of the Ultimate Creditor held with the Creditor.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "schemeName": {
@@ -981,6 +1029,7 @@
                             "description": "Name of the identification scheme in coded form, as specified in the ExternalOrganisationIdentification1Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
                             "minLength": 0,
                             "maxLength": 4,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           },
                           "proprietary": {
@@ -988,6 +1037,7 @@
                             "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
                             "minLength": 0,
                             "maxLength": 35,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           }
                         }
@@ -997,6 +1047,7 @@
                         "description": "Entity/authority/body responsible for issuing the identification.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       }
                     }
@@ -1015,7 +1066,7 @@
                     "properties": {
                       "dateOfBirth": {
                         "type": "string",
-                        "description": "The ultimate creditor’s date of birth.",
+                        "description": "The ultimate creditor’s date of birth. Must be less than the current UTC date.",
                         "format": "date",
                         "nullable": true
                       },
@@ -1024,6 +1075,7 @@
                         "description": "The ultimate creditor’s city of birth.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "countryOfBirth": {
@@ -1032,6 +1084,7 @@
                         "minLength": 0,
                         "maxLength": 2,
                         "pattern": "^[A-Z]{2}$",
+                        "example": "GB",
                         "nullable": true
                       }
                     }
@@ -1046,6 +1099,7 @@
                         "description": "The ultimate creditor's personal identification, as assigned by an identification scheme.",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "schemeName": {
@@ -1058,6 +1112,7 @@
                             "description": "Name of the identification scheme in coded form, as specified in the PersonalIdentification1Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
                             "minLength": 0,
                             "maxLength": 4,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           },
                           "proprietary": {
@@ -1065,6 +1120,7 @@
                             "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in  coded form (i.e., code).",
                             "minLength": 0,
                             "maxLength": 35,
+                            "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                             "nullable": true
                           }
                         }
@@ -1095,13 +1151,15 @@
             "type": "string",
             "description": "Unique identifier provided to ClearBank for each payment.",
             "minLength": 1,
-            "maxLength": 35
+            "maxLength": 35,
+            "pattern": "[A-z0-9/\\-?:.,\"+ ]"
           },
           "reference": {
             "type": "string",
             "description": "Reference provided by the debtor for the payment.",
             "minLength": 1,
-            "maxLength": 140
+            "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "amount": {
             "type": "number",
@@ -1114,7 +1172,8 @@
             "type": "string",
             "description": "The name used to identify the legal owner of the account from which the funds will be debited.",
             "minLength": 1,
-            "maxLength": 140
+            "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "debtorAddress": {
             "type": "object",
@@ -1130,32 +1189,37 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 70,
-                "description": "First line of the debtor’s address."
+                "description": "First line of the debtor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "addressLine2": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 35,
-                "description": "Second line of the debtor’s address."
+                "description": "Second line of the debtor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "addressLine3": {
                 "type": "string",
                 "minLength": 0,
                 "maxLength": 35,
                 "description": "Third line of the debtor’s address.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                 "nullable": true
               },
               "postCode": {
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 16,
-                "description": "Debtor’s postcode."
+                "description": "Debtor’s postcode.",
+                "pattern": "[A-z0-9/\\-?:().,\"+ ]"
               },
               "country": {
                 "minLength": 2,
                 "maxLength": 2,
                 "type": "string",
                 "description": "Two-letter ISO country code for the debtor’s address.",
+                "example": "GB",
                 "pattern": "^[A-Z]{2}$"
               }
             }
@@ -1175,7 +1239,7 @@
                 "properties": {
                   "dateOfBirth": {
                     "type": "string",
-                    "description": "Debtor’s date of birth.",
+                    "description": "Debtor’s date of birth. Must be less than the current UTC date.",
                     "format": "date",
                     "nullable": true
                   },
@@ -1184,6 +1248,7 @@
                     "description": "Debtor’s city of birth.",
                     "minLength": 0,
                     "maxLength": 35,
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "countryOfBirth": {
@@ -1192,6 +1257,7 @@
                     "minLength": 0,
                     "maxLength": 2,
                     "pattern": "^[A-Z]{2}$",
+                    "example": "GB",
                     "nullable": true
                   }
                 }
@@ -1205,6 +1271,7 @@
                     "description": "Debtor’s personal identification, as assigned by an identification scheme.",
                     "minLength": 0,
                     "maxLength": 35,
+                    "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                     "nullable": true
                   },
                   "schemeName": {
@@ -1216,6 +1283,7 @@
                         "description": "Name of the identification scheme in coded form, as specified in the PersonalIdentification1Code code set required by ISO 20022 Message Schemas. No need to specify if you are providing this name in free-form text (i.e., proprietary).",
                         "minLength": 0,
                         "maxLength": 4,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       },
                       "proprietary": {
@@ -1223,6 +1291,7 @@
                         "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in coded form (i.e., code).",
                         "minLength": 0,
                         "maxLength": 35,
+                        "pattern": "[A-z0-9/\\-?:().,\"+ ]",
                         "nullable": true
                       }
                     }
@@ -1236,7 +1305,7 @@
           },
           "debtorAccountCurrency": {
             "type": "string",
-            "description": "Three-letter ISO currency code for the currency supported by the debtor account.",
+            "description": "Three-letter ISO currency code for the currency supported by the debtor account. Valid options include: CAD, CHF, CZK, DKK, EUR, HUF, NOK, PLN, RON, SEK, USD.",
             "minLength": 3,
             "maxLength": 3
           },
@@ -1251,7 +1320,8 @@
             "nullable": true,
             "description": "Further information related to the processing of the payment instruction that may need to be acted upon by the debtor agent (depending on an agreement between the debtor and debtor agent). Financial institutions sending payments on behalf of their customers should populate their BIC in this field preceded by '/INST/' signifying that they are the instructing institution.",
             "minLength": 0,
-            "maxLength": 140
+            "maxLength": 140,
+            "pattern": "[A-z0-9/\\-?:().,\"+ ]"
           },
           "purpose": {
             "$ref": "#/components/schemas/Purpose"
@@ -1280,7 +1350,7 @@
           },
           "currencyCode": {
             "type": "string",
-            "description": "Three-letter ISO currency code for the outbound payment.",
+            "description": "Three-letter ISO currency code for the outbound payment. Valid options include: CAD, CHF, CZK, DKK, EUR, HUF, NOK, PLN, RON, SEK, USD.",
             "example": "EUR",
             "minLength": 3,
             "maxLength": 3
