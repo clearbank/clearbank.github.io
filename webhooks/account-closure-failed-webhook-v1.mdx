@@ -4,7 +4,13 @@ version: 1
 webhook: true
 ---
 
-This webhook confirms the account has not been closed.
+This webhook confirms the account has not been closed. If you receive this webhook, you should check the `ClosureFailureReason` field for more information on why the account closure has failed.
+
+Account closure may fail due to the nominated account details being incorrect. In this scenario, you should retry the account closure through the relevant endpoint, ensuring that the correct nominated account details are submitted in the closure request.
+
+- Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
+- OPTIONAL Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+- Resend the account closure request.
 
 #### Request body
 

@@ -452,7 +452,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -1395,7 +1395,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -1975,7 +1975,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -2075,7 +2075,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -3873,6 +3873,65 @@
       }
     },
     "/v1/accounts/{accountId}/nominated-account": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "This endpoint is used to get a nominated account.",
+        "operationId": "V1InstitutionsByInstitutionIdAccountsByAccountIdNominated-accountGet",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.GetNominatedAccountResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "Accounts"
@@ -3931,7 +3990,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -3943,12 +4002,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.NominatedAccountResponse"
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetNominatedAccountResponse"
                 }
               },
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.NominatedAccountResponse"
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetNominatedAccountResponse"
                 }
               }
             }
@@ -4160,7 +4219,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -4770,7 +4829,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -5877,7 +5936,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "headers": {
               "X-Correlation-Id": {
                 "description": "A unique identifier which should be referenced in any issue with any API call.",
@@ -6185,15 +6244,15 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "The named link type."
+            "description": "Indicates the purpose of the link."
           },
           "href": {
             "type": "string",
-            "description": "URI to be used."
+            "description": "Link to related content."
           },
           "templated": {
             "type": "boolean",
-            "description": "Specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false."
+            "description": "Indicates whether you need to populate any parameters (true) or can use the link as is (false)."
           }
         },
         "description": "A single hypermedia link."
@@ -7068,12 +7127,12 @@
             "maxLength": 50,
             "minLength": 0,
             "type": "string",
-            "description": "The identifier of the nominated account. IBAN is the preferred format.",
+            "description": "The the type of identifier for the nominated account. IBAN is the preferred format.",
             "example": "GB29NWBK60161331926819 (IBAN), NWBK60161331926819 (BBAN) or 60161331926819 (SCAN)"
           },
           "identifierKind": {
             "type": "string",
-            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN'.",
+            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN' (Sort Code and Account Number).",
             "example": "IBAN"
           },
           "ownerName": {
@@ -7086,11 +7145,11 @@
         },
         "description": "The information required to set a nominated account."
       },
-      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.NominatedAccountResponse": {
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetNominatedAccountResponse": {
         "type": "object",
         "properties": {
           "nominatedAccount": {
-            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.NominatedAccountResponseDto"
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetNominatedAccountResponseDto"
           },
           "halLinks": {
             "uniqueItems": false,
@@ -7103,23 +7162,79 @@
         },
         "description": "The nominated account details and associated hypermedia links."
       },
-      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.NominatedAccountResponseDto": {
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.SetNominatedAccountResponseDto": {
         "type": "object",
         "properties": {
           "identifier": {
             "type": "string",
-            "description": "The identifier of the nominated account.",
+            "description": "The type of identifier for the nominated account.",
             "example": "GB12CLBK01020312345678"
           },
           "identifierKind": {
             "type": "string",
-            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN'.",
+            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN' (Sort Code and Account Number).",
             "example": "IBAN"
           },
           "ownerName": {
             "type": "string",
             "description": "The name used to identify the legal owner of the nominated account.",
             "example": "John Smith"
+          }
+        },
+        "description": "The nominated account details."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.GetNominatedAccountResponse": {
+        "type": "object",
+        "properties": {
+          "nominatedAccount": {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.GetNominatedAccountResponseDto"
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V1.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "The nominated account details and associated hypermedia links."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V1.Models.Response.Accounts.GetNominatedAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "The unique identifier of the account associated with the nominated account.",
+            "format": "uuid",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The type of identifier for the nominated account.",
+            "example": "GB12CLBK01020312345678"
+          },
+          "identifierKind": {
+            "type": "string",
+            "description": "The identifier kind of the nominated account. Supported values are 'IBAN', 'BBAN' and 'SCAN' (Sort Code and Account Number).",
+            "example": "IBAN"
+          },
+          "ownerName": {
+            "type": "string",
+            "description": "The name used to identify the legal owner of the nominated account.",
+            "example": "John Smith"
+          },
+          "createdDateTime": {
+            "type": "string",
+            "description": "The date that the nominated account was created.",
+            "format": "date-time",
+            "example": "2024-05-01T00:00:00+01:00"
+          },
+          "modifiedDateTime": {
+            "type": "string",
+            "description": "The date that the nominated account was modified.",
+            "format": "date-time",
+            "example": "2024-05-01T00:00:00+01:00"
           }
         },
         "description": "The nominated account details."
