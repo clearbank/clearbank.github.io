@@ -200,14 +200,14 @@ The process is shown in this message flow diagram:
 
 ClearBank supports full or partial transfers in of cash ISAs.
 
-During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub account into the cash ISA.
+During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub in account into the cash ISA.
 
 If you want to reject an existing transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
 
 To transfer in a cash ISA:
 1. If a cash ISA doesn't already exist, you'll need to [set up a cash ISA](#set-up-a-cash-isa) first.
 2. Use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint.
-> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter or leave the transfer hub.
+> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter the transfer in or leave the transfer out hub.
 3. When the previous manager of the cash ISA moves funds into the transfer hub, you will receive the [Transaction Settled webhook](#transaction-settled-webhook). They will also send you the transfer history form. 
 4. Use the [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](#submit-a-transfer-history-form) endpoint to submit the transfer history form to us.
 > OPTIONAL To check the status of a transfer in, use the [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in) endpoint.
@@ -263,14 +263,14 @@ To transfer in a cash ISA:
 
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
-During the transfer out process, you move funds to a transfer hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
+During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
 
-If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
+If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
 
 To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
 > The cash ISA is now frozen. Only accrued interest, if any, can be credited to the account, and only the full balance can be withdrawn from the account.
-2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer hub account created during onboarding. From there, you can send the funds to the new provider.
+2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub account created during onboarding. From there, you can send the funds to the new provider.
 3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
 4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
 5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
