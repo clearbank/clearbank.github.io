@@ -12,29 +12,38 @@ import * as CONSTANTS from "./confirmation-of-payee.constants"
 
 Confirmation of Payee (CoP) gives you greater assurance that you are sending payments to the intended beneficiary. It not only helps in preventing accidental, misdirected payments but also reduces the risk associated with Authorised Push Payment (APP) fraud. CoP is a scheme agnostic, peer-to-peer messaging service between accredited participants and sits completely outside of the payment journey. A CoP check can be made prior to setting up a payee or making a payment.
 
-ClearBank is a CoP participant and will provide this account name checking service to those customers who use ClearBank sort codes linked to our bank code.
+ClearBank is a CoP participant and will provide this account name checking service to customers who have onboarded onto our CoP service and use ClearBank sort codes linked to our bank code.
 
-### Confirmation of Payee as a Service
-Confirmation of Payee as a Service (CoPaaS) is an extension of the technical capability of ClearBank’s own participation in Confirmation of Payee (CoP), whereby clients must become direct participants with Pay.UK to use CoP and then integrate with ClearBank’s technical service to have access to CoP request and/or CoP response functionality. For this service, ClearBank will solely be the Technical Service Provider (TSP) and this service is only available to clients operating under their own bank code.
+### Confirmation of Payee Aggregator Service
 
-If you are using CoPaaS, you will need to use the [CoPaaS onboarding](#copaas-onboarding) endpoints to complete your onboarding. You can then use the CoP respond and request endpoints in the usual way.
+For customers who do not have sort codes linked to our bank code, or who use both their own bank code and ClearBank's bank code, the Confirmation of Payee Aggregator Service allows you to leverage your existing ClearBank integration to indirectly participate in the Confirmation of Payee service. This service allows:
+- All of your accounts held at ClearBank to be CoP addressable
+- For you to accept CoP name check requests on any account
+
+CoP addressability allows other institutions to send inbound CoP name checks to ClearBank. ClearBank will return a response. You can also send an outbound name check request through ClearBank to return information on an account held at another institution.
 
 ## CoP respond (inbound)
 
-Responding to a CoP request from an external participant requires us to complete a fuzzy matching check on the account in question. To do so successfully, we need the following account information:
-- The name of the legal owner of the account
--	Nature of funds held in the account: Personal or Business
--	Operating nature of the account: Single or Joint
+If you have chosen to use the ClearBank CoP service, you must PATCH all of your accounts using the below endpoints. New accounts must also be patched to access CoP because account creation and account patching are two separate actions.
 
-For your real and virtual accounts to be CoP-ready, you will need to use the following PATCH endpoints to update your accounts:  
+<Callout colour="blue">
+To opt out specific accounts, first PATCH those accounts, then opt them out using the PUT endpoints below.
+</Callout>
+
+For your real and virtual accounts to be CoP-enabled, you will need to use the following PATCH endpoints to update your accounts:
 -	[PATCH /v1/Accounts/{accountId}](../gbp-accounts/manage-accounts#amend-an-account-real)
 -	[PATCH /v1/Accounts/{accountId}/Virtual/{virtualAccountId}](../gbp-accounts/manage-accounts#amend-an-account-virtual)
 
-If you have chosen to use the ClearBank CoP service, all your real and virtual accounts will be opted in by default, at the time of account creation. 
+You need to provide:
+- The name of the legal owner of the account
+-	Nature of funds held in the account: `Personal` or `Business`
+-	Operating nature of the account: `Single` or `Joint`
+
+This enables us to respond to a CoP request from an external participant by completing a fuzzy matching check on the account in question.
 
 For a real or virtual account to be opted out from using this service, you can use the following PUT endpoints:
--	[PUT/ v1/Cop/opt/accounts/{accountId}](#opt-out-from-the-cop-service-real-account)
--	[PUT/ v1/Cop/opt/accounts/{accountId}/virtual/{VirtualAccountId}](#opt-out-from-the-cop-service-virtual-account)
+-	[PUT /v1/Cop/opt/accounts/{accountId}](#opt-out-from-the-cop-service-real-account)
+-	[PUT /v1/Cop/opt/accounts/{accountId}/virtual/{VirtualAccountId}](#opt-out-from-the-cop-service-virtual-account)
 
 Further information about opting out from using our CoP service along with your responsibilities can be found in our Confirmation of Payee (CoP) Operating Guide. This document can be found in the Reference Documents section in the Knowledge Centre.
 
@@ -74,6 +83,10 @@ Once confirmed, we pass the result of the matching check back to you which you c
 ### CoP requests that require secondary reference data (SRD)
 
 CoP checks are typically carried out on accounts that are addressable by sort code and account number, but can also be done for accounts that are addressable through secondary reference data (SRD). SRD-level checks are performed against the underlying account that is identified by the SRD rather than the name held against the sort code and account number. If an account requires SRD and it is not provided, the CoP check cannot be carried out.
+
+<Callout colour="blue">
+No accounts at ClearBank require SRD to be CoP addressable, however SRD can be added to your CoP checks if the payee's account requires it.
+</Callout>
 
 To check whether SRD will be required, use:
 - [POST /open-banking/outbound/v1/srd/validate](#check-whether-a-sort-code-account-number-requires-srd-with-cop-requests)
@@ -121,41 +134,6 @@ For reference, the following table gives examples of how the owner name should b
     {
       path: "/open-banking/outbound/v1/srd/validate",
       version: "1.0.COP-Outbound"
-    }
-  ]}
-/>
-
-## CoPaaS onboarding
-
-As part of your onboarding journey for CoPaaS, you will need to:
-
-- Use the [Get CSR file](#get-csr-file) endpoint to get the Certificate Signing Request (CSR) .csr file. The softwareStatementID and certificateType inputs are required. The `{softwareStatementId}` URL parameter is the unique ID of a CoP software statement on your Open Banking Directory entry.
-- Use the [Create a new certificate](#create-a-new-certificate) endpoint to upload an X.509 certificate in a PEM .pem format. This is the signed PEM you can download from the Open Banking Directory after uploading the certificate signing request returned from the Get CSR file endpoint. Line breaks must be removed from the PEM before submission to ClearBank.
-
-<Callout colour="blue">
-These endpoints are only applicable if you are using CoPaaS.
-</Callout>
-
-Once you have completed the onboarding set up, you can use the [CoP respond](#cop-respond-inbound) and [CoP request](#cop-request-outbound) endpoints in the usual way.
-
-<EndpointBlock
-  type="get"
-  title="Get CSR file"
-  endpoints={[
-    {
-      path: "/v1/softwarestatements/{softwareStatementId}/csr/{certificatetype}",
-      version: "1.0.CoPaaS"
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="post"
-  title="Create a new certificate"
-  endpoints={[
-    {
-      path: "/v1/softwarestatements/{softwareStatementId}/pem",
-      version: "1.0.CoPaaS"
     }
   ]}
 />
