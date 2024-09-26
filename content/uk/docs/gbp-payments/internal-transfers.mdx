@@ -1,0 +1,26 @@
+---
+title: "Internal transfers"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from 'src/components/callout'
+
+## Internal transfers
+
+When sending payments via [Faster Payments](./faster-payments) or [CHAPS](./chaps), there are two scenarios where the payment won't be sent to scheme and will instead be changed to an internal transfer:
+
+- The payment is being sent to another account owned by you
+- The recipient account is held by another ClearBank client
+
+You can confirm whether the payment was sent via the intended scheme or internal transfer using the Transaction Settled webhook as detailed below.
+
+### Confirm the payment method
+
+To confirm the payment method used, refer to the **Scheme** field of the Transaction Settled webhook. If the payment method was changed to internal transfer, the Scheme field will be **Transfer**.
+
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+
+

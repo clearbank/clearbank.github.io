@@ -6,6 +6,7 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from 'src/components/callout'
 
 ## Faster Payments
 
@@ -52,6 +53,19 @@ The result of the screening can be found in the `SupplementaryData` object of th
 | Pass (no match)                      | `AbusiveMessageScreeningResult:Pass` |
 | Fail (match)                         | `AbusiveMessageScreeningResult:Fail`<br /> `AbusiveMessageScreeningIdentifiers:paymentInstruction.creditTransfer.remittanceInformation.structured.creditorReferenceInformation.reference` |
 
+#### APP Scam protection
+
+In line with legislation to prevent Authorised Push Payment (APP) scams, payments sent via the Faster Payments scheme may be in scope for APP scam reimbursement, allowing for the recovery of 50% of any consumer reimbursement (up to the claim limit) from the receiving Payment Service Provider (PSP). Further details are available on [Pay.UK's website](https://www.wearepay.uk/appr-policy/).
+
+Only payments sent via scheme are in scope of APP scam reimbursement, however, when you initiate a payment and we identify that the recipient account is held by a ClearBank client, the payment method is updated to internal transfer by default.
+
+To ensure you have control over the payment method and, by extension, your level of liability for reimbursement claims, the [POST /v3/payments/fps endpoint](#send-faster-payments) contains a **enforceSendToScheme** Boolean field.
+
+- When set to **true**: the payment will be processed (and billed for) as a Faster Payment regardless of whether it is eligible to be processed as an internal transfer. 
+- When set to **false** or not included: there will be no change to the existing behaviour.
+
+<Callout colour="blue"><p>Note that if the <strong>enforceSendToScheme</strong> field is included in your payload but left blank, the request will fail and a 400 Bad Request response will be received.</p>
+</Callout>
 
 <EndpointBlock
 type="post"
