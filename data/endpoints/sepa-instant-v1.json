@@ -257,7 +257,7 @@
                 "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$"
               }
             ],
-            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority.",
             "example": "BUKBGB20"
           }
         },
@@ -266,7 +266,8 @@
       "CreateRequestForRecallRequest": {
         "required": [
           "amount",
-          "reasonCodeForRecall"
+          "reasonCodeForRecall",
+          "originalInstructedDate"
         ],
         "type": "object",
         "properties": {
@@ -275,7 +276,7 @@
             "minimum": 0,
             "exclusiveMinimum": true,
             "type": "number",
-            "description": "Amount of money moved between the debtor and creditor (EUR)",
+            "description": "Amount of money moved between the debtor and creditor (EUR).",
             "format": "double",
             "example": "1000"
           },
@@ -294,9 +295,10 @@
           },
           "originalInstructedDate": {
             "type": "string",
-            "description": "Original date of transaction",
-            "format": "date-time",
-            "example": "19/06/2015 10:35:50"
+            "description": "Original date of transaction.",
+            "format": "date",
+            "example": "2024-08-23",
+            "pattern": "YYYY-MM-DD"
           }
         },
         "additionalProperties": false
@@ -339,7 +341,7 @@
           },
           "reference": {
             "type": "string",
-            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system",
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
             "nullable": true,
             "example": "INV-00002 2020-01-21"
           },
@@ -395,14 +397,15 @@
         "properties": {
           "dateOfBirth": {
             "type": "string",
-            "description": "Date of birth of a person",
-            "format": "date-time",
+            "description": "Date of birth of a person.",
+            "format": "date",
             "nullable": true,
-            "example": "1991-02-21"
+            "example": "1991-02-21",
+            "pattern": "YYYY-MM-DD"
           },
           "placeOfBirth": {
             "type": "string",
-            "description": "Place of birth of a person",
+            "description": "Place of birth of a person.",
             "nullable": true,
             "example": "Birth Town"
           }
@@ -470,7 +473,7 @@
             "minLength": 8,
             "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
             "type": "string",
-            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority.",
             "example": "BUKBGB20"
           }
         },
@@ -584,7 +587,7 @@
           },
           "rejectionCode": {
             "type": "string",
-            "description": "Value must be one of \"AC04, NOOR, AM04, ARDT, NOAS, LEGL, CUST\". AC04 = Closed account,\r\nNOOR = No Original Transaction Received,\r\nAM04 = insufficient funds,\r\nARDT = The transaction has already been returned,\r\nNOAS = No answer from customer,\r\nLEGL = Legal decision,\r\nCUST = Requested by customer.Rejection codes should only be set when rejecting the recall. In order to reject a recall, please set the the value of the Approve field to false",
+            "description": "Value must be one of \"AC04, NOOR, AM04, ARDT, NOAS, LEGL, CUST\". AC04 = Closed account,\r\nNOOR = No Original Transaction Received,\r\nAM04 = insufficient funds,\r\nARDT = The transaction has already been returned,\r\nNOAS = No answer from customer,\r\nLEGL = Legal decision,\r\nCUST = Requested by customer.Rejection codes should only be set when rejecting the recall. In order to reject a recall, please set the the value of the Approve field to false.",
             "nullable": true,
             "example": "AM04"
           }
