@@ -32,7 +32,7 @@ Once you have opened a savings account, you can deposit and withdraw payments us
 
 **To close a savings account:**
 1. Withdraw all funds from the account.
-2. Verify that a nominated account has been defined.
+2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
 3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
 > The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
 4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
@@ -46,12 +46,23 @@ Webhooks are not instant and may take up to the following day to arrive. Wait un
 
 Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
 
+See the following possible combinations of `accountStatus` and `closureStatus`:
+
+| accountStatus | closureStatus | Description                 |
+|---------------|---------------|-----------------------------|
+| Enabled       | None          | No closure request submitted |
+| Enabled       | Pending       | Closure requested, interest being calculated |
+| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
+| Suspended     | Pending       | Closure requested for suspended account, interest being calculated |
+| Closed        | Complete      | Closure completed successfully |
+
 **To reset the nominated account and close the account:**
-1. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
+1. OPTIONAL Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
+2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+4. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
 > The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
-4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
-5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+5. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+6. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
 
 ![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close-fail-nominated-account.svg)
 
@@ -74,6 +85,17 @@ Account closure may fail due to the nominated account details being incorrect. Y
 <EndpointBlock
   type="put"
   title="Set a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get a nominated account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -108,5 +130,8 @@ Account closure may fail due to the nominated account details being incorrect. Y
   ]}
 />
 
+## Savings account webhooks
+
+<WebhookPlaceholder render='interest-paid-webhook-v1' />
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
