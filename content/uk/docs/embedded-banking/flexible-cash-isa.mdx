@@ -26,13 +26,7 @@ Funds can be transferred in from either the nominated account or another ClearBa
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
-The sections below explain how to:
-- [Set up a cash ISA](#set-up-a-cash-isa)
-- [Close, cancel, or transfer out a cash ISA](#end-of-life-for-a-cash-isa)
-- [Transfer in a cash ISA](#transfers-in)
-- [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
-
-### Set up a cash ISA
+## Set up a cash ISA
 
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
 
@@ -53,7 +47,7 @@ The process is shown in this message flow diagram:
 
 The account is now open and fully operational. You can return details of a cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
 
-### End of life for a cash ISA
+## End of life for a cash ISA
 
 There are several ways you can close a cash ISA. You need to choose the appropriate one based on what's happened in the account journey so far and what the customer wants to do with the account next.
 
@@ -62,8 +56,9 @@ There are several ways you can close a cash ISA. You need to choose the appropri
 | Close | Closes the account. |
 | Cancel | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
 | Transfer out | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account. |
+| Discontinue | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure. |
 
-You can use this diagram to select the correct action:
+You can use this diagram to validate if the account should be closed, cancelled or transferred out:
 
 <img src="/assets/images/cash-isa-life-cycle.svg" alt="A decision tree diagram explaining the life cycle of a cash ISA." width="100%"/>
 
@@ -71,8 +66,9 @@ The sections below explain how to:
 - [Close a cash ISA](#close)
 - [Cancel a cash ISA](#cancel)
 - [Transfer out a cash ISA](#transfer-out)
+- [Discontinue a cash ISA](#discontinue)
 
-#### Close
+### Close
 When closing a cash ISA, you must first withdraw funds before closing the account.
 
 <Callout colour="blue">
@@ -96,7 +92,7 @@ The process is shown in this message flow diagram:
 
 ![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
 
-#### Cancel
+### Cancel
 When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
 
 The cancellation period is based on the acceptance date field. For example, an account with the acceptance date of the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
@@ -112,7 +108,45 @@ To cancel a cash ISA:
 
 The process is shown in this message flow diagram:
 
-![Message flow diagram of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
+![Message flow diagream of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
+
+### Transfer out
+You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
+
+During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
+
+If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
+
+To transfer out a cash ISA:
+1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
+> The cash ISA is now frozen. Only accrued interest, if any, can be credited to the account, and only the full balance can be withdrawn from the account.
+2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub account created during onboarding. From there, you can send the funds to the new provider.
+3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
+4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
+5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
+6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+
+The process is shown in this message flow diagram:
+
+![Message flow diagram of the transfer out path, as detailed above.](/assets/images/cash-isa-transfer-out.svg)
+
+### Discontinue
+
+The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once the notification is received, use the [PATCH /v1/accounts/{accountId}](#amend-a-cash-isa-status) to update the **status** to **Suspended** using the **statusReason**  of **AccountHolderDeceased**.  
+
+As per HMRC rules, if an ISA investor passes away, their account must be treated as **'continuing account of a deceased investor'**. This allows the account to continue to benefit from the tax advantages of an ISA for the period beginning on the death of the account holder and ending either:
+
+- On the completion of the administration of the deceased's estate
+- 3 years since the date of death
+
+Once either of these conditions are met, use the [PATCH /v1/isas/{accountId}/discontinue](#discontinue-a-cash-isa) endpoint to trigger the payment of any unpaid interest into the account. 
+Once the entire account balance has been withdrawn, the ISA account can be closed using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint using the **closureReason** of **AccountHolderDeceased**.
+
+The process is shown in this flow diagram:
+
+![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/discontinue-cash-isa.svg)
+
+## Cash ISA endpoints
 
 <EndpointBlock
   type="post"
@@ -128,11 +162,20 @@ The process is shown in this message flow diagram:
   ]}
 />
 
-<WebhookPlaceholder render='account-created-webhook-v1' />
-
 <EndpointBlock
   type="put"
-  title="Set up a nominated account"
+  title="Set a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get a nominated account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -147,6 +190,17 @@ The process is shown in this message flow diagram:
   endpoints={[
     {
       path: "/v1/isas/{accountId}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a cash ISA status"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}",
       version: "1.0.Sterling",
     }
   ]}
@@ -168,20 +222,6 @@ The process is shown in this message flow diagram:
 />
 
 <EndpointBlock
-  type="get"
-  title="Get cash ISA closure status"
-  endpoints={[
-    {
-      path: "/v1/accounts/{accountId}/closure",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
-<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
-
-<EndpointBlock
   type="post"
   title="Cancel a cash ISA"
   endpoints={[
@@ -196,89 +236,16 @@ The process is shown in this message flow diagram:
   ]}
 />
 
-## Transfer in
-
-ClearBank supports full or partial transfers in of cash ISAs.
-
-During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub in account into the cash ISA.
-
-If you want to reject an existing transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
-
-To transfer in a cash ISA:
-1. If a cash ISA doesn't already exist, you'll need to [set up a cash ISA](#set-up-a-cash-isa) first.
-2. Use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint.
-> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter the transfer in or leave the transfer out hub.
-3. When the previous manager of the cash ISA moves funds into the transfer hub, you will receive the [Transaction Settled webhook](#transaction-settled-webhook). They will also send you the transfer history form. 
-4. Use the [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](#submit-a-transfer-history-form) endpoint to submit the transfer history form to us.
-> OPTIONAL To check the status of a transfer in, use the [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in) endpoint.
-5. Once the transfer in has been approved, move the funds from the transfer hub to the cash ISA.
-
-![Message flow diagram of the transfer in process, as detailed above.](/assets/images/cash-isa-transfer-in.svg)
-
 <EndpointBlock
-  type="post"
-  title="Transfer in a cash ISA"
+  type="patch"
+  title="Discontinue a cash ISA"
   endpoints={[
     {
-      path: "/v1/isas/{accountId}/transfer-in",
-      version: "1.0.Sterling"
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="put"
-  title="Submit a transfer history form"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form",
+      path: "/v1/isas/{accountId}/discontinue",
       version: "1.0.Sterling",
     }
   ]}
 />
-
-<EndpointBlock
-  type="get"
-  title="Get infomation on a transfer in"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/transfer-in/{transferInId}",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="post"
-  title="Reject a transfer in"
-  endpoints={[
-    {
-      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/rejection",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-## Transfer out
-
-You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
-
-During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
-
-If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#transfer-out-rejected) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
-
-To transfer out a cash ISA:
-1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-ISA).
-> The cash ISA is now frozen. Only accrued interest, if any, can be credited to the account, and only the full balance can be withdrawn from the account.
-2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub account created during onboarding. From there, you can send the funds to the new provider.
-3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
-4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
-5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been closed.
-6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
-
-The process is shown in this message flow diagram:
-
-![Message flow diagram of the transfer out path, as detailed above.](/assets/images/cash-isa-transfer-out.svg)
 
 <EndpointBlock
   type="post"
@@ -286,14 +253,14 @@ The process is shown in this message flow diagram:
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
-      version: "1.0.Sterling"
+      version: "1.0.Sterling",
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Reject a transfer out"
+  title="Cash ISA transfer out rejected"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs/rejection",
@@ -301,3 +268,22 @@ The process is shown in this message flow diagram:
     }
   ]}
 />
+
+<EndpointBlock
+  type="get"
+  title="Get cash ISA closure status"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Cash ISA webhooks
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+<WebhookPlaceholder render='interest-paid-webhook-v1' />
+<WebhookPlaceholder render='isa-subscription-rejected-webhook-v1' />
+<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
+<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
