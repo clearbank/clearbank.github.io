@@ -26,6 +26,13 @@ Funds can be transferred in from either the nominated account or another ClearBa
 
 Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
 
+The sections below explain how to:
+- [Set up a cash ISA](#set-up-a-cash-isa)
+- [Close, cancel, or transfer out a cash ISA](#end-of-life-for-a-cash-isa)
+- [Discontinue a cash ISA](#discontinue)
+- [Transfer in a cash ISA](#transfers-in)
+- [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
+
 ## Set up a cash ISA
 
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
@@ -47,16 +54,16 @@ The process is shown in this message flow diagram:
 
 The account is now open and fully operational. You can return details of a cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
 
-## End of life for a cash ISA
+### End of life for a cash ISA
 
 There are several ways you can close a cash ISA. You need to choose the appropriate one based on what's happened in the account journey so far and what the customer wants to do with the account next.
 
 | Action | What this does |
 |---------|------------|
-| Close | Closes the account. |
-| Cancel | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
-| Transfer out | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account. |
-| Discontinue | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure. |
+| [Close](#close) | Closes the account. |
+| [Cancel](#cancel) | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
+| [Transfer out](#transfer-out) | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account. |
+| [Discontinue](#discontinue) | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure. |
 
 You can use this diagram to validate if the account should be closed, cancelled or transferred out:
 
@@ -275,6 +282,67 @@ The process is shown in this flow diagram:
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Transfer in
+ClearBank supports full or partial transfers in of cash ISAs.
+
+During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub in account into the cash ISA.
+
+If you want to reject an existing transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
+
+To transfer in a cash ISA:
+1. If a cash ISA doesn't already exist, you'll need to [set up a cash ISA](#set-up-a-cash-isa) first.
+2. Use the [POST /v1/isas/{accountId}/transfer-in](#transfer-in-a-cash-isa) endpoint.
+> You must provide a unique payment reference in the `PaymentReference` field when calling this endpoint. This reference will be used for reconciliation when the funds enter the transfer in or leave the transfer out hub.
+3. When the previous manager of the cash ISA moves funds into the transfer hub, you will receive the [Transaction Settled webhook](#transaction-settled-webhook). They will also send you the transfer history form. 
+4. Use the [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](#submit-a-transfer-history-form) endpoint to submit the transfer history form to us.
+> OPTIONAL To check the status of a transfer in, use the [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in) endpoint.
+5. Once the transfer in has been approved, move the funds from the transfer hub to the cash ISA.
+
+![Message flow diagram of the transfer in process, as detailed above.](/assets/images/cash-isa-transfer-in.svg)
+
+<EndpointBlock
+  type="post"
+  title="Transfer in a cash ISA"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+<EndpointBlock
+  type="put"
+  title="Submit a transfer history form"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get infomation on a transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Reject a transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/transfer-in/{transferInId}/rejection",
       version: "1.0.Sterling",
     }
   ]}
