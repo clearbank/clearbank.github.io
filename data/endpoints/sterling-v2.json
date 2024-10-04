@@ -3594,29 +3594,61 @@
       },
       "ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifier": {
         "type": "object",
-        "properties": {
-          "iban": {
-            "type": "string",
-            "description": "The IBAN identifier associated with the account.",
-            "example": "GB12CLBK01020312345678"
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierIban"
           },
-          "bban": {
-            "type": "string",
-            "description": "The BBAN identifier associated with the account.",
-            "example": "CLBK01020312345678"
+          {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierBban"
           },
-          "proprietaryIdentifier": {
-            "type": "string",
-            "description": "ClearBank proprietary identifier consisting of country code, sort code and account number."
+          {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierProp"
           },
-          "externalIdentifier": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string",
-            "description": "Customer provided External ID."
+          {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierExternal"
           }
-        },
-        "description": "Represents ways of identifying a virtual account."
+        ],
+        "description": "Represents ways of identifying a virtual account. Choose one of the groups below to populate."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierIban": {
+        "type": "object",
+        "properties": {
+        "iban": {
+          "type": "string",
+          "description": "The IBAN identifier associated with the account.",
+          "example": "GB12CLBK01020312345678"
+        }
+       }
+      },
+      "ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierBban": {
+        "type": "object",
+        "properties": {
+        "bban": {
+          "type": "string",
+          "description": "The BBAN identifier associated with the account.",
+          "example": "CLBK01020312345678"
+        }
+      }
+      },
+      "ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierProp": {
+        "type": "object",
+        "properties": {
+        "proprietaryIdentifier": {
+          "type": "string",
+          "description": "ClearBank proprietary identifier consisting of country code, sort code and account number."
+        }
+      }
+      },
+      "ClearBank.FI.API.Accounts.Versions.V2.Models.VirtualAccountIdentifierExternal": {
+        "type": "object",
+        "properties": {
+        "externalIdentifier": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string",
+          "description": "Customer provided External ID."
+        }
+      }
       },
       "ClearBank.FI.API.Accounts.Versions.V2.Models.Response.VirtualAccounts.VirtualAccountsCreationAcceptedResponse": {
         "type": "object",
