@@ -33,7 +33,7 @@ The sections below explain how to:
 - [Transfer in a cash ISA](#transfers-in)
 - [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
 
-## Set up a cash ISA
+### Set up a cash ISA
 
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
 
@@ -75,7 +75,7 @@ The sections below explain how to:
 - [Transfer out a cash ISA](#transfer-out)
 - [Discontinue a cash ISA](#discontinue)
 
-### Close
+#### Close
 When closing a cash ISA, you must first withdraw funds before closing the account.
 
 <Callout colour="blue">
@@ -99,7 +99,7 @@ The process is shown in this message flow diagram:
 
 ![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
 
-### Cancel
+#### Cancel
 When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
 
 The cancellation period is based on the acceptance date field. For example, an account with the acceptance date of the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
@@ -117,7 +117,23 @@ The process is shown in this message flow diagram:
 
 ![Message flow diagream of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
 
-### Transfer out
+#### Discontinue
+
+The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once the notification is received, use the [PATCH /v1/accounts/{accountId}](#amend-a-cash-isa-status) to update the **status** to **Suspended** using the **statusReason**  of **AccountHolderDeceased**.  
+
+As per HMRC rules, if an ISA investor passes away, their account must be treated as **'continuing account of a deceased investor'**. This allows the account to continue to accrue interest and benefit from the tax advantages of an ISA for the period beginning on the death of the account holder and ending either:
+
+- On the completion of the administration of the deceased's estate
+- 3 years since the date of death
+
+Once either of these conditions are met, you will need to mark the account as discontinued. To do so, use the [PATCH /v1/isas/{accountId}/discontinue](#discontinue-a-cash-isa) endpoint to trigger the payment of any unpaid interest into the account. 
+The account can then be closed as normal using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint using the **closureReason** of **AccountHolderDeceased**.
+
+The process is shown in this flow diagram:
+
+![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/cash-isa-discontinue.svg)
+
+#### Transfer out
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
 During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 day waiting period before you can close the account. If you requested a transfer out on the 1st of the month, the waiting period ends at 00:00 on the 16th. After that, you can close the account.
@@ -137,21 +153,6 @@ The process is shown in this message flow diagram:
 
 ![Message flow diagram of the transfer out path, as detailed above.](/assets/images/cash-isa-transfer-out.svg)
 
-### Discontinue
-
-The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once the notification is received, use the [PATCH /v1/accounts/{accountId}](#amend-a-cash-isa-status) to update the **status** to **Suspended** using the **statusReason**  of **AccountHolderDeceased**.  
-
-As per HMRC rules, if an ISA investor passes away, their account must be treated as **'continuing account of a deceased investor'**. This allows the account to continue to accrue interest and benefit from the tax advantages of an ISA for the period beginning on the death of the account holder and ending either:
-
-- On the completion of the administration of the deceased's estate
-- 3 years since the date of death
-
-Once either of these conditions are met, you will need to mark the account as discontinued. To do so, use the [PATCH /v1/isas/{accountId}/discontinue](#discontinue-a-cash-isa) endpoint to trigger the payment of any unpaid interest into the account. 
-The account can then be closed as normal using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint using the **closureReason** of **AccountHolderDeceased**.
-
-The process is shown in this flow diagram:
-
-![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/discontinue-cash-isa.svg)
 
 ## Cash ISA endpoints
 
