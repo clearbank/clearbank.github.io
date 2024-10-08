@@ -29,9 +29,9 @@ Because cash ISAs are structured differently to other account types, you will ne
 The sections below explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
 - [Close, cancel, or discontinue a cash ISA](#end-of-life-for-a-cash-isa)
+- [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
 - [Transfer in a cash ISA](#transfers-in)
 - [Transfer out a cash ISA](#transfer-out)
-- [Set a customer's cash ISA eligibility](#setting-customer-eligibility)
 
 ### Set up a cash ISA
 
@@ -133,6 +133,9 @@ The process is shown in this flow diagram:
 
 ![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/cash-isa-discontinue.svg)
 
+
+## Setting up a cash ISA
+
 <EndpointBlock
   type="post"
   title="Create a cash ISA"
@@ -193,6 +196,30 @@ The process is shown in this flow diagram:
   ]}
 />
 
+## Subscribe to or withdraw from a cash ISA
+
+<EndpointBlock
+type="post"
+title="Send Faster Payments"
+endpoints={[
+  {
+    path: "/v3/payments/fps",
+    version: "3.0.FPS-payment",
+    webhooks: [
+      'transaction-settled-webhook-v6',
+      'payment-message-assessment-failed-webhook-v1',
+      'payment-message-validation-failed-webhook-v1',
+      'transaction-rejected-v2'
+    ]
+  }
+]}
+/>
+
+<WebhookPlaceholder render='transaction-settled-webhook-v6' />
+<WebhookPlaceholder render='interest-paid-webhook-v1' />
+
+## Closing a cash ISA
+
 <EndpointBlock
   type="post"
   title="Close a cash ISA"
@@ -207,6 +234,9 @@ The process is shown in this flow diagram:
     }
   ]}
 />
+
+<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
+<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 <EndpointBlock
   type="post"
@@ -234,8 +264,6 @@ The process is shown in this flow diagram:
   ]}
 />
 
-<WebhookPlaceholder render='account-closure-completed-webhook-v1' />
-<WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 <EndpointBlock
   type="get"
