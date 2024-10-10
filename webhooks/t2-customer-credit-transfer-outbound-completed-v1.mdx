@@ -4,6 +4,8 @@ version: 1
 webhook: true
 ---
 
+This webhook confirms a T2 customer credit transfer outbound payment has completed.
+
 #### Request body
 
 ```json
@@ -22,3 +24,4 @@ webhook: true
 | `Uetr`          |**Required**<br /> Randomly generated UUID to provide an end-to-end reference of a payment transaction.<br/>Format: `guid`<br/> Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`   |
 | `TransactionId` |**Required**<br /> ID of the transaction used to move funds for this payment.<br/>Type: `guid`<br/>Format: `string`<br/>Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`  |
 | `PaymentId`     |**Required**<br /> ClearBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
+| `EndToEndId`    |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
