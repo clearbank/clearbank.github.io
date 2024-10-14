@@ -182,27 +182,68 @@ For most of our `GET` requests, one or more query parameters in the request URL 
 
 ### HTTP status codes
 
-When you send a request, the response will include an HTTP status code to indicate the success or failure of the request. For successful requests, we return a HTTP `2XX` status code. For failed requests, we return a HTTP `4XX` or `5XX` status code. Some endpoints return JSON response bodies that include errors and additional properties.
+When you send a request, the response will include a HTTP status code to indicate the success or failure of the request. Some endpoints return JSON response bodies that include errors and additional properties.
 
-
-| Status Code | Description|
+| Status code | Description|
 |-------------|------------|
-| `200`       | Success!   |
-| `201`       | Success!   |
-| `202`       | Request received successfully and is being processed.  |
-| `400`       | Bad request. Something went wrong with the request. The response should include the reason why the request has failed.  |
-| `403`       | Forbidden. Your API token does not have permissions to perform the request   |
-| `404`       | Not found. The resource you are looking for cannot be found                  |
-| `409`       | Conflict. A request conflict with the current state of the server            |
-| `429`       | Too many requests. You have sent too many requests in a given time ("rate limiting")  |
-| `500`       | Internal server error  |
-| `503`       | Server error. Service unavailable |
+| `200`       | **OK** - The request has succeeded.   |
+| `201`       | **Created** - The request has succeeded and a new resource has been created as a result.   |
+| `202`       | **Accepted** - The request has been received but not completed yet. Indicates that the request will be completed asynchronously.  |
+| `204`       | **No content** - The request has been fulfilled but we do not need to return a response body. We may return the updated meta information.  |
+| `400`       | **Bad request** - The request could not be understood or processed. The response should include the reason why the request has failed.  |
+| `401`       | **Unauthorised** - The request was not authorised due to missing or invalid credentials.   |
+| `403`       | **Forbidden** - Unable to perform the request as the provided credentials could not be verified.   |
+| `404`       | **Not found** - The resource you are looking for cannot be found.                  |
+| `405`       | **Method not allowed** - The request is recognised but the target resource does not support this method.   |
+| `406`       | **Not acceptable** - The `Accept` header in the request is not supported.    |
+| `409`       | **Conflict** - The request conflicts with the current state of the server.            |
+| `410`       | **Gone** - The requested resource is no longer available, likely due to deprecation.            |
+| `415`       | **Unsupported media type** - The `Content-Type` of the request is not supported. No match for a key in the requestBody content map.           |
+| `422`       | **Client error** - The request cannot be processed due to failure processing payload. The payload may be valid but the data within the request could not be acted upon.            |
+| `423`       | **Locked** - The resource that is being accessed is locked.  |
+| `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting))  |
+| `500`       | **Internal server error** |
+| `503`       | **Server error** - Service unavailable. |
 
+#### 2XX status codes
+Responses with a `2XX` status code indicate the request was successfully received and verified. The status code will indicate if the request has been completed or is due to be completed shortly (asynchronously).
+
+#### 4XX status codes
+Responses with a `4XX` status code indicate the request was received but was unable to be actioned, details of the error can be found in the `title` field of the response in a human readable format. 4XX errors are typically caused by an issue with the request (for example, incorrect formatting or missing data) or issues validating the request (for example, missing or invalid credentials). Due to the wide variety scenarios, we are unable to list every potential variation of error, however, the combination of status code and `title` should allow you to identify and resolve the issue.
+
+#### Common 4XX responses
+See the below examples of some common 4XX responses and their meaning which may assist you in troubleshooting.
+
+**Missing X-Request-Id**
+
+```json
+"type": "about:blank",
+"title": "Missing X-Request-Id Header"
+"status": 400
+```
+
+**Duplicated X-Request-Id**
+
+```json
+"status": 409
+```
+
+**Invalid token**
+
+```json
+"status": 403
+```
+
+**Invalid Digital Signature**
+
+```json
+"type": "about:blank",
+"title": "Invalid DigitalSignature Header"
+"status": 400
+```
 
 #### 5xx status codes
-If you receive a 5xx error code, you should retry your request as these are service errors. A request that returns these errors may, in exceptional circumstances, result in being processed regardless. Following which, you will receive a notification (webhook) delivered to you as expected.
-
-To avoid any duplication, always retry all such requests with exactly the same request ID header and payload. If the initial request is successful, the retry request will trigger a notification (HTTP response or webhook) to confirm that it has not been processed as it was identified as a duplicate.
+Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same X-Request-Id header and payload to prevent duplication. In exceptional circumstances where the initial request was effectively processesed, the second request would make that clear either in the response or via an appropriate webhook. In the event this response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
 
 #### Example of a response containing detailed errors
 
@@ -226,6 +267,14 @@ To avoid any duplication, always retry all such requests with exactly the same r
   "instance": "string"
 }
 ```
+### Rate limiting
+We use rate limiting to protect our systems from excessive load and to ensure a consistent level of availability and performance to all our clients.
+
+<Callout colour="blue">
+Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to be able to handle rate limits and react accordingly. 
+</Callout>
+
+Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try and again later. All requests are safe to retry after a short period of time. To aid with the testing of this our rate limits are significantly lower in our simulation environment. This should make it easier to hit the limit and validate that your systems behave accordingly.
 
 ### HAL Links
 
