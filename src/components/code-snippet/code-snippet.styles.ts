@@ -6,7 +6,8 @@ const typeMap = {
   get: colors.dodgerBlue,
   post: colors.emerald,
   patch: colors.indigo,
-  delete: colors.red
+  delete: colors.red,
+  put: colors.downriver,
 }
 
 export const Container = styled.code`
