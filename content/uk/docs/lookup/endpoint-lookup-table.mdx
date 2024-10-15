@@ -17,7 +17,6 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [POST /v4/Accounts](../embedded-banking/fscs-protected-deposits#create-an-account) | Create a new FSCS-protected current account |
 | [GET /v3/Accounts/{accountId}](../gbp-accounts/manage-accounts#get-information-for-an-account-real) | Get a detailed view of an account |
 | [PATCH /v1/Accounts/{accountId}](../gbp-accounts/manage-accounts#amend-an-account-real) | Amend the properties of an existing account |
-| [POST /v1/accounts/{accountId}/cancellation](../embedded-banking/flexible-cash-isa#cancel-a-cash-isa) | Cancel a cash ISA |
 | [GET /v1/accounts/{accountId}/closure](../embedded-banking/flexible-cash-isa#check-cash-isa-closure-status) | Get savings account or flexible cash ISA closure status |
 | [POST /v1/accounts/{accountId}/closure](../embedded-banking/flexible-cash-isa#close-a-cash-isa) | Close a savings account or flexible cash ISA |
 | [GET /v2/Accounts/{accountId}/Mandates](../gbp-payments/bacs-direct-debit-instructions#get-all-ddis-real-account) | Get all of the Direct Debit Instructions associated with the account |
@@ -27,6 +26,7 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v2/Accounts/{accountId}/Mandates/{mandateId}/Collections](../gbp-accounts/bacs-payment-data#get-all-collected-direct-debit-payments-real-account) | Get a collection of transactions for account Instruction |
 | [POST /v1/Accounts/{accountId}/Mandates/{mandateId}/Returns](../gbp-payments/bacs-direct-debit-instructions#return-a-ddi-real-account) | Request rejection for the supplied Direct Debit Instruction identifier |
 | [GET /v2/Accounts/{accountId}/Mandates/Unpaid](../gbp-accounts/bacs-payment-data#get-all-unpaid-direct-debit-payments-real-account) | Get a list of all unpaid transactions belonging to an account |
+| [GET /v1/accounts/{accountId}/nominated-account](../embedded-banking/flexible-cash-isa#set-up-a-nominated-account) | Get a nominated account for a flexible cash ISA or savings account |
 | [PUT /v1/accounts/{accountId}/nominated-account](../embedded-banking/flexible-cash-isa#set-up-a-nominated-account) | Set a nominated account for a flexible cash ISA or savings account |
 | [GET /v2/Accounts/{accountId}/Transactions](../gbp-accounts/payment-data#get-all-payments-real-account) | Get a summary of all of the transactions from the specified account |
 | [GET /v2/Accounts/{accountId}/Transactions/{transactionId}](../gbp-accounts/payment-data#get-a-payment-real-account) | Get the details of a specific transaction from the specified account |
@@ -55,10 +55,17 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [POST /fx/v1/ExecuteQuote](../multi-currency/fx-trade-rfq#execute-a-quote) | Execute a FX trade using the rate received in a quote (must be executed within the held rate period of 45 seconds) |
 | [POST /fx/v1/order](../multi-currency/fx-trade#create-a-foreign-exchange-fx-buy-and-sell-order) | Create a Foreign Exchange (FX) trade with the buy or sell amount specified |
 | [POST /fx/v1/quote](../multi-currency/fx-trade-rfq#request-a-quote) | Request a quote up-front for a FX trade |
+| [POST /inbound-payment-simulation/chaps/v1/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
 | [POST /v1/isas](../embedded-banking/flexible-cash-isa#create-a-cash-isa) | Create a cash ISA |
 | [GET /v1/isas/{accountId}](../embedded-banking/flexible-cash-isa#get-cash-isa-details) | Get cash ISA details |
+| [POST /v1/isas/{accountId}/cancellation](../embedded-banking/flexible-cash-isa#cancel-a-cash-isa) | Cancel a cash ISA |
+| [PATCH /v1/isas/{accountId}/discontinue](../embedded-banking/flexible-cash-isa#discontinue-a-cash-isa) | Inform ClearBank that the cash ISA account holder has deceased |
+| [POST /v1/isas/{accountId}/transfer-in](../embedded-banking/flexible-cash-isa#transfer-in-a-cash-isa) | Transfer in a Cash ISA |
+| [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](../embedded-banking/flexible-cash-isa#reject-a-transfer-in) | Reject an existing cash ISA transfer in request |
+| [GET /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](../embedded-banking/flexible-cash-isa#get-infomation-on-a-transfer-in) | Get information on a cash ISA transfer in |
+| [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](../embedded-banking/flexible-cash-isa#submit-a-transfer-history-form) | Submit a cash ISA transfer history form |
+| [POST /v1/isas/{accountId}/transfer-outs](../embedded-banking/flexible-cash-isa#transfer-out-a-cash-isa) | Transfer out a cash ISA |
 | [POST /v1/isas/{accountId}/transfer-outs/rejection](../embedded-banking/flexible-cash-isa#cash-isa-transfer-out-rejected) | Inform ClearBank that cash ISA transfer out has been rejected |
-| [POST /inbound-payment-simulation/chaps/v1/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
 | [GET /mccy/v1/Accounts](../multi-currency/manage-multi-currency-accounts#get-all-accounts-real) | Get a list of all the accounts associated with your institution, excluding virtual accounts |
 | [POST /mccy/v1/Accounts](../multi-currency/manage-multi-currency-accounts#create-a-new-account-real) | Create a new account |
 | [DELETE /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#close-an-existing-account-real) | Close an existing account |

@@ -1,0 +1,78 @@
+---
+title: "ISA Subscription Rejected webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms the ISA subscription (payment into the ISA) has failed and provides a rejection reason.
+
+
+
+#### Request body
+
+```json
+{
+    "Type":"IsaSubscriptionRejected",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+
+#### Payload
+| Element                   | Description  |
+|---------------------------|--------------|
+| `AccountId`               | The unique identifier of the ISA which was the creditor of the subscription. <br /> Type: `string` <br /> Format: `GUID` |
+| `RejectionReasons`           | An array of human readable reasons why the subscription was rejected. <br /> Type: `array` <br />Min. items: `1` |
+| `EndToEndId`    | The end to end identifier of the subscription. <br />Type: `string`, `null` <br />Max length: `35`|
+| `Amount` | The amount of the subscription. <br /> Type: `number` <br /> Format: `decimal` |
+| `TaxYear`                   | The tax year. <br /> Type: `string` <br /> Pattern: `^[0-9]{2}/[0-9]{2}$`|
+| `CashIsaStatus` | The status of the ISA. <br /> Type: `string` <br /> Example: `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut`|
+| `NetSubscription`                   | The net subscription for the ISA in the tax year. <br /> Type: `number` <br /> Format: `decimal`|
+| `RemainingSubscriptionAllowance`    | The remaining subscription allowance for the ISA in the tax year. <br /> Type: `number` <br /> Format: `decimal`|
+| `AnnualAllowanceUsed`    | The maximum value the net subscription reaches in the tax year. <br /> Type: `number`, `null` <br /> Format: `decimal`|
+| `PaymentMethodType`    | The payment method type of the subscription. <br /> Type: `null`, `string` <br />  Example: `Undefined`, `Transfer`, `FasterPayments`, `Bacs`, `CHAPS`, `Sepa`, `Visa`, `Mastercard` |
+| `DebtorAccountIdentifiers`    | The account identifiers of the debtor account of the subscription. <br /> Type: `null`, `string` <br /> Example: `IBAN`, `BBAN` |
+| `NominatedAccountIdentifiers`    | The account identifiers of the nominated account for the ISA. <br /> Type: `null`, `string` <br /> Example: `IBAN`, `BBAN` |
+| `DeclarationExpiryDate`    | The date the declaration expires (UTC). If null, the declaration is valid indefinitely. <br /> Type: `null`, `string` <br /> Format: `date-time`|
+| `CustomerEligibilityStatus`    | The eligibility status of the customer. <br /> Type: `string` <br /> Example: `NotProvided`, `Eligible`, `Ineligible`|
+| `CustomerEligibilityStatusReasons`    | The reasons for the eligibility status of the customer. <br /> Type: `null`, `array` of `string` <br /> Example: `NotProvided`, `CustomerAddressInvalid`, `CustomerResidencyInvalid`, `CustomerNationalInsuranceNumberInvalid`, `CustomerDateOfBirthInvalid`|
+| `TransferOutStatus`    | The transfer out status of the ISA. <br /> Type: `string` <br /> Example: `NotProvided`, `None`, `InProgress`, `FullTransferOutComplete`, `AwaitingFullTransferOutConfirmation`, `AwaitingFullFundReturn`, `Rejected`|
+
+
+#### Example ISA Subscription Rejected webhook request body
+
+```json
+{
+    "Type":"IsaSubscriptionRejected",
+    "Version":1,
+    "Payload":{
+        "AccountId":"56de3483-a569-42eb-90cc-acf59661356f",
+        "RejectionReasons":"ISA closure in progress or already closed",
+        "EndToEndId":"a6f3c732a6a0b2a8018a06e10c6ecae254c",
+        "Amount":"180.90",
+        "TaxYear":"2024",
+        "CashIsaStatus":"Closed",
+        "NetSubscription":"1447.20",
+        "RemainingSubscriptionAllowance":"18552.80",
+        "AnnualAllowanceUsed":"20000.00",
+        "PaymentMethodType":"Transfer",
+        "DebtorAccountIdentifiers":"GB00CUBK44556687654321",
+        "NominatedAccountIdentifiers":"CUBK44556687654321",
+        "DeclarationExpiryDate":"null",
+        "CustomerEligibilityStatus":"Eligible",
+        "CustomerEligibilityStatusReasons":"null",
+        "TransferOutStatus":"None",
+    },
+    "Nonce":108246778
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1082946778
+}
+```
