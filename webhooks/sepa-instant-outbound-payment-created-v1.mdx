@@ -1,0 +1,27 @@
+---
+title: "SEPA Instant Outbound Payment Created webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms a SEPA Instant outbound payment has been created.
+
+#### Request body
+
+```json
+{
+    "Type":"Sepa.Instant.Outbound.Payment.Created",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description     |
+|-------------------------|-----------------|
+| `TransactionId` |**Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid` |
+| `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
+| `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
+| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
+
