@@ -10,8 +10,36 @@
                 "tags": [
                     "T2-RTGS Inbound Customer Payment"
                 ],
-                "description": "Trigger inbound customer payment request (Pacs008) to simulate a payment being sent from a T2 scheme participent into ClearBank to a ClearBank customer",
-                "parameters": [],
+                "description": "Simulates an inbound customer payment request (pacs.008) sent from a T2 scheme participant into ClearBank to a ClearBank customer",
+               "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API token, obtained from the ClearBank Portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -50,8 +78,36 @@
                 "tags": [
                     "T2-RTGS Inbound Financial Institution Payment"
                 ],
-                "description": "Trigger inbound financial institution payment request (Pacs009) to simulate a payment being sent from a T2 scheme participent into ClearBank to a ClearBank customer",
-                "parameters": [],
+                "description": "Simulates an inbound financial institution payment request (pacs.009) sent from a T2 scheme participant into ClearBank to a ClearBank customer",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API token, obtained from the ClearBank Portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -90,8 +146,36 @@
                 "tags": [
                     "T2-RTGS Inbound Payment Return"
                 ],
-                "description": "Trigger inbound payment return request (Pacs004) to simulate a payment being returned from a T2 scheme participent into ClearBank to a ClearBank customer",
-                "parameters": [],
+                "description": "Trigger inbound payment return request (Pacs004) to simulate a payment being returned from a T2 scheme participant into ClearBank to a ClearBank customer",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API token, obtained from the ClearBank Portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -138,15 +222,19 @@
                         "$ref": "#/components/schemas/Type"
                     },
                     "currency": {
+                        "minLength": 3,
+                        "maxLength": 3,
                         "type": "string",
-                        "nullable": true
+                        "description": "The three-letter ISO currency code for the new currency to be supported by the account.",
+                        "example": "EUR"
                     },
                     "name": {
                         "minLength": 1,
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "proxy": {
                         "type": "string",
@@ -157,13 +245,17 @@
             },
             "AccountIdentification": {
                 "type": "object",
+                "required": [
+                    "iban"
+                ],
                 "properties": {
                     "iban": {
                         "minLength": 5,
                         "maxLength": 34,
                         "pattern": "^[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\\z",
                         "type": "string",
-                        "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+                        "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions.",
+                        "example": "NL17CLRB0126793871"
                     },
                     "other": {
                         "$ref": "#/components/schemas/Other"
@@ -184,34 +276,41 @@
                     },
                     "streetName": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "North Lane"
                     },
                     "buildingNumber": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "24"
                     },
                     "buildingName": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "Tree Cottage"
                     },
                     "floor": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "Floor 4"
                     },
                     "postBox": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "6"
                     },
                     "room": {
                         "type": "string",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "5b"
                     },
                     "postCode": {
                         "maxLength": 16,
                         "minLength": 1,
                         "type": "string",
                         "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,14}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
-                        "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail."
+                        "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+                        "example": "1022 LC"
                     },
                     "townName": {
                         "maxLength": 35,
@@ -236,7 +335,8 @@
                         "maxLength": 2,
                         "minLength": 2,
                         "type": "string",
-                        "description": "Nation with its own government."
+                        "description": "Two-letter ISO country code for a nation with its own government.",
+                        "example": "GB"
                     },
                     "addressLine": {
                         "type": "array",
@@ -250,29 +350,42 @@
             },
             "BusinessApplicationHeader": {
                 "type": "object",
+                "required": [
+                    "bizMsgId",
+                    "from",
+                    "to"
+                ],
                 "properties": {
                     "bizMsgId": {
                         "description": "Point to point reference, as assigned by the instructing party, and sent to the next party in the chain to unambiguously identify the message. Usage: The instructing party has to make sure that MessageIdentification is unique per instructed party for a pre-agreed period.",
                         "minLength": 1,
                         "maxLength": 35,
                         "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
-                        "type": "string"
+                        "type": "string",
+                        "example": "75030e66dc7844ed9e4a1266c9e8410f"
                     },
                     "from": {
+                        "description": "The sending party BIC.",
                         "minLength": 11,
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
-                        "type": "string"
+                        "type": "string",
+                        "example": "CLRBNL2AXXX"
                     },
                     "to": {
+                        "description": "The receiving party BIC.",
                         "minLength": 11,
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
-                        "type": "string"
+                        "type": "string",
+                        "example": "AACSDE33XXX"
                     },
                     "messageNameId": {
                         "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "maxLength": 35,
+                        "description": "Specifies the original message name identifier to which the message refers.",
+                        "example": "pacs.008.001.08"
                     }
                 },
                 "additionalProperties": false
@@ -292,7 +405,11 @@
                 "additionalProperties": false
             },
             "CreditorAgent": {
+                "description": "Information that identifies the creditor agent as a financial institution.",
                 "type": "object",
+                "required": [
+                    "identification"
+                ],
                 "properties": {
                     "identification": {
                         "$ref": "#/components/schemas/FinancialInstitutionIdentification"
@@ -304,7 +421,12 @@
                 "additionalProperties": false
             },
             "CustomerCreditTransfer.Creditor": {
+                "description": "Information that identifies the creditor.",
                 "type": "object",
+                "required": [
+                    "party",
+                    "account"
+                ],
                 "properties": {
                     "party": {
                         "$ref": "#/components/schemas/PartyIdentification"
@@ -317,6 +439,17 @@
             },
             "CustomerCreditTransfer.CustomerCreditTransferRequest": {
                 "type": "object",
+                "required": [
+                    "paymentIdentification",
+                    "header",
+                    "value",
+                    "debtor",
+                    "debtorAgent",
+                    "creditor",
+                    "creditorAgent",
+                    "instructingAgent",
+                    "instructedAgent"
+                ],
                 "properties": {
                     "paymentIdentification": {
                         "$ref": "#/components/schemas/PaymentIdentification"
@@ -367,6 +500,7 @@
                         "$ref": "#/components/schemas/RelatedRemittanceInformation"
                     },
                     "purposeCode": {
+                        "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
                         "type": "string",
                         "nullable": true
                     }
@@ -374,7 +508,12 @@
                 "additionalProperties": false
             },
             "CustomerCreditTransfer.Debtor": {
+                "description": "Information that identifies the debtor.",
                 "type": "object",
+                "required": [
+                    "party",
+                    "account"
+                ],
                 "properties": {
                     "party": {
                         "$ref": "#/components/schemas/PartyIdentification"
@@ -399,13 +538,15 @@
                         "minLength": 1,
                         "type": "string",
                         "description": "City of birth.",
-                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z"
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]])\\z",
+                        "example": "London"
                     },
                     "country": {
                         "minLength": 2,
                         "maxLength": 2,
                         "type": "string",
-                        "description": "Two-letter ISO country code for the country of birth."
+                        "description": "Two-letter ISO country code for the country of birth.",
+                        "example": "GB"
                     },
                     "province": {
                         "maxLength": 35,
@@ -418,7 +559,11 @@
                 "additionalProperties": false
             },
             "DebtorAgent": {
+                "description": "Information that identifies the debtor agent as a financial institution.",
                 "type": "object",
+                "required": [
+                    "identification"
+                ],
                 "properties": {
                     "identification": {
                         "$ref": "#/components/schemas/FinancialInstitutionIdentification"
@@ -430,6 +575,7 @@
                 "additionalProperties": false
             },
             "FinancialInstitutionCreditTransfer.Creditor": {
+                "description": "Details about the creditor's financial institution.",
                 "type": "object",
                 "properties": {
                     "identification": {
@@ -442,6 +588,7 @@
                 "additionalProperties": false
             },
             "FinancialInstitutionCreditTransfer.Debtor": {
+                "description": "Details about the debtor financial institution.",
                 "type": "object",
                 "properties": {
                     "identification": {
@@ -459,19 +606,32 @@
                     "settlementAmount": {
                         "type": "number",
                         "format": "double",
-                        "description": "Indicates the amount used in a given transaction or account balance."
+                        "description": "Indicates the amount used in a given transaction or account balance.",
+                        "example": 948.32
                     },
                     "settlementCurrency": {
                         "minLength": 3,
                         "maxLength": 3,
                         "type": "string",
-                        "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                        "description": "The three-letter ISO currency code for the new currency to be supported by the account. Set to EUR.",
+                        "example": "EUR"
                     }
                 },
                 "additionalProperties": false
             },
             "FinancialInstitutionCreditTransferRequest": {
                 "type": "object",
+                "required": [
+                    "paymentIdentification",
+                    "header",
+                    "value",
+                    "debtor",
+                    "debtorAgent",
+                    "creditor",
+                    "creditorAgent",
+                    "instructingAgent",
+                    "instructedAgent"
+                ],
                 "properties": {
                     "paymentIdentification": {
                         "$ref": "#/components/schemas/PaymentIdentification"
@@ -518,27 +678,34 @@
             },
             "FinancialInstitutionIdentification": {
                 "type": "object",
+                "required": [
+                    "bicFi"
+                ],
                 "properties": {
                     "bicFI": {
                         "minLength": 11,
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "type": "string",
                         "description": "Legal Entity Identifier of the party",
                         "maxLength": 20,
                         "minLength": 20,
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z"
+                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "nullable": true
                     },
                     "name": {
                         "minLength": 1,
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -572,6 +739,7 @@
                 "additionalProperties": false
             },
             "InitiatingParty": {
+                "description": "The initiating party of the payment.",
                 "type": "object",
                 "properties": {
                     "name": {
@@ -579,7 +747,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "address": {
                         "$ref": "#/components/schemas/Address"
@@ -588,20 +757,28 @@
                         "$ref": "#/components/schemas/Identification"
                     },
                     "countryOfResidence": {
+                        "minLength": 2,
+                        "maxLength": 2,
                         "type": "string",
-                        "nullable": true
+                        "description": "Two-letter ISO country code for the country of residence.",
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
             },
             "InstructedAgent": {
                 "type": "object",
+                "required": [
+                    "bic"
+                ],
                 "properties": {
                     "bic": {
+                        "description": "Party's Business Identifier Code (BIC).",
                         "maxLength": 11,
                         "minLength": 11,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z"
+                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "example": "AACSDE33XXX"
                     },
                     "lei": {
                         "type": "string",
@@ -615,13 +792,19 @@
                 "additionalProperties": false
             },
             "InstructingAgent": {
+                "description": "Instructing agent for the payment.",
                 "type": "object",
+                "required": [
+                    "bic"
+                ],
                 "properties": {
                     "bic": {
+                        "description": "Party's Business Identifier Code (BIC).",
                         "maxLength": 11,
                         "minLength": 11,
                         "type": "string",
-                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z"
+                        "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
+                        "example": "CLRBNL2AXXX"
                     },
                     "lei": {
                         "type": "string",
@@ -662,6 +845,7 @@
                 "additionalProperties": {}
             },
             "OrganisationIdentification": {
+                "description": "Information about the creditor’s organisation.",
                 "type": "object",
                 "properties": {
                     "anyBIC": {
@@ -714,13 +898,15 @@
             },
             "PartyIdentification": {
                 "type": "object",
+                "description": "If Postal Address is present then Name is mandatory. If AnyBIC is absent then Name is mandatory.",
                 "properties": {
                     "name": {
                         "minLength": 1,
                         "maxLength": 140,
                         "type": "string",
-                        "description": "Name of the party",
-                        "nullable": true
+                        "description": "Name of the party. Mandatory if postal address is present, or if anyBic is absent.",
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "address": {
                         "$ref": "#/components/schemas/Address"
@@ -732,33 +918,43 @@
                         "minLength": 2,
                         "maxLength": 2,
                         "type": "string",
-                        "description": "Two-letter ISO country code"
+                        "description": "Two-letter ISO country code for the country of residence.",
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
             },
             "PaymentIdentification": {
+                "description": "Identification of the payment instruction.",
                 "type": "object",
+                "required": [
+                    "instructionId",
+                    "endToEndId",
+                    "uetr"
+                ],
                 "properties": {
                     "instructionId": {
                         "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
                         "minLength": 1,
                         "maxLength": 35,
                         "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
-                        "type": "string"
+                        "type": "string",
+                        "example": "75030e66dc7844ed9e4a1266c9e8410f"
                     },
                     "endToEndId": {
                         "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
                         "minLength": 1,
                         "maxLength": 35,
                         "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+](|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+]|[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]{1,33}[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+])\\z",
-                        "type": "string"
+                        "type": "string",
+                        "example": "Inbound Payment"
                     },
                     "uetr": {
                         "type": "string",
                         "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
                         "format": "uuid",
-                        "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
+                        "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
+                        "example": "c29f6e6d-da4d-4e1d-9acb-db90c2cf900f"
                     },
                     "clearingSystemId": {
                         "type": "string",
@@ -769,6 +965,15 @@
             },
             "PaymentReturnRequest": {
                 "type": "object",
+                "required": [
+                    "originalGroupInformation",
+                    "originalPaymentIdentification",
+                    "returnedAmount",
+                    "instructedAgent",
+                    "instructingAgent",
+                    "returnChain",
+                    "header"
+                ],
                 "properties": {
                     "originalGroupInformation": {
                         "$ref": "#/components/schemas/Returns.OriginalGroupInformation"
@@ -860,6 +1065,7 @@
                 "additionalProperties": false
             },
             "RelatedRemittanceInformation": {
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system.",
                 "type": "object",
                 "properties": {
                     "remittanceIdentification": {
@@ -884,7 +1090,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -906,6 +1113,10 @@
             },
             "Returns.Creditor": {
                 "type": "object",
+                "required": [
+                    "party",
+                    "agent"
+                ],
                 "properties": {
                     "party": {
                         "$ref": "#/components/schemas/PartyIdentification"
@@ -924,7 +1135,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -939,7 +1152,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -956,13 +1170,15 @@
                     "amount": {
                         "type": "number",
                         "format": "double",
-                        "description": "Indicates the amount used in a given transaction or account balance."
+                        "description": "Indicates the amount used in a given transaction or account balance.",
+                        "example": 64.99
                     },
                     "currency": {
                         "minLength": 3,
                         "maxLength": 3,
                         "type": "string",
-                        "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                        "description": "The three-letter ISO currency code for the new currency to be supported by the account.",
+                        "example": "EUR"
                     }
                 },
                 "additionalProperties": false
@@ -987,7 +1203,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1002,7 +1220,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1033,7 +1252,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1048,7 +1269,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1067,7 +1289,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1082,7 +1306,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1101,7 +1326,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1116,7 +1343,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1129,18 +1357,24 @@
             },
             "Returns.OriginalGroupInformation": {
                 "type": "object",
+                "required": [
+                    "messageId",
+                    "messageNameId"
+                ],
                 "properties": {
                     "messageId": {
                         "type": "string",
                         "minLength": 1,
                         "maxLength": 35,
-                        "description": "Point to point reference, as assigned by the original instructing party, to unambiguously identify the original message."
+                        "description": "Point to point reference, as assigned by the original instructing party, to unambiguously identify the original message.",
+                        "example": "22b8d536639c4744877ddb4efeae0421"
                     },
                     "messageNameId": {
                         "type": "string",
                         "minLength": 1,
                         "maxLength": 35,
-                        "description": "Specifies the original message name identifier to which the message refers."
+                        "description": "Specifies the original message name identifier to which the message refers.",
+                        "example": "pacs.008.001.08"
                     }
                 },
                 "additionalProperties": false
@@ -1168,7 +1402,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1183,7 +1419,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1202,7 +1439,9 @@
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
                         "type": "string",
-                        "description": "Financial Institution's Bank Identifier Code (BIC)."
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "maxLength": 20,
@@ -1217,7 +1456,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1231,25 +1471,30 @@
             "Returns.PreviousInstructingAgent3": {
                 "type": "object",
                 "properties": {
-                    "bicfi": {
+                    "bicFI": {
                         "minLength": 11,
                         "maxLength": 11,
                         "pattern": "^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}\\z",
-                        "type": "string"
+                        "type": "string",
+                        "description": "Financial Institution's Bank Identifier Code (BIC).",
+                        "example": "CLRBNL01001",
+                        "nullable": true
                     },
                     "lei": {
                         "type": "string",
                         "description": "Legal Entity Identifier of the party",
                         "maxLength": 20,
                         "minLength": 20,
-                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z"
+                        "pattern": "^[A-Z0-9]{18,18}[0-9]{2,2}\\z",
+                        "nullable": true
                     },
                     "name": {
                         "minLength": 1,
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "postalAddress": {
                         "$ref": "#/components/schemas/Address"
@@ -1262,6 +1507,10 @@
             },
             "Returns.ReturnChain": {
                 "type": "object",
+                "required": [
+                    "debtor",
+                    "creditor"
+                ],
                 "properties": {
                     "debtor": {
                         "$ref": "#/components/schemas/Returns.Debtor"
@@ -1313,7 +1562,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "address": {
                         "$ref": "#/components/schemas/Address"
@@ -1322,27 +1572,126 @@
                         "$ref": "#/components/schemas/Identification"
                     },
                     "countryOfResidence": {
+                        "minLength": 2,
+                        "maxLength": 2,
                         "type": "string",
-                        "nullable": true
+                        "description": "Two-letter ISO country code for the country of residence.",
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
             },
             "Returns.ReturnReason": {
                 "type": "object",
+                "required": [
+                    "code"
+                ],
                 "properties": {
                     "code": {
                         "minLength": 1,
                         "maxLength": 4,
-                        "enum": ["AC01", "AC03", "AC04", "AC06",
-                        "AC13", "AC14", "AC15", "AC16", "AC17", "AG01", "AG02", "AM01", "AM02", "AM03", "AM04",
-                        "AM05", "AM06", "AM07", "AM09", "AM10", "ARDT", "BE01",
-                        "BE04", "BE05", "BE06", "BE07", "BE08", "CN01", "CNOR", "CNPC",
-                        "CURR", "CUST", "DNOR", "DS28", "DT01", "DT02", "ED01", "ED03", "ED05", "EMVL", "ERIN", "FF05", "FOCR", "FR01", "FRTR",
-                        "MD01", "MD02", "MD06", "MD07", "MS02", "MS03", "NARR", "NOAS", "NOCM", "NOOR", "PINL", "RC01", "RC07", "RF01", "RR01",
-                        "RR02", "RR03", "RR04", "RUTA", "SL01", "SL02", "SL11", "SL12", "SL13", "SL14", "SP01", "SP02", "SVNR", "TM01", "TRAC",
-                        "UPAY", "AGNT", "FF06", "RC08", "BE11", "BE17", "AC02", "RR11", "BE10", "BE16", "RC11", "RR12", "FF03", "FF07", "FF04",
-                        "RR09", "RR05", "RR07", "RR08", "RR06", "AG07", "G004", "MD05", "AC07", "DC04"],
+                        "enum": [
+                            "AC01",
+                            "AC03",
+                            "AC04",
+                            "AC06",
+                            "AC13",
+                            "AC14",
+                            "AC15",
+                            "AC16",
+                            "AC17",
+                            "AG01",
+                            "AG02",
+                            "AM01",
+                            "AM02",
+                            "AM03",
+                            "AM04",
+                            "AM05",
+                            "AM06",
+                            "AM07",
+                            "AM09",
+                            "AM10",
+                            "ARDT",
+                            "BE01",
+                            "BE04",
+                            "BE05",
+                            "BE06",
+                            "BE07",
+                            "BE08",
+                            "CN01",
+                            "CNOR",
+                            "CNPC",
+                            "CURR",
+                            "CUST",
+                            "DNOR",
+                            "DS28",
+                            "DT01",
+                            "DT02",
+                            "ED01",
+                            "ED03",
+                            "ED05",
+                            "EMVL",
+                            "ERIN",
+                            "FF05",
+                            "FOCR",
+                            "FR01",
+                            "FRTR",
+                            "MD01",
+                            "MD02",
+                            "MD06",
+                            "MD07",
+                            "MS02",
+                            "MS03",
+                            "NARR",
+                            "NOAS",
+                            "NOCM",
+                            "NOOR",
+                            "PINL",
+                            "RC01",
+                            "RC07",
+                            "RF01",
+                            "RR01",
+                            "RR02",
+                            "RR03",
+                            "RR04",
+                            "RUTA",
+                            "SL01",
+                            "SL02",
+                            "SL11",
+                            "SL12",
+                            "SL13",
+                            "SL14",
+                            "SP01",
+                            "SP02",
+                            "SVNR",
+                            "TM01",
+                            "TRAC",
+                            "UPAY",
+                            "AGNT",
+                            "FF06",
+                            "RC08",
+                            "BE11",
+                            "BE17",
+                            "AC02",
+                            "RR11",
+                            "BE10",
+                            "BE16",
+                            "RC11",
+                            "RR12",
+                            "FF03",
+                            "FF07",
+                            "FF04",
+                            "RR09",
+                            "RR05",
+                            "RR07",
+                            "RR08",
+                            "RR06",
+                            "AG07",
+                            "G004",
+                            "MD05",
+                            "AC07",
+                            "DC04"
+                        ],
                         "type": "string"
                     },
                     "additionalInformation": {
@@ -1357,6 +1706,9 @@
             },
             "Returns.ReturnReasonInformation": {
                 "type": "object",
+                "required": [
+                    "reason"
+                ],
                 "properties": {
                     "reason": {
                         "$ref": "#/components/schemas/Returns.ReturnReason"
@@ -1368,6 +1720,7 @@
                 "additionalProperties": false
             },
             "Returns.ReturnsPaymentIdentification": {
+            "description": "Identification of the payment instruction.",
                 "type": "object",
                 "properties": {
                     "endToEndId": {
@@ -1381,7 +1734,8 @@
                         "type": "string",
                         "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\z",
                         "format": "uuid",
-                        "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
+                        "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
+                        "example": "228b55f8-84e0-4e0d-aad3-2c5349a8f236"
                     },
                     "instructionId": {
                         "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
@@ -1424,6 +1778,7 @@
                 "additionalProperties": false
             },
             "UltimateCreditor": {
+                "description": "The ultimate creditor of the payment.",
                 "type": "object",
                 "properties": {
                     "name": {
@@ -1431,7 +1786,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "address": {
                         "$ref": "#/components/schemas/Address"
@@ -1440,13 +1796,17 @@
                         "$ref": "#/components/schemas/Identification"
                     },
                     "countryOfResidence": {
+                        "minLength": 2,
+                        "maxLength": 2,
                         "type": "string",
-                        "nullable": true
+                        "description": "Two-letter ISO country code for the country of residence.",
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
             },
             "UltimateDebtor": {
+                "description": "The ultimate debtor of the payment.",
                 "type": "object",
                 "properties": {
                     "name": {
@@ -1454,7 +1814,8 @@
                         "maxLength": 140,
                         "type": "string",
                         "description": "Name of the party",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "John Smith"
                     },
                     "address": {
                         "$ref": "#/components/schemas/Address"
@@ -1463,30 +1824,41 @@
                         "$ref": "#/components/schemas/Identification"
                     },
                     "countryOfResidence": {
+                        "minLength": 2,
+                        "maxLength": 2,
                         "type": "string",
-                        "nullable": true
+                        "description": "Two-letter ISO country code for the country of residence.",
+                        "example": "GB"
                     }
                 },
                 "additionalProperties": false
             },
             "Value": {
+                "description": "Value of the payment instruction.",
                 "type": "object",
+                "required": [
+                    "settlementAmount",
+                    "settlementCurrency"
+                ],
                 "properties": {
                     "settlementAmount": {
                         "type": "number",
                         "format": "double",
-                        "description": "Indicates the amount used in a given transaction or account balance."
+                        "description": "Indicates the amount used in a given transaction or account balance.",
+                        "example": 22.49
                     },
                     "settlementCurrency": {
                         "minLength": 3,
                         "maxLength": 3,
                         "type": "string",
-                        "description": "The three-letter ISO currency code for the new currency to be supported by the account."
+                        "description": "The three-letter ISO currency code for the new currency to be supported by the account. Must be EUR.",
+                        "example": "EUR"
                     },
                     "instructedAmount": {
                         "type": "number",
                         "format": "double",
-                        "nullable": true
+                        "nullable": true,
+                        "example": 673.01
                     },
                     "instructedCurrency": {
                         "type": "string",
