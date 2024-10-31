@@ -1,36 +1,56 @@
 ---
-title: "Business banking customer accounts"
+title: "Business customers"
 order: 2
 showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
-import * as CONSTANTS from "./retail-customers.constants";
-import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import Callout from "src/components/callout";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
 
-## Business banking customer accounts
+## Business customers
 
-This endpoint is used to create an [FSCS-protected](./manage-retail-customers#fscs-protected-deposits) current account. This endpoint is specific to our embedded banking partners. If you'd like access to this product, please speak to your Client Director.
+A business customer is a business [registered with the UK government](https://www.gov.uk/set-up-business/limited-company). A business customer can either be a partnership or a limited company.
 
-**To create a customer account:**
-1. If not already present, create a retail customer using the [Create a retail customer](./manage-retail-customers) endpoint.
-2. Use the [POST /v4/Accounts](#create-an-account) endpoint to create the account.
+<Callout colour="blue">To open a sole trader customer, refer to <a href="./sole-trader-customers">Sole trader customers</a>.</Callout>
 
-![Message flow on how to create an account](/assets/images/current-account-create.svg)
+Because registered company accounts are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling acounts page](./manage-accounts).
+
+To create a registered company account, use the [POST /v1/customers/business](#create-a-business-customer) endpoint.
+
+Once you have created a sole trader, you can:
+- Open a [current account](./current-accounts)
+- Open an [interest-bearing current account](./savings-accounts)
 
 <EndpointBlock
   type="post"
-  title="Create an account"
+  title="Create a business customer"
   endpoints={[
     {
-      path: "/v4/Accounts",
-      version: "4.0.Sterling",
-      webhooks: [
-        'account-created-webhook-v1'
-      ]
+      path: "/v1/customers/business",
+      version: "1.0.Business"
     }
   ]}
 />
 
-<WebhookPlaceholder render='account-created-webhook-v1' />
+<EndpointBlock
+  type="put"
+  title="Update an existing business customer's address"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/currentAddress",
+      version: "1.0.Business"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}",
+      version: "1.0.Business"
+    }
+  ]}
+/>
