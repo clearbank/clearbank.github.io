@@ -91,11 +91,11 @@ Receipt of a SEPA Instant CT payment can be confirmed by subscribing to the [SEP
 
 ## Recall a SEPA Instant CT payment
 
-You can both [send](#sending-recall-requests) and [receive](#responding-to-recall-requests) recall requests. Recall requests remain valid for a maximimum of 15 business days. 
-
 ### Send a recall request
 
-You can send SEPA Instant CT recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#request-a-sepa-instant-recall) endpoint. You will receive confirmation via the [SEPA Instant CT Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](r#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks.
+You can send SEPA Instant CT recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#request-a-sepa-instant-recall) endpoint. You will receive confirmation via the [SEPA Instant CT Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks. 
+
+Recall requests remain valid for a maximimum of **15 business days**.  If after 15 business days the receiving party has not responded, the recall request is automatically rejected and the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-payment-rejected-webhook) is sent.
 
 ![A message flow diagram explaining a successful SEPA Instant CT recall which results in receiving a SEPA Instant CT Recall Payment Settled webhook](/assets/images/sepa-ict-successful-recall.svg)
 
@@ -118,7 +118,6 @@ You can send SEPA Instant CT recall requests using the [POST /v1/payments/sepa-i
   ]}
 />
 
-<WebhookPlaceholder render='sepa-instant-recall-payment-created-v2' />
 <WebhookPlaceholder render='sepa-instant-recall-payment-settled-v2' />
 <WebhookPlaceholder render='sepa-instant-recall-request-rejected-v2' />
 
@@ -150,7 +149,9 @@ Following your approval of a recall request, the amount of the original payment 
 
 Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
 
-![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant CT Recall Request Received webhook and responding using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint](/assets/images/sepa-ict-receive-recall.svg)
+![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant CT Recall Request Received webhook, responding with 'approve' set to 'true' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint and receiving the SEPA Instant CT Recall Payment Created webhook and SEPA Instant CT Recall Payment Settled webhook following the return of the recalled amount.](/assets/images/sepa-ict-receive-recall-approved.svg)
+
+![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant CT Recall Request Received webhook and responding with 'approve' set to 'false' with a valid 'rejectionCode' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint](/assets/images/sepa-ict-receive-recall-rejected.svg)
 
 <WebhookPlaceholder render='sepa-instant-recall-request-received-v2' />
 
