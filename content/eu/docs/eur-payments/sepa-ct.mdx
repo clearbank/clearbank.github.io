@@ -17,11 +17,11 @@ import Callout from "src/components/callout";
 SEPA CT (Single Euro Payments Area Credit Transfer) is a payment scheme that enables you to move Euros between scheme participants. Transactions are capped at €999,999,999 per payment.
 
 You can:
-- [Send a SEPA CT payment](#sending-a-sepa-credit-transfer-payment)
-- [Recall a SEPA CT payment](#sepa-credit-transfer-recalls)
-- [Return a SEPA CT payment](#sepa-credit-transfer-returns) (integrating with recall and return is required.)
-- Receive a SEPA CT payment
-> You will be notified of incoming SEPA CT payments via the [SEPA CT Payment Settled](#sepa-instant-payment-settled-webhook) webhook.
+- [Send a SEPA CT payment](#sending-a-sepa-CT-payment)
+- [Recall a SEPA CT payment](#recall-a-sepa-ct-payment)
+- [Return a SEPA CT payment](#returning-sepa-ct-payments) (Integrating with recall and return is required.)
+- [Respond to SEPA CT recall requests](#responding-to-a-sepa-ct-recall-request)
+> You will be notified of incoming SEPA CT payments via the [SEPA CT Payment Settled](#sepa-ct-inbound-payment-completed) webhook.
 
 ### Opening hours
 
@@ -29,7 +29,7 @@ Inbound SEPA CT payments can be received on Netherlands business days between 02
 
 Outbound SEPA CT payments can be sent on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
 
-## Sending a SEPA Credit Transfer payment
+## Sending a SEPA CT payment
 
 To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a-sepa-ct-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook).
 
@@ -54,6 +54,9 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 <WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+
+## Receiving a SEPA CT payment
+<WebhookPlaceholder render='sepa-ct-inbound-payment-completed-v1' />
 
 ## Recall a SEPA CT Payment
 
