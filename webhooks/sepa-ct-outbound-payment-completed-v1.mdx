@@ -10,8 +10,8 @@ This webhook confirms an outgoing SEPA CT payment has completed.
 
 ```json
 {
-    "Type":"Sepa.Ct.OutboundPayment.Completed",
-    "Version":1,
+    "Type": "Sepa.Ct.OutboundPayment.Completed",
+    "Version": 1,
     "Payload": {...},
     "Nonce":
 }
@@ -22,21 +22,25 @@ This webhook confirms an outgoing SEPA CT payment has completed.
 |-------------------------|-----------------|
 |`PaymentId` |**Required**<br />ClearBank identifier that uniquely identifies the payment instruction.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
 |`TransactionId` |**Required**<br />The ID of the debit transaction associated with this outbound payment.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
-|`Reason` |**Required**<br />Specifies the reason for the failure.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `4` |
+|`Reason` |**Required**<br />Specifies the reason for the failure.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1` |
 
 
-### Example SEPA CT outbound payment completed request body
+#### Example SEPA CT outbound payment completed request body
 
 ```json
 {
-    "PaymentId": "061b687d-ef1e-4979-a086-669905545247",
-    "TransactionId": "44abdea4-92f9-472a-975d-f5c901cc090e",
-    "Reason": "AC06",
+    "Type": "Sepa.Ct.OutboundPayment.Completed",
+    "Version": 1,
+    "Payload": {
+        "PaymentId": "061b687d-ef1e-4979-a086-669905545247",
+        "TransactionId": "44abdea4-92f9-472a-975d-f5c901cc090e",
+        "Reason": "AC06"
+    }
     "Nonce": 163290462
 }
 ```
 
-### Example webhook response
+#### Example webhook response
 ```
 {
     "Nonce": 163290462
