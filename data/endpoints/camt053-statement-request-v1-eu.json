@@ -1,0 +1,230 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Customer Statements API",
+    "version": "1.0_camt053_eu"
+  },
+  "paths": {
+    "/v1/statementrequests": {
+      "post": {
+        "tags": [
+          "StatementRequests"
+        ],
+        "summary": "Request a Camt.053 statement to be generated.",
+        "description": "POSTs a statement generation request by specifying the start and end of the statement in UTC.",
+        "parameters": [
+           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Definition of the statement period requested.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "422": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/statements/{messageId}": {
+      "get": {
+        "tags": [
+          "Statements"
+        ],
+        "summary": "Retrieve a Camt.053 statement which has been generated.",
+        "description": "GETs a generated statement in Camt.053 format by specifying the MessageId property of the statement and a page number.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "description": "The statement ID as per the MsgId field of the Camt.053 specification; provided as the MessageId property in the Statements.ReadyForDownload webhook. Pattern: (CAMT053_)[0-9]{8}[_][0-9]{8}[_]\\w{8}",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The requested page number; should be no greater than the TotalPages property of the Statements.ReadyForDownload webhook.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK (Contains statement in XML)",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatementRequest": {
+        "type": "object",
+        "properties": {
+          "startDateTimeUtc": {
+            "type": "string",
+            "description": "The statement includes transactions after this time in the format yyyy-MM-ddTHH:mm:ssZ.",
+            "format": "yyyy-MM-ddTHH:mm:ssZ"
+          },
+          "endDateTimeUtc": {
+            "type": "string",
+            "description": "The statement includes transactions before this time in the format yyyy-MM-ddTHH:mm:ssZ.",
+            "format": "yyyy-MM-ddTHH:mm:ssZ"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The statement generation request body defines the period for the statement to cover. The period can be no more than 25 hours."
+      },
+      "Camt.053":{
+        "description": "Camt.053 XML file",
+        "type": "string"
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}
