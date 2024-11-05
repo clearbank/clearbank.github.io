@@ -7,7 +7,7 @@
       "name": "Support",
       "email": "fiapisupport@clear.bank"
     },
-    "version": "1.0.MCCY-Transactions"
+    "version": "1.0.MCCY-ACC-EU"
   },
   "paths": {
     "/mccy/v1/Accounts": {
@@ -21,6 +21,33 @@
             "name": "Authorization",
             "in": "header",
             "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
             "required": true,
             "schema": {
               "type": "string"
@@ -95,13 +122,25 @@
             }
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/mccy/v1/Accounts/{accountId}": {
+      "get": {
         "tags": [
           "Accounts"
         ],
-        "summary": "This endpoint is used to create a new account.",
+        "summary": "This endpoint is used to retrieve details related to an account.",
         "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account. This can be retrieved from GET /mccy/v1/Accounts.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           {
             "name": "Authorization",
             "in": "header",
@@ -114,154 +153,28 @@
           {
             "name": "DigitalSignature",
             "in": "header",
-            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "8D4364AFA2A79D46DDDA74361F9DF1EE939D84DC81E31FC53FAB221CA54E5E31"
-            }
-          },
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "A unique identifier for the request.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "b36464858dee4878806e6f4d7308c2fd"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Data to create the account.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAccountRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Client Error",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mccy/v1/Accounts/{accountId}": {
-      "get": {
-        "tags": [
-          "Accounts"
-        ],
-        "summary": "This endpoint is used to retrieve details related to an account.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "accountId",
-            "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /mccy/v1/Accounts.",
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -375,11 +288,11 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "751ef16b554e40868fdb05197d176b9e"
+              "example": "2d42cd0b84554502a2d8140b2d212cfe"
             }
           }
         ],
@@ -490,13 +403,39 @@
             }
           },
           {
-            "name": "X-Request-Id",
+            "name": "Authorization",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "Your API token, obtained from the ClearBank Portal.",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "cd8e5c834f774061b537f9ab88fe798a"
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -600,11 +539,11 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "88f20e510d20495da92a00ad4b4fed4a"
+              "example": "60f5279b769f406f82a551c289c02ef0"
             }
           }
         ],
@@ -691,124 +630,6 @@
         }
       }
     },
-    "/mccy/v1/Accounts/{accountId}/currencies": {
-      "post": {
-        "tags": [
-          "Accounts"
-        ],
-        "summary": "This endpoint is used to enable an existing account to support a new currency.",
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /mccy/v1/Accounts.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "DigitalSignature",
-            "in": "header",
-            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "8D4364AFA2A79D46DDDA74361F9DF1EE939D84DC81E31FC53FAB221CA54E5E31"
-            }
-          },
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "A unique identifier for the request.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "33964a4362ce4f178ad018c01ee9875a"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Data to enable an existing account to support a new currency.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCurrencyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/mccy/v1/Accounts/{accountId}/balances": {
       "get": {
         "tags": [
@@ -834,6 +655,33 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -856,257 +704,6 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/BalancesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mccy/v1/Accounts/{accountId}/transactions": {
-      "get": {
-        "tags": [
-          "Accounts"
-        ],
-        "summary": "This endpoint is used to retrieve a list of transactions for a real account and any virtual accounts associated with the real account.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accountId",
-            "in": "path",
-            "description": "The unique identifier for the account. This can be retrieved from GET /mccy/v1/Accounts.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "description": "The page number to control returned results into manageable sets. There is a limit of 1000 per request. \r\nA request with over 1000 will result in a bad request. Default if not supplied: 1.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "description": "The page size to control returned results into manageable sets. There is a limit of 1000 per request. \r\nA request with over 1000 will result in a bad request. Default if not supplied: 50.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "StartDateTime",
-            "in": "query",
-            "description": "When supplied, filters the result set to include the start date and time of when the returned transactions were created. \r\n            If not supplied, then it defaults to 24 hours ago.\r\n            If StartDateTime and EndDateTime time are not supplied, all transactions that have occurred in the last 24 hours will be returned.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2021-08-16T00:00:00Z"
-            },
-            "example": "2021-08-16T00:00:00Z"
-          },
-          {
-            "name": "EndDateTime",
-            "in": "query",
-            "description": "When supplied, filters the result set to include the end date and time of the when the returned transactions were created. \r\n            If not supplied, then it defaults to the current time.\r\n            If StartDateTime and EndDateTime time are not supplied, all transactions that have occurred in the last 24 hours will be returned.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2021-08-17T16:00:00Z"
-            },
-            "example": "2021-08-17T16:00:00Z"
-          },
-          {
-            "name": "Currency",
-            "in": "query",
-            "description": "The ISO currency code for the currency of the transactions to be returned. For example, EUR.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "EUR"
-            },
-            "example": "EUR"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionsResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionsResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mccy/v1/Transactions/{transactionId}": {
-      "get": {
-        "tags": [
-          "Transactions"
-        ],
-        "summary": "This endpoint is used to retrieve a transaction.",
-        "parameters": [
-          {
-            "name": "transactionId",
-            "in": "path",
-            "description": "The unique identifier for the transaction.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
                 }
               }
             }
@@ -1189,11 +786,11 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "1307067ea21f4c8db5c938d149fb6964"
+              "example": "2abb100fe00d4385a301373a8412ea90"
             }
           }
         ],
@@ -1276,6 +873,29 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Client Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1288,6 +908,42 @@
         "summary": "This endpoint is used to retrieve details related to a virtual account.",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "virtualAccountId",
             "in": "path",
             "description": "The unique identifier for the virtual account.",
@@ -1295,15 +951,6 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
             }
           }
         ],
@@ -1417,11 +1064,11 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "45ca91d84c2b46598ace286f2dc865e6"
+              "example": "fdb05673b97f4d07a497e4ce7f9ec6bf"
             }
           }
         ],
@@ -1555,13 +1202,39 @@
             }
           },
           {
-            "name": "X-Request-Id",
+            "name": "Authorization",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "Your API token, obtained from the ClearBank Portal.",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "f2c6363de8844254972238e4098952bb"
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Generated from your HTTP METHOD, Query Path, X-Request-Id, and X-Request-Time values.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1665,11 +1338,11 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "4c5723d81e364cc7bbaf121d9fa53076"
+              "example": "8df8c863b7a04544a99be9aa0fd74490"
             }
           }
         ],
@@ -1693,155 +1366,16 @@
                   "type": "string"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
             },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/VirtualAccountResponse"
                 }
               },
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mccy/v1/VirtualAccounts/{virtualAccountId}/transactions": {
-      "get": {
-        "tags": [
-          "VirtualAccounts"
-        ],
-        "summary": "This endpoint is used to retrieve a list of transactions for a virtual account.",
-        "parameters": [
-          {
-            "name": "virtualAccountId",
-            "in": "path",
-            "description": "The unique identifier for the virtual account.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "description": "The page number to control returned results into manageable sets. There is a limit of 1000 per request. \r\nA request with over 1000 will result in a bad request. Default if not supplied: 1.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "description": "The page size to control returned results into manageable sets. There is a limit of 1000 per request. \r\nA request with over 1000 will result in a bad request. Default if not supplied: 50.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "StartDateTime",
-            "in": "query",
-            "description": "When supplied, filters the result set to include the start date and time of when the returned transactions were created. \r\n            If not supplied, then it defaults to 24 hours ago.\r\n            If StartDateTime and EndDateTime time are not supplied, all transactions that have occurred in the last 24 hours will be returned.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2021-08-16T00:00:00Z"
-            },
-            "example": "2021-08-16T00:00:00Z"
-          },
-          {
-            "name": "EndDateTime",
-            "in": "query",
-            "description": "When supplied, filters the result set to include the end date and time of the when the returned transactions were created. \r\n            If not supplied, then it defaults to the current time.\r\n            If StartDateTime and EndDateTime time are not supplied, all transactions that have occurred in the last 24 hours will be returned.",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2021-08-17T16:00:00Z"
-            },
-            "example": "2021-08-17T16:00:00Z"
-          },
-          {
-            "name": "Currency",
-            "in": "query",
-            "description": "The ISO currency code for the currency of the transactions to be returned. For example, EUR.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "EUR"
-            },
-            "example": "EUR"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "X-Correlation-Id": {
-                "description": "A unique identifier which should be referenced in any issue with any API call.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
+                  "$ref": "#/components/schemas/VirtualAccountResponse"
                 }
               }
             }
@@ -1909,11 +1443,13 @@
             "maxLength": 50,
             "minLength": 1,
             "type": "string",
-            "description": "Unique account identifier value that corresponds to the specified account identifier kind."
+            "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+            "example": "GB29CLRB40391731926000"
           },
           "kind": {
             "type": "string",
-            "description": "The kind of account identifier provided. This can either be AccountId, IBAN, BBAN or Descriptor (another kind of identifier)."
+            "description": "The kind of account identifier provided. This can only be IBAN.",
+            "example": "Iban"
           }
         },
         "additionalProperties": false
@@ -1927,8 +1463,7 @@
           "label",
           "name",
           "owner",
-          "status",
-          "type"
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -1999,11 +1534,6 @@
             "description": "Additional information to support the specified status reason.",
             "nullable": true,
             "example": "Received documentation"
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of account. Valid options include: Customer, Operating, MinimumMandatedBalance, Treasury, HeldSuspense, RepairSuspense.",
-            "example": "Customer"
           }
         },
         "additionalProperties": false
@@ -2064,35 +1594,17 @@
         },
         "additionalProperties": false
       },
-      "AdditionalProperty": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "The key for the additional property. For example, FixedSide."
-          },
-          "value": {
-            "type": "string",
-            "description": "The value of the additional property. For example, Sell."
-          }
-        },
-        "additionalProperties": false
-      },
       "Balance": {
         "type": "object",
         "properties": {
           "available": {
             "type": "number",
-            "description": "Account balance available to spend, excluding funds that have been earmarked.",
+            "description": "Account balance available to spend, excluding any earmarked funds (for example, pending payments that are in transit or held).",
             "format": "double"
           },
           "actual": {
             "type": "number",
-            "description": "Actual balance of the account, ignoring any earmarked funds.",
+            "description": "Actual balance of the account. This includes any earmarked funds, so may be higher than the available balance.",
             "format": "double"
           }
         },
@@ -2103,7 +1615,7 @@
         "properties": {
           "balances": {
             "type": "object",
-            "additionalProperties": {
+            "items": {
               "$ref": "#/components/schemas/Balance"
             },
             "description": "A dictionary of balances associated with each currency, using the three-letter ISO currency code as the key.",
@@ -2124,7 +1636,7 @@
             }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": true
       },
       "CreateAccountRequest": {
         "required": [
@@ -2209,38 +1721,6 @@
         },
         "additionalProperties": false
       },
-      "CurrencyExchange": {
-        "required": [
-          "amount",
-          "currency",
-          "margin",
-          "rate"
-        ],
-        "type": "object",
-        "properties": {
-          "rate": {
-            "type": "number",
-            "description": "The exchange rate applied to the transaction. \r\nMandatory for FX transactions only.",
-            "format": "double"
-          },
-          "margin": {
-            "type": "number",
-            "description": "The optional percentage ClearBank will deduct from the proceeds of the trade prior to crediting the financial institution’s customer. \r\nClearBank will create a credit transaction (equal to the margin amount calculated) to an account specified by the financial institution. \r\nMandatory for FX transactions only.",
-            "format": "double"
-          },
-          "currency": {
-            "type": "string",
-            "description": "Three-letter ISO currency code for the opposite currency in the currency pair. \r\nMandatory for FX transactions only."
-          },
-          "amount": {
-            "type": "number",
-            "description": "The amount of the opposite currency in the currency pair. \r\nMandatory for FX transactions only.",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Currency conversion information for the transaction. Applies to foreign exchange transactions only."
-      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -2291,223 +1771,6 @@
         "additionalProperties": false,
         "description": "Payment routing information used by ClearBank to associate your bank account with your institution."
       },
-      "TransactionIdentifier": {
-        "required": [
-          "identifier",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "scope": {
-            "type": "string",
-            "description": "The context in which the identifier is unique.",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the transaction identifier."
-          },
-          "identifier": {
-            "type": "string",
-            "description": "The value of the transaction identifier."
-          }
-        },
-        "additionalProperties": false
-      },
-      "TransactionResponse": {
-        "required": [
-          "accountId",
-          "actualPaymentMethod",
-          "amount",
-          "createdAt",
-          "currency",
-          "endToEndId",
-          "kind",
-          "reference",
-          "requestedPaymentMethod",
-          "transactionId",
-          "ultimateBeneficiary",
-          "ultimateRemitter"
-        ],
-        "type": "object",
-        "properties": {
-          "transactionId": {
-            "type": "string",
-            "description": "Unique identifier defined by ClearBank for each payment.",
-            "format": "uuid"
-          },
-          "accountId": {
-            "type": "string",
-            "description": "Unique identifier for the account held with ClearBank.",
-            "format": "uuid"
-          },
-          "virtualAccountId": {
-            "type": "string",
-            "description": "Unique identifier for the virtual account associated with the real account held with ClearBank.",
-            "format": "uuid",
-            "nullable": true
-          },
-          "endToEndId": {
-            "maxLength": 35,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique identifier provided to ClearBank for each payment."
-          },
-          "reference": {
-            "maxLength": 140,
-            "minLength": 1,
-            "type": "string",
-            "description": "A description of the transaction."
-          },
-          "ultimateBeneficiary": {
-            "$ref": "#/components/schemas/UltimateBeneficiary"
-          },
-          "ultimateRemitter": {
-            "$ref": "#/components/schemas/UltimateRemitter"
-          },
-          "amount": {
-            "type": "number",
-            "description": "The amount of currency to be moved between the ultimate remitter and the ultimate beneficiary.",
-            "format": "double"
-          },
-          "currency": {
-            "maxLength": 3,
-            "minLength": 3,
-            "type": "string",
-            "description": "Three-letter ISO currency code for the currency of the transaction."
-          },
-          "currencyExchange": {
-            "$ref": "#/components/schemas/CurrencyExchange"
-          },
-          "actualPaymentMethod": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string",
-            "description": "The payment route applied to the transaction."
-          },
-          "requestedPaymentMethod": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string",
-            "description": "The payment method for the transaction as requested by the customer."
-          },
-          "kind": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string",
-            "description": "The kind of transaction carried out. For example, FX or same-currency transfers i.e., EUR to EUR or USD to USD."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "The date and time the transaction was created. Time in UTC.",
-            "format": "date-time"
-          },
-          "identifiers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TransactionIdentifier"
-            },
-            "description": "List of additional transaction identifiers that may be included with the transaction. It is an array of objects with a Scope, Name and Identifier.",
-            "nullable": true
-          },
-          "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdditionalProperty"
-            },
-            "description": "List of additional information that may be included with the transaction. It is an array of objects with a Key and Value.",
-            "nullable": true
-          },
-          "settledAt": {
-            "type": "string",
-            "description": "The date and time the transaction was settled. Time in UTC.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "valueAt": {
-            "type": "string",
-            "description": "The date and time when ClearBank applies the value of the transaction (For example, to calculate accrued interest). Time in UTC.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "cancelledAt": {
-            "type": "string",
-            "description": "The date and time the transaction was cancelled. Time in UTC.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "cancellationCode": {
-            "type": "string",
-            "description": "The cancellation code for the transaction. Valid options include: RejectedByScheme, SanctionsRejection, SchemeUnavailable, 2 (TradePlaceFailed), 4 (UnknownError), 5 (MarketDataUnavailable).",
-            "nullable": true
-          },
-          "reason": {
-            "type": "string",
-            "description": "Cancellation reason for the transaction.",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "description": "The current status of the transaction. Valid options include: Clearing, Settled, Cancelled.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TransactionsResponse": {
-        "type": "object",
-        "properties": {
-          "transactions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TransactionResponse"
-            },
-            "description": "Array of transactions associated with the specified account.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UltimateBeneficiary": {
-        "type": "object",
-        "properties": {
-          "accountIdentifiers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AccountIdentifier"
-            },
-            "description": "List of account identifiers used to uniquely identify the ultimate beneficiary. It is an array of objects with an Identifier and Kind.",
-            "nullable": true
-          },
-          "payeeName": {
-            "type": "string",
-            "description": "The legal name of the ultimate beneficiary of the transaction.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Information about the ultimate beneficiary of the transaction."
-      },
-      "UltimateRemitter": {
-        "type": "object",
-        "properties": {
-          "accountIdentifiers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AccountIdentifier"
-            },
-            "description": "List of account identifiers used to uniquely identify the ultimate remitter. It is an array of objects with an Identifier and Kind.",
-            "nullable": true
-          },
-          "payerName": {
-            "type": "string",
-            "description": "The legal name of the ultimate remitter of the transaction.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Information about the ultimate remitter of the transaction."
-      },
       "UpdateAccountRequest": {
         "required": [
           "label",
@@ -2539,11 +1802,35 @@
         "type": "object",
         "properties": {
           "status": {
+            "enum": [
+              "Active",
+              "Suspended"
+            ],
             "type": "string",
-            "description": "Desired status of the account. Valid options include: Active, Suspended.",
+            "description": "Desired status of the account.",
             "example": "Suspended"
           },
           "statusReason": {
+            "enum": [
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateAccount",
+              "FinancialCrime",
+              "FraudConfirmed",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "InternallyDormant",
+              "KYCRequired",
+              "LegallyDisputed",
+              "PotentialSanctionedIndividual",
+              "SanctionedIndividual",
+              "SuspectMoneyLaundering",
+              "TransactionDispute",
+              "Other"
+            ],
             "type": "string",
             "description": "Reason to support the desired status of the account.",
             "nullable": true,
@@ -2583,11 +1870,35 @@
         "type": "object",
         "properties": {
           "status": {
+            "enum": [
+              "Active",
+              "Suspended"
+            ],
             "type": "string",
-            "description": "Desired status of the virtual account. Valid options include: Active, Suspended.",
+            "description": "Desired status of the virtual account.",
             "example": "Suspended"
           },
           "statusReason": {
+            "enum": [
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateAccount",
+              "FinancialCrime",
+              "FraudConfirmed",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "InternallyDormant",
+              "KYCRequired",
+              "LegallyDisputed",
+              "PotentialSanctionedIndividual",
+              "SanctionedIndividual",
+              "SuspectMoneyLaundering",
+              "TransactionDispute",
+              "Other"
+            ],
             "type": "string",
             "description": "Reason to support the desired status of the virtual account.",
             "nullable": true,
