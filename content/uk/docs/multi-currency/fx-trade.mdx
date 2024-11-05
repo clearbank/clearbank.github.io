@@ -55,30 +55,52 @@ Additionally, you can also specify your margin (%) to be applied to the trade. T
 - Credit to the buyAccount: USD 1400
 - Credit to the specified margin account: GBP  10
 
-**FX trades are subject to cut-off times:**
- * If a trade is booked in time for same-day settlement, you will receive a webhook notification of the settlement. If it fails to settle (in practice, because there are insufficient funds in the account), you will learn of the failure immediately. ClearBank will then send a [fx-trade-cancelled-v1](#fx-trade-cancelled-webhook) webhook.
- * If a trade is booked, but cannot be settled until a later day, and the settlement fails, the [fx-trade-settlement-failed-v1](#fx-trade-settlement-failed-webhook) webhook notifies you of the failure. Make sure you subscribe to this webhook if you are making FX trades with a value (settlement) date later than the day of booking.
- 
- For more information about cut-off times, please speak to your Relationship Manager.
-
 **FX trades minimum values:**
 
 FX trades have minimum trading values defined for each currency. If you try to request a trade below these values, you will receive a 400 error response.
 
-|  Currency  | Minimum value|  
-|------------|--------------|
-|  CAD       |  17          |
-|  CHF       |  11          |
-|  CZK       |  279         |
-|  DKK       |  86          |
-|  GBP       |  10          |
-|  HUF       |  4411        |
-|  NOK       |  134         |
-|  PLN       |  52          |
-|  RON       |  54          |
-|  SEK       |  135         |
-|  USD       |  13          |
-|  EUR       |  12          |
+|   Currency       |  Currency code  | Minimum value|  
+|------------------|------------|--------------|
+| Canadian Dollar  |  CAD       |  17          |
+| Swiss Franc      |  CHF       |  11          |
+| Czech Koruna     |  CZK       |  279         |
+| Danish Krone     |  DKK       |  86          |
+| Euro             |  EUR       |  12          |
+| British Pounds   |  GBP       |  10          |
+| Hungarian Forint |  HUF       |  4411        |
+| Norwegian Krone  |  NOK       |  134         |
+| Polish Zloty     |  PLN       |  52          |
+| Romanian Leu     |  RON       |  54          |
+| Swedish Krona    |  SEK       |  135         |
+| United States Dollar |  USD       |  13          |
+
+<br />
+
+**FX trades are subject to cut-off times:**
+
+FX trades are subject to the cut-off times of both currencies in the trade. In order to execute a same-day trade, both currencies must be within their operating hours. A trade scheduled for next day or 2 days' time (indicated by a `valueDate` of T+1/T+2) can be executed for all currencies up to 23:30.
+
+ * If a trade is booked in time for same-day settlement, you will receive a webhook notification of the settlement. If it fails to settle (typically because there are insufficient funds in the account), you will learn of the failure immediately. ClearBank will then send a [fx-trade-cancelled-v1](#fx-trade-cancelled-webhook) webhook.
+ * If you attempt to book a trade but one or both currencies are outside of the operating hours, you will receive a 400 error response.
+ * Trades scheduled for next day or 2 days' time are typically processed around 8am of the `valueDate`.
+ * If a trade is booked, but cannot be settled until a later day, and the settlement fails, the [fx-trade-settlement-failed-v1](#fx-trade-settlement-failed-webhook) webhook notifies you of the failure. Make sure you subscribe to this webhook if you are making FX trades with a value (settlement) date later than the day of booking.
+
+For further details on cut-off times, refer to the below table detailing the cut-off times for all currently supported currencies. Note that all times are in **UK time**.
+
+|   Currency       |   Currency code   |   Start time   |   FX cut-off time (same day)   |   FX cut-off time (next day/2 days' time)   |  
+|------------------|-------------------|----------------|--------------------------------|-------------------------------------------|
+| Canadian Dollar  | CAD               | 07:00          | 08:30                          | 23:30                                     |
+| Swiss Franc      | CHF               | 07:00          | 11:00                          | 23:30                                     |
+| Czech Koruna     | CZK               | 07:00          | 08:30                          | 23:30                                     |
+| Danish Krone     | DKK               | 07:00          | 11:00                          | 23:30                                     |
+| Euro             | EUR               | 07:00          | 14:30                          | 23:30                                     |
+| British Pounds   | GBP               | 07:00          | 15:00                          | 23:30                                     |
+| Hungarian Forint | HUF               | 07:00          | 09:30                          | 23:30                                     |
+| Norwegian Krone  | NOK               | 07:00          | 11:00                          | 23:30                                     |
+| Polish Zloty     | PLN               | 07:00          | 09:30                          | 23:30                                     |
+| Romanian Leu     | RON               | 07:00          | 08:30                          | 23:30                                     |
+| Swedish Krona    | SEK               | 07:00          | 11:00                          | 23:30                                     |
+| United States Dollar | USD           | 07:00          | 17:00                          | 23:30                                     |
 
 <EndpointBlock
   type="post"
