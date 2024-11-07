@@ -343,6 +343,7 @@
             "type": "string",
             "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
             "nullable": true,
+            "maxLength": 35,
             "example": "INV-00002 2020-01-21"
           },
           "ultimateCreditor": {
@@ -391,45 +392,53 @@
           }
         }
       },
-      "DateAndPlaceOfBirth": {
-        "required": [
-          "dateOfBirth",
-          "placeOfBirth",
-          "countryOfBirth"
-        ],
-        "type": "object",
+      "DateAndPlaceOfBirthObject": {
         "properties": {
-          "dateOfBirth": {
-            "type": "string",
-            "description": "Date of birth of a person.",
-            "format": "date",
-            "nullable": true,
-            "example": "1991-02-21",
-            "pattern": "YYYY-MM-DD"
-          },
-          "placeOfBirth": {
-            "type": "string",
-            "description": "Place of birth of a person.",
-            "nullable": true,
-            "pattern": "^[a-zA-Z0-9 ,.'-]*$",
-            "example": "Belfeld"
-          },
-          "countryOfBirth": {
-            "type": "string",
-            "description": "Country where a person was born. ISO 3166 Alpha-2 code to be used.",
-            "nullable": true,
-            "pattern": "^[a-zA-Z]*$",
-            "example": "NL"
-          },
-          "provinceOfBirth": {
-            "type": "string",
-            "description": "Province where a person was born.",
-            "nullable": true,
-            "pattern": "^[a-zA-Z0-9 ,.'-]*",
-            "example": "Limburg"
+          "dateAndPlaceOfBirth": {
+            "required": [
+              "dateOfBirth",
+              "placeOfBirth",
+              "countryOfBirth"
+            ],
+            "type": "object",
+            "description": "Object describing the individual's date and place of birth.",
+            "properties": {
+              "dateOfBirth": {
+                "type": "string",
+                "description": "Date of birth of a person.",
+                "format": "date",
+                "nullable": true,
+                "example": "1991-02-21",
+                "pattern": "YYYY-MM-DD"
+              },
+              "placeOfBirth": {
+                "type": "string",
+                "description": "Place of birth of a person.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+                "maxLength": 35,
+                "example": "Belfeld"
+              },
+              "countryOfBirth": {
+                "type": "string",
+                "description": "Country where a person was born. ISO 3166 Alpha-2 code to be used.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z]*$",
+                "maxLength": 2,
+                "example": "NL"
+              },
+              "provinceOfBirth": {
+                "type": "string",
+                "description": "Province where a person was born.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z0-9 ,.'-]*",
+                "maxLength": 35,
+                "example": "Limburg"
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Debtor": {
         "required": [
@@ -469,31 +478,39 @@
         },
         "additionalProperties": false
       },
-      "GenericIdentification": {
-        "type": "object",
+      "GenericIdentificationObject": {
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Identification code of the the reference party, as defined by scheme in the SEPA Implementation Guide and the RT1 Interface Spec.",
-            "nullable": true
-          },
-          "schemeName": {
-            "$ref": "#/components/schemas/GenericIdentificationSchemeName"
-          },
-          "issuer": {
-            "type": "string",
-            "description": "The name of the entity that assigns the identification.",
-            "nullable": true
+          "genericIdentification": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identification code of the the reference party, as defined by scheme in the SEPA Implementation Guide and the RT1 Interface Spec.",
+                "nullable": true
+              },
+              "schemeName": {
+                "$ref": "#/components/schemas/GenericIdentificationSchemeName"
+              },
+              "issuer": {
+                "type": "string",
+                "description": "The name of the entity that assigns the identification.",
+                "nullable": true
+              }
+            }
           }
         },
         "additionalProperties": false
       },
       "GenericIdentificationSchemeName": {
         "type": "object",
+        "description": "Name of the identification scheme.",
         "properties": {
           "item": {
             "type": "string",
-            "description": "For Private Identification the valid options are: BANK, CBID, CHID, CINC, COID, CUST, DUNS, EMPL, GS1G, SREN, SRET, TXID, BDID, BOID. For Organisation Identification the valid options are: ARNU, CCPT, CUST, DRLC, EMPL, NIDN, SOSE, TELE, TXID, POID",
+            "description": "If itemElementName is set to 1, this is a free text field. If itemElementName is set to 0, you must specify a code: For Organisation Identification the valid options are: BANK, CBID, CHID, CINC, COID, CUST, DUNS, EMPL, GS1G, SREN, SRET, TXID, BDID, BOID. For Private Identification the valid options are: ARNU, CCPT, CUST, DRLC, EMPL, NIDN, SOSE, TELE, TXID, POID",
             "nullable": true
           },
           "itemElementName": {
@@ -504,7 +521,7 @@
       },
       "Identification": {
         "type": "object",
-                "description": "Description for Identification",
+        "description": "Identification for creditor or debtor.",
         "oneOf": [
           {
             "$ref": "#/components/schemas/OrganisationIdentification"
@@ -520,38 +537,55 @@
           1
         ],
         "type": "integer",
-        "format": "int32"
+        "format": "int32",
+        "description": "0 indicates Cd: code, 1 indicates Prtry: proprietary."
       },
       "OrganisationIdentification": {
         "type": "object",
         "description": "Description for OrganisationIdentification",
+        "properties": {
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrgIdOptions",
+            "description": "Identification for an organisation that is the creditor or debtor."
+          }
+        }
+      },
+      "OrgIdOptions": {
         "oneOf": [
           {
-            "$ref": "#/components/schemas/bic"
+            "$ref": "#/components/schemas/BicField"
           },
           {
-            "$ref": "#/components/schemas/lei"
+            "$ref": "#/components/schemas/LeiField"
           },
           {
-            "$ref": "#/components/schemas/GenericIdentification"
+            "$ref": "#/components/schemas/GenericIdentificationObject"
           }
         ]
       },
-      "lei": {
-        "maxLength": 20,
-        "minLength": 20,
-        "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
-        "type": "string",
-        "description": "Legal Entity Identifier (LEI) - Unique alphanumeric code that has 20 characters and is based on the ISO 17442 standard.",
-        "example": "724500EAW1MTCM9M1X68"
+      "LeiField":{
+        "properties": {
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "description": "Legal Entity Identifier (LEI) - Unique alphanumeric code that has 20 characters and is based on the ISO 17442 standard.",
+            "example": "724500EAW1MTCM9M1X68"
+          }
+        }
       },
-      "bic": {
-        "maxLength": 11,
-        "minLength": 8,
-        "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
-        "type": "string",
-        "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
-        "example": "BUKBNL20"
+      "BicField": {
+        "properties": {
+          "bic": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
+            "type": "string",
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "example": "BUKBNL20"
+          }
+        }
       },
       "PaymentCreated": {
         "type": "object",
@@ -572,6 +606,7 @@
             "description": "Name of a street or thoroughfare.",
             "nullable": true,
             "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 70,
             "example": "Morissette Union"
           },
           "buildingNumber": {
@@ -579,6 +614,7 @@
             "description": "Number that identifies the position of a building on a street.",
             "nullable": true,
             "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 16,
             "example": "99"
           },
           "townName": {
@@ -586,6 +622,7 @@
             "description": "Name of a built-up area, with defined boundaries,and a local government.",
             "nullable": true,
             "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 35,
             "example": "Sipesville"
           },
           "postCode": {
@@ -593,6 +630,7 @@
             "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
             "nullable": true,
             "pattern": "[a-zA-Z0-9 ]",
+            "maxLength": 16,
             "example": "RV7 4IS"
           },
           "countrySubdivision": {
@@ -600,12 +638,14 @@
             "description": "Identifies a subdivision of a country such as state, region, county.",
             "nullable": true,
             "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 35,
             "example": "Buckinghamshire"
           },
           "country": {
             "type": "string",
-            "description": "Nation with its own government.",
+            "description": "Nation with its own government. ISO 3166 Alpha-2 code to be used.",
             "nullable": true,
+            "maxLength": 2,
             "example": "GB"
           }
         },
@@ -614,12 +654,20 @@
       "PrivateIdentification": {
         "type": "object",
         "description": "Description for PrivateIdentification",
+        "properties": {
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PrivateIdOptions",
+            "description": "Identification for an individual creditor or debtor."
+          }
+        }
+      },
+      "PrivateIdOptions": {
         "oneOf": [
           {
-            "$ref": "#/components/schemas/DateAndPlaceOfBirth"
+            "$ref": "#/components/schemas/DateAndPlaceOfBirthObject"
           },
           {
-            "$ref": "#/components/schemas/GenericIdentification"
+            "$ref": "#/components/schemas/GenericIdentificationObject"
           }
         ]
       },
@@ -677,6 +725,7 @@
             "type": "string",
             "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate creditor is populated.",
             "nullable": true,
+            "maxLength": 70,
             "example": "John Doe"
           },
           "identification": {
@@ -692,6 +741,7 @@
             "type": "string",
             "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate debtor is populated.",
             "nullable": true,
+            "maxLength": 70,
             "example": "John Doe"
           },
           "identification": {

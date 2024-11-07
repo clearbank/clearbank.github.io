@@ -31,30 +31,6 @@ You can:
 It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
 </Callout>
 
-## Simulate a SEPA Instant CT inbound payment and recall request
-
-<EndpointBlock
-  type="post"
-  title="Create an inbound SEPA Instant CT payment in the simulation environment"
-  endpoints={[
-    {
-      path: "/v1/sepa-instant-emulator/inbound-payment",
-      version: "1.0.SIM"
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="post"
-  title="Create an inbound SEPA Instant CT recall request in the simulation environment"
-  endpoints={[
-    {
-      path: "/v1/sepa-instant-emulator/inbound-payment/recall",
-      version: "1.0.SIM"
-    }
-  ]}
-/>
-
 ## Send a SEPA Instant CT payment
 
 To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the [SEPA Instant CT Payment Created webhook](#sepa-instant-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant CT Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
@@ -181,3 +157,27 @@ The following diagram outlines the process following the unlikely event that the
 Following a rejected pacs.004 and receipt of the SEPA Instant CT Recall Payment Cancelled webhook, the ringfence is removed from the recall amount and you must re-initiate the recall response using the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sepa-instant-ct-recall-request) endpoint.
 
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
+
+## Simulate a SEPA Instant CT inbound payment and recall request
+
+<EndpointBlock
+  type="post"
+  title="Create an inbound SEPA Instant CT payment in the simulation environment"
+  endpoints={[
+    {
+      path: "/v1/sepa-instant-emulator/inbound-payment",
+      version: "1.0.SIM"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create an inbound SEPA Instant CT recall request in the simulation environment"
+  endpoints={[
+    {
+      path: "/v1/sepa-instant-emulator/inbound-payment/recall",
+      version: "1.0.SIM"
+    }
+  ]}
+/>
