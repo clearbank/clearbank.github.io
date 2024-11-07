@@ -16,7 +16,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API Token, retrieved from the web portal.",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -34,7 +34,7 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -91,33 +91,33 @@
               "format": "uuid"
             }
           },
-        {
-          "name": "Authorization",
-          "in": "header",
-          "description": "Your API Token, retrieved from the web portal.",
-          "required": true,
-          "schema": {
-            "type": "string"
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
-        },
-        {
-          "name": "DigitalSignature",
-          "in": "header",
-          "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "X-Request-Id",
-          "in": "header",
-          "description": "A unique identifier for the request.",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
         ],
         "requestBody": {
           "content": {
@@ -175,7 +175,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API Token, retrieved from the web portal.",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -193,7 +193,7 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -265,7 +265,7 @@
       },
       "CreateRequestForRecallRequest": {
         "required": [
-          "amount",
+          "originalInstructedAmount",
           "reasonCodeForRecall",
           "originalInstructedDate"
         ],
@@ -343,6 +343,7 @@
             "type": "string",
             "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
             "nullable": true,
+            "maxLength": 35,
             "example": "INV-00002 2020-01-21"
           },
           "ultimateCreditor": {
@@ -389,28 +390,55 @@
           "identification": {
             "$ref": "#/components/schemas/Identification"
           }
-        },
-        "additionalProperties": false
+        }
       },
-      "DateAndPlaceOfBirth": {
-        "type": "object",
+      "DateAndPlaceOfBirthObject": {
         "properties": {
-          "dateOfBirth": {
-            "type": "string",
-            "description": "Date of birth of a person.",
-            "format": "date",
-            "nullable": true,
-            "example": "1991-02-21",
-            "pattern": "YYYY-MM-DD"
-          },
-          "placeOfBirth": {
-            "type": "string",
-            "description": "Place of birth of a person.",
-            "nullable": true,
-            "example": "Birth Town"
+          "dateAndPlaceOfBirth": {
+            "required": [
+              "dateOfBirth",
+              "placeOfBirth",
+              "countryOfBirth"
+            ],
+            "type": "object",
+            "description": "Object describing the individual's date and place of birth.",
+            "properties": {
+              "dateOfBirth": {
+                "type": "string",
+                "description": "Date of birth of a person.",
+                "format": "date",
+                "nullable": true,
+                "example": "1991-02-21",
+                "pattern": "YYYY-MM-DD"
+              },
+              "placeOfBirth": {
+                "type": "string",
+                "description": "Place of birth of a person.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+                "maxLength": 35,
+                "example": "Belfeld"
+              },
+              "countryOfBirth": {
+                "type": "string",
+                "description": "Country where a person was born. ISO 3166 Alpha-2 code to be used.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z]*$",
+                "maxLength": 2,
+                "example": "NL"
+              },
+              "provinceOfBirth": {
+                "type": "string",
+                "description": "Province where a person was born.",
+                "nullable": true,
+                "pattern": "^[a-zA-Z0-9 ,.'-]*",
+                "maxLength": 35,
+                "example": "Limburg"
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Debtor": {
         "required": [
@@ -450,34 +478,114 @@
         },
         "additionalProperties": false
       },
-      "Identification": {
-        "type": "object",
+      "GenericIdentificationObject": {
         "properties": {
-          "organisationIdentification": {
-            "$ref": "#/components/schemas/OrganisationIdentification"
-          },
-          "privateIdentification": {
-            "$ref": "#/components/schemas/PrivateIdentification"
+          "genericIdentification": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identification code of the the reference party, as defined by scheme in the SEPA Implementation Guide and the RT1 Interface Spec.",
+                "nullable": true
+              },
+              "schemeName": {
+                "$ref": "#/components/schemas/GenericIdentificationSchemeName"
+              },
+              "issuer": {
+                "type": "string",
+                "description": "The name of the entity that assigns the identification.",
+                "nullable": true
+              }
+            }
           }
         },
         "additionalProperties": false
       },
-      "OrganisationIdentification": {
-        "required": [
-          "bic"
-        ],
+      "GenericIdentificationSchemeName": {
         "type": "object",
+        "description": "Name of the identification scheme.",
+        "properties": {
+          "item": {
+            "type": "string",
+            "description": "If itemElementName is set to 1, this is a free text field. If itemElementName is set to 0, you must specify a code: For Organisation Identification the valid options are: BANK, CBID, CHID, CINC, COID, CUST, DUNS, EMPL, GS1G, SREN, SRET, TXID, BDID, BOID. For Private Identification the valid options are: ARNU, CCPT, CUST, DRLC, EMPL, NIDN, SOSE, TELE, TXID, POID",
+            "nullable": true
+          },
+          "itemElementName": {
+            "$ref": "#/components/schemas/ItemChoiceType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Identification": {
+        "type": "object",
+        "description": "Identification for creditor or debtor.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          {
+            "$ref": "#/components/schemas/PrivateIdentification"
+          }
+        ]
+      },
+      "ItemChoiceType": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32",
+        "description": "0 indicates Cd: code, 1 indicates Prtry: proprietary."
+      },
+      "OrganisationIdentification": {
+        "type": "object",
+        "description": "Description for OrganisationIdentification",
+        "properties": {
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrgIdOptions",
+            "description": "Identification for an organisation that is the creditor or debtor."
+          }
+        }
+      },
+      "OrgIdOptions": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/BicField"
+          },
+          {
+            "$ref": "#/components/schemas/LeiField"
+          },
+          {
+            "$ref": "#/components/schemas/GenericIdentificationObject"
+          }
+        ]
+      },
+      "LeiField":{
+        "properties": {
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "description": "Legal Entity Identifier (LEI) - Unique alphanumeric code that has 20 characters and is based on the ISO 17442 standard.",
+            "example": "724500EAW1MTCM9M1X68"
+          }
+        }
+      },
+      "BicField": {
         "properties": {
           "bic": {
             "maxLength": 11,
             "minLength": 8,
             "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
             "type": "string",
-            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority.",
-            "example": "BUKBGB20"
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "example": "BUKBNL20"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "PaymentCreated": {
         "type": "object",
@@ -497,36 +605,47 @@
             "type": "string",
             "description": "Name of a street or thoroughfare.",
             "nullable": true,
+            "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 70,
             "example": "Morissette Union"
           },
           "buildingNumber": {
             "type": "string",
             "description": "Number that identifies the position of a building on a street.",
             "nullable": true,
+            "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 16,
             "example": "99"
           },
           "townName": {
             "type": "string",
             "description": "Name of a built-up area, with defined boundaries,and a local government.",
             "nullable": true,
+            "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 35,
             "example": "Sipesville"
           },
           "postCode": {
             "type": "string",
             "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
             "nullable": true,
+            "pattern": "[a-zA-Z0-9 ]",
+            "maxLength": 16,
             "example": "RV7 4IS"
           },
           "countrySubdivision": {
             "type": "string",
             "description": "Identifies a subdivision of a country such as state, region, county.",
             "nullable": true,
+            "pattern": "^[a-zA-Z0-9 ,.'-]*$",
+            "maxLength": 35,
             "example": "Buckinghamshire"
           },
           "country": {
             "type": "string",
-            "description": "Nation with its own government.",
+            "description": "Nation with its own government. ISO 3166 Alpha-2 code to be used.",
             "nullable": true,
+            "maxLength": 2,
             "example": "GB"
           }
         },
@@ -534,18 +653,23 @@
       },
       "PrivateIdentification": {
         "type": "object",
+        "description": "Description for PrivateIdentification",
         "properties": {
-          "dateAndPlaceOfBirth": {
-            "$ref": "#/components/schemas/DateAndPlaceOfBirth"
-          },
-          "other": {
-            "type": "string",
-            "description": "Unique identification of a person, as assigned by an institution, using an identification scheme.",
-            "nullable": true,
-            "example": "Other identification."
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PrivateIdOptions",
+            "description": "Identification for an individual creditor or debtor."
           }
-        },
-        "additionalProperties": false
+        }
+      },
+      "PrivateIdOptions": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DateAndPlaceOfBirthObject"
+          },
+          {
+            "$ref": "#/components/schemas/GenericIdentificationObject"
+          }
+        ]
       },
       "ProblemDetails": {
         "type": "object",
@@ -582,12 +706,12 @@
         "properties": {
           "approve": {
             "type": "boolean",
-            "description": "To accept a recall, set the value to true. To reject a recall, set the value to false.",
+            "description": "To accept a recall, set the value to true. To reject a recall, set the value to false. If set to false, rejectionCode is required.",
             "example": "false"
           },
           "rejectionCode": {
             "type": "string",
-            "description": "Value must be one of \"AC04, NOOR, AM04, ARDT, NOAS, LEGL, CUST\". AC04 = Closed account,\r\nNOOR = No Original Transaction Received,\r\nAM04 = insufficient funds,\r\nARDT = The transaction has already been returned,\r\nNOAS = No answer from customer,\r\nLEGL = Legal decision,\r\nCUST = Requested by customer.Rejection codes should only be set when rejecting the recall. In order to reject a recall, please set the the value of the Approve field to false.",
+            "description": "Value must be one of \"AC04, NOOR, AM04, ARDT, NOAS, LEGL, CUST\". AC04 = Closed account,\r\nNOOR = No Original Transaction Received,\r\nAM04 = insufficient funds,\r\nARDT = The transaction has already been returned,\r\nNOAS = No answer from customer,\r\nLEGL = Legal decision,\r\nCUST = Requested by customer. Rejection codes should only be set when rejecting the recall. In order to reject a recall, please set the the value of the Approve field to false.",
             "nullable": true,
             "example": "AM04"
           }
@@ -601,19 +725,11 @@
             "type": "string",
             "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate creditor is populated.",
             "nullable": true,
+            "maxLength": 70,
             "example": "John Doe"
           },
-          "ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
-            "nullable": true,
-            "example": "NLKBGB20"
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
+          "identification": {
+            "$ref": "#/components/schemas/Identification"
           }
         },
         "additionalProperties": false
@@ -625,22 +741,51 @@
             "type": "string",
             "description": "Name by which a party is known and which is usually used to identify that party. Required if ultimate debtor is populated.",
             "nullable": true,
+            "maxLength": 70,
             "example": "John Doe"
           },
-          "ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of the unique identifications of a person, as assigned by an institution, using an identification scheme.",
-            "nullable": true,
-            "example": "NLKBGB20"
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
+          "identification": {
+            "$ref": "#/components/schemas/Identification"
           }
         },
         "additionalProperties": false
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
       }
     }
   }

@@ -1,0 +1,27 @@
+---
+title: "SEPA Instant CT Recall Payment Settled webhook"
+version: 2
+webhook: true
+---
+
+This webhook confirms an outbound or inbound SEPA Instant CT payment related to a recall request has settled.
+
+#### Request body
+
+```json
+{
+    "Type":"Sepa.Instant.RecallPayment.Settled",
+    "Version":2,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description     |
+|-------------------------|-----------------|
+|`RecallTransactionId` |**Required**<br />Unique identifier of the recall transaction as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `1` |
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1` |
+|`TotalReturnedAmount` |**Required**<br />The amount of money returned in euros, with the direction of payment indicated by the sign. For example 12.51 would indicate €12.51 has been credited to your account and -12.51 would indicate that €12.51 has been debited from your account.<br/>Type: `number` <br/>Format: `decimal`|
+|`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+|`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
