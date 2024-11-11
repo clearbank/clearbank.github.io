@@ -25,3 +25,25 @@ This webhook confirms a T2 financial institution credit transfer outbound paymen
 | `PaymentId`     |**Required**<br /> ClearBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
 | `EndToEndId`    |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
 | `Errors`        |**Required**<br />A list of reasons why the payment failed.<br />Type: `array`<br/><br/>**Required**<br /> `ErrorCode`<br />ISO 20022/ClearBank code for why the payment failed.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br /><br />**Required**<br /> `AdditionalInformation`<br />Text description of why the payment failed.<br/>Type: `string`|
+
+#### Example T2 Financial Institution Credit Transfer Outbound Failed webhook request body
+
+```json
+  {
+  "Type": "Target2.FICreditTransfer.Outbound.Failed",
+  "Version": 1,
+  "Payload": {
+    "EndToEndId": "eb713ec63e714eebaba05c67429224c5",
+    "InstructionId": "4088a8a0bde548498d351339b4af71b7",
+    "Uetr": "ae2a2872-14c8-4c9e-b68d-1956280d5656",
+    "PaymentId": "Outbound_ae2a287214c84c9eb68d1956280d5656",
+    "Errors": [
+      {
+        "Reason": "AM04",
+        "AdditionalInformation": "InsufficientFunds"
+      }
+    ]
+  },
+  "Nonce": 797785730
+}
+```
