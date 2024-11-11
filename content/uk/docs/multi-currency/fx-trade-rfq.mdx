@@ -7,6 +7,7 @@ showPageMenu: true
 import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
 
 ## FX trade (RFQ)
 
@@ -75,7 +76,7 @@ You can use our FX trade functionality to perform FX trades between accounts whi
 - Credit to the buyAccount: USD 1400
 - Credit to the specified margin account: GBP  10
 
-**FX trades are subject to cut-off times:**
+### FX trade cut-off times
 
  * If a trade is booked in time for same-day settlement, you will receive a webhook notification of the settlement. If it fails to settle (in practice, because there are insufficient funds in the account), you will learn of the failure immediately. ClearBank will then send a [fx-trade-cancelled-v1](../webhooks/#fx-trade-cancelled-webhook) webhook.
 
@@ -83,10 +84,19 @@ You can use our FX trade functionality to perform FX trades between accounts whi
  
  For more information about cut-off times, please speak to your relationship manager.
 
-**FX trades minimum values:**
+### FX trades minimum values
 
 FX trades have minimum trading values defined for each currency. If you try to request a trade below these values, you will receive a 400 error response. For the full list of minimum trade values per currency, see [Foreign exchange trade](#fx-trade).
 
+
+<Callout colour="blue">
+Due to public holidays in the US, pricing of all currency pairs for our FX RFQ (Request For Quote) service will be impacted on the following dates:<br/>
+
+•	**Monday 11 November (Veterans Day)** <br/>
+•	**Thursday 28 November (Thanksgiving Day)**
+
+While same day trades will be unavailable on these dates, TOM/SPOT trades will be available to book. Please be mindful of TOM/SPOT trades booked in the days leading up to these dates.
+</Callout>
 
 <EndpointBlock
   type="post"
