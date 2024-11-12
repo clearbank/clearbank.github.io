@@ -12,6 +12,35 @@
           "Payments"
         ],
         "summary": "This endpoint is used to initiate payments.",
+        "parameters": [
+          {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API token, obtained from the ClearBank Portal.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          }
+      ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -169,6 +198,33 @@
         "summary": "This endpoint is used to cancel an entire batch of payments with a matching batch ID. It must be sent at least one hour prior to the opening of the currency payment window in order to successfully cancel the payment.",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+          {
             "name": "batchId",
             "in": "path",
             "required": true,
@@ -278,6 +334,33 @@
         ],
         "summary": "This endpoint is used to cancel a single payment within a batch, with a matching batch ID and end-to-end ID. It must be sent at least one hour prior to the opening of the currency payment window in order to successfully cancel the payment.",
         "parameters": [
+          {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API token, obtained from the ClearBank Portal.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
           {
             "name": "batchId",
             "in": "path",
