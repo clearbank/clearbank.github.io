@@ -25,3 +25,33 @@ This webhook confirms a T2 customer credit transfer outbound payment has failed.
 | `PaymentId`     |**Required**<br /> ClearBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
 | `EndToEndId`    |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
 | `Errors`        |**Required**<br />A list of reasons why the payment failed.<br />Type: `array`<br/><br/>**Required**<br /> `ErrorCode`<br />ISO 20022/ClearBank code for why the payment failed.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br /><br />**Required**<br /> `AdditionalInformation`<br />Text description of why the payment failed.<br/>Type: `string`|
+
+#### Example T2 Customer Credit Transfer Outbound Failed webhook request body
+
+```json
+{
+  "Type": "Target2.CustomerCreditTransfer.Outbound.Failed",
+  "Version": 1,
+  "Payload": {
+    "EndToEndId": "eb713ec63e714eebaba05c67429224c5",
+    "InstructionId": "e69df0ff97a7442591ee0570f8e71c52",
+    "Uetr": "583fedc5-85f3-4a6f-adb5-5d115901a9a6",
+    "PaymentId": "Outbound_583fedc585f34a6fadb55d115901a9a6",
+    "Errors": [
+      {
+        "Reason": "AM03",
+        "AdditionalInformation": "Account doesn't support EUR"
+      }
+    ]
+  },
+  "Nonce": 365827338
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 365827338
+}
+```

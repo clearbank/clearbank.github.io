@@ -25,3 +25,28 @@ This webhook confirms a T2 financial institution credit transfer outbound paymen
 | `TransactionId` |**Required**<br /> ID of the transaction used to move funds for this payment.<br/>Type: `guid`<br/>Format: `string`<br/>Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`  |
 | `PaymentId`     |**Required**<br /> ClearBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
 | `EndToEndId`    |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
+
+#### Example T2 Financial Institution Credit Transfer Outbound Completed webhook request body
+
+```json
+  {
+  "Type": "Target2.FICreditTransfer.Outbound.Completed",
+  "Version": 1,
+  "Payload": {
+    "EndToEndId": "eb713ec63e714eebaba05c67429224c5",
+    "InstructionId": "ea94148253084f7ea2bcd53174f512c5",
+    "Uetr": "34d0368b-f0a9-4703-8ff7-60e1fa116695",
+    "TransactionId": "df9bb238-65a4-446d-b529-ca48e4542bd2",
+    "PaymentId": "Outbound_34d0368bf0a947038ff760e1fa116695"
+  },
+  "Nonce": 1016256602
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1016256602
+}
+```

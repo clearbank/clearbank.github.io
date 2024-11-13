@@ -24,5 +24,29 @@ This webhook confirms a T2 return outbound payment has completed.
 | `Uetr`          |**Required**<br /> Randomly generated UUID to provide an end-to-end reference of a payment transaction.<br/>Format: `guid`<br/> Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`   |
 | `TransactionId` |**Required**<br /> ID of the transaction used to move funds for this payment.<br/>Type: `guid`<br/>Format: `string`<br/>Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}`  |
 | `PaymentReturnId`     |**Required**<br /> learBank internal identifier for this payment.<br/>Format: `string`<br/>Pattern: `[a-zA-Z0-9_-]{0,50}` |
-| `EndToEndId`    |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
+| `EndToEndId`    |**Required**<br />Unique identification, as assigned by the original initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Format: `string`<br/>Pattern: `[0-9a-zA-Z/\-?:().,''+](\|[0-9a-zA-Z\/-?:().,''+]\|[0-9a-zA-Z\/-?:().,''+]{1,33}[0-9a-zA-Z\/-?:().,''+])`|
 
+#### Example T2 Payment Return Outbound Completed webhook request body
+
+```json
+  {
+  "Type": "Target2.PaymentReturn.Outbound.Completed",
+  "Version": 1,
+  "Payload": {
+    "EndToEndId": "eb713ec63e714eebaba05c67429224c5",
+    "ReturnInstructionId": "b6a914c923bf4bbf9bed006e2ffd469b",
+    "Uetr": "46e0bf29-38aa-4e16-9c2c-8497dacd5f58",
+    "TransactionId": "7287d349-f36d-455e-896f-4b82a2c51096",
+    "PaymentReturnId": "return_46e0bf2938aa4e169c2c8497dacd5f58"
+  },
+  "Nonce": 1540026201
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1540026201
+}
+```
