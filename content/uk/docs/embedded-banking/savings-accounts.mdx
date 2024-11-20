@@ -139,6 +139,13 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 ## Update account interest configuration
+You can update the interest configuration of your savings accounts to have different interest rates for different account types.
+
+To change the interest configuration, call the [POST /interest/v1/accounts/{accountId}/configurations](#interest-configuration-update) endpoint with your updated interest rate. You can request this configuration ID from your usual ClearBank contact.
+
+Interest rates are applied retroactively from midnight on the day they are set. For example, if you update an interest rate at 15:00 on Tuesday, the interest accrual for Tuesday, including before 15:00, is calculated and applied at 00:00 UK time Wednesday.
+
+![A message flow diagram describing the above process of setting the interest configuration.](/assets/images/savings-account-interest-config.svg)
 
 <EndpointBlock
   type="post"
@@ -150,10 +157,6 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     }
   ]}
 />
-
-
-
-
 
 ## Interest paid
 
