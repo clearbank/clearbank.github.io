@@ -138,18 +138,28 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
-## Update account interest configuration
-You can update the interest configuration of your savings accounts to have different interest rates for different account types.
+## Interest configurations
+You can update the interest configuration of your savings accounts yourself.
 
-To change the interest configuration, call the [POST /interest/v1/accounts/{accountId}/configurations](#interest-configuration-update) endpoint with your updated interest rate. You can request this configuration ID from your usual ClearBank contact.
+During account creation, you set your initial interest configuration. You can have multiple interest configurations using different configuration IDs. You can request a new configuration ID from your usual ClearBank contact. 
 
-Interest rates are applied retroactively from midnight on the day they are set. For example, if you update an interest rate at 15:00 on Tuesday, the interest accrual for Tuesday, including before 15:00, is calculated and applied at 00:00 UK time Wednesday.
+To change the interest configuration, call the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint with your new interest rate ID in the `InterestConfigurationId` field. 
+
+The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
+
+**Daily interest example**
+
+If you update an interest rate at 15:00 on Tuesday, all of Tuesday's interest, even before 15:00, will be calculated at the new interest rate.
+
+**Monthly interest example**
+
+If you update an interest rate at 14:00 on the 5th, interest from the 1st to the 4th will be calculated at the previous rate at the end of the month. Interest from the 5th until the end of the month will be calculated using the new rate.
 
 ![A message flow diagram describing the above process of setting the interest configuration.](/assets/images/savings-account-interest-config.svg)
 
 <EndpointBlock
   type="post"
-  title="Interest configuration update"
+  title="Update interest configuration"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
