@@ -9,7 +9,7 @@ const config = {
     logoLink: '/',
     title: 'ClearBank Developer Portal',
     githubUrl: 'https://github.com/clearbank/',
-    githubDocsRoot: 'https://github.com/clearbank/docs/blob/master/content',
+    githubDocsRoot: 'https://github.com/clearbank/clearbank.github.io/tree/main/content',
     helpUrl: '',
     tweetText: '',
     links: [{ text: '', link: '' }],
