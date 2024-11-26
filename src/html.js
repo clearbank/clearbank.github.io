@@ -13,6 +13,19 @@ export default class HTML extends React.Component {
             name='viewport'
             content='width=device-width, initial-scale=1, shrink-to-fit=no'
           />
+          {/* <!-- Google Tag Manager --> */}
+          {/* <!-- Google Tag Manager --> */}
+          <script
+            dangerouslySetInnerHTML={{
+            __html: `              
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-572ZBFR8');
+              `
+            }}
+          />          
           {config.siteMetadata.ogImage ? (
             <meta property='og:image' content={config.siteMetadata.ogImage} />
           ) : null}
@@ -30,13 +43,15 @@ export default class HTML extends React.Component {
               href={config.siteMetadata.favicon}
             />
           ) : null}
-          <noscript key='noscript' />
           <link rel='stylesheet' type='text/css' href='/lib/css/index.css' />
 
           {this.props.headComponents}
         </head>
         <body {...this.props.bodyAttributes}>
           {this.props.preBodyComponents}
+          <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-572ZBFR8" height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
+          </noscript>
           <div
             key='body'
             id='___gatsby'
