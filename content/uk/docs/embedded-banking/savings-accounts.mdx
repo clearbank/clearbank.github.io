@@ -22,6 +22,8 @@ You can choose how much interest to pay customers. ClearBank will calculate accr
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 > **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
 
+If your account product has been set up to allow changing interest configurations, then you must provide the initial interest configuration ID when creating the savings account.
+
 ![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
 <Callout colour="blue">
@@ -139,11 +141,9 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 ## Interest configurations
-You can update the interest configuration of your savings accounts yourself.
+You can update the interest configuration of your existing savings accounts.
 
-During account creation, you set your initial interest configuration. You can have multiple interest configurations using different configuration IDs. You can request a new configuration ID from your usual ClearBank contact. 
-
-To change the interest configuration, call the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint with your new interest rate ID in the `InterestConfigurationId` field. 
+The initial interest configuration is usually set during account creation. If your product ID has multiple interest configurations, you set this during account creation and update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint with your new interest configuration ID in the `InterestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
 
 The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
 
