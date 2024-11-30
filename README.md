@@ -1,6 +1,5 @@
 # To update the site
 
-
 ## Running locally
 
 ```bash
@@ -43,12 +42,12 @@ This is so we can keep the edited copies in version control and will become the 
 Unfortunately, they're a `.tgn` format. Which is only supported with that site. CVS's didn't seem to support the formatting.
 
 #### Steps (to load an example)
-1. Go to (table generator)[https://www.tablesgenerator.com/markdown_tables/]
+1. Go to [table generator](https://www.tablesgenerator.com/markdown_tables/)
 2. Load an example (https://d.pr/i/KTALbQ)
 
 
 #### Steps to create a new table
-1. Go to (table generator)[https://www.tablesgenerator.com/markdown_tables/]
+1. Go to [table generator](https://www.tablesgenerator.com/markdown_tables/)
 2. Add in all the values, including headings (https://d.pr/i/qqigrK)
 3. Hit generate, copy the code over to the mark down file
 4. Replace all the `<br />` with `<br />`
