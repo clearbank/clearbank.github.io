@@ -16,7 +16,7 @@ ClearBank supports savings accounts. A savings account is an FSCS-protected acco
 
 You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments.
 
-## Account setup
+**To create a savings account:**
 1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
 2. Use the [POST /v1/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
@@ -32,36 +32,7 @@ Always note down the X-Request-Id when creating an account. If you receive a 500
 
 Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
 
-<EndpointBlock
-  type="post"
-  title="Create a savings account"
-  endpoints={[
-    {
-      path: "/v1/savings",
-      version: "1.0.Sterling",
-       webhooks: [
-        'account-created-webhook-v1'
-      ]
-    }
-  ]}
-/>
-
-<WebhookPlaceholder render='account-created-webhook-v1' />
-
-<EndpointBlock
-  type="put"
-  title="Set a nominated account"
-  endpoints={[
-    {
-      path: "/v1/accounts/{accountId}/nominated-account",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-<WebhookPlaceholder render='interest-paid-webhook-v1' />
-
-## Close a savings account
+**To close a savings account:**
 1. Withdraw all funds from the account.
 2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
 3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
@@ -103,6 +74,33 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 ![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close-fail-nominated-account.svg)
 
 <EndpointBlock
+  type="post"
+  title="Create a savings account"
+  endpoints={[
+    {
+      path: "/v1/savings",
+      version: "1.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
+
+<EndpointBlock
+  type="put"
+  title="Set a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
   type="get"
   title="Get a nominated account"
   endpoints={[
@@ -112,6 +110,8 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     }
   ]}
 />
+
+<WebhookPlaceholder render='interest-paid-webhook-v1' />
 
 <EndpointBlock
   type="post"
@@ -143,7 +143,7 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
 
 ## Interest configurations
-You can update the interest configuration of your existing savings accounts. **This endpoint is currently available in simulation only and is not yet active.**
+You can update the interest configuration of your existing savings accounts. **This endpoint is currently available for testing in simulation and is not yet active.**
 
 The initial interest configuration is usually set during account creation. If your product ID has multiple interest configurations, you set this during account creation and update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint with your new interest configuration ID in the `interestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
 
