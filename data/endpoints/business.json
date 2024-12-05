@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+"openapi": "3.0.1",
   "info": {
     "title": "Business Accounts API",
     "description": "API endpoints for business accounts",
@@ -14,9 +14,9 @@
     "/v1/customers/business": {
       "post": {
         "tags": [
-          "Businesses"
+          "Business"
         ],
-        "summary": "Requests creation of a Business Customer (Limited Company)",
+        "summary": "This endpoint is used to create a new business customer (limited company).",
         "operationId": "V1CustomersBusinessPost",
         "requestBody": {
           "description": "Information required to create business customer",
@@ -128,114 +128,12 @@
         }
       }
     },
-    "/v1/customers/business/{customerId}": {
-      "patch": {
-        "tags": [
-          "Businesses"
-        ],
-        "summary": "Requests update of a Business Customer (Limited Company)",
-        "operationId": "V1CustomersBusinessByCustomerIdPatch",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The unique identifier for the customer",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Information required to update business customer",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BusinessCustomerUpdateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          },
-          "503": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
     "/v1/customers/business/{customerId}/currentAddress": {
       "put": {
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests update of a Business Customer (Limited Company)'s current address",
+        "summary": "This endpoint is used to update the current address of an existing business customer (limited company).",
         "operationId": "V1CustomersBusinessByCustomerIdCurrentAddressPut",
         "parameters": [
           {
@@ -332,13 +230,13 @@
         }
       }
     },
-    "/v1/customers/business/{customerId}/ubo": {
-      "post": {
+    "/v1/customers/business/{customerId}": {
+      "patch": {
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests creation of a UBO (Ultimate Beneficiary Owner) for a Business Customer(Limited Company)",
-        "operationId": "V1CustomersBusinessByCustomerIdUboPost",
+        "summary": "This endpoint is used to update the details of an existing business customer (limited company).",
+        "operationId": "V1CustomersBusinessByCustomerIdPatch",
         "parameters": [
           {
             "name": "customerId",
@@ -352,55 +250,18 @@
           }
         ],
         "requestBody": {
-          "description": "Information required to create UBO",
+          "description": "Information required to update business customer",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddBusinessUboRequest"
-              }
-            },
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBusinessUboRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBusinessUboRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBusinessUboRequest"
+                "$ref": "#/components/schemas/BusinessCustomerUpdateRequest"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -411,16 +272,6 @@
                 }
               },
               "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
@@ -439,13 +290,117 @@
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
-              "text/plain": {
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
               },
-              "text/json": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "503": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/v1/customers/business/{customerId}/director": {
+      "post": {
+        "tags": [
+          "Businesses"
+        ],
+        "summary": "This endpoint is used to create a director for a business customer (limited company)",
+        "operationId": "V1CustomersBusinessByCustomerIdDirectorPost",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The unique identifier for the customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to create Director",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBusinessDirectorRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -464,8 +419,132 @@
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "503": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/v1/customers/business/{customerId}/ubo": {
+      "post": {
+        "tags": [
+          "Businesses"
+        ],
+        "summary": "This endpoint is used to create a UBO (Ultimate Beneficiary Owner) for a business customer (limited company).",
+        "operationId": "V1CustomersBusinessByCustomerIdUboPost",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The unique identifier for the customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to create UBO",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBusinessUboRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBusinessUboRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBusinessUboRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBusinessUboRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
               "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -491,7 +570,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests update of a UBO (Ultimate Beneficiary Owner) for a Business Customer(Limited Company)",
+        "summary": "This endpoint is used to update a UBO (Ultimate Beneficiary Owner) for a business customer (limited company).",
         "operationId": "V1CustomersBusinessByCustomerIdUboByUboIdPatch",
         "parameters": [
           {
@@ -586,7 +665,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests deletion of a UBO for a Business Customer (Limited Company)",
+        "summary": "This endpoint is used to request deletion of a UBO (Ultimate Beneficiary Owner) for a business customer (limited company).",
         "operationId": "V1CustomersBusinessByCustomerIdUboByUboIdDelete",
         "parameters": [
           {
@@ -621,11 +700,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
               }
             }
           },
@@ -636,11 +710,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
               }
             }
           },
@@ -648,11 +717,6 @@
             "description": "Not Found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -663,110 +727,6 @@
             "description": "Conflict",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          },
-          "503": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/v1/customers/business/{customerId}/director": {
-      "post": {
-        "tags": [
-          "Businesses"
-        ],
-        "summary": "Requests creation of a Director for a Business Customer (Limited Company)",
-        "operationId": "V1CustomersBusinessByCustomerIdDirectorPost",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The unique identifier for the customer",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Information required to create Director",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddBusinessDirectorRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -787,7 +747,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests update of a Director for a Business Customer (Limited Company)",
+        "summary": "This endpoint is used to update a director for a business customer (limited company).",
         "operationId": "V1CustomersBusinessByCustomerIdDirectorByDirectorIdPatch",
         "parameters": [
           {
@@ -897,7 +857,7 @@
         "tags": [
           "Businesses"
         ],
-        "summary": "Requests deletion of a Director for a Business Customer (Limited Company)",
+        "summary": "This endpoint is used to request deletion of a director for a business customer (limited company).",
         "operationId": "V1CustomersBusinessByCustomerIdDirectorByDirectorIdDelete",
         "parameters": [
           {
@@ -932,11 +892,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
               }
             }
           },
@@ -944,11 +899,6 @@
             "description": "Forbidden",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -962,11 +912,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
               }
             }
           },
@@ -974,11 +919,6 @@
             "description": "Conflict",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -994,240 +934,12 @@
         }
       }
     },
-    "/v1/customers/retail": {
-      "post": {
-        "tags": [
-          "RetailCustomer"
-        ],
-        "summary": "Requests creation of a Retail Customer",
-        "operationId": "createRetailCustomer",
-        "requestBody": {
-          "description": "Information required to create retail customer",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRetailCustomerRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/customers/retail/{customerId}/currentAddress": {
-      "put": {
-        "tags": [
-          "RetailCustomer"
-        ],
-        "summary": "Requests update of a Retail Customer's current address",
-        "operationId": "updateRetailCustomerAddress",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The unique identifier for the customer",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Information required to update retail customer",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddressRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/customers/retail/{customerId}": {
-      "patch": {
-        "tags": [
-          "RetailCustomer"
-        ],
-        "summary": "Requests update of a Retail Customer",
-        "operationId": "updateRetailCustomer",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The unique identifier for the customer",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Information required to update retail customer",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RetailCustomerUpdateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/customers/soletrader": {
       "post": {
         "tags": [
-          "SoleTraderCustomer"
+          "SoleTraders"
         ],
-        "summary": "Requests creation of a Sole Trader",
+        "summary": "This endpoint is used to create a sole trader",
         "operationId": "V1CustomersSoleTraderPost",
         "requestBody": {
           "description": "Information required to create sole trader customer",
@@ -1339,12 +1051,114 @@
         }
       }
     },
+    "/v1/customers/soletrader/{customerId}/currentAddress": {
+      "put": {
+        "tags": [
+          "SoleTraders"
+        ],
+        "summary": "This endpoint is used to update a sole trader customer's current address",
+        "operationId": "V1CustomersSoleTraderByCustomerIdCurrentAddressPut",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The unique identifier for the customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to update customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "503": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/v1/customers/soletrader/{customerId}": {
       "patch": {
         "tags": [
-          "SoleTraderCustomer"
+          "SoleTraders"
         ],
-        "summary": "Requests update of a Sole Trader",
+        "summary": "This endpoint is used to update the details of a sole trader.",
         "operationId": "V1CustomersSoleTraderByCustomerIdPatch",
         "parameters": [
           {
@@ -1440,120 +1254,6 @@
           }
         }
       }
-    },
-    "/v1/customers/soletrader/{customerId}/currentAddress": {
-      "put": {
-        "tags": [
-          "SoleTraderCustomer"
-        ],
-        "summary": "Requests update of a Sole trader Customer's current address",
-        "operationId": "V1CustomersSoleTraderByCustomerIdCurrentAddressPut",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The unique identifier for the customer",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Information required to update customer",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddressRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatedResourceResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          },
-          "503": {
-            "description": "Server Error"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -1563,17 +1263,17 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "The first name of the business director.",
+            "description": "First name of the contact",
             "nullable": true
           },
           "middleName": {
             "type": "string",
-            "description": "The middle name of the business director.",
+            "description": "Middle name of the contact",
             "nullable": true
           },
           "surname": {
             "type": "string",
-            "description": "The last name of the business director.",
+            "description": "Surname of the contact",
             "nullable": true
           },
           "countryOfResidence": {
@@ -1581,19 +1281,19 @@
           }
         },
         "additionalProperties": false,
-        "description": "Request object for capturing required data for creating a Director for a Limited Company"
+        "description": "Request object capturing required data for creating a Director for a Limited Company"
       },
       "AddBusinessUboRequest": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the UBO.",
+            "description": "Name of the UBO",
             "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the UBO in date format, if it is an individual.",
+            "description": "Date of birth of the UBO, if it is an individual",
             "format": "date-time",
             "nullable": true
           },
@@ -1605,7 +1305,7 @@
           },
           "ownershipPercentage": {
             "type": "number",
-            "description": "The percentage of ownership.",
+            "description": "Percentage of ownership",
             "format": "double"
           },
           "typeOfOwnership": {
@@ -1623,13 +1323,13 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "The date from when the customer started using the current address in date-time format.",
+            "description": "Date address is valid from",
             "format": "date-time",
             "nullable": true
           },
           "validTo": {
             "type": "string",
-            "description": "The expiry date of the customer’s current address in date-time format. Leave this field blank if the current address is still valid.",
+            "description": "Date address is valid to. Leave blank for current address",
             "format": "date-time",
             "nullable": true
           },
@@ -1638,32 +1338,32 @@
           },
           "buildingNameNumber": {
             "type": "string",
-            "description": "The building name and/or number of the customer’s current address.",
+            "description": "Building number and/or name of the address",
             "nullable": true
           },
           "streetName": {
             "type": "string",
-            "description": "The street name of the customer’s current address.",
+            "description": "Street name of the address",
             "nullable": true
           },
           "city": {
             "type": "string",
-            "description": "The city/town of the customer’s current address.",
+            "description": "City/Town of the address",
             "nullable": true
           },
           "county": {
             "type": "string",
-            "description": "The county of the customer’s current address.",
+            "description": "County of the address",
             "nullable": true
           },
           "postalCode": {
             "type": "string",
-            "description": "The post code of the customer’s current address.",
+            "description": "Postal code of the address",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Request object for capturing required data for updating an address"
+        "description": "Information representing Address"
       },
       "AddressType": {
         "enum": [
@@ -1672,24 +1372,24 @@
           "ResidentialAddress"
         ],
         "type": "string",
-        "description": "The type of address"
+        "description": "Type of address for the entity e.g. Trading, Registered, Residential address etc."
       },
       "BusinessCustomerUpdateRequest": {
         "type": "object",
         "properties": {
           "email": {
             "type": "string",
-            "description": "The primary email address used by the business customer.",
+            "description": "Primary email address for contact",
             "nullable": true
           },
           "tradingName": {
             "type": "string",
-            "description": "The trading name of the business.",
+            "description": "Trading name of the business",
             "nullable": true
           },
           "companyName": {
             "type": "string",
-            "description": "The company name of the business.",
+            "description": "Name of company of the customer",
             "nullable": true
           },
           "sicCodes": {
@@ -1697,7 +1397,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Standard Industrial Classification (SIC) codes assigned to the business.\r\nThe following SIC codes are invalid: 64205,64304,64999,66220,65120,66190,64922,64306,64929,65110,65300,64110,64191,64192,64301,64302,64303,64305,64921,64992,65201,65202,66110,66120,66290,66300",
+            "description": "Standard Industrial Classification (SIC) codes assigned to the business\r\nThe following SIC codes are invalid: 64205,64304,64999,66220,65120,66190,64922,64306,64929,65110,65300,64110,64191,64192,64301,64302,64303,64305,64921,64992,65201,65202,66110,66120,66290,66300",
             "nullable": true
           },
           "sectorCode": {
@@ -1708,7 +1408,7 @@
           },
           "vatRegistrationNumber": {
             "type": "string",
-            "description": "The VAT registration number of the business.",
+            "description": "VAT registration number of the business",
             "nullable": true
           },
           "vatRegistrationCountry": {
@@ -1722,24 +1422,24 @@
           }
         },
         "additionalProperties": false,
-        "description": "Request object for capturing required data for updating a Business Customer"
+        "description": "Request object capturing required data for the business customer (Limited Company)"
       },
       "BusinessDirectorUpdateRequest": {
         "type": "object",
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "The first name of the business director.",
+            "description": "First name of the contact",
             "nullable": true
           },
           "middleName": {
             "type": "string",
-            "description": "The middle name of the business director.",
+            "description": "Middle name of the contact",
             "nullable": true
           },
           "surname": {
             "type": "string",
-            "description": "The surname of the business director.",
+            "description": "Surname of the contact",
             "nullable": true
           },
           "countryOfResidence": {
@@ -1747,19 +1447,19 @@
           }
         },
         "additionalProperties": false,
-        "description": "Request object for capturing required data for updating a Business Director"
+        "description": "Request object capturing required data for creating a Director for a Limited Company"
       },
       "BusinessUboUpdateRequest": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "The name of the UBO.",
+            "description": "Name of the UBO",
             "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the UBO in date format, if it is an individual.",
+            "description": "Date of birth of the UBO, if it is an individual",
             "format": "date-time",
             "nullable": true
           },
@@ -1774,12 +1474,12 @@
           },
           "ownershipPercentage": {
             "type": "number",
-            "description": "The percentage of ownership.",
+            "description": "Percentage of ownership",
             "format": "double"
           }
         },
         "additionalProperties": false,
-        "description": "Request object capturing required data for updating a UBO (Ultimate Beneficiary Owner)"
+        "description": "Request object capturing required data for creating a UBO (Ultimate Beneficiary Owner)"
       },
       "CompanySize": {
         "enum": [
@@ -1789,7 +1489,7 @@
           "Large"
         ],
         "type": "string",
-        "description": "The company size"
+        "description": "Representation of size of the company"
       },
       "CountryCode": {
         "enum": [
@@ -2057,27 +1757,27 @@
             "items": {
               "$ref": "#/components/schemas/AddressRequest"
             },
-            "description": "Previous address(es) associated with the business customer.",
+            "description": "Previous address(es) associated with the customer",
             "nullable": true
           },
           "email": {
             "type": "string",
-            "description": "The primary email address used by the business customer.",
+            "description": "Primary email address for contact",
             "nullable": true
           },
           "tradingName": {
             "type": "string",
-            "description": "The trading name of the business.",
+            "description": "Trading name of the business",
             "nullable": true
           },
           "companyName": {
             "type": "string",
-            "description": "The name of company of the business.",
+            "description": "Name of company of the customer",
             "nullable": true
           },
           "companyNumber": {
             "type": "string",
-            "description": "The companies house assigned company number.",
+            "description": "Companies house assigned company number",
             "nullable": true
           },
           "sicCodes": {
@@ -2085,12 +1785,12 @@
             "items": {
               "type": "string"
             },
-            "description": "Standard Industrial Classification (SIC) codes assigned to the business.\r\nThe following SIC codes are invalid: 64205,64304,64999,66220,65120,66190,64922,64306,64929,65110,65300,64110,64191,64192,64301,64302,64303,64305,64921,64992,65201,65202,66110,66120,66290,66300",
+            "description": "Standard Industrial Classification (SIC) codes assigned to the business\r\nThe following SIC codes are invalid: 64205,64304,64999,66220,65120,66190,64922,64306,64929,65110,65300,64110,64191,64192,64301,64302,64303,64305,64921,64992,65201,65202,66110,66120,66290,66300",
             "nullable": true
           },
           "vatRegistrationNumber": {
             "type": "string",
-            "description": "VAT registration number of the business.",
+            "description": "VAT registration number of the business",
             "nullable": true
           },
           "vatRegistrationCountry": {
@@ -2112,69 +1812,6 @@
         "additionalProperties": false,
         "description": "Request object capturing required data for the business customer (Limited Company)"
       },
-      "CreateRetailCustomerRequest": {
-        "type": "object",
-        "properties": {
-          "currentAddress": {
-            "$ref": "#/components/schemas/AddressRequest"
-          },
-          "previousAddresses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AddressRequest"
-            },
-            "description": "Previous address(es) associated with the retail customer.",
-            "nullable": true
-          },
-          "firstName": {
-            "type": "string",
-            "description": "The first name of the retail customer.",
-            "nullable": true
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The middle name of the retail customer.",
-            "nullable": true
-          },
-          "surname": {
-            "type": "string",
-            "description": "The surname name of the retail customer.",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The date of birth of the retail customer in date format.",
-            "format": "date-time"
-          },
-          "email": {
-            "type": "string",
-            "description": "The primary email address used by the retail customer.",
-            "nullable": true
-          },
-          "idCountryOfIssue": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "idType": {
-            "$ref": "#/components/schemas/IdType"
-          },
-          "idNumber": {
-            "type": "string",
-            "description": "The identification number on the identification document provided by the retail customer. Optional unless information for other ID fields such as idCountryOfIssue, idType, and/or idExpiryDate is specified.",
-            "nullable": true
-          },
-          "idExpiryDate": {
-            "type": "string",
-            "description": "The expiry date of the identification document provided by the retail customer in date-time format. Optional unless information for other ID fields such as idCountryOfIssue, IdType and/or idNumber is specified.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "countryOfResidence": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Request object capturing required data for the retail customer"
-      },
       "CreateSoleTraderCustomerRequest": {
         "type": "object",
         "properties": {
@@ -2186,32 +1823,32 @@
             "items": {
               "$ref": "#/components/schemas/AddressRequest"
             },
-            "description": "Previous address(es) associated with the sole trader.",
+            "description": "Previous address(es) associated with the customer",
             "nullable": true
           },
           "firstName": {
             "type": "string",
-            "description": "The first name of the sole trader.",
+            "description": "First name of the contact",
             "nullable": true
           },
           "middleName": {
             "type": "string",
-            "description": "The middle name of the sole trader.",
+            "description": "Middle name of the contact",
             "nullable": true
           },
           "surname": {
             "type": "string",
-            "description": "The surname name of the sole trader.",
+            "description": "Surname of the contact",
             "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the sole trader in date format.",
+            "description": "Date of birth for the contact",
             "format": "date-time"
           },
           "email": {
             "type": "string",
-            "description": "The primary email address used by the sole trader.",
+            "description": "Email address of the contact",
             "nullable": true
           },
           "idCountryOfIssue": {
@@ -2222,23 +1859,23 @@
           },
           "idNumber": {
             "type": "string",
-            "description": "The identification number on the identification document provided by the sole trader. Optional unless information for other ID fields such as idCountryOfIssue, idType, and/or idExpiryDate is specified.",
+            "description": "Number of the document used for identification",
             "nullable": true
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "The expiry date of the identification document provided by the sole trader in date-time format. Optional unless information for other ID fields such as idCountryOfIssue, IdType and/or idNumber is specified.",
+            "description": "Date of expiry of the document used for identification",
             "format": "date-time",
             "nullable": true
           },
           "tradingName": {
             "type": "string",
-            "description": "The trading name of the sole trader.",
+            "description": "Trading name of the sole trader",
             "nullable": true
           },
           "vatRegistrationNumber": {
             "type": "string",
-            "description": "The VAT registration number of the sole trader.",
+            "description": "VAT registration number of the business",
             "nullable": true
           },
           "vatRegistrationCountry": {
@@ -2255,7 +1892,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Request object capturing required data to create sole trader"
+        "description": "Request object capturing required data for the sole traders"
       },
       "CreatedResourceResponse": {
         "type": "object",
@@ -2342,7 +1979,7 @@
           "_18_IndividualsAndIndividualTrusts"
         ],
         "type": "string",
-        "description": "The industry classification code."
+        "description": "Industry classification code of the business"
       },
       "ProblemDetails": {
         "type": "object",
@@ -2377,58 +2014,6 @@
         "additionalProperties": { },
         "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
       },
-      "RetailCustomerUpdateRequest": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "description": "The first name of the retail customer.",
-            "nullable": true
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The middle name of the retail customer.",
-            "nullable": true
-          },
-          "surname": {
-            "type": "string",
-            "description": "The surname of the retail customer.",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The date of birth of the retail customer in date format.",
-            "format": "date-time"
-          },
-          "email": {
-            "type": "string",
-            "description": "The primary email address used by the retail customer.",
-            "nullable": true
-          },
-          "idCountryOfIssue": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "idType": {
-            "$ref": "#/components/schemas/IdType"
-          },
-          "idNumber": {
-            "type": "string",
-            "description": "The identification number on the identification document provided by the retail customer. Optional unless information for other ID fields such as idCountryOfIssue, idType, and/or idExpiryDate is specified.",
-            "nullable": true
-          },
-          "idExpiryDate": {
-            "type": "string",
-            "description": "The expiry date of the identification document provided by the retail customer in date-time format. Optional unless information for other ID fields such as idCountryOfIssue, IdType and/or idNumber is specified.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "countryOfResidence": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Request object for capturing data required to update a retail customer"
-      },
       "SectorCode": {
         "enum": [
           "_1_BankOfEngland_CentralBank",
@@ -2453,27 +2038,27 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "The first name of the sole trader.",
+            "description": "First name of the contact",
             "nullable": true
           },
           "middleName": {
             "type": "string",
-            "description": "The middle name of the sole trader.",
+            "description": "Middle name of the contact",
             "nullable": true
           },
           "surname": {
             "type": "string",
-            "description": "The surname of the sole trader.",
+            "description": "Surname of the contact",
             "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the sole trader in date format.",
+            "description": "Date of birth for the contact",
             "format": "date-time"
           },
           "email": {
             "type": "string",
-            "description": "The primary email address used by the sole trader.",
+            "description": "Email address of the contact",
             "nullable": true
           },
           "idCountryOfIssue": {
@@ -2484,18 +2069,18 @@
           },
           "idNumber": {
             "type": "string",
-            "description": "The identification number on the identification document provided by the sole trader. Optional unless information for other ID fields such as idCountryOfIssue, idType, and/or idExpiryDate is specified.",
+            "description": "Number of the document used for identification",
             "nullable": true
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "The expiry date of the identification document provided by the sole trader in date-time format. Optional unless information for other ID fields such as idCountryOfIssue, IdType and/or idNumber is specified.",
+            "description": "Date of expiry of the document used for identification",
             "format": "date-time",
             "nullable": true
           },
           "tradingName": {
             "type": "string",
-            "description": "The trading name of the sole trader.",
+            "description": "Trading name of the sole trader",
             "nullable": true
           },
           "sectorCode": {
@@ -2506,7 +2091,7 @@
           },
           "vatRegistrationNumber": {
             "type": "string",
-            "description": "VAT registration number of the business.",
+            "description": "VAT registration number of the business",
             "nullable": true
           },
           "vatRegistrationCountry": {
@@ -2565,7 +2150,8 @@
               }
             },
             "description": "The validation errors.",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": { },
