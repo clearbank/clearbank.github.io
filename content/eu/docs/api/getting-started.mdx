@@ -70,7 +70,7 @@ We use the following specifications to create a digital signature:
 **To create a digital signature:**
 
 1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature)
-2. Hash the encoded value using SHA-256
+2. For messages without a body, this value is generated from your `HTTP METHOD`, `Query Path`, `X-Request-Id`, and `X-Request-Time` values. For messages with a body, hash the encoded value using SHA-256 and use the value
 3. Request a digital signature for that hash value from your hardware security module (HSM)
 > (In the simulation environment, this can be done using open source solutions.)
 
@@ -108,7 +108,7 @@ import ParameterDetails from 'src/components/parameter-details'
 import parameters from './parameters.json'
 
 <ParameterDetails parameter={parameters.authorization} />
-<ParameterDetails parameter={parameters.digitalSignature} />
+<ParameterDetails parameter={parameters.digitalSignatureEu} />
 <ParameterDetails parameter={parameters.xRequestId} />
 <ParameterDetails parameter={parameters.xRequestTime} />
 <ParameterDetails parameter={parameters.xCorrelationId} />
