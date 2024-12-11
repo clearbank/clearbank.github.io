@@ -10,31 +10,35 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary';
 import Callout from "src/components/callout";
 
+## SEPA Instant CT
+
 <Callout colour="green"><h2>SEPA Instant CT is coming soon</h2><p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our European simulation environment.</p>
 </Callout>
 
 SEPA Instant Credit Transfers (SEPA Instant CT) is a payment scheme that enables customers to make and receive payments, up to a maximum value of €100,000 within a 10 second period. Payments can be sent at any time, including bank holidays and weekends.
 
 <Callout colour="blue">
-<p>SEPA ICT is currently an optional scheme. New regulation means that by January 2025 all participants that offer SEPA CT (SEPA Credit Transfer) must also offer SEPA Instant CT.</p>
+<p>SEPA ICT is currently an optional scheme. New regulation means that by January 2025 all Eurozone participants utilising the euro currency that offer SEPA CT (SEPA Credit Transfer) must also offer SEPA Instant CT.</p>
 <p>In the event that a payment is initiated and the beneficiary's bank does not yet participate in SEPA Instant CT, the payment will be rejected.</p>
 </Callout>
 
 You can:
-- [Simulate a SEPA Instant CT inbound payment and recall request](#simulate-a-sepa-instant-ct-inbound-payment-and-recall-request)
 - [Send a SEPA Instant CT payment](#send-a-sepa-instant-ct-payment)
 - [Receive SEPA Instant CT payment](#receive-a-sepa-instant-ct-payment)
 - [Recall a SEPA Instant CT payment](#send-a-recall-request) (integrating with recall payments is required)
 - [Receive and respond to a recall request](#receive-and-respond-to-a-recall-request)
-> You are notified of incoming SEPA Instant CT payments via the [SEPA Instant Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+- [Simulate a SEPA Instant CT inbound payment and recall request](#simulate-a-sepa-instant-ct-inbound-payment-and-recall-request)
+> You are notified of incoming SEPA Instant CT payments via the [SEPA Instant CT Inbound Payment Settled webhook](#sepa-instant-ct-inbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 <Callout colour="blue">
 It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
 </Callout>
 
-## Send a SEPA Instant CT payment
+## Sending a SEPA Instant CT payment
 
-To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint. You will receive the [SEPA Instant CT Payment Created webhook](#sepa-instant-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant CT Payment Settled webhook](#sepa-instant-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-instant-payment) endpoint.
+
+You will receive the [SEPA Instant CT Payment Created webhook](#sepa-instant-ct-outbound-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant CT Outbound Payment Settled webhook](#sepa-instant-ct-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 ![A message flow diagram explaining how to send a SEPA Instant CT payment](/assets/images/sepa-ict-send-payment.svg)
 
@@ -46,25 +50,25 @@ To submit a payment, use the [POST /v1/payments/sepa-instant](#send-a-sepa-insta
       path: "/v1/payments/sepa-instant",
       version: "1.0-SEPA-INSTANT",
       webhooks: [
-        'sepa-instant-outbound-payment-created-v1',
-        'sepa-instant-outbound-payment-settled-v1',
-        'sepa-instant-outbound-payment-cancelled-v1',
+        'sepa-instant-ct-outbound-payment-created-v1',
+        'sepa-instant-ct-outbound-payment-settled-v1',
+        'sepa-instant-ct-outbound-payment-cancelled-v1',
         'eu-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
 />
 
-<WebhookPlaceholder render='sepa-instant-outbound-payment-created-v1' />
-<WebhookPlaceholder render='sepa-instant-outbound-payment-settled-v1'/>
-<WebhookPlaceholder render='sepa-instant-outbound-payment-cancelled-v1' />
+<WebhookPlaceholder render='sepa-instant-ct-outbound-payment-created-v1' />
+<WebhookPlaceholder render='sepa-instant-ct-outbound-payment-settled-v1'/>
+<WebhookPlaceholder render='sepa-instant-ct-outbound-payment-cancelled-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 ## Receive a SEPA Instant CT payment
 
 Receipt of a SEPA Instant CT payment can be confirmed by subscribing to the [SEPA Instant CT Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook).
 
-<WebhookPlaceholder render='sepa-instant-inbound-payment-settled-v1' />
+<WebhookPlaceholder render='sepa-instant-ct-inbound-payment-settled-v1' />
 
 ## Recall a SEPA Instant CT payment
 
@@ -86,17 +90,17 @@ Recall requests remain valid for a maximimum of **15 business days**.  If after 
       path: "/v1/payments/sepa-instant/{paymentId}/recall",
       version: "1.0-SEPA-INSTANT",
       webhooks: [
-        'sepa-instant-recall-payment-created-v2',
-        'sepa-instant-recall-payment-settled-v2',
-        'sepa-instant-recall-payment-cancelled-v2',
+        'sepa-instant-ct-recall-payment-created-v2',
+        'sepa-instant-ct-recall-payment-settled-v2',
+        'sepa-instant-ct-recall-payment-cancelled-v2',
         'eu-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
 />
 
-<WebhookPlaceholder render='sepa-instant-recall-payment-settled-v2' />
-<WebhookPlaceholder render='sepa-instant-recall-request-rejected-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-payment-settled-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-request-rejected-v2' />
 
 ### Recall reason codes
 
@@ -122,7 +126,7 @@ If `approve` is set to `true`, a pacs.004 payment will be automatically initiate
 If `approve` is set to `false`, the `rejectionCode` field must be populated with a rejection reason code.
 </Callout>
 
-Following your approval of a recall request, the amount of the original payment is ringfenced and returned to the sending party. You can be notified of the status of the status of the return payment via the [SEPA Instant CT Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), [SEPA Instant CT Recall Payment Settled webhook](#sepa-instant-recall-payment-settled-webhook) and [SEPA Instant CT Recall Payment Cancelled webhook](#sepa-instant-recall-payment-cancelled-webhook).
+Following your approval of a recall request, the amount of the original payment is ringfenced and returned to the sending party. You can be notified of the status of the status of the return payment via the [SEPA Instant CT Recall Payment Created webhook](#sepa-instant-ct-recall-payment-created-webhook), [SEPA Instant CT Recall Payment Settled webhook](#sepa-instant-recall-payment-settled-webhook) and [SEPA Instant CT Recall Payment Cancelled webhook](#sepa-instant-recall-payment-cancelled-webhook).
 
 Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
 
@@ -130,7 +134,7 @@ Recall requests should be responded to within 15 business days. If after 15 busi
 
 ![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant CT Recall Request Received webhook and responding with 'approve' set to 'false' with a valid 'rejectionCode' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint](/assets/images/sepa-ict-receive-recall-rejected.svg)
 
-<WebhookPlaceholder render='sepa-instant-recall-request-received-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-request-received-v2' />
 
 <EndpointBlock
   type="post"
@@ -140,16 +144,16 @@ Recall requests should be responded to within 15 business days. If after 15 busi
       path: "/v1/payments/sepa-instant/{paymentId}/recall-response",
       version: "1.0-SEPA-INSTANT",
       webhooks:[
-        'sepa-instant-recall-request-received-v2',
-        'sepa-instant-recall-payment-created-v2',
-        'sepa-instant-recall-payment-settled-v2'
+        'sepa-instant-ct-recall-request-received-v2',
+        'sepa-instant-ct-recall-payment-created-v2',
+        'sepa-instant-ct-recall-payment-settled-v2'
       ]
     }
   ]}
 />
 
-<WebhookPlaceholder render='sepa-instant-recall-payment-created-v2' />
-<WebhookPlaceholder render='sepa-instant-recall-payment-settled-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-payment-created-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-payment-settled-v2' />
 
 The following diagram outlines the process following the unlikely event that there is an issue with the pacs.004 payment that is sent following your approval of an inbound recall request.
 
@@ -157,7 +161,7 @@ The following diagram outlines the process following the unlikely event that the
 
 Following a rejected pacs.004 and receipt of the SEPA Instant CT Recall Payment Cancelled webhook, the ringfence is removed from the recall amount and you must re-initiate the recall response using the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sepa-instant-ct-recall-request) endpoint.
 
-<WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
+<WebhookPlaceholder render='sepa-instant-ct-recall-payment-cancelled-v2' />
 
 ## Simulate a SEPA Instant CT inbound payment and recall request
 
