@@ -59,7 +59,7 @@ export const Head: React.FC<any> = ({ data }) => {
 
   return (
     <>
-      {metaTitle ? <title>{metaTitle} | ClearBank® Developer Portal</title> : null}
+      {metaTitle ? <title>{metaTitle} | ClearBank Developer Portal</title> : null}
       {metaTitle ? <meta name='title' content={metaTitle} /> : null}
       {metaDescription ? (
         <meta name='description' content={metaDescription} />
