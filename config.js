@@ -9,7 +9,7 @@ const config = {
     logoLink: '/',
     title: 'ClearBank Developer Portal',
     githubUrl: 'https://github.com/clearbank/',
-    githubDocsRoot: 'https://github.com/clearbank/docs/blob/master/content',
+    githubDocsRoot: 'https://github.com/clearbank/clearbank.github.io/tree/main/content',
     helpUrl: '',
     tweetText: '',
     links: [{ text: '', link: '' }],
@@ -31,7 +31,7 @@ const config = {
     title: 'ClearBank Developer Portal',
     description: 'ClearBank Developer Portal - our API documentation',
     ogImage: null,
-    docsLocation: 'https://github.com/clearbank/docs/tree/master/content/docs',
+    docsLocation: 'https://github.com/clearbank/clearbank.github.io/tree/main/content',
     favicon: '/assets/images/favicon-32x32.png'
   },
   pwa: {

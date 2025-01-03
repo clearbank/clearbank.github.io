@@ -1,5 +1,6 @@
 ---
 title: "Endpoint lookup table"
+metaTitle: "UK endpoint lookup table"
 order: 1
 showPageMenu: true
 ---
@@ -31,7 +32,7 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v2/Accounts/{accountId}/Transactions](../gbp-accounts/payment-data#get-all-payments-real-account) | Get a summary of all of the transactions from the specified account |
 | [GET /v2/Accounts/{accountId}/Transactions/{transactionId}](../gbp-accounts/payment-data#get-a-payment-real-account) | Get the details of a specific transaction from the specified account |
 | [POST /v1/Accounts/{accountId}/Transactions/Returns](../gbp-payments/bacs#return-bacs-payment-real-account) | Create a return of one or more Direct Debit or Direct Credit transactions for the account |
-| [POST /v1/accounts/{accountId}/transfer-outs](../embedded-banking/flexible-cash-isa#transfer-out-a-cash-isa) | Transfer out a cash ISA |
+| [GET /v2/Accounts/{accountId}/Virtual](../gbp-accounts/manage-accounts#get-all-virtual-accounts-for-a-real-account) | Get a list of virtual accounts belonging to a given real account |
 | [POST /v2/Accounts/{accountId}/Virtual](../gbp-accounts/manage-accounts#create-accounts-virtual) | Create a series of virtual accounts |
 | [DELETE /v1/Accounts/{accountId}/Virtual/{virtualAccountId}](../gbp-accounts/manage-accounts#disable-an-account-virtual) | Disable the virtual account that belongs to the given account |
 | [GET /v2/Accounts/{accountId}/Virtual/{virtualAccountId}](../gbp-accounts/manage-accounts#get-information-for-an-account-virtual) | Get a specific virtual account |
@@ -56,45 +57,49 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [POST /fx/v1/order](../multi-currency/fx-trade#create-a-foreign-exchange-fx-buy-and-sell-order) | Create a Foreign Exchange (FX) trade with the buy or sell amount specified |
 | [POST /fx/v1/quote](../multi-currency/fx-trade-rfq#request-a-quote) | Request a quote up-front for a FX trade |
 | [POST /inbound-payment-simulation/chaps/v1/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
+| [POST /inbound-payment-simulation/chaps/v1/institution-payments](../gbp-payments/chaps#simulate-a-chaps-bank-to-bank-payment)| Simulate an inbound CHAPS bank-to-bank payment for testing in the sim environment|
+| [POST /inbound-payment-simulation/chaps/v1/return-payments](../gbp-payments/chaps#simulate-a-returned-chaps-payment)| Simulate a returned CHAPS payment for testing in the sim environment|
+| [POST /interest/v1/accounts/{accountId}/configurations](../embedded-banking/savings-accounts#update-interest-configuration) | Update the interest configuration ID of a savings account |
 | [POST /v1/isas](../embedded-banking/flexible-cash-isa#create-a-cash-isa) | Create a cash ISA |
 | [GET /v1/isas/{accountId}](../embedded-banking/flexible-cash-isa#get-cash-isa-details) | Get cash ISA details |
 | [POST /v1/isas/{accountId}/cancellation](../embedded-banking/flexible-cash-isa#cancel-a-cash-isa) | Cancel a cash ISA |
 | [PATCH /v1/isas/{accountId}/discontinue](../embedded-banking/flexible-cash-isa#discontinue-a-cash-isa) | Inform ClearBank that the cash ISA account holder has deceased |
 | [POST /v1/isas/{accountId}/transfer-in](../embedded-banking/flexible-cash-isa#transfer-in-a-cash-isa) | Transfer in a Cash ISA |
 | [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](../embedded-banking/flexible-cash-isa#reject-a-transfer-in) | Reject an existing cash ISA transfer in request |
-| [GET /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](../embedded-banking/flexible-cash-isa#get-infomation-on-a-transfer-in) | Get information on a cash ISA transfer in |
+| [GET /v1/isas/{accountId}/transfer-in/{transferInId}](../embedded-banking/flexible-cash-isa#get-infomation-on-a-transfer-in) | Get information on a cash ISA transfer in |
 | [PUT /v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form](../embedded-banking/flexible-cash-isa#submit-a-transfer-history-form) | Submit a cash ISA transfer history form |
 | [POST /v1/isas/{accountId}/transfer-outs](../embedded-banking/flexible-cash-isa#transfer-out-a-cash-isa) | Transfer out a cash ISA |
 | [POST /v1/isas/{accountId}/transfer-outs/rejection](../embedded-banking/flexible-cash-isa#cash-isa-transfer-out-rejected) | Inform ClearBank that cash ISA transfer out has been rejected |
-| [GET /mccy/v1/Accounts](../multi-currency/manage-multi-currency-accounts#get-all-accounts-real) | Get a list of all the accounts associated with your institution, excluding virtual accounts |
-| [POST /mccy/v1/Accounts](../multi-currency/manage-multi-currency-accounts#create-a-new-account-real) | Create a new account |
-| [DELETE /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#close-an-existing-account-real) | Close an existing account |
-| [GET /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#get-information-for-an-account-real) | Get details related to an account |
-| [PATCH /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#amend-the-properties-of-an-account-real) | Amend the properties of an existing account |
-| [GET /mccy/v1/Accounts/{accountId}/balances](../multi-currency/manage-multi-currency-accounts#get-the-balance-of-an-account-real) | Get the balance of an account |
-| [POST /mccy/v1/Accounts/{accountId}/currencies](../multi-currency/manage-multi-currency-accounts#add-a-currency-to-an-existing-account-real) | Enable an existing account to support a new currency |
-| [GET /mccy/v1/Accounts/{accountId}/transactions](../multi-currency/account-reporting#get-full-transaction-list-for-an-account) | Get a list of transactions for a real account and any virtual accounts associated with that real account |
-| [POST /v1/mccy/inboundpayment/{accountUniqueId}](../multi-currency/multi-currency-payments#fund-your-account-in-the-simulation-environment) | Make an inbound payment to an account in the simulation environment |
+| [GET /mccy/v1/Accounts](../multi-currency/manage-multi-currency-accounts#get-all-accounts-real) | Get a list of all the real multi-currency accounts associated with your institution, excluding virtual accounts |
+| [POST /mccy/v2/Accounts](../multi-currency/manage-multi-currency-accounts#create-a-new-account-real) | Create a real multi-currency account |
+| [DELETE /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#close-an-existing-account-real) | Close an existing real multi-currency account |
+| [GET /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#get-information-for-an-account-real) | Get details related to a real multi-currency account |
+| [PATCH /mccy/v1/Accounts/{accountId}](../multi-currency/manage-multi-currency-accounts#amend-the-properties-of-an-account-real) | Amend the properties of an existing real multi-currency account |
+| [GET /mccy/v1/Accounts/{accountId}/balances](../multi-currency/manage-multi-currency-accounts#get-the-balance-of-an-account-real) | Get the balance of a real multi-currency account |
+| [POST /mccy/v1/Accounts/{accountId}/currencies](../multi-currency/manage-multi-currency-accounts#add-a-currency-to-an-existing-account-real) | Enable an existing real multi-currency account to support a new currency |
+| [PATCH /mccy/v1/Accounts/{accountId}/status](../multi-currency/manage-multi-currency-accounts#update-the-status-of-an-account-real) | Update the status of an existing real multi-currency account |
+| [GET /mccy/v1/Accounts/{accountId}/transactions](../multi-currency/account-reporting#get-full-transaction-list-for-an-account) | Get a list of transactions for a real multi-currency account and any virtual accounts associated with that real account |
+| [POST /v1/mccy/inboundpayment/{accountUniqueId}](../multi-currency/multi-currency-payments#fund-your-account-in-the-simulation-environment) | Make an inbound payment to a multi-currency account in the simulation environment |
 | [POST /v1/mccy/internaltransfers](../multi-currency/multi-currency-payments#request-an-internal-transfer) | Initiate an internal transfer request |
-| [POST /v1/mccy/payments](../multi-currency/multi-currency-payments#initiate-a-payment) | Initiate payments |
-| [DELETE /v1/mccy/payments/{batchId}](../multi-currency/multi-currency-payments#cancel-batch-payments) | Cancel a batch of payments with a matching batch ID |
-| [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](../multi-currency/multi-currency-payments#cancel-a-single-payment) | Cancel a single payment within a batch, with a matching batch ID and end-to-end ID |
-| [POST /mccy/v1/StatementRequests](../multi-currency/account-reporting#request-a-statement-for-all-accounts) | Request a statement for all accounts associated with your institution (as per the specified currency) |
-| [POST /mccy/v1/StatementRequests/account/{iban}](../multi-currency/account-reporting#request-a-statement-for-an-account) | Request a statement for a specific account associated with your institution (as per the specified currency), excluding virtual accounts |
-| [GET /mccy/v1/Transactions/{transactionId}](../multi-currency/account-reporting#get-a-transaction) | Get a transaction |
-| [POST /mccy/v1/VirtualAccounts](../multi-currency/manage-multi-currency-accounts#create-an-account-virtual) | Create a new virtual account |
-| [DELETE /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#close-an-account-virtual) | Close an existing virtual account |
-| [GET /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#get-information-for-an-account-virtual) | Get details related to a virtual account |
-| [PATCH /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#amend-the-properties-of-an-account-virtual) | Amend the properties of an existing virtual account |
+| [POST /v1/mccy/payments](../multi-currency/multi-currency-payments#initiate-a-payment) | Initiate a multi-currency payment |
+| [DELETE /v1/mccy/payments/{batchId}](../multi-currency/multi-currency-payments#cancel-batch-payments) | Cancel a batch of multi-currency payments with a matching batch ID |
+| [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](../multi-currency/multi-currency-payments#cancel-a-single-payment) | Cancel a single multi-currency payment within a batch, with a matching batch ID and end-to-end ID |
+| [POST /mccy/v1/StatementRequests](../multi-currency/account-reporting#request-a-statement-for-all-accounts) | Request a statement for all multi-currency accounts associated with your institution (as per the specified currency) |
+| [POST /mccy/v1/StatementRequests/account/{iban}](../multi-currency/account-reporting#request-a-statement-for-an-account) | Request a statement for a specific multi-currency account associated with your institution (as per the specified currency), excluding virtual accounts |
+| [GET /mccy/v1/Transactions/{transactionId}](../multi-currency/account-reporting#get-a-transaction) | Get the details of a multi-currency transaction |
+| [POST /mccy/v1/VirtualAccounts](../multi-currency/manage-multi-currency-accounts#create-an-account-virtual) | Create a new multi-currency virtual account |
+| [DELETE /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#close-an-account-virtual) | Close an existing multi-currency virtual account |
+| [GET /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#get-information-for-an-account-virtual) | Get details related to a multi-currency virtual account |
+| [PATCH /mccy/v1/VirtualAccounts/{virtualAccountId}](../multi-currency/manage-multi-currency-accounts#amend-the-properties-of-an-account-virtual) | Amend the properties of an existing multi-currency virtual account |
 | [PATCH /mccy/v1/VirtualAccounts/{virtualAccountId}/status](../multi-currency/manage-multi-currency-accounts#update-the-status-of-an-account-virtual) | Update the status of an existing virtual account |
-| [GET /mccy/v1/VirtualAccounts/{virtualAccountId}/transactions](../multi-currency/account-reporting#get-transaction-list-for-a-virtual-account) | Get a list of transactions for a virtual account |
+| [GET /mccy/v1/VirtualAccounts/{virtualAccountId}/transactions](../multi-currency/account-reporting#get-transaction-list-for-a-virtual-account) | Get a list of transactions for a multi-currency virtual account |
 | [POST /open-banking/outbound/v1/name-verification](../gbp-payments/confirmation-of-payee#check-name-registered-with-the-payees-account) | Confirm the exact name registered with the payee's account |
 | [POST /open-banking/outbound/v1/srd/validate](../gbp-payments/confirmation-of-payee#check-whether-a-sort-code-account-number-requires-srd-with-cop-requests) | Confirm whether a given sort code/account number combination requires Secondary Reference Data (SRD) with Confirmation of Payee (CoP) requests |
 | [POST /payments/chaps/v4/customer-payments](../gbp-payments/chaps#send-a-chaps-payment)| Initiate an outbound CHAPS payment (pacs.008)|
 | [POST /payments/chaps/v4/institution-payments](../gbp-payments/chaps#send-a-chaps-bank-to-bank-payment)| Initiate an outbound CHAPS bank-to-bank payment|
 | [POST /payments/chaps/v4/return-payments](../gbp-payments/chaps#return-a-chaps-payment)|Initiate the return of a CHAPS payment|
 | [POST /payments/cheques/v1/submit-deposit](../gbp-payments/cheques#submit-a-cheque)| Initiate a cheque deposit |
-| [POST /payments/cross-border-sterling/v2/payments](../gbp-payments/gbp-cross-border#send-a-gbp-cross-border-payment)|Initiate a cross border GBP payment|
+| [POST /payments/cross-border-sterling/v3/payments](../gbp-payments/gbp-cross-border#send-a-gbp-cross-border-payment)|Initiate a cross border GBP payment|
 | [POST /v3/payments/fps](../gbp-payments/faster-payments#send-faster-payments) | Initiate an FTR compliant payment using the Faster Payments scheme |
 | [POST /v3/payments/fps/return](../gbp-payments/faster-payments#return-an-fps-payment) | Return a single inbound Faster Payment |
 | [POST /v2/payments/fps/singlepayment](../gbp-payments/faster-payments#send-a-faster-payment-originated-overseas) | Initiate an outbound payment originated overseas |
