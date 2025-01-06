@@ -1,0 +1,38 @@
+---
+title: "Current accounts"
+metaTitle: "Current accounts"
+order: 5
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as CONSTANTS from "./retail-customers.constants";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+
+## Current accounts
+
+ClearBank supports current accounts. A current accounts is an FSCS-protected account that can be used by [business customers](./business-customers), [retail customers](./retail-customers), and [sole traders](./sole-traders) to send and receive payments.
+
+Current accounts can be supported by a [savings account](./savings-accounts), which can accrue interest on behalf of a customer.
+
+**To create a customer account:**
+1. If not already present, create a retail customer using the [Create a retail customer](./manage-retail-customers) endpoint.
+2. Use the [POST /v4/Accounts](#create-an-account) endpoint to create the account.
+
+![Message flow on how to create an account](/assets/images/current-account-create.svg)
+
+<EndpointBlock
+  type="post"
+  title="Create an account"
+  endpoints={[
+    {
+      path: "/v4/Accounts",
+      version: "4.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
