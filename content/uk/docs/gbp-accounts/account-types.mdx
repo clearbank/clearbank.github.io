@@ -8,8 +8,6 @@ import Callout from "src/components/callout";
 
 ## Overview
 
-### Introduction
-
 This page explains GBP accounts, their protections, and the different account types. Embedded Banking Partners should refer to the [embedded banking documentation](/uk/docs/embedded-banking/retail-customers) for information on FSCS Protected Retail and Business accounts.
 
 When you join ClearBank, four financial accounts are given to you by default:
@@ -34,6 +32,25 @@ Your <strong>institution account</strong> is not a financial account: it is a di
 
 Real accounts are physically held with ClearBank and can be used to send and receive payments.  
 The balance of a real account is held by ClearBank, and can be checked both via the Institution Portal and the ClearBank API.
+
+Real GBP accounts can be created using the **[POST /v3/Accounts endpoint](/uk/docs/gbp-accounts/manage-accounts#create-an-account-real)**.
+
+You can specify the type of account using the **UsageType** field.  
+The account type you choose should depend on your agreement with ClearBank, your FCA permissions, and the purpose of the account.
+
+<Callout colour="blue">
+An account's usage type is immutable. Take care to set the correct usage type when making a new account.
+</Callout>
+
+You can specify an account's name using the **AccountName** field.  
+Refer to the endpoint's documentation for accepted characters.
+
+Account names are automatically prefixed with an abbreviated account-type label, depending on the [account type](#account-types) for example:  
+If an account were created with the following parameters:  
+  * **AccountName**: 'account one'  
+  * **UsageType**: 'Segregated Designated'  
+
+When inspected using the [**GET /v3/Accounts/{accountId}**](/uk/docs/gbp-accounts/manage-accounts#get-information-for-an-account-real) endpoint, the name would be returned as: `Des Seg Wsale account one`
 
 #### Virtual accounts
 
@@ -62,27 +79,6 @@ On request, ClearBank will provide safeguarding letters for each safeguarded acc
 An account is only safeguarded if you have received an FCA-compliant safeguarding letter from ClearBank. To receive this letter, you must request one via a Freshdesk ticket for each new safeguarded account you create.
 </Callout>
 
-### Create a GBP account
-
-Real (non-virtual) GBP accounts can be created using the **[POST /v3/Accounts endpoint](/uk/docs/gbp-accounts/manage-accounts#create-an-account-real)**.
-
-You can specify the type of account using the **UsageType** field.  
-The account type you choose should depend on your agreement with ClearBank, your FCA permissions, and the purpose of the account.
-
-<Callout colour="blue">
-An account's usage type is immutable. Take care to set the correct usage type when making a new account.
-</Callout>
-
-You can specify an account's name using the **AccountName** field.  
-See the endpoint's documentation for accepted characters.
-
-Account names are automatically prefixed with an abbreviated account-type label, for example:  
-* An account is created with the following parameters:  
-  * **AccountName**: 'account one'  
-  * **UsageType**: 'Segregated Designated'
-
-* When inspected using [**GET /v3/Accounts/{accountId}**](/uk/docs/gbp-accounts/manage-accounts#get-information-for-an-account-real), returns in the name field: `"Des Seg Wsale account one"`
-
 ## Account types
 
 ### Table
@@ -97,6 +93,8 @@ Account names are automatically prefixed with an abbreviated account-type label,
 | Safeguarded Pooled      | SafeguardedPooled     | Gen Seg Acc Retl/Wsale                       |
 | Safeguarded Designated  | SafeguardedDesignated | Des Seg Acc Retl/Wsale                       |
 | Client Suspense         | ClientSuspense        | -                                            |
+
+The `Retail` / `Wholesale` endings will depend on your institution's settings. (TODO)
 
 ### Client Money accounts
 
