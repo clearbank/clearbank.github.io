@@ -6,6 +6,98 @@
   },
   "paths": {
     "/interest/v1/accounts/{accountId}/configurations": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "This endpoint is used to get the interest configuration for a savings account.",
+        "parameters": [
+          {
+            "name": "AccountId",
+            "in": "path",
+            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountInterestConfigurationsResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountInterestConfigurationsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "AccountId is invalid or malformed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "AccountId is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Accounts"
@@ -13,7 +105,7 @@
         "summary": "This endpoint is used to update an interest configuration for a savings account.",
         "parameters": [
           {
-            "name": "AccountId",
+            "name": "accountId",
             "in": "path",
             "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
             "required": true,
@@ -76,6 +168,21 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -93,21 +200,6 @@
           },
           "409": {
             "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -157,6 +249,47 @@
         },
         "additionalProperties": false
       },
+      "GetAccountInterestConfigurationsResponse": {
+        "type": "object",
+        "properties": {
+          "future": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountInterestConfigurationItem"
+            },
+            "nullable": true
+          },
+          "current": {
+            "$ref": "#/components/schemas/AccountInterestConfigurationItem"
+          },
+          "past": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountInterestConfigurationItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountInterestConfigurationItem": {
+        "type": "object",
+        "properties": {
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "interestConfigurationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -182,7 +315,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       }
     }
   }
