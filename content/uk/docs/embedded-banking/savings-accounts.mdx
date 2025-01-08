@@ -148,6 +148,8 @@ You can update the interest configuration of your existing savings accounts. **T
 
 The initial interest configuration ID is usually set during account creation. You can later update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint to a different interest configuration ID specified in the `interestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
 
+You can check future, current, and all past interest rates by using the [GET /interest/v1/accounts/{accountId}/configurations](#get-an-accounts-interest-configurations) endpoint.
+
 The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
 
 ### Daily interest example
@@ -169,6 +171,17 @@ This diagram shows the message flow:
 <EndpointBlock
   type="post"
   title="Update interest configuration"
+  endpoints={[
+    {
+      path: "/interest/v1/accounts/{accountId}/configurations",
+      version: "1.0.Savings.Config",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get an account's interest configurations"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
