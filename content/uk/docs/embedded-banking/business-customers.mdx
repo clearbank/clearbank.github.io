@@ -17,9 +17,20 @@ A business customer is a business [registered with the UK government](https://ww
 
 Because registered company accounts are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling accounts page](./manage-accounts).
 
-To create a registered company, use the [POST /v1/customers/business](#create-a-business-customer) endpoint.
+To create a business customer, use the [POST /v1/customers/business](#create-a-business-customer) endpoint.
 
 You can update the business customer using the [PATCH /v1/customers/business/{customerId}](#update-an-existing-business-customer) endpoint, and update a business customer's address with the [PUT /v1/customers/business/{customerId}/currentAddress](#update-an-existing-business-customers-address) endpoint.
+
+To manage directors and Ultimate Beneficiary Owners (UBOs) for business customers, you can use various endpoints:
+
+| Action               | Endpoint                                                                                                |
+|----------------------|---------------------------------------------------------------------------------------------------------|
+| Create a Director    | [POST /v1/customers/business/{customerId}/director](#create-a-new-director-for-a-business-customer) |
+| Update a Director    | [PATCH /v1/customers/business/{customerId}/director/{directorId}](#update-a-director-for-a-business-customer) |
+| Delete a Director    | [DELETE /v1/customers/business/{customerId}/director/{directorId}](#delete-a-director-for-a-business-customer) |
+| Create a UBO         | [POST /v1/customers/business/{customerId}/ubo](#create-a-new-ultimate-beneficiary-owner-for-a-business-customer) |
+| Update a UBO         | [PATCH /v1/customers/business/{customerId}/ubo/{uboId}](#update-an-ultimate-beneficiary-owner-for-a-business-customer) |
+| Delete a UBO         | [DELETE /v1/customers/business/{customerId}/ubo/{uboId}](#delete-an-ultimate-beneficiary-owner-for-a-business-customer) |
 
 Once you have created a business customer, you can create FSCS-protected accounts using the following endpoints:
 - [Current accounts](./current-accounts)
@@ -38,7 +49,7 @@ Once you have created a business customer, you can create FSCS-protected account
 
 <EndpointBlock
   type="patch"
-  title="Update an existing business customer"
+  title="Update an existing business customer's personal information"
   endpoints={[
     {
       path: "/v1/customers/business/{customerId}",
@@ -53,6 +64,72 @@ Once you have created a business customer, you can create FSCS-protected account
   endpoints={[
     {
       path: "/v1/customers/business/{customerId}/currentAddress",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create a new director for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/director",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a director for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/director/{directorId}",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a director for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/director/{directorId}",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Create a new ultimate beneficiary owner for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/ubo",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update an ultimate beneficiary owner for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/ubo/{uboId}",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete an ultimate beneficiary owner for a business customer"
+  endpoints={[
+    {
+      path: "/v1/customers/business/{customerId}/ubo/{uboId}",
       version: "1.0.Retail"
     }
   ]}
