@@ -1,0 +1,64 @@
+---
+title: "Interest configurations"
+metaTitle: "Interest configurations"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Interest configurations
+
+You can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis, so please reach out if you'd like to use it.
+
+The initial interest configuration ID is usually set during account creation. You can later update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint to a different interest configuration ID specified in the `interestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
+
+The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
+
+You can retrieve all past, current, and future interest configurations by using the [GET /interest/v1/accounts/{accountId}/configurations](#get-an-accounts-interest-configurations) endpoint.
+
+<Callout colour="blue">
+You cannot yet set the future interest configurations for your accounts. This will be released in a future update.
+</Callout>
+
+### Daily interest example
+
+If you update an interest product at 15:00 on Tuesday, all of Tuesday's interest, even before 15:00, will be calculated at the new interest rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid each day.
+
+This diagram shows the message flow:
+
+![A message flow diagram describing the above process of setting the daily interest configuration.](/assets/images/savings-account-daily-interest-config.svg)
+
+### Monthly interest example
+
+If you update an interest product at 14:00 on the 5th, interest from the 1st to the 4th will be calculated at the previous rate at the end of the month. Interest from the 5th until the end of the month will be calculated using the new rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid at the end of the month.
+
+This diagram shows the message flow:
+
+![A message flow diagram describing the above process of setting the monthly interest configuration.](/assets/images/savings-account-monthly-interest-config.svg)
+
+<EndpointBlock
+  type="post"
+  title="Update interest configuration"
+  endpoints={[
+    {
+      path: "/interest/v1/accounts/{accountId}/configurations",
+      version: "1.0.Savings.Config",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get an account's interest configurations"
+  endpoints={[
+    {
+      path: "/interest/v1/accounts/{accountId}/configurations",
+      version: "1.0.Savings.Config",
+    }
+  ]}
+/>

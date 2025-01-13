@@ -15,7 +15,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ClearBank supports savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
 
-You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments.
+You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configurations](#interest-configurations).
 
 **To create a savings account:**
 1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
@@ -23,7 +23,6 @@ You can choose how much interest to pay customers. ClearBank will calculate accr
 > The `interestConfigurationId` field is currently available for testing purposes in simulation and does not impact the interest calculation. In the future, if your account product has been set up to allow [changing interest configurations](#interest-configurations), then you will have to provide the initial interest configuration ID in this field when creating the savings account. 
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 > **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
-
 
 ![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
@@ -142,50 +141,3 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
-
-## Interest configurations
-You can update the interest configuration of your existing savings accounts. **This functionality is not yet available in production. It is available for testing in the simulation environment. The interest configuration ID does not yet impact the interest calculation in sim, but will do so once the change is completed.**
-
-The initial interest configuration ID is usually set during account creation. You can later update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint to a different interest configuration ID specified in the `interestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
-
-You can check future, current, and all past interest rates by using the [GET /interest/v1/accounts/{accountId}/configurations](#get-an-accounts-interest-configurations) endpoint.
-
-The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
-
-### Daily interest example
-
-If you update an interest product at 15:00 on Tuesday, all of Tuesday's interest, even before 15:00, will be calculated at the new interest rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid each day.
-
-This diagram shows the message flow:
-
-![A message flow diagram describing the above process of setting the daily interest configuration.](/assets/images/savings-account-daily-interest-config.svg)
-
-### Monthly interest example
-
-If you update an interest product at 14:00 on the 5th, interest from the 1st to the 4th will be calculated at the previous rate at the end of the month. Interest from the 5th until the end of the month will be calculated using the new rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid at the end of the month.
-
-This diagram shows the message flow:
-
-![A message flow diagram describing the above process of setting the monthly interest configuration.](/assets/images/savings-account-monthly-interest-config.svg)
-
-<EndpointBlock
-  type="post"
-  title="Update interest configuration"
-  endpoints={[
-    {
-      path: "/interest/v1/accounts/{accountId}/configurations",
-      version: "1.0.Savings.Config",
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="get"
-  title="Get an account's interest configurations"
-  endpoints={[
-    {
-      path: "/interest/v1/accounts/{accountId}/configurations",
-      version: "1.0.Savings.Config",
-    }
-  ]}
-/>
