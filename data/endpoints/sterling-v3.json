@@ -164,7 +164,7 @@
           "Accounts"
         ],
         "summary": "Creates an account with the specified name.",
-        "description": "Currently, this endpoint only supports the creation of current accounts.<br/>AccountName must: not be null, only white space, only contain letters, numbers and the following special characters: - ,.<br/>This endpoint uses the X-Request-Id as a duplicate check and to ensure the request is idempotent.",
+        "description": "Currently, this endpoint only supports the creation of current accounts.<br /><br /><strong>AccountName</strong> must not be null, and must only contain whitespace, letters, numbers and the following special characters: - ,.<br />Account names are automatically prefixed with an abbreviated account-type label, depending on the account type. <br /> For example, if an account were created with the following parameters:<br /><strong>AccountName</strong>: 'account one'<br /><strong>UsageType</strong>: 'Segregated Designated'<br />When inspected using the <strong>GET /v3/Accounts/{accountId}</strong> endpoint, the name would be returned as: `Des Seg Wsale account one`<br /><br /><strong>UsageType</strong> specifies an account's type. The account type you choose should depend on your agreement with ClearBank, your FCA permissions, and the purpose of the account.<br /><strong>An account's usage type is immutable. Take care to set the correct usage type when making a new account.</strong><br /><br />This endpoint uses the X-Request-Id as a duplicate check and to ensure the request is idempotent.",
         "operationId": "V3InstitutionsByInstitutionIdAccountsPost",
         "parameters": [
           {
@@ -609,8 +609,13 @@
           "usageType": {
             "enum": [
               "YourFunds",
+              "SegregatedPooled",
               "SegregatedDesignated",
-              "SegregatedPooled"
+              "ClientMoneyPooled",
+              "ClientMoneyDesignated",
+              "SafeguardedPooled",
+              "SafeguardedDesignated",
+              "ClientSuspense"
             ],
             "type": "string",
             "description": "The type of funds the account will hold. Default if not supplied: YourFunds.",
