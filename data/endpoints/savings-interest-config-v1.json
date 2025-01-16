@@ -30,24 +30,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "DigitalSignature",
-            "in": "header",
-            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -118,6 +100,24 @@
             "name": "Authorization",
             "in": "header",
             "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -206,7 +206,8 @@
         "properties": {
           "accountId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts."
           },
           "interestConfigurationId": {
             "type": "string",
