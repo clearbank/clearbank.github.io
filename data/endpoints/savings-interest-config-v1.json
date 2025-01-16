@@ -228,11 +228,13 @@
           },
           "interestConfigurationId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID indicating the interest configuration for the account. If you don't have this, speak to your Client Director."
           },
           "effectiveFrom": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Time and date in UTC that the interestConfigurationID becomes effective. Format: Date-time"
           }
         },
         "additionalProperties": false
@@ -253,6 +255,7 @@
         "type": "object",
         "properties": {
           "future": {
+          "description": "List of interest configurations that are scheduled to come into effect after today.",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AccountInterestConfigurationItem"
@@ -260,9 +263,11 @@
             "nullable": true
           },
           "current": {
+            "description": "Interest configuration that is currently applicable.",
             "$ref": "#/components/schemas/AccountInterestConfigurationItem"
           },
           "past": {
+            "description": "List of all previous interest configurations that have been active on this account.",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AccountInterestConfigurationItem"
@@ -277,15 +282,18 @@
         "properties": {
           "effectiveFrom": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Time and date in UTC that the interestConfigurationId becomes effective. Format: Date-time"
           },
           "interestConfigurationId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "The UUID indicating the interest configuration for the account. If you don't have this, speak to your Client Director."
           },
           "name": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Name of the interest configuration."
           }
         },
         "additionalProperties": false
