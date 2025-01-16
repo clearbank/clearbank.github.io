@@ -178,6 +178,9 @@
                         "description": "Scheme type. If this field is set to 'Other', then the proprietary field is required."
                     },
                     "proprietary": {
+                        "enum": [
+                            "SortcodeAccountNumber"
+                        ],
                         "type": "string",
                         "description": "This field must be present when schemeName is set to 'Other' and should not be present otherwise."
                     },
@@ -480,7 +483,8 @@
                     "currency": {
                         "minLength": 1,
                         "example": "GBP",
-                        "type": "string"
+                        "type": "string",
+                        "description": "Set to 'GBP' as other currencies are not supported."
                     }
                 },
                 "additionalProperties": false,
@@ -541,7 +545,8 @@
             "PartyDetailsDtoV5": {
                 "required": [
                     "name",
-                    "lei"
+                    "lei",
+                    "postalAddress"
                 ],
                 "type": "object",
                 "properties": {
@@ -602,7 +607,7 @@
             "UnstructuredRemittanceInformationDtoV5": {
                 "type": "object",
                 "properties": {
-                    "creditorReferenceInformation": {
+                    "unstructured": {
                         "maxLength": 140,
                         "minLength": 1,
                         "type": "string",

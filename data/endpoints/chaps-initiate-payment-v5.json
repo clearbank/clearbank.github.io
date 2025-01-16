@@ -180,6 +180,9 @@
                         "description": "Scheme type. If this field is set to 'Other', then the proprietary field is required."
                     },
                     "proprietary": {
+                        "enum": [
+                            "SortcodeAccountNumber"
+                        ],
                         "type": "string",
                         "description": "This field must be present when schemeName is set to 'Other' and should not be present otherwise."
                     },
@@ -213,7 +216,7 @@
                         "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "example": "163f8yk55a9bb4w335qa5f",
-                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\\n\\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction. Usage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
                     },
                     "endToEndIdentification": {
                         "maxLength": 35,
@@ -249,7 +252,7 @@
                         "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction."
                     },
                     "debtor": {
-                        "$ref": "#/components/schemas/CustomerPartyDetailsDtoV5"
+                        "$ref": "#/components/schemas/DebtorCustomerPartyDetailsDtoV5"
                     },
                     "creditorAccount": {
                         "type": "object",
@@ -263,7 +266,7 @@
                         "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction."
                     },
                     "creditor": {
-                        "$ref": "#/components/schemas/CustomerPartyDetailsDtoV5"
+                        "$ref": "#/components/schemas/CreditorCustomerPartyDetailsDtoV5"
                     },
                     "purpose": {
                         "enum": [
@@ -440,14 +443,42 @@
                 },
                 "additionalProperties": false
             },
-            "CustomerPartyDetailsDtoV5": {
+            "DebtorCustomerPartyDetailsDtoV5": {
+                "required": [
+                    "name",
+                    "postalAddress"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 140,
+                        "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+                        "type": "string",
+                        "description": "Name of the party"
+                    },
+                    "postalAddress": {
+                        "$ref": "#/components/schemas/PartyAddressDetailsDtoV5"
+                    },
+                    "organisationIdentifier": {
+                        "$ref": "#/components/schemas/OrganisationIdentifierV5"
+                    },
+                    "privateIdentifier": {
+                        "$ref": "#/components/schemas/PrivateIdentifierV5"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CreditorCustomerPartyDetailsDtoV5": {
                 "required": [
                     "name"
                 ],
                 "type": "object",
                 "properties": {
                     "name": {
+                        "maxLength": 140,
                         "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
                         "type": "string",
                         "description": "Name of the party"
                     },
@@ -496,7 +527,8 @@
                     "currency": {
                         "minLength": 1,
                         "example": "GBP",
-                        "type": "string"
+                        "type": "string",
+                        "description": "Set to 'GBP' as other currencies are not supported."
                     }
                 },
                 "additionalProperties": false,
