@@ -32,6 +32,16 @@ Always note down the X-Request-Id when creating an account. If you receive a 500
 
 Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
 
+You can retrieve information on all savings accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-savings-accounts) endpoint and filtering for savings accounts, or retrieve information for a specific savings account through the [GET /v3/Accounts/{accountId}](#get-information-for-a-savings-account) endpoint.
+
+You can amend a savings account with the [PATCH /v1/accounts/{accountId}](#amend-a-savings-account) endpoint.
+
+To retrieve end of day balances for a savings account, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
+
+<Callout colour="blue">
+These are the same endpoints used to retrieve and amend information on real accounts.
+</Callout>
+
 **To close a savings account:**
 1. Withdraw all funds from the account.
 2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
@@ -112,6 +122,39 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 />
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
+
+<EndpointBlock
+  type="get"
+  title="Get all real accounts, including savings accounts"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get information for a savings account"
+  endpoints={[
+    {
+      path: "/v3/Accounts/{accountId}",
+      version: "3.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a savings account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
 
 <EndpointBlock
   type="post"
