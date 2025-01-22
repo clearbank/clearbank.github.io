@@ -1,0 +1,326 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "ClearBank.Chaps.RtgsPortalManager.Container",
+      "version": "5.0-ChapsReturn"
+    },
+    "paths": {
+        "/payments/chaps/v5/return-payments": {
+            "post": {
+                "tags": [
+                    "ExternalReturnPaymentsV5"
+                ],
+                "description": "Return a CHAPS payment. All CHAPS returns must be made by the next working day. The same operating hours apply for CHAPS returns as for regular CHAPS payments. Note that this endpoint only supports returning CHAPS payments made after the Bank of England's RTGS Renewal Programme went live (all payments made on or after 19 June 2023).",
+                "operationId": "ExternalReturnPayment-v5",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+                  },
+                  {
+                    "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+                  }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateReturnPaymentDtoV5"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateReturnPaymentDtoV5"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateReturnPaymentDtoV5"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateReturnPaymentDtoV5"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV5"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV5"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentCreatedResponseDtoV5"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                            "$ref": "#/components/schemas/ProblemDetails"
+                                        }
+                                },
+                            "application/json": {
+                                "schema": {
+                                            "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                            "$ref": "#/components/schemas/ProblemDetails"
+                                        }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+    "components": {
+      "parameters": {
+            "ParametersOpenapi_Authorization": {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API token retrieved from the ClearBank portal.",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/ApiHeadersSchema_AuthorizationType"
+              }
+            },
+            "ParametersOpenapi_DigitalSignature": {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/ApiHeadersSchema_DigitalSignatureType"
+              }
+            },
+            "ParametersOpenapi_RequestIdentifier": {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request.",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/ApiHeadersSchema_RequestIdentifierType"
+              }
+            }
+          },
+        "schemas": {
+          "ApiHeadersSchema_AuthorizationType": {
+                "description": "Authorization header restricted to Bearer token only",
+                "type": "string",
+                "pattern": "^Bearer +.+"
+            },
+            "ApiHeadersSchema_DigitalSignatureType": {
+                "description": "The digital signature generated by the API consumer",
+                "type": "string"
+            },
+            "ApiHeadersSchema_RequestIdentifierType": {
+                "description": "The request identifier supplied by the API consumer",
+                "type": "string"
+            },
+            "CreateReturnPaymentDtoV5": {
+                "required": [
+                    "instructionIdentification",
+                    "paymentId",
+                    "reason"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string",
+                        "description": "ClearBank identifier that uniquely identifies the inbound payment instruction.",
+                        "format": "uuid",
+                        "example": "bd382f05e8fa4056b25e531e561"
+                    },
+                    "reason": {
+                        "enum": [
+                            "AM09",
+                            "BE01",
+                            "BE04",
+                            "BE05",
+                            "BE06",
+                            "FOCR",
+                            "MD06",
+                            "MS02",
+                            "CURR",
+                            "AC04",
+                            "AM02",
+                            "AM03",
+                            "AG01",
+                            "RR04",
+                            "AC01",
+                            "AC02",
+                            "AC03",
+                            "AC06",
+                            "AC07",
+                            "AC13",
+                            "AC14",
+                            "AC15",
+                            "AC16",
+                            "AC17",
+                            "AG02",
+                            "AG07",
+                            "AGNT",
+                            "AM01",
+                            "AM04",
+                            "AM05",
+                            "AM06",
+                            "AM07",
+                            "AM10",
+                            "ARDT",
+                            "BE07",
+                            "BE08",
+                            "BE10",
+                            "BE11",
+                            "BE16",
+                            "BE17",
+                            "CN01",
+                            "CNOR",
+                            "CNPC",
+                            "CUST",
+                            "DNOR",
+                            "DS28",
+                            "DT01",
+                            "DT02",
+                            "ED01",
+                            "ED03",
+                            "ED05",
+                            "EMVL",
+                            "ERIN",
+                            "FF03",
+                            "FF04",
+                            "FF05",
+                            "FF06",
+                            "FF07",
+                            "FR01",
+                            "FRTR",
+                            "G004",
+                            "MD01",
+                            "MD02",
+                            "MD05",
+                            "MD07",
+                            "MS03",
+                            "NARR",
+                            "NOAS",
+                            "NOCM",
+                            "NOOR",
+                            "PINL",
+                            "RC01",
+                            "RC07",
+                            "RC08",
+                            "RC11",
+                            "RF01",
+                            "RR01",
+                            "RR02",
+                            "RR03",
+                            "RR05",
+                            "RR06",
+                            "RR07",
+                            "RR08",
+                            "RR09",
+                            "RR11",
+                            "RR12",
+                            "RUTA",
+                            "SL01",
+                            "SL02",
+                            "SL11",
+                            "SL12",
+                            "SL13",
+                            "SL14",
+                            "SP01",
+                            "SP02",
+                            "SVNR",
+                            "TM01",
+                            "TRAC",
+                            "UPAY"
+                        ],
+                        "type": "string",
+                        "example": "AC04",
+                        "description": "Specifies the reason for the return."
+                    },
+                    "instructionIdentification": {
+                        "maxLength": 35,
+                        "minLength": 1,
+                        "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+                        "type": "string",
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction."
+                    }
+                },
+                "additionalProperties": false
+            },
+            "HttpValidationProblemDetails": {
+                "type": "object",
+                "allOf": [{
+                    "$ref": "#/components/schemas/ProblemDetails"
+                }],
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "PaymentCreatedResponseDtoV5": {
+                "required": [
+                    "paymentId"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string",
+                        "description": "ClearBank identifier that uniquely identifies the new outbound/return payment instruction.",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "instance": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            }
+        }
+    }
+}
