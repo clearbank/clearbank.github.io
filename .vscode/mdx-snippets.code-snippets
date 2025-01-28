@@ -1,0 +1,78 @@
+{
+	"Create MDX page": {
+		"prefix": "newPage",
+		"body": [
+		  "---",
+		  "title: \"$1\"",
+		  "order: ${2|0,1,2,3,4,5,6,7,8,9,10|}",
+		  "metaTitle: \"${3:tab-title}\"",
+		  "metaDescription: \"${4:shared-url-preview-text}\"",
+		  "showPageMenu: ${5|true,false|}",
+		  "---",
+		  "",
+		  "${6| ,import Callout from \"src/components/callout\";|}",
+		  "${7| ,import EndpointBlock from \"src/components/endpoint-block\";|}",
+		  "${8| ,import WebhookSummary from \"src/components/webhook-summary\";|}",
+		  "${9| ,import WebhookPlaceholder from \"src/components/webhook-placeholder\";|}",
+		  "",
+		  "## ${1:opening-header}",
+		  "",
+		  "$0"
+		],
+		"description": "Create a new MDX page with front matter and optional imports"
+	},
+	"Create endpoint block": {
+		"prefix": "newEndpoint",
+		"body": [
+			"<EndpointBlock",
+			"  type=\"${1|post,get,patch,put,delete|}\"",
+			"  title=\"$2\"",
+			"  endpoints={[",
+			"    {",
+			"      path: \"$3\",",
+			"      version: \"$4\"",
+			"    }",
+			"  ]}",
+			"/>",
+			"",
+			"$0"
+			],
+		"description": ""
+	},
+	"Create webhook summary block": {
+		"prefix": "newWebhookSummary",
+		"body": [
+			"<WebhookSummary",
+			"  description='$1'",
+			"  endpoint='$2'",
+			"  method='${3|post,get,patch,put,delete|}'",
+			"  webhooks={[",
+			"    '$4'",
+			"  ]}",
+			"/>",
+			"",
+			"$0"
+			],
+		"description": "Add a webhook summary block."
+	},
+	"Create webhook placeholder": {
+		"prefix": "newPlaceholderWebhook",
+		"body": [
+			"<WebhookPlaceholder render='${1:full-webhook-name-created-v1}' />",
+			"",
+			"$0"
+			],
+		"description": "Add a webhook placeholder. Use the empty field to set the appropriate webhook."
+	},
+	"Create callout block": {
+		"prefix": "newCallout",
+		"body": [
+			"<Callout colour=\"blue\">",
+			"  ${1:callout-text}",
+			"</Callout>",
+			"",
+			"$0"
+			],
+		"description": "Add a callout block for emphasising something critical to the reader."
+	}
+}
