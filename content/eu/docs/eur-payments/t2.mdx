@@ -20,9 +20,14 @@ T2 has no transaction limit, making it suitable for high-value payments. Transac
 
 ![T2 message flow diagram](/assets/images/Target2-message-flow.svg)
 
-**Customer payments** are payments that have either your or another financial institution's customer as the ultimate debtor or creditor. **Institution payments** are exclusively financial institution (FI) to financial institution. **Return payments** can be returned to either your customer or a financial institution.
+### Payment types
 
-Institution (pacs.009) payments are available to our clients for FI-to-FI payments only. If you attempt to send a pacs.009 payment to an end-user account, the payment will be returned. You will still be charged for the payment.
+**Customer payments** (pacs.008) are payments that have either your or another financial institution's (FI) customer as the ultimate debtor or creditor.
+
+
+**Institution payments** (pacs.009) are exclusively for FI to FI payments. If you attempt to send an institution payment to an end-user account, the payment will be returned. However, you'll still be charged a processing fee for the payment.
+
+**Return payments** (pacs.004) are payments returned to either your customer or a financial institution.
 
 <Callout colour="blue">
 You'll need to subscribe to the <a href="#t-2-payment-return-inbound-completed-webhook">T2 Payment Return Inbound Completed webhook</a> to be notified of returned payments.
@@ -36,12 +41,12 @@ There are three endpoints you can use to submit or return T2 payments:
 | **[/payments/t2-rtgs/v1/payment-returns](#send-a-t-2-payment-to-an-institution)** | Return a T2 payment (pacs.004) | [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook)| [T2  Payment Return Outbound Failed webhook](#t-2-payment-return-outbound-failed-webhook)|
 | **[/payments/t2-rtgs/v1/institution-payments](#send-a-t-2-payment-to-an-institution)** | Send a T2 payment to an institution (pacs.009) | [T2 Financial Institution Outbound Credit Transfer Completed webhook](#t-2-financial-institution-credit-transfer-outbound-completed-webhook)| [T2 Financial Institution Outbound Credit Transfer Failed webhook](#t-2-financial-institution-credit-transfer-outbound-failed-webhook)|
 
-There are also webhooks for incoming payments:
+There are also [webhooks for incoming payments](#receiving-t-2-payments):
 - The [T2 Customer Credit Transfer Inbound Completed webhook](#t-2-customer-credit-transfer-inbound-completed-webhook) is for incoming customer payments
 - The [T2 Payment Return Inbound Completed webhook](#t-2-payment-return-inbound-completed-webhook) is for incoming returns
 - The [T2 Financial Institution Inbound Transfer Completed webhook](#t-2-financial-institution-credit-transfer-inbound-completed-webhook) is for incoming payments from financial institutions
 
-#### Operating hours
+### Operating hours
 
 You can receive T2 payments Monday - Friday, 02:30 - 18:00 CET.
 
@@ -137,7 +142,11 @@ If the payment fails, you will receive the [T2 Payment Return Outbound Completed
 <WebhookPlaceholder render='t2-FI-credit-transfer-outbound-completed-v1' />
 <WebhookPlaceholder render='t2-FI-credit-transfer-outbound-failed-v1' />
 
-## Inbound T2 webhooks
+## Receiving T2 payments
+
+When an inbound T2 payment is received, you'll be notified with one of the below webhooks depending on the payment type.
+
+For institution payments (pacs.009), the T2 scheme does not require IBANs to be provided. **We direct any inbound institution payments addressed only to a BIC and not with an IBAN to your** [**Primary Operating Account**](../accounts/account-types) (this is the first Operating Account created).
 
 <WebhookPlaceholder render='t2-customer-credit-transfer-inbound-completed-v1' />
 <WebhookPlaceholder render='t2-payment-return-inbound-completed-v1' />

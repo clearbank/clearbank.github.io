@@ -22,8 +22,9 @@ This webhook confirms an inbound SEPA CT payment return has completed.
 |-------------------------|-----------------|
 |`PaymentId` |**Required**<br />ClearBank identifier that uniquely identifies the payment instruction.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
 |`TransactionId` |**Required**<br />The ID of the debit transaction associated with this outbound payment.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br />Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
+|`EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
 
-#### Example SEPA CT inbound payment return completed request body
+#### Example SEPA CT Inbound Payment Return Completed webhook request body
 
 ```json
 {
@@ -31,7 +32,8 @@ This webhook confirms an inbound SEPA CT payment return has completed.
     "Version": 1,
     "Payload": {
         "PaymentId": "cc8cf403-a31e-47bd-aafb-4584b7a24921",
-        "TransactionId": "b2c95a9f-f132-4916-9e93-74eb2a32b6fd"
+        "TransactionId": "b2c95a9f-f132-4916-9e93-74eb2a32b6fd",
+        "EndToEndIdentification": "0l99ff01jw6qq1p2j76wwe"
     },
     "Nonce": 294701747
 }
