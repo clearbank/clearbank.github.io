@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Inbound Payment Settled webhook"
+title: "SEPA Instant Inbound Payment Settled webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms an inbound SEPA Instant CT payment has settled.
+This webhook confirms an inbound SEPA Instant payment has settled.
 
 #### Request body
 
@@ -32,3 +32,37 @@ This webhook confirms an inbound SEPA Instant CT payment has settled.
 | `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
 | `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
 
+#### Example SEPA Instant CT Inbound Payment Settled webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.Inbound.Payment.Settled",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "8d3d36fe-272c-fc03-44dc-d76c950867e4",
+    "PaymentId": "8d3d36fe-272c-fc03-44dc-d76c950867e4",
+    "DebtorName": "Thelma Block",
+    "DebtorAccount": "GB68INST20182441739477",
+    "CreditorName": "Shawna Kautzer",
+    "CreditorAccount": "NL37CLRB0126383492",
+    "InstructedAmount": 3.35,
+    "SchemePaymentMethod": "INST",
+    "TimestampCreated": "2025-01-22T12:55:12.1941864Z",
+    "TimestampSubmitted": "2025-01-22T12:55:12.1941864Z",
+    "AdditionalPaymentProperties": [
+      {
+        "Key": "CreditorAgentBic",
+        "Value": "RZKTAT2K288"
+      }
+    ]
+  },
+  "Nonce": 1225137631
+}
+```
+
+#### Example webhook response
+```
+{
+    "Nonce": 1225137631
+}
+```

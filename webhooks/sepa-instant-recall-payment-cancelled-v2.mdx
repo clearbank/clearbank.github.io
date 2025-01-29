@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Recall Payment Cancelled webhook"
+title: "SEPA Instant Recall Payment Cancelled webhook"
 version: 2
 webhook: true
 ---
 
-This webhook confirms an outgoing SEPA Instant CT recall payment has been cancelled.
+This webhook confirms an outgoing SEPA Instant recall payment has been cancelled.
 
 #### Request body
 
@@ -26,3 +26,28 @@ This webhook confirms an outgoing SEPA Instant CT recall payment has been cancel
 |`CancellationCode` |**Required**<br />Cancellation code.<br/>Type: `string`|
 |`CancellationReason` |**Required**<br />Reason Instant SEPA recall payment was cancelled.<br/>Type: `string`|
 |`PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. For recalls of outbound payments this will match the paymentId returned in the 202 response when you initiated the original payment. For recalls of inbound payments this will match the paymentId in the Inbound Payment Settled webhook.<br/>Type: `string` <br/>Format: `uuid`|
+
+#### Example SEPA Instant CT Recall Payment Cancelled webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.RecallPayment.Cancelled",
+  "Version": 2,
+  "Payload": {
+    "PaymentId": "160b3baf-1d92-1b2a-3826-b022363d865a",
+    "RecallTransactionId": "7509f28206a317cfc9ca7ab71f3e8286",
+    "OriginalTransactionId": "160b3baf1d921b2a3826b022363d865a",
+    "TimestampCancelled": "2025-01-22T12:56:00.3080782Z",
+    "CancellationCode": "CB01",
+    "CancellationReason": "Unknown error"
+  },
+  "Nonce": 643704746
+}
+```
+
+#### Example webhook response
+```
+{
+     "Nonce": 643704746
+}
+```

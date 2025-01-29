@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Recall Payment Created webhook"
+title: "SEPA Instant Recall Payment Created webhook"
 version: 2
 webhook: true
 ---
 
-This webhook confirms an inbound SEPA Instant CT recall payment has been created.
+This webhook confirms an inbound SEPA Instant recall payment has been created.
 
 #### Request body
 
@@ -25,3 +25,29 @@ This webhook confirms an inbound SEPA Instant CT recall payment has been created
 |`TotalReturnedAmount` |**Required**<br />The amount of money returned in euros. For example, -12.51 would indicate that €12.51 has been debited from your account.<br/>Type: `number` <br/>Format: `decimal`|
 |`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
 |`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
+
+#### Example SEPA Instant CT Outbound Payment Cancelled webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.Outbound.Payment.Cancelled",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
+    "PaymentId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
+    "TimestampCreated": "2025-01-22T12:54:15.5337199Z",
+    "TimestampSubmitted": "2025-01-22T12:54:20.5337358Z",
+    "CancellationCode": "QG43",
+    "CancellationReason": "Pariatur aspernatur est.",
+    "AdditionalPaymentProperties": null
+  },
+  "Nonce": 1355726072
+}
+```
+
+#### Example webhook response
+```
+{
+    "Nonce": 1355726072
+}
+```
