@@ -40,7 +40,7 @@ To send a SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-a-sep
 
 You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
-![A message flow diagram explaining how to send a SEPA Instant payment](/assets/images/sepa-ict-send-payment.svg)
+![A message flow diagram explaining how to send a SEPA Instant payment](/assets/images/sct-inst-send-payment.svg)
 
 <EndpointBlock
   type="post"
@@ -78,9 +78,9 @@ You can send SCT Inst recall requests using the [POST /v1/payments/sepa-instant/
 
 Recall requests remain valid for a maximum of **15 business days**.  If after 15 business days the receiving party has not responded, the recall request is automatically rejected and the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-payment-rejected-webhook) is sent.
 
-![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sepa-ict-successful-recall.svg)
+![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sct-inst-successful-recall.svg)
 
-![A message flow diagram explaining a rejected SCT Inst recall which results in receiving a SEPA Instant Recall Request Rejected webhook](/assets/images/sepa-ict-rejected-recall.svg)
+![A message flow diagram explaining a rejected SCT Inst recall which results in receiving a SEPA Instant Recall Request Rejected webhook](/assets/images/sct-inst-rejected-recall.svg)
 
 <EndpointBlock
   type="post"
@@ -106,14 +106,14 @@ Recall requests remain valid for a maximum of **15 business days**.  If after 15
 
 Recalls can be requested using the following reason codes:
 
-| Reason | Description|Time limit to send recall request|
-|------|-----------|---------------------------------|
-|DUPL |Duplicate sending|10 business days| 
-|TECH |Technical problems resulting in an erroneous SCT Inst Transaction|10 business days|
-|FRAD |Fraudulent originated SCT Inst Instruction|13 months|
-|AC03 |Wrong account number in original transfer|13 months|
-|AM09 |Wrong amount in original transfer|13 months|
-|CUST |Requested by customer|13 months|
+| Reason | Description                                                       | Time limit to send recall request |
+| ------ | ----------------------------------------------------------------- | --------------------------------- |
+| DUPL   | Duplicate sending                                                 | 10 business days                  |
+| TECH   | Technical problems resulting in an erroneous SCT Inst Transaction | 10 business days                  |
+| FRAD   | Fraudulent originated SCT Inst Instruction                        | 13 months                         |
+| AC03   | Wrong account number in original transfer                         | 13 months                         |
+| AM09   | Wrong amount in original transfer                                 | 13 months                         |
+| CUST   | Requested by customer                                             | 13 months                         |
 
 ## Receive and respond to a recall request
 
@@ -130,9 +130,9 @@ Following your approval of a recall request, the amount of the original payment 
 
 Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
 
-![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant Recall Request Received webhook, responding with 'approve' set to 'true' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint and receiving the SEPA Instant Recall Payment Created webhook and SEPA Instant Recall Payment Settled webhook following the return of the recalled amount.](/assets/images/sepa-ict-receive-recall-approved.svg)
+![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant Recall Request Received webhook, responding with 'approve' set to 'true' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint and receiving the SEPA Instant Recall Payment Created webhook and SEPA Instant Recall Payment Settled webhook following the return of the recalled amount.](/assets/images/sct-inst-receive-recall-approved.svg)
 
-![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant Recall Request Received webhook and responding with 'approve' set to 'false' with a valid 'rejectionCode' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint](/assets/images/sepa-ict-receive-recall-rejected.svg)
+![A message flow diagram explaining receiving a recall request, being notified via the SEPA Instant Recall Request Received webhook and responding with 'approve' set to 'false' with a valid 'rejectionCode' using the POST /v1/payments/sepa-instant/{paymentId}/recall-response endpoint](/assets/images/sct-inst-receive-recall-rejected.svg)
 
 <WebhookPlaceholder render='sepa-instant-recall-request-received-v2' />
 
@@ -157,7 +157,7 @@ Recall requests should be responded to within 15 business days. If after 15 busi
 
 The following diagram outlines the process following the unlikely event that there is an issue with the pacs.004 payment that is sent following your approval of an inbound recall request.
 
-![A message flow diagram explaining responding to a recall request with 'approve' followed by the pacs.004 payment being rejected at RT1 resulting in receiving a SEPA Instant Recall Payment Cancelled webhook](/assets/images/sepa-ict-recall-payment-cancelled.svg)
+![A message flow diagram explaining responding to a recall request with 'approve' followed by the pacs.004 payment being rejected at RT1 resulting in receiving a SEPA Instant Recall Payment Cancelled webhook](/assets/images/sct-inst-recall-payment-cancelled.svg)
 
 Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Cancelled webhook, the ringfence is removed from the recall amount and you must re-initiate the recall response using the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sepa-instant-recall-request) endpoint.
 
