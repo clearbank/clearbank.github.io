@@ -23,20 +23,20 @@ SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables custome
 </Callout>
 
 You can:
-- [Send a SCT Inst payment](#send-a-sct-inst-payment)
-- [Receive a SCT Inst payment](#receive-a-sct-inst-payment)
-- [Recall a SCT Inst payment](#recall-a-sct-inst-payment) (integrating with recall payments is required)
+- [Send an SCT Inst payment](#send-an-sct-inst-payment)
+- [Receive an SCT Inst payment](#receive-an-sct-inst-payment)
+- [Recall an SCT Inst payment](#recall-an-sct-inst-payment) (integrating with recall payments is required)
 - [Receive and respond to a recall request](#receive-and-respond-to-a-recall-request)
-- [Simulate a SCT Inst inbound payment and recall request](#simulate-a-sct-inst-inbound-payment-and-recall-request)
+- [Simulate an SCT Inst inbound payment and recall request](#simulate-an-sct-inst-inbound-payment-and-recall-request)
 > You are notified of incoming SCT Inst payments via the [SEPA Instant Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 <Callout colour="blue">
 It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
 </Callout>
 
-## Sending a SCT Inst payment
+## Sending an SCT Inst payment
 
-To send a SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-a-sct-inst-payment) endpoint.
+To send an SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-an-sct-inst-payment) endpoint.
 
 You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
@@ -44,7 +44,7 @@ You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-outbou
 
 <EndpointBlock
   type="post"
-  title="Send a SCT Inst payment"
+  title="Send an SCT Inst payment"
   endpoints={[
     {
       path: "/v1/payments/sepa-instant",
@@ -64,17 +64,17 @@ You will receive the [SEPA Instant Payment Created webhook](#sepa-instant-outbou
 <WebhookPlaceholder render='sepa-instant-outbound-payment-cancelled-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
-## Receive a SCT Inst payment
+## Receive an SCT Inst payment
 
-Receipt of a SCT Inst payment can be confirmed by subscribing to the [SEPA Instant Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook).
+Receipt of an SCT Inst payment can be confirmed by subscribing to the [SEPA Instant Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook).
 
 <WebhookPlaceholder render='sepa-instant-inbound-payment-settled-v1' />
 
-## Request a SCT Inst recall
+## Request an SCT Inst recall
 
 ### Send a recall request
 
-You can send SCT Inst recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#recall-a-sct-inst-payment) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [SEPA Instant Recall Payment Settled](#sepa-instant-recall-payment-settled-webhook) or [SEPA Instant Recall Request Rejected](#sepa-instant-recall-request-rejected-webhook) webhooks. 
+You can send SCT Inst recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#recall-an-sct-inst-payment) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [SEPA Instant Recall Payment Settled](#sepa-instant-recall-payment-settled-webhook) or [SEPA Instant Recall Request Rejected](#sepa-instant-recall-request-rejected-webhook) webhooks. 
 
 Recall requests remain valid for a maximum of **15 business days**.  If after 15 business days the receiving party has not responded, the recall request is automatically rejected and the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-request-rejected-webhook) is sent.
 
@@ -84,7 +84,7 @@ Recall requests remain valid for a maximum of **15 business days**.  If after 15
 
 <EndpointBlock
   type="post"
-  title="Recall a SCT Inst payment"
+  title="Recall an SCT Inst payment"
   endpoints={[
     {
       path: "/v1/payments/sepa-instant/{paymentId}/recall",
@@ -119,7 +119,7 @@ Recalls can be requested using the following reason codes:
 
 If you receive a recall request, you will be notified via the [SEPA Instant Recall Request Received webhook](#sepa-instant-recall-request-received-webhook). You can review the details of the request by referring to the `OriginalTransactionId` for details of the original payment received and `ReasonCode` for the reason the sending party is requesting the recall (see [Recall reason codes](#recall-reason-codes))
 
-To respond to the recall request, use the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sct-inst-recall-request) endpoint. Set the `approve` boolean `true` to accept the request or `false` to reject it.
+To respond to the recall request, use the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-an-sct-inst-recall-request) endpoint. Set the `approve` boolean `true` to accept the request or `false` to reject it.
 
 <Callout colour="blue">
 If `approve` is set to `true`, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.
@@ -138,7 +138,7 @@ Recall requests should be responded to within 15 business days. If after 15 busi
 
 <EndpointBlock
   type="post"
-  title="Respond to a SCT Inst recall request"
+  title="Respond to an SCT Inst recall request"
   endpoints={[
     {
       path: "/v1/payments/sepa-instant/{paymentId}/recall-response",
@@ -159,11 +159,11 @@ The following diagram outlines the process following the unlikely event that the
 
 ![A message flow diagram explaining responding to a recall request with 'approve' followed by the pacs.004 payment being rejected at RT1 resulting in receiving a SEPA Instant Recall Payment Cancelled webhook](/assets/images/sct-inst-recall-payment-cancelled.svg)
 
-Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Cancelled webhook, the ringfence is removed from the recall amount and you must re-initiate the recall response using the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-a-sct-inst-recall-request) endpoint.
+Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Cancelled webhook, the ringfence is removed from the recall amount and you must re-initiate the recall response using the [POST /v1/payments/sepa-instant/{paymentId}/recall-response](#respond-to-an-sct-inst-recall-request) endpoint.
 
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
 
-## Simulate a SCT Inst inbound payment and recall request
+## Simulate an SCT Inst inbound payment and recall request
 
 <EndpointBlock
   type="post"
