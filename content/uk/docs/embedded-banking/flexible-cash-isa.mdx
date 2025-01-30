@@ -52,7 +52,15 @@ The process is shown in this message flow diagram:
 
 ![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/cash-isa-open.svg)
 
-The account is now open and fully operational. You can return details of a cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
+The account is now open and fully operational. You can retrieve information on all ISAs by using the [GET /v3/accounts](#get-all-accounts-real) endpoint and filtering for ISAs. You can also retrieve details on a specific cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
+
+You can amend the details or the status of a cash ISA using the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) endpoint.
+
+To retrieve end of day balances for a cash ISA, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
+
+<Callout colour="blue">
+The endpoints for retrieving all ISAs and amending cash ISA details or status are the same as those used for real accounts.
+</Callout>
 
 ### End of life for a cash ISA
 
@@ -119,7 +127,7 @@ The process is shown in this message flow diagram:
 
 #### Discontinue
 
-The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once you have received the notification, use the [PATCH /v1/accounts/{accountId}](#amend-a-cash-isa-status) to update the `status` to `Suspended` using the `statusReason`  of `AccountHolderDeceased`.  
+The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once you have received the notification, use the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) to update the `status` to `Suspended` using the `statusReason`  of `AccountHolderDeceased`.  
 
 As per HMRC rules, if an ISA investor passes away, their account must be treated as **'continuing account of a deceased investor'**. This allows the account to continue to accrue interest and benefit from the tax advantages of an ISA for the period beginning with the death of the account holder and ending either:
 
@@ -187,11 +195,22 @@ The process is shown in this flow diagram:
 
 <EndpointBlock
   type="patch"
-  title="Amend a cash ISA status"
+  title="Amend cash ISA details or status"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
-      version: "1.0.Sterling",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all real accounts, including cash ISAs"
+  endpoints={[
+    {
+      path: "/v3/Accounts",
+      version: "3.0.Sterling",
     }
   ]}
 />
