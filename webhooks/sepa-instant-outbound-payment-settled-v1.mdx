@@ -24,30 +24,33 @@ This webhook confirms an outbound SEPA Instant payment has settled.
 | `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
 | `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
 | `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
+| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`|
 
-#### Example SEPA Instant CT Outbound Payment Settled webhook request body
+#### Example SEPA Instant Outbound Payment Settled webhook request body
 
 ```json
 {
-  "Type": "Sepa.Instant.Outbound.Payment.Cancelled",
-  "Version": 1,
-  "Payload": {
-    "TransactionId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
-    "PaymentId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
-    "TimestampCreated": "2025-01-22T12:54:15.5337199Z",
-    "TimestampSubmitted": "2025-01-22T12:54:20.5337358Z",
-    "CancellationCode": "QG43",
-    "CancellationReason": "Pariatur aspernatur est.",
-    "AdditionalPaymentProperties": null
-  },
-  "Nonce": 1355726072
+   "Type":"Sepa.Instant.Outbound.Payment.Settled",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"24d683a7-ae69-3035-c748-94827ddcbf92",
+      "PaymentId":"24d683a7-ae69-3035-c748-94827ddcbf92",
+      "TimestampCreated":"2024-10-11T13:34:59.682719Z",
+      "TimestampSubmitted":"2024-10-11T13:35:01.9941075Z",
+      "AdditionalPaymentProperties":[
+         {
+            "Key":"InterBankSettlementDate",
+            "Value":"2024-10-11"
+         }
+      ]
+   },
+   "Nonce": 1630803960
 }
 ```
 
 #### Example webhook response
 ```
 {
-    "Nonce": 1355726072
+    "Nonce": 1630803960
 }
 ```

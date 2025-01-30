@@ -20,34 +20,34 @@ This webhook confirms an inbound SEPA Instant recall request has been received.
 #### Payload
 | Element                 | Description     |
 |-------------------------|-----------------|
-|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1` |
-|`ReasonCode` |**Required**<br />The reason code used to recall the payment. This can be DUPL, FRAD, TECH, CUST, AC03 or AM09.<br/>Type: `string`|
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
+|`ReasonCode` |**Required**<br />The reason code used to recall the payment. This can be DUPL, FRAD, TECH, CUST, AC03 or AM09.<br/>Type: `string`<br/>Pattern: `[^\n]`|
 |`TimestampCreated` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
-|`AdditionalInformation` |Additional information provided by the initiating party about the recall.<br/>Type: `array` or `null`<br />Type: `string`|
+|`AdditionalInformation` |_Optional_<br/>Additional information provided by the initiating party about the recall.<br/>Type: `array` or `null`<br />Type: `string`<br/>Pattern: `[^\n]`|
 |`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
 
-#### Example SEPA Instant CT Outbound Payment Cancelled webhook request body
+#### Example SEPA Instant Outbound Payment Cancelled webhook request body
 
 ```json
 {
-  "Type": "Sepa.Instant.Outbound.Payment.Cancelled",
-  "Version": 1,
+  "Type": "Sepa.Instant.RecallRequest.Received",
+  "Version": 2,
   "Payload": {
-    "TransactionId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
-    "PaymentId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
-    "TimestampCreated": "2025-01-22T12:54:15.5337199Z",
-    "TimestampSubmitted": "2025-01-22T12:54:20.5337358Z",
-    "CancellationCode": "QG43",
-    "CancellationReason": "Pariatur aspernatur est.",
-    "AdditionalPaymentProperties": null
+    "PaymentId": "86a5fcb3-6be3-4bf9-9e8c-dab5b1c39bc4",
+    "OriginalTransactionId": "aa4f5da6-15b7-45ec-abf1-c72d58041ec3",
+    "ReasonCode": "ABCD",
+    "TimestampCreated": "2025-01-22T12:54:32.8690907Z",
+    "AdditionalInformation": [
+      "Some Reason"
+    ]
   },
-  "Nonce": 1355726072
+  "Nonce": 1885237896
 }
 ```
 
 #### Example webhook response
 ```
 {
-    "Nonce": 1355726072
+    "Nonce": 1885237896
 }
 ```

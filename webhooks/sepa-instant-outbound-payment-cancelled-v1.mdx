@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Outbound Payment Cancelled webhook"
+title: "SEPA Instant Outbound Payment Cancelled webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms a SEPA Instant CT outbound payment has been cancelled.
+This webhook confirms a SEPA Instant outbound payment has been cancelled.
 
 #### Request body
 
@@ -24,11 +24,11 @@ This webhook confirms a SEPA Instant CT outbound payment has been cancelled.
 | `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
 | `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
 | `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `CancellationCode` |**Required**<br />The cancellation code for the Payment. Possible values include: AC01, CB01, CNOR, AM04.<br/>Type: `string`|
-| `CancellationReason` |**Required**<br />Reason Instant SEPA payment was cancelled.<br/>Type: `string`|
-| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
+| `CancellationCode` |**Required**<br />The cancellation code for the Payment. Possible values include: AC01, CB01, CNOR, AM04.<br/>Type: `string`<br/>Pattern: `[^\n]`|
+| `CancellationReason` |**Required**<br />Reason Instant SEPA payment was cancelled.<br/>Type: `string`<br/>Pattern: `[^\n]`|
+| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`|
 
-#### Example SEPA Instant CT Outbound Payment Cancelled webhook request body
+#### Example SEPA Instant Outbound Payment Cancelled webhook request body
 
 ```json
 {
