@@ -24,11 +24,11 @@ SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables custome
 
 You can:
 - [Send a SCT Inst payment](#send-a-sct-inst-payment)
-- [Receive SCT Inst payment](#receive-a-sct-inst-payment)
+- [Receive a SCT Inst payment](#receive-a-sct-inst-payment)
 - [Recall a SCT Inst payment](#recall-a-sct-inst-payment) (integrating with recall payments is required)
 - [Receive and respond to a recall request](#receive-and-respond-to-a-recall-request)
 - [Simulate a SCT Inst inbound payment and recall request](#simulate-a-sct-inst-inbound-payment-and-recall-request)
-> You are notified of incoming SCT Inst payments via the [SEPA Instant Inbound Payment Settled webhook](#sct-inst-inbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+> You are notified of incoming SCT Inst payments via the [SEPA Instant Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 <Callout colour="blue">
 It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
@@ -70,13 +70,13 @@ Receipt of a SCT Inst payment can be confirmed by subscribing to the [SEPA Insta
 
 <WebhookPlaceholder render='sepa-instant-inbound-payment-settled-v1' />
 
-## Recall a SCT Inst payment
+## Request a SCT Inst recall
 
 ### Send a recall request
 
-You can send SCT Inst recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#recall-a-sct-inst-payment) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [Settled](#sepa-instant-recall-payment-settled-webhook), [Rejected](#sepa-instant-recall-payment-rejected-webhook), or [Cancelled](#sepa-instant-recall-payment-cancelled-webhook) webhooks. 
+You can send SCT Inst recall requests using the [POST /v1/payments/sepa-instant/{paymentId}/recall](#recall-a-sct-inst-payment) endpoint. You will receive confirmation via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), and a response via either the [SEPA Instant Recall Payment Settled](#sepa-instant-recall-payment-settled-webhook) or [SEPA Instant Recall Request Rejected](#sepa-instant-recall-request-rejected-webhook) webhooks. 
 
-Recall requests remain valid for a maximum of **15 business days**.  If after 15 business days the receiving party has not responded, the recall request is automatically rejected and the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-payment-rejected-webhook) is sent.
+Recall requests remain valid for a maximum of **15 business days**.  If after 15 business days the receiving party has not responded, the recall request is automatically rejected and the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-request-rejected-webhook) is sent.
 
 ![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sct-inst-successful-recall.svg)
 
@@ -126,7 +126,7 @@ If `approve` is set to `true`, a pacs.004 payment will be automatically initiate
 If `approve` is set to `false`, the `rejectionCode` field must be populated with a rejection reason code.
 </Callout>
 
-Following your approval of a recall request, the amount of the original payment is ringfenced and returned to the sending party. You can be notified of the status of the status of the return payment via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), [SEPA Instant Recall Payment Settled webhook](#sepa-instant-recall-payment-settled-webhook) and [SEPA Instant Recall Payment Cancelled webhook](#sepa-instant-recall-payment-cancelled-webhook).
+Following your approval of a recall request, the amount of the original payment is ringfenced and returned to the sending party. You can be notified of the status of the status of the return payment via the [SEPA Instant Recall Payment Created webhook](#sepa-instant-recall-payment-created-webhook), [SEPA Instant Recall Payment Settled webhook](#sepa-instant-recall-payment-settled-webhook), and [SEPA Instant Recall Payment Cancelled webhook](#sepa-instant-recall-payment-cancelled-webhook).
 
 Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
 
