@@ -4,7 +4,13 @@ version: 1
 webhook: true
 ---
 
-This webhook triggers when a Cash ISA customer's annual allowance is affected by their actions on a Cash ISA issued by ClearBank.
+import Callout from "src/components/callout";
+
+This webhook triggers when a cash ISA customer's annual allowance is affected by their actions on another cash ISA issued by ClearBank.
+
+<Callout colour="blue">
+  This webhook cannot account for customer activity on cash ISAs operating outside of ClearBank's ISA manager license.
+</Callout>
 
 #### Request body
 
@@ -17,7 +23,6 @@ This webhook triggers when a Cash ISA customer's annual allowance is affected by
 }
 ```
 
-
 #### Payload
 
 | Element                          | Description                                                                                                                                                                                                                           |
@@ -28,10 +33,6 @@ This webhook triggers when a Cash ISA customer's annual allowance is affected by
 | `NetSubscription`                | The net amount withdrawn and deposited to this ISA in the current tax year. This can value can be negative. <br /> Type: `number` <br /> Format: `decimal`                                                                            |
 | `RemainingSubscriptionAllowance` | The available amount the customer can deposit in the current tax year to this ISA. Accounts for withdrawals from this account and deposits to this and other ISAs issued by ClearBank. <br /> Type: `number` <br /> Format: `decimal` |
 | `AnnualAllowanceUsed`            | The total amount that has been deposited into this ISA in the current tax year. <br /> Type: `number` <br /> Format: `decimal`                                                                                                        |
-
-<Callout colour="blue">
-  These values are only updated when the initiating ISA is operating under ClearBank's ISA manager license.
-</Callout>
 
 #### Example ISA Remaining Subscription Allowance Updated webhook request body
 
