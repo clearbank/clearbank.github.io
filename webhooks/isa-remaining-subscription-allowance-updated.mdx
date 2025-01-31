@@ -1,0 +1,63 @@
+---
+title: "ISA Remaining Subscription Allowance Updated webhook"
+version: 1
+webhook: true
+---
+
+This webhook triggers when a Cash ISA customer's annual allowance is affected by their actions on a Cash ISA issued by ClearBank.
+
+#### Request body
+
+```json
+{
+    "Type":"IsaRemainingSubscriptionAllowanceUpdated",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+
+#### Payload
+
+| Element                          | Description                                                                                                                                                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AccountId`                      | The unique identifier for this ISA. <br /> Type: `string` <br /> Format: `GUID`                                                                                                                                                       |
+| `TaxYear`                        | The current tax year. <br /> Type: `string` <br /> Pattern: `^[0-9]{2}/[0-9]{2}$`                                                                                                                                                     |
+| `CashIsaStatus`                  | The status of this ISA. <br /> Type: `string` <br /> Example: `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut`                                                                                                   |
+| `NetSubscription`                | The net amount withdrawn and deposited to this ISA in the current tax year. This can value can be negative. <br /> Type: `number` <br /> Format: `decimal`                                                                            |
+| `RemainingSubscriptionAllowance` | The available amount the customer can deposit in the current tax year to this ISA. Accounts for withdrawals from this account and deposits to this and other ISAs issued by ClearBank. <br /> Type: `number` <br /> Format: `decimal` |
+| `AnnualAllowanceUsed`            | The total amount that has been deposited into this ISA in the current tax year. <br /> Type: `number` <br /> Format: `decimal`                                                                                                        |
+
+<Callout colour="blue">
+  These values are only updated when the initiating ISA is operating under ClearBank's ISA manager license.
+</Callout>
+
+#### Example ISA Remaining Subscription Allowance Updated webhook request body
+
+```json
+{
+    "Type":"IsaRemainingSubscriptionAllowanceUpdated",
+    "Version": 1,
+    "Payload":
+    {
+        "AccountId": "57d56e32-efca-49e7-a71f-8eb18d72c162",
+        "TaxYear": "24/25",
+        "CashIsaStatus": "Active",
+        "NetSubscription": 8000.00,
+        "RemainingSubscriptionAllowance": 10000.00,
+        "AnnualAllowanceUsed": 8000.00
+    },
+    "Nonce": 5582946458
+}
+```
+
+In this example, the customer has deposited £2,000 into a different cash ISA held with ClearBank, decreasing the **RemainingSubscriptionAllowance** from £12,000 to £10,000.
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 5582946458
+}
+```
