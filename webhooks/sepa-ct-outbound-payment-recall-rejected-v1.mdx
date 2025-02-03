@@ -1,19 +1,19 @@
 ---
-title: "SEPA CT Outbound Payment Completed webhook"
+title: "SEPA CT Outbound Payment Recall Rejected webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms an outgoing SEPA CT payment has completed.
+This webhook confirms when your outbound SCT payment recall request is rejected.
 
 #### Request body
 
 ```json
 {
-    "Type": "Sepa.Ct.OutboundPayment.Completed",
+    "Type": "Sepa.Ct.OutboundPayment.RecallRejected",
     "Version": 1,
     "Payload": {...},
-    "Nonce":
+    "Nonce": 
 }
 ```
 
@@ -21,30 +21,26 @@ This webhook confirms an outgoing SEPA CT payment has completed.
 | Element                  | Description                                                                                                                                                                                                                                                                 |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PaymentId`              | **Required**<br />ClearBank identifier that uniquely identifies the payment instruction.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`   |
-| `TransactionId`          | **Required**<br />The ID of the debit transaction associated with this outbound payment.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`   |
-| `Reason`                 | **Required**<br />Specifies the reason for the failure.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br />Pattern: `^[^\n]{1,4}$`                                                                                                                           |
+| `Reason`                 | **Required**<br />Specifies the reason code for the recall rejection.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br />Pattern: `^[^\n]{1,4}$`                                                                                                             |
 | `EndToEndIdentification` | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` |
 
-
-#### Example SEPA CT Outbound Payment Completed webhook request body
+#### Example SEPA CT Outbound Payment Recall Rejected webhook request body
 
 ```json
 {
-    "Type": "Sepa.Ct.OutboundPayment.Completed",
-    "Version": 1,
+    "Type": "Sepa.Ct.OutboundPayment.RecallRejected",
     "Payload": {
-        "PaymentId": "061b687d-ef1e-4979-a086-669905545247",
-        "TransactionId": "44abdea4-92f9-472a-975d-f5c901cc090e",
-        "Reason": "AC06",
-        "EndToEndIdentification": "f70w45r3cxbg15"
+        "PaymentId": "f9902c78-f25d-4fb7-b29f-68cb3c0caf01",
+        "Reason": "CUST",
+        "EndToEndIdentification": "e20w26d5cxbg15"
     },
-    "Nonce": 163290462
+    "Nonce": 185447285
 }
 ```
 
 #### Example webhook response
-```
+```json
 {
-    "Nonce": 163290462
+    "Nonce": 185447285
 }
 ```
