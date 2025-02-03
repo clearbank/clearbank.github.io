@@ -159,26 +159,34 @@ Following a rejected pacs.004 and receipt of the SEPA Instant CT Recall Payment 
 
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
 
-## Simulate a SEPA Instant CT inbound payment and recall request
+## Simulate SEPA Instant CT payment scenarios
+
+The following will allow you to test SEPA Instant CT payment scenarios in the ClearBank simulation environment.
 
 <EndpointBlock
   type="post"
-  title="Create an inbound SEPA Instant CT payment in the simulation environment"
+  title="Simulate an inbound SEPA Instant CT payment"
   endpoints={[
     {
       path: "/v1/sepa-instant-emulator/inbound-payment",
-      version: "1.0.SIM"
+      version: "1.0.SIM",
+      webhooks: [
+        'sepa-instant-inbound-payment-settled-v1'
+      ]
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Create an inbound SEPA Instant CT recall request in the simulation environment"
+  title="Simulate an inbound SEPA Instant CT recall request"
   endpoints={[
     {
       path: "/v1/sepa-instant-emulator/inbound-payment/recall",
-      version: "1.0.SIM"
+      version: "1.0.SIM",
+      webhooks: [
+        'sepa-instant-recall-request-received-v2'
+      ]
     }
   ]}
 />
