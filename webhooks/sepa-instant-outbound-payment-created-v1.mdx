@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Outbound Payment Created webhook"
+title: "SEPA Instant Outbound Payment Created webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms a SEPA Instant CT outbound payment has been created.
+This webhook confirms an SCT Inst outbound payment has been created.
 
 #### Request body
 
@@ -23,5 +23,27 @@ This webhook confirms a SEPA Instant CT outbound payment has been created.
 | `TransactionId` |**Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid` |
 | `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
 | `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
+| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`|
 
+#### Example SEPA Instant Outbound Payment Created webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.Outbound.Payment.Created",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "872237b4-c981-a835-8d6b-0e3d704a661c",
+    "PaymentId": "872237b4-c981-a835-8d6b-0e3d704a661c",
+    "TimestampCreated": "2025-01-22T12:54:42.1408507Z",
+    "AdditionalPaymentProperties": null
+  },
+  "Nonce": 1839160681
+}
+```
+
+#### Example webhook response
+```
+{
+    "Nonce": 1839160681
+}
+```

@@ -1,10 +1,10 @@
 ---
-title: "SEPA Instant CT Recall Payment Created webhook"
+title: "SEPA Instant Recall Payment Created webhook"
 version: 2
 webhook: true
 ---
 
-This webhook confirms an outbound or inbound SEPA Instant CT recall payment has been created.
+This webhook confirms an inbound SCT Inst recall payment has been created.
 
 #### Request body
 
@@ -21,7 +21,31 @@ This webhook confirms an outbound or inbound SEPA Instant CT recall payment has 
 | Element                 | Description     |
 |-------------------------|-----------------|
 |`RecallTransactionId` |**Required**<br />Unique identifier of the recall transaction as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `1` |
-|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1` |
+|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
 |`TotalReturnedAmount` |**Required**<br />The amount of money returned in euros. For example, -12.51 would indicate that €12.51 has been debited from your account.<br/>Type: `number` <br/>Format: `decimal`|
 |`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
 |`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
+
+#### Example SEPA Instant Recall Payment Created webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.RecallPayment.Created",
+  "Version": 2,
+  "Payload": {
+    "RecallTransactionId": "fcb6963b5e9d4b3b943b1551bdc9b398",
+    "OriginalTransactionId": "2e4880ab-21a3-43d1-95a1-b6c5426cd6e4",
+    "TotalReturnedAmount": 100,
+    "TimestampCreated": "2025-01-22T12:54:39.9844016Z",
+    "PaymentId": "c7c4402a-56a6-4382-a31a-0ca32099ca4f"
+  },
+  "Nonce": 2068152292
+}
+```
+
+#### Example webhook response
+```
+{
+    "Nonce": 2068152292
+}
+```
