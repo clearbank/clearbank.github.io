@@ -23,6 +23,7 @@ This webhook confirms a SEPA Instant outbound payment has been created.
 | `TransactionId` |**Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid` |
 | `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
 | `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 | `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`|
 
 #### Example SEPA Instant Outbound Payment Created webhook request body
@@ -35,6 +36,7 @@ This webhook confirms a SEPA Instant outbound payment has been created.
     "TransactionId": "872237b4-c981-a835-8d6b-0e3d704a661c",
     "PaymentId": "872237b4-c981-a835-8d6b-0e3d704a661c",
     "TimestampCreated": "2025-01-22T12:54:42.1408507Z",
+    "EndToEndId": "sMLnipYzjNSrxp4QUA1Tqi0Xo8uHnLRYJaS",
     "AdditionalPaymentProperties": null
   },
   "Nonce": 1839160681

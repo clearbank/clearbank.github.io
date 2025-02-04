@@ -30,6 +30,7 @@ This webhook confirms an inbound SEPA Instant payment has settled.
 | `SchemePaymentMethod`   | **Required**<br />Payment scheme used to submit the transaction. This will always be INST, which indicates SEPA CT Instant.<br /> Type: `string`|
 | `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
 | `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 | `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`|
 
 #### Example SEPA Instant Inbound Payment Settled webhook request body
@@ -49,6 +50,7 @@ This webhook confirms an inbound SEPA Instant payment has settled.
     "SchemePaymentMethod": "INST",
     "TimestampCreated": "2025-01-22T12:55:12.1941864Z",
     "TimestampSubmitted": "2025-01-22T12:55:12.1941864Z",
+    "EndToEndId": "ec1GSkA8YCLzPYod96O7ROildNHeeHnuwgO",
     "AdditionalPaymentProperties": [
       {
         "Key": "CreditorAgentBic",

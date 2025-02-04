@@ -25,6 +25,7 @@ This webhook confirms an inbound SEPA Instant recall payment has been created.
 |`TotalReturnedAmount` |**Required**<br />The amount of money returned in euros. For example, -12.51 would indicate that €12.51 has been debited from your account.<br/>Type: `number` <br/>Format: `decimal`|
 |`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
 |`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 
 #### Example SEPA Instant Recall Payment Created webhook request body
 
@@ -37,7 +38,8 @@ This webhook confirms an inbound SEPA Instant recall payment has been created.
     "OriginalTransactionId": "2e4880ab-21a3-43d1-95a1-b6c5426cd6e4",
     "TotalReturnedAmount": 100,
     "TimestampCreated": "2025-01-22T12:54:39.9844016Z",
-    "PaymentId": "c7c4402a-56a6-4382-a31a-0ca32099ca4f"
+    "PaymentId": "c7c4402a-56a6-4382-a31a-0ca32099ca4f",
+    "EndToEndId": "8ufIvXRF6gDpWcFnLl4GruLZLQsAGCzFa4F"
   },
   "Nonce": 2068152292
 }

@@ -26,6 +26,7 @@ This webhook confirms an outgoing SEPA Instant recall payment has been cancelled
 |`TimestampCancelled` |**Required**<br />Date and time transaction was cancelled, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
 |`CancellationCode` |**Required**<br />Cancellation code.<br/>Type: `string`<br/>Pattern: `[^\n]`|
 |`CancellationReason` |**Required**<br />Reason Instant SEPA recall payment was cancelled.<br/>Type: `string`<br/>Pattern: `[^\n]`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 
 #### Example SEPA Instant Recall Payment Cancelled webhook request body
 
@@ -39,7 +40,8 @@ This webhook confirms an outgoing SEPA Instant recall payment has been cancelled
     "OriginalTransactionId": "160b3baf1d921b2a3826b022363d865a",
     "TimestampCancelled": "2025-01-22T12:56:00.3080782Z",
     "CancellationCode": "CB01",
-    "CancellationReason": "Unknown error"
+    "CancellationReason": "Unknown error",
+    "EndToEndId": "6jff6aBJ1B76Zoy3rvMT5MzImos14R5WbdC"
   },
   "Nonce": 643704746
 }

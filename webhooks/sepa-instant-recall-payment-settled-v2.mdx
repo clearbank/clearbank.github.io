@@ -25,6 +25,7 @@ This webhook confirms an outbound or inbound SEPA Instant payment related to a r
 |`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
 |`TotalReturnedAmount` |**Required**<br />The amount of money returned in euros, with the direction of payment indicated by the sign. For example 12.51 would indicate €12.51 has been credited to your account and -12.51 would indicate that €12.51 has been debited from your account.<br/>Type: `number` <br/>Format: `decimal`|
 |`TimestampSettled` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 
 #### Example SEPA Instant Recall Payment Settled request body
 
@@ -37,7 +38,8 @@ This webhook confirms an outbound or inbound SEPA Instant payment related to a r
     "RecallTransactionId": "c8634f01290904468afeabb417f5ceb0",
     "OriginalTransactionId": "4f26864449b129f7238ad5ee8ea014eb",
     "TotalReturnedAmount": 3.28,
-    "TimestampSettled": "2025-01-22T12:55:40.8714037Z"
+    "TimestampSettled": "2025-01-22T12:55:40.8714037Z",
+    "EndToEndId": "mtsHGw83TX9DSvhHD3XDXIHHb3HSqING0T9"
   },
   "Nonce": 445427771
 }

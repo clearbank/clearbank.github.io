@@ -24,6 +24,7 @@ This webhook confirms an outgoing SEPA Instant recall request has been rejected.
 |`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
 |`RejectionCode` |**Required**<br />Specifies the reason for the rejection of the recall. External code sets can be downloaded from [www.iso20022.org](www.iso20022.org).<br />`NOOR` - Original credit transfer never received. <br />`RNPR` - Original credit transfer was received but is not processable. <br />`ARJT` - Already rejected original SCT (SEPA Credit Transfer). <br />`ARDT` - Already returned original SCT (SEPA Credit Transfer). <br />`RR04` - Regulatory reason.<br/>Type: `string`|
 |`TimestampRejected` |**Required**<br />Date and time the recall was rejected, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
+| `EndToEndIdentification` |**Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 |`AdditionalInformation` |_Optional_<br/>Additional information provided by the initiating party about the rejection.<br/>Type: `array` or `null`<br />Type: `string`<br/>Pattern: `[^\n]`|
 
 #### Example SEPA Instant Recall Request Rejected request body
@@ -37,6 +38,7 @@ This webhook confirms an outgoing SEPA Instant recall request has been rejected.
     "OriginalTransactionId": "c496d6a7-fc9b-438b-b03c-22e4ba15d2a1",
     "RejectionCode": "AC03",
     "TimestampRejected": "2025-01-22T12:54:05.1118861Z",
+    "EndToEndId": "CKDIbhOhfZVGN6YJ5KgsST9H77IbOViXhhs",
     "AdditionalInformation": [
       "Some Reason"
     ]
