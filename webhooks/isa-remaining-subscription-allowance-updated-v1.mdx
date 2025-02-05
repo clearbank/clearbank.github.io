@@ -25,14 +25,15 @@ This webhook triggers when a cash ISA customer's annual allowance is affected by
 
 #### Payload
 
-| Element                          | Description                                                                                                                                                                                                                           |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AccountId`                      | The unique identifier for this ISA. <br /> Type: `string` <br /> Format: `GUID`                                                                                                                                                       |
-| `TaxYear`                        | The current tax year. <br /> Type: `string` <br /> Pattern: `^[0-9]{2}/[0-9]{2}$`                                                                                                                                                     |
-| `CashIsaStatus`                  | The status of this ISA. <br /> Type: `string` <br /> Example: `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut`                                                                                                   |
-| `NetSubscription`                | The net amount withdrawn and deposited to this ISA in the current tax year. This can value can be negative. <br /> Type: `number` <br /> Format: `decimal`                                                                            |
-| `RemainingSubscriptionAllowance` | The remaining amount the customer can deposit into this Cash ISA this tax year, which reflects the subscriptions this customer has made across all ISAs managed by ClearBank. <br /> Type: `number` <br /> Format: `decimal` |
-| `AnnualAllowanceUsed`            | The total amount that has been deposited into this ISA in the current tax year. <br /> Type: `number` <br /> Format: `decimal`                                                                                                        |
+| Element                                         | Description                                                                                                                                                                                                                  |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AccountId`                                     | The unique identifier for this ISA. <br /> Type: `string` <br /> Format: `GUID`                                                                                                                                              |
+| `TaxYear`                                       | The current tax year. <br /> Type: `string` <br /> Pattern: `^[0-9]{2}/[0-9]{2}$`                                                                                                                                            |
+| `CashIsaStatus`                                 | The status of this ISA. <br /> Type: `string` <br /> Example: `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut`                                                                                          |
+| `NetSubscription`                               | The net amount withdrawn and deposited to this ISA in the current tax year. This can value can be negative. <br /> Type: `number` <br /> Format: `decimal`                                                                   |
+| `RemainingSubscriptionAllowance`                | The remaining amount the customer can deposit into this Cash ISA this tax year, which reflects the subscriptions this customer has made across all ISAs managed by ClearBank. <br /> Type: `number` <br /> Format: `decimal` |
+| `AnnualAllowanceUsed`                           | The total amount that has been deposited into this ISA in the current tax year. <br /> Type: `number` <br /> Format: `decimal`                                                                                               |
+| `RemainingSubscriptionAllowanceUpdatedDateTime` | Date and time the remaining subscription allowance was updated in UTC. <br /> Type: `string` <br /> Format: `date-time`                                                                                                      |
 
 #### Example ISA Remaining Subscription Allowance Updated webhook request body
 
@@ -47,7 +48,8 @@ This webhook triggers when a cash ISA customer's annual allowance is affected by
         "CashIsaStatus": "Active",
         "NetSubscription": 8000.00,
         "RemainingSubscriptionAllowance": 10000.00,
-        "AnnualAllowanceUsed": 8000.00
+        "AnnualAllowanceUsed": 8000.00,
+        "RemainingSubscriptionAllowanceUpdatedDateTime": "2024-10-20T09:54:44.000209Z"
     },
     "Nonce": 5582946458
 }
