@@ -18,13 +18,15 @@ This webhook confirms an inbound SCT Inst recall request has been received.
 ```
 
 #### Payload
-| Element                 | Description     |
-|-------------------------|-----------------|
-|`PaymentId` |**Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`|
-|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
-|`ReasonCode` |**Required**<br />The reason code used to recall the payment. This can be DUPL, FRAD, TECH, CUST, AC03 or AM09.<br/>Type: `string`<br/>Pattern: `[^\n]`|
-|`TimestampCreated` |**Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
-|`AdditionalInformation` |_Optional_<br/>Additional information provided by the initiating party about the recall.<br/>Type: `array` or `null`<br />Type: `string`<br/>Pattern: `[^\n]`|
+
+| Element                 | Description                                                                                                                                                                                                                                                                                                             |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`             | **Required**<br />Unique identifier for payment as assigned by ClearBank.<br/>Type: `string` <br/>Format: `uuid`                                                                                                                                                                                                        |
+| `OriginalTransactionId` | **Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}` |
+| `ReasonCode`            | **Required**<br />The reason code used to recall the payment. This can be DUPL, FRAD, TECH, CUST, AC03 or AM09.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                                 |
+| `TimestampCreated`      | **Required**<br />Date and time the recall was requested, in UTC.<br/>Type: `string`<br/>Format: `date-time`                                                                                                                                                                                                            |
+| `EndToEndId`            | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$`               |
+| `AdditionalInformation` | _Optional_<br/>Additional information provided by the initiating party about the recall.<br/>Type: `array` or `null`<br />Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                           |
 
 #### Example SEPA Instant Recall Request Received request body
 
@@ -37,6 +39,7 @@ This webhook confirms an inbound SCT Inst recall request has been received.
     "OriginalTransactionId": "aa4f5da6-15b7-45ec-abf1-c72d58041ec3",
     "ReasonCode": "AC03",
     "TimestampCreated": "2025-01-22T12:54:32.8690907Z",
+    "EndToEndId": "QtXXMAu18XRVubaXBSFoLdi14e5uSMzr85p",
     "AdditionalInformation": [
       "Some Reason"
     ]
@@ -46,7 +49,8 @@ This webhook confirms an inbound SCT Inst recall request has been received.
 ```
 
 #### Example webhook response
-```
+
+```json
 {
     "Nonce": 1885237896
 }
