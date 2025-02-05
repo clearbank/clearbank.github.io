@@ -66,7 +66,9 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 
 You can send SEPA recall requests using the [POST /payments/sepa-ct/v1/recall](#request-a-sepa-ct-payment-recall) endpoint. Recalls can take up to 15 business days.
 
-If your recall request has been accepted, you will be notified via the [SEPA CT Outbound Payment Return Completed](#sepa-ct-outbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks.
+* If your recall request has been **accepted**, you will be notified via the [SEPA CT Outbound Payment Return Completed](#sepa-ct-outbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks.
+
+* If your recall request has been **rejected**, you will be notified via the [SEPA CT Outbound Payment Recall Rejected](#sepa-ct-outbound-payment-recall-rejected-webhook) webhook.
 
 ![A message flow diagram explaining how to send a SEPA CT recall request](/assets/images/sepa-ct-recall-request.svg)
 
@@ -77,8 +79,8 @@ Recalls can be requested using the following reason codes:
 | Reason | Description                                                           | Time limit to send recall request |
 | ------ | --------------------------------------------------------------------- | --------------------------------- |
 | DUPL   | Duplicate sending                                                     | 10 business days                  |
-| TECH   | Technical problems resulting in an erroneous SEPA Instant Transaction | 10 business days                  |
-| FRAD   | Fraudulent originated SEPA Instant Instruction                        | 13 months                         |
+| TECH   | Technical problems resulting in an erroneous SCT Inst Transaction | 10 business days                  |
+| FRAD   | Fraudulent originated SCT Inst Instruction                        | 13 months                         |
 | AC03   | Wrong account number in original transfer                             | 13 months                         |
 | AM09   | Wrong amount in original transfer                                     | 13 months                         |
 | CUST   | Requested by customer                                                 | 13 months                         |
@@ -92,13 +94,17 @@ Recalls can be requested using the following reason codes:
       version: "1.0-SEPA-CT",
       webhooks: [
         'sepa-ct-outbound-payment-return-completed-v1',
-        'eu-customer-accounts-transaction-completed-v1'
+        'eu-customer-accounts-transaction-completed-v1',
+        'sepa-ct-outbound-payment-recall-rejected-v1'
       ]
     }
   ]}
 />
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-return-completed-v1' />
+<WebhookPlaceholder render='sepa-ct-outbound-payment-recall-rejected-v1' />
+
+
 
 ## Responding to a SEPA CT recall request
 
