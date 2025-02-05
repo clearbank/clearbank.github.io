@@ -4,7 +4,8 @@ version: 1
 webhook: true
 ---
 
-This webhook confirms a SEPA Instant outbound payment has been cancelled.
+
+This webhook confirms an SCT Inst outbound payment has been cancelled.
 
 #### Request body
 
@@ -18,6 +19,7 @@ This webhook confirms a SEPA Instant outbound payment has been cancelled.
 ```
 
 #### Payload
+
 | Element                       | Description                                                                                                                                                                                                                                                                                               |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TransactionId`               | **Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`                                                                                                                                                                                                       |
@@ -28,6 +30,7 @@ This webhook confirms a SEPA Instant outbound payment has been cancelled.
 | `CancellationReason`          | **Required**<br />Reason Instant SEPA payment was cancelled.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                                                                      |
 | `EndToEndIdentification`      | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 | `AdditionalPaymentProperties` | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`                                                                |
+
 
 #### Example SEPA Instant Outbound Payment Cancelled webhook request body
 
@@ -50,6 +53,7 @@ This webhook confirms a SEPA Instant outbound payment has been cancelled.
 ```
 
 #### Example webhook response
+
 ```json
 {
     "Nonce": 1355726072
