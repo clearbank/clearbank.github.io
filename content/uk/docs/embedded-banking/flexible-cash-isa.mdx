@@ -148,26 +148,29 @@ The process is shown in this flow diagram:
 
 ### Manage customer ISA eligibility
 
-Customers can invalidate their cash ISA subscriptions in the following ways:
+Customers can be made ineligible for cash ISAs. While a customer is ineligible, they cannot pay funds into their cash ISA.  
+Ineligible customers should still be able to withdraw funds from their cash ISA.
 
-* Moving address out of the UK
-* Moving their place of residence out of the UK
-* Providing an invalid Date of Birth (DoB)
-* Providing an invalid National Insurance (NI) number
+Customers can be made ineligible for cash ISA contributions for the following reasons:
+
+* You notified us that the customer's address is now outside the UK
+* You notified us that the customer's place of residence is now outside the UK
+* You provided us an invalid Date of Birth (DoB) for the customer
+* You provided us an invalid National Insurance (NI) number for the customer
 
 **When a customer moves their address out of the UK, they can continue making subscriptions until the current tax year ends.**  
-We are notified of address changes via the [**PUT /v1/customers/retail/{customerId}/currentaddress**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-address) endpoint.  
-After you set the customer's address back to the UK, you must submit a new declaration of ISA eligibility before the customer can pay into their ISA again.
+You should notify us of customer address changes via the [**PUT /v1/customers/retail/{customerId}/currentaddress**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-address) endpoint.  
+Once a customer's address returns to the UK, you should notify us of their new details then submit a new declaration of ISA eligibility. If successful, the customer will be able to pay into their ISA again.
 
 **When a customer changes their place of residence out of the UK, no further subscriptions can be made.**  
-We are notified of country of residence changes via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
-After you set the customer's place of residence back to the UK, you must submit a new declaration of ISA eligibility before the customer can pay into their ISA again.
+You should notify us of customer country of residence changes via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
+Once the customer's place of residence returns to the UK, you should notify us of this then submit a new declaration of ISA eligibility. If successful, the customer will be able to pay into their ISA again.
 
 **When a customer's DoB or NI number is found to be invalid, no further subscriptions can be made.**  
-We receive these details via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
-After the details are corrected, you must submit a new declaration of ISA eligibility before the customer can pay into their ISA again.
+You should send us these details via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) and [**POST /v1/customers/retail/**](/uk/docs/embedded-banking/retail-customers#create-a-retail-customer) endpoints.  
+Once you have a corrected NI or DoB for the customer, you should notify us of this then submit a new declaration of ISA eligibility. If successful, the customer will be able to pay into their ISA again.
 
-You can submit a declaration of ISA eligibility using the [**POST /isas/{accountId}/declaration**](#set-a-new-isa-declaration) endpoint.
+You can submit a declaration of ISA eligibility using the [**POST /isas/{accountId}/declaration**](#set-a-new-isa-declaration) endpoint.  
 
 ## Setting up a cash ISA
 
