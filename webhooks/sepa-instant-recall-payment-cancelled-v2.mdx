@@ -1,10 +1,11 @@
 ---
-title: "SEPA Instant CT Recall Payment Cancelled webhook"
+title: "SEPA Instant Recall Payment Cancelled webhook"
 version: 2
 webhook: true
 ---
 
-This webhook confirms an outgoing SEPA Instant CT recall payment has been cancelled.
+This webhook confirms an outgoing SCT Inst recall payment has been cancelled.
+
 
 #### Request body
 
@@ -18,11 +19,40 @@ This webhook confirms an outgoing SEPA Instant CT recall payment has been cancel
 ```
 
 #### Payload
-| Element                 | Description     |
-|-------------------------|-----------------|
-|`RecallTransactionId` |**Required**<br />Unique identifier of the recall transaction as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `1` |
-|`OriginalTransactionId` |**Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1` |
-|`TimestampCancelled` |**Required**<br />Date and time transaction was cancelled, in UTC.<br/>Type: `string`<br/>Format: `date-time`|
-|`CancellationCode` |**Required**<br />Cancellation code.<br/>Type: `string`|
-|`CancellationReason` |**Required**<br />Reason Instant SEPA recall payment was cancelled.<br/>Type: `string`|
-|`PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. For recalls of outbound payments this will match the paymentId returned in the 202 response when you initiated the original payment. For recalls of inbound payments this will match the paymentId in the Inbound Payment Settled webhook.<br/>Type: `string` <br/>Format: `uuid`|
+
+| Element                 | Description                                                                                                                                                                                                                                                                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`             | **Required**<br />Unique identifier for payment assigned by ClearBank. For recalls of outbound payments this will match the paymentId returned in the 202 response when you initiated the original payment. For recalls of inbound payments this will match the paymentId in the Inbound Payment Settled webhook.<br/>Type: `string` <br/>Format: `uuid` |
+| `RecallTransactionId`   | **Required**<br />Unique identifier of the recall transaction as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `1`                                                                                                                                                                                 |
+| `OriginalTransactionId` | **Required**<br />Unique identifier of the original payment transaction, as assigned by ClearBank, to unambiguously identify the transaction. This identifier is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,36}`                                  |
+| `TimestampCancelled`    | **Required**<br />Date and time transaction was cancelled, in UTC.<br/>Type: `string`<br/>Format: `date-time`                                                                                                                                                                                                                                            |
+| `CancellationCode`      | **Required**<br />Cancellation code.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                                                                                                                                             |
+| `CancellationReason`    | **Required**<br />Reason SCT Inst recall payment was cancelled.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                                                                                                                 |
+| `EndToEndId`            | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$`                                                |
+
+#### Example SEPA Instant Recall Payment Cancelled webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.RecallPayment.Cancelled",
+  "Version": 2,
+  "Payload": {
+    "PaymentId": "160b3baf-1d92-1b2a-3826-b022363d865a",
+    "RecallTransactionId": "7509f28206a317cfc9ca7ab71f3e8286",
+    "OriginalTransactionId": "160b3baf1d921b2a3826b022363d865a",
+    "TimestampCancelled": "2025-01-22T12:56:00.3080782Z",
+    "CancellationCode": "CB01",
+    "CancellationReason": "Unknown error",
+    "EndToEndId": "6jff6aBJ1B76Zoy3rvMT5MzImos14R5WbdC"
+  },
+  "Nonce": 643704746
+}
+```
+
+#### Example webhook response
+
+```json
+{
+     "Nonce": 643704746
+}
+```

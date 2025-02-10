@@ -1,10 +1,11 @@
 ---
-title: "SEPA Instant CT Outbound Payment Settled webhook"
+title: "SEPA Instant Outbound Payment Settled webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms an outbound SEPA Instant CT payment has settled.
+
+This webhook confirms an outbound SCT Inst payment has settled.
 
 #### Request body
 
@@ -18,11 +19,44 @@ This webhook confirms an outbound SEPA Instant CT payment has settled.
 ```
 
 #### Payload
-| Element                 | Description     |
-|-------------------------|-----------------|
-| `TransactionId` |**Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid` |
-| `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
-| `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
 
+| Element                       | Description                                                                                                                                                                                                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`               | **Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`                                                                                                                                                                                                       |
+| `PaymentId`                   | **Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`                                                                                                  |
+| `TimestampCreated`            | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                             |
+| `TimestampSubmitted`          | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                      |
+| `EndToEndId`                  | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
+| `AdditionalPaymentProperties` | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`                                                                |
+
+
+#### Example SEPA Instant Outbound Payment Settled webhook request body
+
+```json
+{
+   "Type":"Sepa.Instant.Outbound.Payment.Settled",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"24d683a7-ae69-3035-c748-94827ddcbf92",
+      "PaymentId":"24d683a7-ae69-3035-c748-94827ddcbf92",
+      "TimestampCreated":"2024-10-11T13:34:59.682719Z",
+      "TimestampSubmitted":"2024-10-11T13:35:01.9941075Z",
+      "EndToEndId":"5g3qDxv7BCF3sgYy6hJmomi7GqlAc8jstHs",
+      "AdditionalPaymentProperties":[
+         {
+            "Key":"InterBankSettlementDate",
+            "Value":"2024-10-11"
+         }
+      ]
+   },
+   "Nonce": 1630803960
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1630803960
+}
+```

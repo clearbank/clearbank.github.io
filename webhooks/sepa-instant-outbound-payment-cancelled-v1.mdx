@@ -1,10 +1,11 @@
 ---
-title: "SEPA Instant CT Outbound Payment Cancelled webhook"
+title: "SEPA Instant Outbound Payment Cancelled webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms a SEPA Instant CT outbound payment has been cancelled.
+
+This webhook confirms an SCT Inst outbound payment has been cancelled.
 
 #### Request body
 
@@ -18,13 +19,43 @@ This webhook confirms a SEPA Instant CT outbound payment has been cancelled.
 ```
 
 #### Payload
-| Element                 | Description     |
-|-------------------------|-----------------|
-| `TransactionId` |**Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid` |
-| `PaymentId` |**Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`|
-| `TimestampCreated`   | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `TimestampSubmitted`   | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`|
-| `CancellationCode` |**Required**<br />The cancellation code for the Payment. Possible values include: AC01, CB01, CNOR, AM04.<br/>Type: `string`|
-| `CancellationReason` |**Required**<br />Reason Instant SEPA payment was cancelled.<br/>Type: `string`|
-| `AdditionalPaymentProperties`   | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`|
 
+| Element                       | Description                                                                                                                                                                                                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`               | **Required**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`                                                                                                                                                                                                       |
+| `PaymentId`                   | **Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`                                                                                                  |
+| `TimestampCreated`            | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                             |
+| `TimestampSubmitted`          | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                      |
+| `CancellationCode`            | **Required**<br />The cancellation code for the Payment. Possible values include: AC01, CB01, CNOR, AM04.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                         |
+| `CancellationReason`          | **Required**<br />Reason SCT Inst payment was cancelled.<br/>Type: `string`<br/>Pattern: `[^\n]`                                                                                                                                                                                                         |
+| `EndToEndId`                  | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
+| `AdditionalPaymentProperties` | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`                                                                |
+
+
+#### Example SEPA Instant Outbound Payment Cancelled webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.Outbound.Payment.Cancelled",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
+    "PaymentId": "a6c26de0-8aae-79d9-eef7-208dfd072632",
+    "TimestampCreated": "2025-01-22T12:54:15.5337199Z",
+    "TimestampSubmitted": "2025-01-22T12:54:20.5337358Z",
+    "CancellationCode": "QG43",
+    "CancellationReason": "Pariatur aspernatur est.",
+    "EndToEndId": "dTQC8O0EoyMBvxURbgghRrJMWBTtwCT78GU",
+    "AdditionalPaymentProperties": null
+  },
+  "Nonce": 1355726072
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1355726072
+}
+```
