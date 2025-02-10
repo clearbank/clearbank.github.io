@@ -1,0 +1,58 @@
+---
+title: "Business customers"
+metaTitle: "Business customers"
+order: 2
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+
+## Business customers
+
+A business customer is a business [registered with the UK government](https://www.gov.uk/set-up-business/limited-company). A business customer can be a partnership, sole trader, or limited company.
+
+Because registered company accounts are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling accounts page](../gbp-accounts/manage-accounts).
+
+To create a business customer, use the [POST /v1/customers/business](#create-a-business-customer) endpoint.
+
+You can update the business customer's personal information using the [PATCH /v1/customers/business/{customerId}](#update-an-existing-business-customers-personal-information) endpoint, and update a business customer's address with the [PUT /v1/customers/business/{customerId}/currentAddress](#update-an-existing-business-customers-address) endpoint.
+
+#### Directors and Ultimate Beneficiary Owners
+
+You can also set directors and Ultimate Beneficiary Owners (UBOs) for the business customers using various endpoints:
+
+Once you have created a business customer, you can create FSCS-protected accounts using the following endpoints:
+- [Current accounts](./current-accounts)
+- [Savings accounts](./savings-accounts)
+
+<EndpointBlock
+  type="post"
+  title="Create a business customer"
+  endpoints={[
+    {
+      path: "/customers/v2/individuals",
+      version: "retail-2.0",
+      webhooks: [
+      'associated-webhook-name-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a business customer"
+  endpoints={[
+    {
+      path: "/customers/v2/individuals/{individualId}",
+      version: "retail-2.0",
+      webhooks: [
+      'associated-webhook-name-v1'
+      ]
+    }
+  ]}
+/>
+
+

@@ -1,0 +1,1914 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "The ClearBank® API is a REST based API that can be connected to in order to leverage ClearBank®’s products and banking services.\r\n\r\nThis ClearBank® Financial Institution API area in Swagger provides Financial Institutions with the required API endpoint information and message schema.\r\n\r\nFor the necessary information in order for Financial Institutions to successfully connect to ClearBank®’s API, refer to the Knowledge Centre.\r\n\r\nAll information is provided to you on a confidential basis and shall remain the property of ClearBank Ltd (including ownership rights in all intellectual property). All information is provided \"as is\" and without any implied warranty, representation, condition or otherwise, regarding its accuracy or completeness.\r\n\r\nCopyright ClearBank Ltd. Authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority (Financial Services Register number: 754568). Registered Address: ClearBank, Borough Yards, 13 Dirty Lane, London, SE1 9PA.",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "2.0.Retail"
+  },
+  "paths": {
+    "/customers/v2/individuals": {
+      "post": {
+        "tags": [
+          "Individual"
+        ],
+        "summary": "Requests creation of Individual",
+        "operationId": "V2IndividualPost",
+        "requestBody": {
+          "description": "Information required to create individual",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIndividualRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/customers/v2/individuals/{individualId}": {
+      "get": {
+        "tags": [
+          "Individual"
+        ],
+        "summary": "Retrieves an individual by individualId",
+        "operationId": "V2IndividualGet",
+        "parameters": [
+          {
+            "name": "individualId",
+            "in": "path",
+            "description": "ID of the individual",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIndividualResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Individual"
+        ],
+        "summary": "Requests to update Individual",
+        "operationId": "V2IndividualPatch",
+        "parameters": [
+          {
+            "name": "individualId",
+            "in": "path",
+            "description": "Individual id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update request for Individual",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIndividualRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/customers/v2/retail-customers/{customerId}": {
+      "get": {
+        "tags": [
+          "Retail"
+        ],
+        "summary": "Retrieves a retail customer by customerId",
+        "operationId": "V2RetailGet",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRetailCustomerResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/v2/retail-customers": {
+      "post": {
+        "tags": [
+          "Retail"
+        ],
+        "summary": "Requests creation of retail customer",
+        "operationId": "V2RetailPost",
+        "requestBody": {
+          "description": "Information required to create individual",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRetailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/customers/v2/retail-customers/{customerId}/relatedparties": {
+      "post": {
+        "tags": [
+          "Retail"
+        ],
+        "summary": "Adds related party to retail customer",
+        "operationId": "V2RetailRelatedPartyPost",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the retail customer to create a related party for",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to related party to retail customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRetailRelatedPartyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedRelatedPartyResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedRelatedPartyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/customers/v2/retail-customers/{customerId}/status": {
+      "patch": {
+        "tags": [
+          "Retail"
+        ],
+        "summary": "Suspends customer",
+        "operationId": "V2PatchCustomerStatus",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the retail customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Set suspended status for retail customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRetailCustomerStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CddType": {
+        "enum": [
+          "SimplifiedDueDiligence",
+          "StandardDueDiligence",
+          "EnhancedDueDiligence"
+        ],
+        "type": "string",
+        "description": "The type of CDD check"
+      },
+      "CountryCode": {
+        "enum": [
+          "AFG",
+          "ALB",
+          "ATA",
+          "DZA",
+          "ASM",
+          "AND",
+          "AGO",
+          "ATG",
+          "AZE",
+          "ARG",
+          "AUS",
+          "AUT",
+          "BHS",
+          "BHR",
+          "BGD",
+          "ARM",
+          "BRB",
+          "BEL",
+          "BMU",
+          "BTN",
+          "BOL",
+          "BIH",
+          "BWA",
+          "BVT",
+          "BRA",
+          "BLZ",
+          "IOT",
+          "SLB",
+          "VGB",
+          "BRN",
+          "BGR",
+          "MMR",
+          "BDI",
+          "BLR",
+          "KHM",
+          "CMR",
+          "CAN",
+          "CPV",
+          "CYM",
+          "CAF",
+          "LKA",
+          "TCD",
+          "CHL",
+          "CHN",
+          "TWN",
+          "CXR",
+          "CCK",
+          "COL",
+          "COM",
+          "MYT",
+          "COG",
+          "COD",
+          "COK",
+          "CRI",
+          "HRV",
+          "CUB",
+          "CYP",
+          "CZE",
+          "BEN",
+          "DNK",
+          "DMA",
+          "DOM",
+          "ECU",
+          "SLV",
+          "GNQ",
+          "ETH",
+          "ERI",
+          "EST",
+          "FRO",
+          "FLK",
+          "SGS",
+          "FJI",
+          "FIN",
+          "ALA",
+          "FRA",
+          "GUF",
+          "PYF",
+          "ATF",
+          "DJI",
+          "GAB",
+          "GEO",
+          "GMB",
+          "PSE",
+          "DEU",
+          "GHA",
+          "GIB",
+          "KIR",
+          "GRC",
+          "GRL",
+          "GRD",
+          "GLP",
+          "GUM",
+          "GTM",
+          "GIN",
+          "GUY",
+          "HTI",
+          "HMD",
+          "VAT",
+          "HND",
+          "HKG",
+          "HUN",
+          "ISL",
+          "IND",
+          "IDN",
+          "IRN",
+          "IRQ",
+          "IRL",
+          "ISR",
+          "ITA",
+          "CIV",
+          "JAM",
+          "JPN",
+          "KAZ",
+          "JOR",
+          "KEN",
+          "PRK",
+          "KOR",
+          "KWT",
+          "KGZ",
+          "LAO",
+          "LBN",
+          "LSO",
+          "LVA",
+          "LBR",
+          "LBY",
+          "LIE",
+          "LTU",
+          "LUX",
+          "MAC",
+          "MDG",
+          "MWI",
+          "MYS",
+          "MDV",
+          "MLI",
+          "MLT",
+          "MTQ",
+          "MRT",
+          "MUS",
+          "MEX",
+          "MCO",
+          "MNG",
+          "MDA",
+          "MNE",
+          "MSR",
+          "MAR",
+          "MOZ",
+          "OMN",
+          "NAM",
+          "NRU",
+          "NPL",
+          "NLD",
+          "CUW",
+          "ABW",
+          "SXM",
+          "BES",
+          "NCL",
+          "VUT",
+          "NZL",
+          "NIC",
+          "NER",
+          "NGA",
+          "NIU",
+          "NFK",
+          "NOR",
+          "MNP",
+          "UMI",
+          "FSM",
+          "MHL",
+          "PLW",
+          "PAK",
+          "PAN",
+          "PNG",
+          "PRY",
+          "PER",
+          "PHL",
+          "PCN",
+          "POL",
+          "PRT",
+          "GNB",
+          "TLS",
+          "PRI",
+          "QAT",
+          "REU",
+          "ROU",
+          "RUS",
+          "RWA",
+          "BLM",
+          "SHN",
+          "KNA",
+          "AIA",
+          "LCA",
+          "MAF",
+          "SPM",
+          "VCT",
+          "SMR",
+          "STP",
+          "SAU",
+          "SEN",
+          "SRB",
+          "SYC",
+          "SLE",
+          "SGP",
+          "SVK",
+          "VNM",
+          "SVN",
+          "SOM",
+          "ZAF",
+          "ZWE",
+          "ESP",
+          "SSD",
+          "SDN",
+          "ESH",
+          "SUR",
+          "SJM",
+          "SWZ",
+          "SWE",
+          "CHE",
+          "SYR",
+          "TJK",
+          "THA",
+          "TGO",
+          "TKL",
+          "TON",
+          "TTO",
+          "ARE",
+          "TUN",
+          "TUR",
+          "TKM",
+          "TCA",
+          "TUV",
+          "UGA",
+          "UKR",
+          "MKD",
+          "EGY",
+          "GBR",
+          "GGY",
+          "JEY",
+          "IMN",
+          "TZA",
+          "USA",
+          "VIR",
+          "BFA",
+          "URY",
+          "UZB",
+          "VEN",
+          "WLF",
+          "WSM",
+          "YEM",
+          "ZMB"
+        ],
+        "type": "string",
+        "description": "3-letter country codes as defined in ISO 3166-1"
+      },
+      "CraRating": {
+        "enum": [
+          "LowRisk",
+          "MediumRisk",
+          "HighRisk"
+        ],
+        "type": "string",
+        "description": "CRA Rating"
+      },
+      "CreateIdentityDocumentDetailsRequest": {
+        "required": [
+          "countryOfIssue",
+          "idNumber",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "idNumber": {
+            "type": "string",
+            "description": "ID Number",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "ID Expiry Date",
+            "format": "date",
+            "nullable": true
+          },
+          "countryOfIssue": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IdType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates an identity document for an individual"
+      },
+      "CreateIdentityDocumentsRequest": {
+        "type": "object",
+        "properties": {
+          "documentDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateIdentityDocumentDetailsRequest"
+            },
+            "description": "Identity document details",
+            "nullable": true
+          },
+          "noIdReason": {
+            "$ref": "#/components/schemas/NoIdReason"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates an identity document for an individual; either identity document details, or a reason for no ID"
+      },
+      "CreateIndividualAddressRequest": {
+        "required": [
+          "addressLine1",
+          "addressLine2",
+          "city",
+          "country",
+          "county",
+          "postalCode",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/IndividualAddressType"
+          },
+          "addressLine1": {
+            "type": "string",
+            "description": "First line of the address",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "Second line of the address",
+            "nullable": true
+          },
+          "county": {
+            "type": "string",
+            "description": "County",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "City",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal code",
+            "nullable": true
+          },
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Address was valid until this date",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates an address for an individual"
+      },
+      "CreateIndividualRequest": {
+        "required": [
+          "countryOfResidence",
+          "dateOfBirth",
+          "firstName",
+          "identityDocuments",
+          "kycAml",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "The individual's first name",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "description": "The individual's middle name(s)",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "The individual's last name",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The individual's date of birth",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "description": "The individual's gender",
+            "nullable": true
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "The individual's email address",
+            "nullable": true
+          },
+          "telephone": {
+            "type": "string",
+            "description": "The individual's telephone number",
+            "nullable": true
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/CreateKycRequest"
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateIndividualAddressRequest"
+            },
+            "description": "Collection of addresses for the individual",
+            "nullable": true
+          },
+          "identityDocuments": {
+            "$ref": "#/components/schemas/CreateIdentityDocumentsRequest"
+          },
+          "nationalities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateNationalityRequest"
+            },
+            "description": "Collection of nationalities for the individual",
+            "nullable": true
+          },
+          "specialStatuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateSpecialStatusRequest"
+            },
+            "description": "Collection of special statuses for the individual",
+            "nullable": true
+          },
+          "taxResidencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateTaxResidencyRequest"
+            },
+            "description": "Collection of tax residencies for the individual",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates an individual"
+      },
+      "CreateKycRequest": {
+        "required": [
+          "kycReferenceId"
+        ],
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Is the customer or individual under sanctions?"
+          },
+          "pep": {
+            "type": "boolean",
+            "description": "Is the customer or individual a politically exposed person?"
+          },
+          "adverseMedia": {
+            "type": "boolean",
+            "description": "Does the customer or individual have adverse media?"
+          },
+          "denyListWatch": {
+            "type": "boolean",
+            "description": "Is the customer or individual on a deny list?"
+          },
+          "cddType": {
+            "$ref": "#/components/schemas/CddType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          },
+          "kycStatus": {
+            "$ref": "#/components/schemas/KycStatus"
+          },
+          "kycReferenceId": {
+            "type": "string",
+            "description": "The reference ID for the KYC check",
+            "nullable": true
+          },
+          "reviewDate": {
+            "type": "string",
+            "description": "The date the KYC check was performed",
+            "format": "date"
+          },
+          "nextReviewDate": {
+            "type": "string",
+            "description": "The date the next KYC check is due",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Create a KYC request for a customer or individual"
+      },
+      "CreateNationalityRequest": {
+        "required": [
+          "country"
+        ],
+        "type": "object",
+        "properties": {
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates a nationality for an individual"
+      },
+      "CreateRetailRelatedPartyRequest": {
+        "required": [
+          "individualId",
+          "relatedPartyType"
+        ],
+        "type": "object",
+        "properties": {
+          "individualId": {
+            "type": "string",
+            "description": "ID of the individual to be linked as a related party",
+            "format": "uuid"
+          },
+          "relatedPartyType": {
+            "$ref": "#/components/schemas/RetailCustomerRelatedPartyType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Create a related party for a retail customer"
+      },
+      "CreateRetailRequest": {
+        "type": "object",
+        "properties": {
+          "individualId": {
+            "type": "string",
+            "description": "The ID of the primary party individual",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for creating a retail customer"
+      },
+      "CreateSpecialStatusRequest": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/SpecialStatusValue"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Create a special status for a customer or individual"
+      },
+      "CreateTaxResidencyRequest": {
+        "required": [
+          "taxCountry"
+        ],
+        "type": "object",
+        "properties": {
+          "taxCountry": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "taxIdNumber": {
+            "type": "string",
+            "description": "Tax ID number",
+            "nullable": true
+          },
+          "noTaxIdReason": {
+            "$ref": "#/components/schemas/ReasonForNoTaxId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Create a tax residency for a customer or individual"
+      },
+      "CreatedRelatedPartyResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "Unique identifier for the linked customer",
+            "format": "uuid"
+          },
+          "individualId": {
+            "type": "string",
+            "description": "Unique identifier for the linked indvidual",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response containing information about the created related party"
+      },
+      "CustomerStatus": {
+        "enum": [
+          "InOnboarding",
+          "Active",
+          "InOffboarding",
+          "Offboarded",
+          "Suspended_KycNotMet",
+          "Suspended_FinCrime",
+          "Suspended_FirstPartyFraud",
+          "Suspended_ThirdPartyFraud"
+        ],
+        "type": "string",
+        "description": "Represents the status of a customer in the system."
+      },
+      "GetIndividualResponse": {
+        "type": "object",
+        "properties": {
+          "individualId": {
+            "type": "string",
+            "description": "Unique identifier for the individual.",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the individual.",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Middle name of the individual.",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "Surname of the individual.",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Date of birth of the individual.",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender of the individual.",
+            "nullable": true
+          },
+          "nationalities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "List of nationalities of the individual.",
+            "nullable": true
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "Email address of the individual.",
+            "nullable": true
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Telephone number of the individual.",
+            "nullable": true
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IndividualAddressResponse"
+            },
+            "description": "List of addresses associated with the individual.",
+            "nullable": true
+          },
+          "identityDocuments": {
+            "$ref": "#/components/schemas/IdentityDocumentsResponse"
+          },
+          "taxResidencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxResidenciesResponse"
+            },
+            "description": "List of tax residencies associated with the individual.",
+            "nullable": true
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/KycAmlResponse"
+          },
+          "specialStatuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialStatusResponse"
+            },
+            "description": "List of special statuses associated with the individual.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for retrieving individual details."
+      },
+      "GetRetailCustomerResponse": {
+        "type": "object",
+        "properties": {
+          "retailCustomerId": {
+            "type": "string",
+            "description": "Unique identifier for the retail customer.",
+            "format": "uuid"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Date when the retail customer was created.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Date when the retail customer was last modified.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/CustomerStatus"
+          },
+          "individuals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RetailCustomerRelatedPartyResponse"
+            },
+            "description": "List of related parties associated with the retail customer.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for retrieving retail customer details."
+      },
+      "IdType": {
+        "enum": [
+          "Passport",
+          "DriversLicense",
+          "NationalId",
+          "BirthCertificate"
+        ],
+        "type": "string",
+        "description": "The type of ID document"
+      },
+      "IdentityDocumentDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "idNumber": {
+            "type": "string",
+            "description": "Identity document number.",
+            "nullable": true
+          },
+          "expiryDate": {
+            "type": "string",
+            "description": "Expiry date of the identity document.",
+            "format": "date",
+            "nullable": true,
+            "readOnly": true
+          },
+          "countryOfIssue": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IdType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for an individual's identity document."
+      },
+      "IdentityDocumentsResponse": {
+        "type": "object",
+        "properties": {
+          "documentDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IdentityDocumentDetailsResponse"
+            },
+            "description": "Identity document details",
+            "nullable": true
+          },
+          "noIdReason": {
+            "$ref": "#/components/schemas/NoIdReason"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for an individual's identity documents. If no documents, will instead contain the reason why."
+      },
+      "IndividualAddressResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/IndividualAddressType"
+          },
+          "addressLine1": {
+            "type": "string",
+            "description": "First line of the address.",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "Second line of the address.",
+            "nullable": true
+          },
+          "county": {
+            "type": "string",
+            "description": "County of the address.",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "City of the address.",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal code of the address.",
+            "nullable": true
+          },
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Date from which the address is valid.",
+            "format": "date"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Date until which the address is valid.",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for an individual's address."
+      },
+      "IndividualAddressType": {
+        "enum": [
+          "Residential",
+          "Correspondence"
+        ],
+        "type": "string",
+        "description": "Types of address allowed for an individual"
+      },
+      "KycAmlResponse": {
+        "type": "object",
+        "properties": {
+          "kycReferenceId": {
+            "type": "string",
+            "description": "KYC reference identifier.",
+            "nullable": true
+          },
+          "reviewDate": {
+            "type": "string",
+            "description": "Date of the KYC review.",
+            "format": "date"
+          },
+          "nextReviewDate": {
+            "type": "string",
+            "description": "Date of the next KYC review.",
+            "format": "date",
+            "nullable": true
+          },
+          "sanctions": {
+            "type": "boolean",
+            "description": "Indicates if the individual is on sanctions list."
+          },
+          "pep": {
+            "type": "boolean",
+            "description": "Indicates if the individual is a politically exposed person."
+          },
+          "adverseMedia": {
+            "type": "boolean",
+            "description": "Indicates if the individual has adverse media."
+          },
+          "denyListWatch": {
+            "type": "boolean",
+            "description": "Indicates if the individual is on a deny list or watch list."
+          },
+          "cddType": {
+            "$ref": "#/components/schemas/CddType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          },
+          "kycStatus": {
+            "$ref": "#/components/schemas/KycStatus"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for KYC/AML information."
+      },
+      "KycStatus": {
+        "enum": [
+          "Failed",
+          "Passed"
+        ],
+        "type": "string",
+        "description": "The status of the KYC/AML check"
+      },
+      "NoIdReason": {
+        "enum": [
+          "Homeless",
+          "AsylumSeeker",
+          "NoLegalStatus",
+          "Minor",
+          "Other"
+        ],
+        "type": "string",
+        "description": "Reason for no ID; must only be set if no details provided"
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      },
+      "ReasonForNoTaxId": {
+        "enum": [
+          "CountryDoesNotIssue",
+          "UnableToObtain",
+          "NotRequired"
+        ],
+        "type": "string",
+        "description": "Supported reasons for not having a tax ID (required if no tax ID number provided)"
+      },
+      "RetailCustomerRelatedPartyResponse": {
+        "type": "object",
+        "properties": {
+          "individualId": {
+            "type": "string",
+            "description": "Unique identifier for the individual.",
+            "format": "uuid"
+          },
+          "relatedPartyType": {
+            "$ref": "#/components/schemas/RetailCustomerRelatedPartyType"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the individual.",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Middle name of the individual.",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "Surname of the individual.",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Date of birth of the individual.",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender of the individual.",
+            "nullable": true
+          },
+          "nationalities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "List of nationalities of the individual.",
+            "nullable": true
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "Email address of the individual.",
+            "nullable": true
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Telephone number of the individual.",
+            "nullable": true
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IndividualAddressResponse"
+            },
+            "description": "List of addresses associated with the individual.",
+            "nullable": true
+          },
+          "identityDocuments": {
+            "$ref": "#/components/schemas/IdentityDocumentsResponse"
+          },
+          "taxResidencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxResidenciesResponse"
+            },
+            "description": "List of tax residencies associated with the individual.",
+            "nullable": true
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/KycAmlResponse"
+          },
+          "specialStatuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialStatusResponse"
+            },
+            "description": "List of special statuses associated with the individual.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for related parties of a retail customer."
+      },
+      "RetailCustomerRelatedPartyType": {
+        "enum": [
+          "PrimaryParty",
+          "PowerOfAttorney",
+          "Parent"
+        ],
+        "type": "string",
+        "description": "Supported related party types for a retail customer"
+      },
+      "SpecialStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/SpecialStatusValue"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the special status.",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the special status.",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for special statuses of an individual."
+      },
+      "SpecialStatusValue": {
+        "enum": [
+          "LegalAndReg_Bankrupt",
+          "LegalAndReg_Insolvent",
+          "LegalAndReg_InLitigation",
+          "LegalAndReg_InDispute",
+          "SpecialCircumstances_PowerOfAttorney",
+          "SpecialCircumstances_GoneAway",
+          "SpecialCircumstances_Deceased",
+          "SpecialCircumstances_CrownEmployee",
+          "SpecialCircumstances_Diplomat",
+          "SpecialCircumstances_SpouseOfCrownEmployee",
+          "SpecialCircumstances_SpouseOfDiplomat",
+          "FraudAndSecurity_FraudVictim",
+          "FraudAndSecurity_FraudPerpetrator",
+          "FraudAndSecurity_FraudSuspect",
+          "RegReporting_FATCA",
+          "RegReporting_CRS",
+          "RegReporting_MiFIDClassified",
+          "RegReporting_FSCSEligible",
+          "RegReporting_DGSEligigible",
+          "RegReporting_GDPRRestriction",
+          "Vulnerability_VisualImpairmentBraille",
+          "Vulnerability_VisualImpairmentLargeText",
+          "Vulnerability_AudioImpairment",
+          "Vulnerability_OtherPhysicalDisability",
+          "Vulnerability_LifeEvent",
+          "Vulnerability_MentalCapacity",
+          "Comms_PreferContactEmail",
+          "Comms_PreferContactPhone"
+        ],
+        "type": "string",
+        "description": "Supported special statuses."
+      },
+      "TaxResidenciesResponse": {
+        "type": "object",
+        "properties": {
+          "taxCountry": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "taxIdNumber": {
+            "type": "string",
+            "description": "Tax identification number.",
+            "nullable": true
+          },
+          "noTaxIdReason": {
+            "$ref": "#/components/schemas/ReasonForNoTaxId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for an individual's tax residencies."
+      },
+      "UpdateIndividualRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "The individual's first name",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "description": "The individual's middle name(s)",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "The individual's last name",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The individual's date of birth",
+            "format": "date",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "description": "The individual's gender",
+            "nullable": true
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "The individual's email address",
+            "nullable": true
+          },
+          "telephone": {
+            "type": "string",
+            "description": "The individual's telephone number",
+            "nullable": true
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/UpdateKycRequest"
+          },
+          "nationalities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateNationalityRequest"
+            },
+            "description": "The individual's nationalities",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates an individual"
+      },
+      "UpdateKycRequest": {
+        "required": [
+          "kycReferenceId"
+        ],
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Is the customer or individual under sanctions?"
+          },
+          "pep": {
+            "type": "boolean",
+            "description": "Is the customer or individual a politically exposed person?"
+          },
+          "adverseMedia": {
+            "type": "boolean",
+            "description": "Does the customer or individual have adverse media?"
+          },
+          "denyListWatch": {
+            "type": "boolean",
+            "description": "Is the customer or individual on a deny list?"
+          },
+          "cddType": {
+            "$ref": "#/components/schemas/CddType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          },
+          "kycStatus": {
+            "$ref": "#/components/schemas/KycStatus"
+          },
+          "kycReferenceId": {
+            "type": "string",
+            "description": "The reference ID for the KYC check",
+            "nullable": true
+          },
+          "reviewDate": {
+            "type": "string",
+            "description": "The date the KYC check was performed",
+            "format": "date"
+          },
+          "nextReviewDate": {
+            "type": "string",
+            "description": "The date the next KYC check is due",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Create a KYC request for a customer or individual"
+      },
+      "UpdateNationalityRequest": {
+        "required": [
+          "country"
+        ],
+        "type": "object",
+        "properties": {
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Creates a nationality for an individual"
+      },
+      "UpdateRetailCustomerStatusRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/CustomerStatus"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Update request to suspend customer, valid statuses are: Suspended_FinCrime, Suspended_FirstPartyFraud, Suspended_ThirdPartyFraud"
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}
