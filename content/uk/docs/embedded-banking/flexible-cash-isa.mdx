@@ -25,7 +25,9 @@ The balance of a cash ISA is held by ClearBank and can only be viewed via our AP
 Funds can be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
 </Callout>
 
-Because cash ISAs are structured differently to other account types, you will need to use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling accounts page](/uk/docs/gbp-accounts/manage-accounts).
+Because cash ISAs are structured differently to other GBP account types, you must use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling accounts page](/uk/docs/gbp-accounts/manage-accounts).
+
+You can create and manage customers with cash ISAs using the endpoints listed on the [Retail customers page](/uk/docs/embedded-banking/retail-customers).
 
 The sections below explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
@@ -66,12 +68,12 @@ The endpoints for retrieving all ISAs and amending cash ISA details or status ar
 
 There are several ways you can close a cash ISA. You need to choose the appropriate one based on what's happened in the account journey so far and what the customer wants to do with the account next.
 
-| Action | What this does |
-|---------|------------|
-| [Close](#close) | Closes the account. |
-| [Cancel](#cancel) | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
-| [Transfer out](#transfer-out) | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account. |
-| [Discontinue](#discontinue) | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure. |
+| Action                        | What this does                                                                                                                                                  |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Close](#close)               | Closes the account.                                                                                                                                             |
+| [Cancel](#cancel)             | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
+| [Transfer out](#transfer-out) | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account.                              |
+| [Discontinue](#discontinue)   | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure.                                 |
 
 You can use this diagram to validate if the account should be closed, cancelled or transferred out:
 
@@ -142,6 +144,35 @@ The process is shown in this flow diagram:
 ![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/cash-isa-discontinue.svg)
 
 
+
+
+### Manage customer ISA eligibility
+
+Customers can be made ineligible for cash ISAs. While a customer is ineligible, they cannot pay funds into their cash ISA.  
+Ineligible customers should still be able to withdraw funds from their cash ISA.
+
+Customers can be made ineligible for cash ISA subscriptions for these reasons:
+
+* You notified us that the customer's address is now outside the UK
+* You notified us that the customer's place of residence is now outside the UK
+* You provided us an invalid date of birth for the customer
+* You provided us an invalid National Insurance (NI) number for the customer
+
+**When a customer moves their address out of the UK, they can continue making subscriptions until the current tax year ends.**  
+You should notify us of customer address changes via the [**PUT /v1/customers/retail/{customerId}/currentaddress**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-address) endpoint.  
+If the customer's address returns to the UK in the next tax year, you should submit a new declaration of ISA eligibility.
+
+**When a customer moves their place of residence out of the UK, no further subscriptions can be made.**  
+You should notify us of customer country of residence changes via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
+If the customer's place of residence returns to the UK, you should notify us of this then submit a new declaration of ISA eligibility.
+
+**When a customer's date of birth or NI number is found to be invalid, no further subscriptions can be made.**  
+Once you have obtained a corrected NI or date of birth for the customer, use the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint to notify us of this then submit a new declaration of ISA eligibility.
+
+You can submit a declaration of ISA eligibility using the [**POST /isas/{accountId}/declaration**](#set-a-new-isa-declaration) endpoint. Verify the `customerEligibilityStatus` field in the response has been set to `Eligible`.
+
+You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpoint to check the customer's eligibility status at any time.
+
 ## Setting up a cash ISA
 
 <EndpointBlock
@@ -211,6 +242,17 @@ The process is shown in this flow diagram:
     {
       path: "/v3/Accounts",
       version: "3.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Set a new ISA declaration"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/declaration",
+      version: "1.0.Sterling",
     }
   ]}
 />
