@@ -36,16 +36,143 @@ This webhook confirms a transaction has completed.
 
 #### Example Customer Accounts Transaction Completed webhook request body
 
+**Inbound T2 payment**
+
 ```json
 {
-"Type": "CustomerAccountsTransactionCompleted",
-"Version": 1,
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"70e7d2ff-bbb2-4f1f-90f0-f2221029447a",
+      "EndToEndIdentification":"Inbound Payment",
+      "CreatedDateTime":"2025-02-10T12:49:55.5733333Z",
+      "CompletedDateTime":"2025-02-10T12:49:55.6Z",
+      "ClearingChannel":"Target2",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"75030e66dc7844ed9e4a1266c9e8410f",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL17CLRB0126793871",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":944609635
 }
 ```
+
+**SCT inbound**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"ce57422c-1276-4820-b97b-e7108f9c59cd",
+      "EndToEndIdentification":"Inbound12345677",
+      "CreatedDateTime":"2025-02-10T12:54:58.0766667Z",
+      "CompletedDateTime":"2025-02-10T12:54:58.0966667Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Funding",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL51XBLT6087402426",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":740685879
+}
+```
+
+**SCT Inst outbound**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"8fa1ceea-e592-480c-26fa-1fd040c89df1",
+      "EndToEndIdentification":"0947eaf6-2b51-496b-afba-969a0a72f38",
+      "CreatedDateTime":"2025-02-10T15:54:09.97Z",
+      "CompletedDateTime":"2025-02-10T15:54:14.29Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Debit",
+      "Amount":100.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"testing instant",
+      "DebtorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"DE25370502991000122343",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1778087803
+}
+```
+
+**SCT Inst inbound**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "EndToEndIdentification":"12345678",
+      "CreatedDateTime":"2025-02-10T12:52:43.7433333Z",
+      "CompletedDateTime":"2025-02-10T12:52:43.7666667Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"GB68INST20182441739477",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":263934935
+}
+```
+
+
 #### Example webhook response
 
 ```json
 {
-    "Nonce": 1804374592
+    "Nonce": 263934935
 }
 ```
