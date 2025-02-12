@@ -174,9 +174,6 @@
         "additionalProperties": false
     },
     "AccountIdentificationIbanDtoV4": {
-        "required": [
-            "iban"
-        ],
         "type": "object",
         "allOf": [{
             "$ref": "#/components/schemas/AccountIdentificationDtoV4"
@@ -184,6 +181,7 @@
         "properties": {
             "iban": {
                 "minLength": 1,
+                "maxLength": 30,
                 "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                 "type": "string",
                 "example": "GB12CLBK01020312345678",
@@ -193,10 +191,6 @@
         "additionalProperties": false
     },
     "AccountIdentificationOtherDtoV4": {
-        "required": [
-            "identification",
-            "schemeName"
-        ],
         "type": "object",
         "allOf": [{
             "$ref": "#/components/schemas/AccountIdentificationDtoV4"
@@ -220,6 +214,7 @@
             },
             "identification": {
                 "minLength": 1,
+                "maxLength": 34,
                 "type": "string",
                 "description": "Unambiguous identification for the given scheme (specified in schemeName). Set to either the BBAN (XXXX01020301234567) or the sort code and account number (01020301234567).",
                 "example": "01020301234567"
@@ -517,6 +512,8 @@
                     "PLRF"
                 ],
                 "type": "string",
+                "minLength": "4",
+                "maxLength": "4",
                 "example": "SALA",
                 "description": "Underlying reason for the payment transaction, as published in an external Purpose Code list."
             },
@@ -552,6 +549,8 @@
                     "WHLD"
                 ],
                 "type": "string",
+                "minLength": "4",
+                "maxLength": "4",
                 "example": "SALA",
                 "description": "Broader nature of the payment, as published in an external Category Purpose Code list."
             },
@@ -570,7 +569,7 @@
             "bic": {
                 "type": "string",
                 "example": "ABNANL2A",
-                "description": "Bank Identifier Code (BIC) of the entity."
+                "description": "Bank Identifier Code (BIC) of the entity. BIC11 recommended but BIC8 also supported."
             }
         },
         "additionalProperties": false
@@ -590,6 +589,7 @@
         "properties": {
             "iban": {
                 "minLength": 1,
+                "maxLength": 30,
                 "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
                 "type": "string",
                 "example": "NL91ABNA04171643008894",
@@ -599,10 +599,6 @@
         "additionalProperties": false
     },
     "CrossBorderCreditorIdentificationOtherDtoV4": {
-        "required": [
-            "identification",
-            "schemeName"
-        ],
         "type": "object",
         "allOf": [{
             "$ref": "#/components/schemas/CrossBorderCreditorIdentificationDtoV4"
@@ -723,6 +719,9 @@
         "additionalProperties": false
     },
     "OrganisationIdentifierV5": {
+        "required": [
+            "bic"
+        ],
         "type": "object",
         "description": "Option to provide either OrganisationIdentifier or PrivateIdentifier, but not both.",
         "properties": {
@@ -784,7 +783,8 @@
                 "description": "Name of a built-up area, with defined boundaries, and a local government."
             },
             "country": {
-                "minLength": 1,
+                "minLength": 2,
+                "maxLength": 2,
                 "pattern": "[A-Z]{2,2}",
                 "type": "string",
                 "description": "Nation with its own government."
