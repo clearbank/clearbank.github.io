@@ -30,7 +30,7 @@ export const Title = styled.h5`
 
 export const List = styled.ul`
   list-style: none;
-  margin-top: 38px;
+  margin-top: 15px;
 `
 
 export const ListItem = styled.li`
