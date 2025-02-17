@@ -59,6 +59,62 @@ The character set defined by the pattern for the `name` and `reference` fields i
 |**\`**|Backtick|**\]**|Right square bracket|
 |**\{**|Left curly bracket|||
 
+### Version 5 mandatory fields
+In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
+
+You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: [UK recommended Purpose Code PDF](https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf)  
+
+#### Legal Entity Identifer (LEI)
+The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
+
+#### Purpose Codes and Category Purpose Codes
+The Purpose Code captures the nature of the payment and should be transported end to end. The Purpose Code is 4 characters used to abbreviate the purpose, for example, IVPT - Invoice Payment.
+
+The Category Purpose Code is used to identify the broader nature of the payment and is used by agents. There are fewer Category Purpose Codes as this is providing a higher level understanding. In total there are 127 Purpose Codes and 28 Category Purpose Codes.
+
+To help make sense of the various codes, they have been broken down into nine categories in the following table. The nine categories have been created by ClearBank to support our clients in finding the appropriate codes for their use case when making GBP Cross-Border payments.
+
+<Callout colour="blue">
+ClearBank are mandated to prioritise identifying which payments are linked to Property – therefore if you are looking to complete a property-related payment, ensure that you make use of these Purpose Codes in your payment instruction.
+</Callout>
+
+For your convenience, Purpose Codes and Category Purpose Codes with the same value are shown in bold.
+
+|Group|Name|Description|Purpose Codes|Category Purpose Codes|
+|---|----|---|---|---|
+| 1 | Personal finance | These codes can be used if the payment relates to something specific to a person, for example, alimony payment or dental services. | ALMY, BECH, BENE, CHAR, CLPR, DNTS, EDUC, GAMB, LOTT, LTCF, MDCS, **SALA**, SAVG, **SSBE**, SUBS, TRFD, VIEW | GP2P, MP2P, **SALA**, **SSBE**| 
+| 2 | Finance and accounting | These codes can be used if the payment relates to invoices or managing finances. | ACCT, AREN, BKIP, BKPP, **CASH**, CSDB, **INTC**, INTP, IVPT, LIMA, NETT, REOD, **TREA**, **LOAN**, LOAR, **INTE** | **CASH**, **TREA**, **INTC**, **INTE**, **LOAN** | 
+| 3 | Corporate | These codes can be used if the payment relates to topics that impact corporations. | ADCS, AGRT, BEXP, **BONU**, COMC, COMM, COMP, COMT, CPYR, DEPT, DIVD, ECPR, EPAY, GDSV, GIFT, GSCB, HREC, INSM, PEFC, REBT, REFU, RELG, ROYA, TRAD, **SUPP**, **PENS** | **BONU**, DIVI, DVPM, **PENS**, RRCT, **SUPP** | 
+| 4 | Tax & government specific | These codes can be used if the payment relates to tax or for government related activities. | ESTX, FAND, **GOVT**, HSTX, PENO, RDTX, TAXR, **TAXS**, **VATX**, **WHLD**, PTXP | **GOVT**, **TAXS**, **VATX**, **WHLD** | 
+| 5 | Insurance | These codes can be used if the payment relates to insurance. | HLTI, INPC, INPR, INSC, INSU, INTX, LBRI, LIFI, PPTI | N/A | 
+| 6 | Property | These codes must be used if the payment is related to property. **It is a priority to identify these payments correctly**. | HLRP, HLST, PCOM, PDEP, PLDS, PLRF | N/A | 
+| 7 | Financial products | These codes can be used if the payment relates to a financial product. | BKFE, BNET, BOCE, **CBLK**, CMDT, COLL, **CORT**, DERI, EXTD, FNET, FORW, FREX, FUTR, FXNT, **HEDG**, INVS, OTCD, REPO, SBSC, **SECU**, SLEB, SWFP, SWPP, SWRS, SWUF, LREB, LREV | **CBLK**, **CORT**, **HEDG**, TRAD, **SECU** | 
+| 8 | Bills and fees | These codes can be used if the payment being made is related to a bill or fee being applied. | CBTV, CDBL, LICF, SERV, TCSC, UBIL, WTER, PHON, ELEC, GASB, CPKC, FEES, BLDM, DBTC, RENT | CCRD, DCRD, FCOL | 
+| 9 | Miscellaneous | Other or miscellaneous reason(s). | N/A | OTHR | 
+
+#### Common use case examples
+
+The following table details common uses of Purpose Codes and Category Purpose Codes which you can refer to when making payments.
+
+|Use case|Purpose Code|Category Purpose Code|
+|---|----|---|
+| Buying a property – payment of a deposit | PDEP – Property Deposit | OTHR – Other Payment |
+| Buying a property – final payment to complete the purchase of a property | PCOM – Property Completion Payment | OTHR – Other Payment |
+| Payments made in relation to salaries | SALA – Salary Payment | SALA – Salary Payment |
+| Moving money for the same company from a ClearBank to a non-ClearBank account | INTC – Intra Company Payment | INTC – Intra Company Payment |
+| Moving money for the same individual(s) from a ClearBank to a non-ClearBank account | INTP – Intra Party Payment | GP2P – Person to Person Payment |
+| Paying a supplier | SUPP – Supplier Payment | SUPP – Supplier Payment |
+| Paying a business expense | BEXP – Business Expenses | OTHR – Other Payment |
+| Paying a generic tax bill | TAXS – Tax Payment | TAXS – Tax Payment |
+| Payment of an insurance premium | INSU – Insurance Premium | OTHR – Other Payment |
+| Paying VAT | VATX – Value Added Tax Payment | VATX – Value Added Tax Payment |
+| Making a payment for a trade | TRAD - Trade | CORT – Trade Settlement Payment |
+| Paying an invoice | IVPT – Invoice Payment | CASH – Cash Management Transfer |
+| Paying fees of some sort | FEES – Payment of Fees | OTHR – Other Payment |
+| Payment of building maintenance | BLDM – Building Maintenance | OTHR – Other Payment |
+| Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
+| Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
+
 <EndpointBlock
     type="post"
     title="Send a CHAPS payment"
