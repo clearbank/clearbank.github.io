@@ -30,7 +30,11 @@ export const Title = styled.h5`
 
 export const List = styled.ul`
   list-style: none;
-  margin-top: 15px;
+  margin-top: 38px;
+`
+
+export const ListItem = styled.li`
+  margin-bottom: 14px;
 `
 
 export const BaseLink = styled.a<{ isActive?: boolean }>`
@@ -38,7 +42,7 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
   cursor: pointer;
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
   font-weight: ${props => props.isActive ? 600 : 400};
-  line-height: 38px;
+  line-height: 0px;
   font-size: 20px;
 
   &:hover {
