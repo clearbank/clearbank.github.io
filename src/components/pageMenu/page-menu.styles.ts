@@ -42,7 +42,7 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
   cursor: pointer;
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
   font-weight: ${props => props.isActive ? 600 : 400};
-  line-height: 0px;
+  line-height: 1em;
   font-size: 20px;
 
   &:hover {
