@@ -27,7 +27,7 @@ You can:
 - [Receive an SCT Inst payment](#receive-an-sct-inst-payment)
 - [Recall an SCT Inst payment](#recall-an-sct-inst-payment) (integrating with recall payments is required)
 - [Receive and respond to a recall request](#receive-and-respond-to-a-recall-request)
-- [Simulate an SCT Inst inbound payment and recall request](#simulate-an-sct-inst-inbound-payment-and-recall-request)
+- [Simulate  SCT Inst payment scenarios](#simulate-sct-inst-payment-scenarios)
 > You are notified of incoming SCT Inst payments via the [SEPA Instant Inbound Payment Settled webhook](#sepa-instant-inbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 <Callout colour="blue">
@@ -163,26 +163,32 @@ Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Can
 
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
 
-## Simulate an SCT Inst inbound payment and recall request
+## Simulate SCT Inst payment scenarios
 
 <EndpointBlock
   type="post"
-  title="Create an inbound SCT Inst payment in the simulation environment"
+  title="Simulate an inbound SCT Inst payment"
   endpoints={[
     {
       path: "/v1/sepa-instant-emulator/inbound-payment",
-      version: "1.0.SIM"
+      version: "1.0.SIM",
+      webhooks: [
+        'sepa-instant-inbound-payment-settled-v1'
+      ]
     }
   ]}
 />
 
 <EndpointBlock
   type="post"
-  title="Create an inbound SCT Inst recall request in the simulation environment"
+  title="Simulate an inbound SCT Inst recall request"
   endpoints={[
     {
       path: "/v1/sepa-instant-emulator/inbound-payment/recall",
-      version: "1.0.SIM"
+      version: "1.0.SIM",
+      webhooks: [
+        'sepa-instant-recall-request-received-v2'
+      ]
     }
   ]}
 />

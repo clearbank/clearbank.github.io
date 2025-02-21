@@ -99,9 +99,9 @@ const PageMenu: React.FC<Types.PageMenuProps> = () => {
       <Styles.Title>On this page:</Styles.Title>
       <Styles.List>
         {headings.map(heading => (
-          <li key={heading.id}>
+          <Styles.ListItem key={heading.id}>
             {mapHeadingToComponent(heading, activeHash)}
-          </li>
+          </Styles.ListItem>
         ))}
       </Styles.List>
     </Styles.Container>
