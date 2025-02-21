@@ -83,21 +83,32 @@ You can use our FX trade functionality to perform FX trades between accounts whi
 
  * If a trade is booked, but cannot be settled until a later day, and the settlement fails, the [fx-trade-settlement-failed-v1](../webhooks/#fx-trade-settlement-failed-webhook) webhook notifies you of the failure. Make sure you subscribe to this webhook if you are making FX trades with a value (settlement) date later than the day of booking.
  
- For more information about cut-off times, please speak to your relationship manager.
+Refer to the below table detailing the cut-off times for all currently supported currencies. Note that all times are in **UK time**.
+
+|   Currency       |   Currency code   |   Start time   |   FX cut-off time (same day)   |   FX cut-off time (next day/2 days' time) |  
+|------------------|-------------------|----------------|--------------------------------|-------------------------------------------|
+| Canadian Dollar  | CAD               | 07:00          | 13:00                          | 23:30                                     |
+| Swiss Franc      | CHF               | 07:00          | 09:30                          | 23:30                                     |
+| Czech Koruna     | CZK               | 07:00          | TBC                            | 23:30 (not yet enabled)                   |
+| Danish Krone     | DKK               | 07:00          | 09:30                          | 23:30                                     |
+| Euro             | EUR               | 07:00          | 13:00                          | 23:30                                     |
+| British Pounds   | GBP               | 07:00          | 13:00                          | 23:30                                     |
+| Hungarian Forint | HUF               | 07:00          | TBC                            | 23:30 (not yet enabled)                   |
+| Norwegian Krone  | NOK               | 07:00          | 09:30                          | 23:30                                     |
+| Polish Zloty     | PLN               | 07:00          | TBC                            | 23:30 (not yet enabled)                   |
+| Romanian Leu     | RON               | 07:00          | TBC                            | 23:30 (not yet enabled)                   |
+| Swedish Krona    | SEK               | 07:00          | 09:30                          | 23:30                                     |
+| United States Dollar | USD           | 07:00          | 13:00                          | 23:30                                     |
+
+ <Callout colour="blue">
+Cut-off times are under regular review and subject to change as we actively work to extend current cut-off times and extend our offering of currencies
+
+For more information about cut-off times, please speak to your Client Director.
+</Callout>
 
 ### FX trades minimum values
 
 FX trades have minimum trading values defined for each currency. If you try to request a trade below these values, you will receive a 400 error response. For the full list of minimum trade values per currency, see [Foreign exchange trade](#fx-trade).
-
-
-<Callout colour="blue">
-Due to public holidays in the US, pricing of all currency pairs for our FX RFQ (Request For Quote) service will be impacted on the following dates:<br/>
-
-•	**Monday 20 January 2025 (Martin Luther King Jr. Day/Inauguration Day)** <br/>
-•	**Monday 17 February 2025 (Presidents' Day)**
-
-While same day trades will be unavailable on these dates, TOM/SPOT trades will be available to book. Please be mindful of TOM/SPOT trades booked in the days leading up to these dates.
-</Callout>
 
 <EndpointBlock
   type="post"
