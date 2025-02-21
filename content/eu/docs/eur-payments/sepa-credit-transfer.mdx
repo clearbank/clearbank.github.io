@@ -1,6 +1,6 @@
 ---
-title: "SEPA CT"
-metaTitle: "SEPA CT"
+title: "SEPA Credit Transfer"
+metaTitle: "SEPA Credit Transfer"
 order: 2
 showPageMenu: true
 ---
@@ -17,31 +17,33 @@ import Callout from "src/components/callout";
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our European simulation environment.</p>
 </Callout>
 
-SEPA CT (Single Euro Payments Area Credit Transfer) is a payment scheme that enables you to move euros between scheme participants. Transactions are capped at €999,999,999 per payment.
+SEPA Credit Transfer (SCT) is a payment scheme that enables you to move euros between scheme participants. Transactions are capped at €999,999,999 per payment.
 
 You can:
-- [Send a SEPA CT payment](#sending-a-sepa-ct-payment)
-- [Recall a SEPA CT payment](#recall-a-sepa-ct-payment)
-- [Respond to SEPA CT recall requests](#responding-to-a-sepa-ct-recall-request)
-- [Return a SEPA CT payment](#returning-sepa-ct-payments) (Integrating with recall and return is required.)
-- [Receive a returned SEPA CT payment](#receive-sepa-ct-returns)
-> You will be notified of incoming SEPA CT payments via the [SEPA CT Inbound Payment completed](#sepa-ct-inbound-payment-completed-webhook) webhook.
+- [Send an SCT payment](#send-an-sct-payment)
+- [Recall an SCT payment](#recall-an-sct-payment)
+- [Return an SCT payment](#returning-sct-payments) (Integrating with recall and return is required.)
+- [Respond to an SCT recall request](#responding-to-an-sct-recall-request)
+- [Receive an SCT payment](#receive-an-sct-payment)
+- [Receive a returned SCT payment](#receive-a-returned-sct-payment)
+- [Simulate SCT payment scenarios](#simulate-sct-payment-scenarios)
+> You will be notified of incoming SCT payments via the [SEPA CT Inbound Payment Completed](#sepa-ct-inbound-payment-completed-webhook) webhook.
 
 ### Opening hours
 
-Inbound SEPA CT payments can be received on Netherlands business days between 02:30 and 16:30 CET.
+Inbound SCT payments can be received on Netherlands business days between 02:30 and 16:30 CET.
 
-Outbound SEPA CT payments can be sent on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
+Outbound SCT payments can be sent on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
 
-## Sending a SEPA CT payment
+## Send an SCT payment
 
-To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a-sepa-ct-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-an-sct-outbound-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
-![A message flow diagram explaining how to send a SEPA CT payment](/assets/images/sepa-ct-send-payment.svg)
+![A message flow diagram explaining how to send an SCT payment](/assets/images/sepa-ct-send-payment.svg)
 
 <EndpointBlock
   type="post"
-  title="Send a SEPA CT payment"
+  title="Send an SCT outbound payment"
   endpoints={[
     {
       path: "/payments/sepa-ct/v1/customer-payments",
@@ -59,18 +61,18 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 <WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
-## Receive a SEPA CT payment
+## Receive an SCT payment
 <WebhookPlaceholder render='sepa-ct-inbound-payment-completed-v1' />
 
-## Recall a SEPA CT Payment
+## Recall an SCT Payment
 
-You can send SEPA recall requests using the [POST /payments/sepa-ct/v1/recall](#request-a-sepa-ct-payment-recall) endpoint. Recalls can take up to 15 business days.
+You can send an SCT recall requests using the [POST /payments/sepa-ct/v1/recall](#request-an-sct-payment-recall) endpoint. Recalls can take up to 15 business days.
 
 * If your recall request has been **accepted**, you will be notified via the [SEPA CT Outbound Payment Return Completed](#sepa-ct-outbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks.
 
 * If your recall request has been **rejected**, you will be notified via the [SEPA CT Outbound Payment Recall Rejected](#sepa-ct-outbound-payment-recall-rejected-webhook) webhook.
 
-![A message flow diagram explaining how to send a SEPA CT recall request](/assets/images/sepa-ct-recall-request.svg)
+![A message flow diagram explaining how to send an SCT recall request](/assets/images/sepa-ct-recall-request.svg)
 
 #### Recall request reason codes
 
@@ -79,15 +81,15 @@ Recalls can be requested using the following reason codes:
 | Reason | Description                                                           | Time limit to send recall request |
 | ------ | --------------------------------------------------------------------- | --------------------------------- |
 | DUPL   | Duplicate sending                                                     | 10 business days                  |
-| TECH   | Technical problems resulting in an erroneous SCT Inst Transaction | 10 business days                  |
-| FRAD   | Fraudulent originated SCT Inst Instruction                        | 13 months                         |
+| TECH   | Technical problems resulting in an erroneous SCT Transaction | 10 business days                  |
+| FRAD   | Fraudulent originated SCT Instruction                        | 13 months                         |
 | AC03   | Wrong account number in original transfer                             | 13 months                         |
 | AM09   | Wrong amount in original transfer                                     | 13 months                         |
 | CUST   | Requested by customer                                                 | 13 months                         |
 
 <EndpointBlock
   type="post"
-  title="Request a SEPA CT payment recall"
+  title="Request an SCT payment recall"
   endpoints={[
     {
       path: "/payments/sepa-ct/v1/recall",
@@ -104,13 +106,11 @@ Recalls can be requested using the following reason codes:
 <WebhookPlaceholder render='sepa-ct-outbound-payment-return-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-outbound-payment-recall-rejected-v1' />
 
+## Responding to an SCT recall request
 
+You may receive a recall request via the [SEPA CT Inbound Payment Recalled webhook](#sepa-ct-inbound-payment-recalled-webhook). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-an-sct-recall-request) endpoint.
 
-## Responding to a SEPA CT recall request
-
-You may receive a recall request via the [Recall Request webhook](#respond-to-sepa-ct-recall-request). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-a-sepa-ct-recall-request) endpoint.
-
-![A message flow diagram explaining how to send a SEPA CT recall request](/assets/images/sepa-ct-recall-response.svg)
+![A message flow diagram showing how to respond to an SCT recall request](/assets/images/sepa-ct-recall-response.svg)
 
 #### Recall response reason codes
 
@@ -142,7 +142,7 @@ If you accept the recall, a pacs.004 payment will be automatically initiated.  Y
 
 <EndpointBlock
   type="post"
-  title="Respond to a SEPA CT recall request"
+  title="Respond to an SCT recall request"
   endpoints={[
     {
       path: "/payments/sepa-ct/v1/recall-response",
@@ -155,19 +155,19 @@ If you accept the recall, a pacs.004 payment will be automatically initiated.  Y
   ]}
 />
 
-## Returning SEPA CT payments
+## Returning SCT payments
 
-SEPA CT payments can also be returned to the payment originator.
+SCT payments can also be returned to the payment originator.
 
-You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#return-a-sepa-ct-payment) endpoint. You can only return a payment after receiving the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook). Returns must be sent within three business days of the original payment's settlement date.
+You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#return-an-sct-payment) endpoint. You can only return a payment after receiving the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook). Returns must be sent within three business days of the original payment's settlement date.
 
-![A message flow diagram explaining how to send a SEPA CT return](/assets/images/sepa-ct-return.svg)
+![A message flow diagram explaining how to send an SCT return](/assets/images/sepa-ct-return.svg)
 
 Once the return has been processed, you will either receive the [SEPA CT Inbound Payment Return Completed](#sepa-ct-inbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks or the [SEPA CT Inbound Payment Return Failed](#sepa-ct-inbound-payment-return-failed-webhook) webhook.
 
 <EndpointBlock
   type="post"
-  title="Return a SEPA CT payment"
+  title="Return an SCT payment"
   endpoints={[
     {
       path: "/payments/sepa-ct/v1/payment-returns",
@@ -184,9 +184,37 @@ Once the return has been processed, you will either receive the [SEPA CT Inbound
 <WebhookPlaceholder render='sepa-ct-inbound-payment-return-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-inbound-payment-return-failed-v1' />
 
-## Receive SEPA CT returns
+## Receive a returned SCT payment
 
-You will be notified of a successful SEPA CT return via the [SEPA CT Outbound Payment Return Completed webhook](#sepa-ct-outbound-payment-return-completed-webhook) webhook.
+You will be notified of a successful SCT return payment via the [SEPA CT Outbound Payment Return Completed webhook](#sepa-ct-outbound-payment-return-completed-webhook).
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-return-completed-v1' />
 
+## Simulate SCT payment scenarios
+
+The following will allow you to test SCT payment scenarios in the ClearBank simulation environment.
+
+<EndpointBlock
+  type="post"
+  title="Simulate an inbound SCT payment"
+  endpoints={[
+    {
+      path: "/v1/payments/sepa-ct/emulator/inbound/payment",
+      version: "1.0-SEPA-CT-Emulator",
+            webhooks: [
+        'sepa-ct-outbound-payment-completed-v1',
+        'eu-customer-accounts-transaction-completed-v1'
+      ]
+    }
+  ]}
+/>
+
+### Simulate a returned SCT payment
+
+To simulate the return of an SCT payment in the simulation environment, use the [Send an SCT payment](#send-an-sct-outbound-payment) endpoint with the `remittanceInformationUnstructured` field populated with `--SCTRETURN--`. This will simulate an outbound SCT payment settling and then being returned by the creditor.
+
+ Receipt of the [SEPA CT Outbound Payment Return Completed webhook](#sepa-ct-outbound-payment-return-completed-webhook) confirms the return payment.
+
+```
+"remittanceInformationUnstructured": "--SCTRETURN--"
+```
