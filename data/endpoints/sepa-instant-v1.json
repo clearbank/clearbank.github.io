@@ -10,7 +10,7 @@
         "tags": [
           "Sepa Instant Payments"
         ],
-        "summary": "This endpoint is used to create an outbound SCT Inst' payment. The amount you can pay to external accounts is €100,000, while it is €999,999,999.99 for your internal accounts held with ClearBank. If you pay an internal account by mistake, it can only be corrected with a new payment request: you cannot recall a payment to an internal account.",
+        "summary": "This endpoint is used to create an outbound SCT Inst' payment. The amount you can pay to external accounts is €100,000, while it is €999,999,999.99 for your internal accounts held with ClearBank. If you make an error on an internal payment, this can only be corrected with a new payment request: you cannot recall payments made to your own accounts.",
         "operationId": "Payment.Create",
         "parameters": [
           {
@@ -314,11 +314,11 @@
         "type": "object",
         "properties": {
           "amount": {
-            "maximum": 999999999.99,
+            "maximum": 100000.00,
             "minimum": 0,
             "exclusiveMinimum": true,
             "type": "number",
-            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR). Note: the maximum amount is 100,000 for external payments where the debtor's account is not yours.",
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR). Note: the maximum is 999999999.99 for internal payments where the debtor's account is one of yours.",
             "format": "double",
             "example": 10.00
           },
