@@ -11,9 +11,10 @@ export const Header = styled(Text)`
   font-family: ${fonts.heading};
   font-weight: 600;
   scroll-margin-top: ${heights.header};
+  color: ${colors.businessBlue};
 `
 
-// TODO: This style doesn't exisit in the styleguide and needs sorting out properly
+// TODO: This style doesn't exist in the styleguide and needs sorting out properly
 export const H1 = styled(Header)`
   margin-top: 40px;
   font-family: ${fonts.body};
