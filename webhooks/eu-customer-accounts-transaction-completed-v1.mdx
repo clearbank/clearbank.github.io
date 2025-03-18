@@ -30,22 +30,257 @@ This webhook confirms a transaction has completed.
 | `Amount`         |**Required**<br />Amount of money to be moved between the debtor and creditor.<br/>Type: `string`|
 | `Currency`         |**Required**<br />Unit of currency is explicit and compliant with ISO 4217.<br/>Type: `string`|
 | `RemittanceInformation`         |**Required**<br />Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system. Unstructured data or flattened version of the structured data.<br/>Type: `string`|
-| `CreditorAccount`         |**Required**<br />Unambiguous identification of the account of the debtor to which a debit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitary account descriptor.<br/>Type: `string`|
-| `DebtorAccount`         |**Required**<br />Unambiguous identification of the account of the creditor to which a credit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitary account descriptor.<br/>Type: `string`|
+| `CreditorAccount`         |**Required**<br />Unambiguous identification of the account of the debtor to which a debit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitrary account descriptor.<br/>Type: `string`|
+| `DebtorAccount`         |**Required**<br />Unambiguous identification of the account of the creditor to which a credit entry is posted.<br/>Type: `object`<br/><br/>`AccountId`<br/>Represents the account ID used within ClearBank's systems.<br/>Type: `string`<br/><br/>`IBAN`<br/>The IBAN for the account.<br/>Type: `string`<br/>Max. Length: `34`<br/><br/>`BBAN`<br/>The BBAN for the account.<br/>Type: `string`<br/>Max. Length: `30`<br/><br/>`Descriptor`<br/>Represents an arbitrary account descriptor.<br/>Type: `string`|
 
+### T2 webhook examples
 
-#### Example Customer Accounts Transaction Completed webhook request body
+#### Example Customer Accounts Transaction Completed webhook request body for inbound T2 payment
 
 ```json
 {
-"Type": "CustomerAccountsTransactionCompleted",
-"Version": 1,
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"70e7d2ff-bbb2-4f1f-90f0-f2221029447a",
+      "EndToEndIdentification":"Inbound Payment",
+      "CreatedDateTime":"2025-02-10T12:49:55.5733333Z",
+      "CompletedDateTime":"2025-02-10T12:49:55.6Z",
+      "ClearingChannel":"Target2",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"75030e66dc7844ed9e4a1266c9e8410f",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL17CLRB0126793871",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":944609635
 }
 ```
+
 #### Example webhook response
 
 ```json
 {
-    "Nonce": 1804374592
+    "Nonce": 944609635
+}
+```
+
+#### Example Customer Accounts Transaction Completed webhook request body for outbound T2 payment
+
+```
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"a94a49f7-9007-419a-8722-bc45b0ddc7ec",
+      "EndToEndIdentification":"46189668732340195406845",
+      "CreatedDateTime":"2025-02-20T10:44:06.7833333Z",
+      "CompletedDateTime":"2025-02-20T10:44:09.7633333Z",
+      "ClearingChannel":"Target2",
+      "DebitCreditCode":"Debit",
+      "Amount":424.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Example Remittance",
+      "DebtorAccount":{
+         "AccountId":"c182ac1e-3f15-4b58-b9c3-22719a6b6461",
+         "Iban":"NL74CLRB0113702695",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"NL91ABNA0417164300",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1269251375
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1269251375
+}
+```
+
+### SCT webhook examples
+
+#### Example Customer Accounts Transaction Completed webhook request body for inbound SCT payment
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"ce57422c-1276-4820-b97b-e7108f9c59cd",
+      "EndToEndIdentification":"Inbound12345677",
+      "CreatedDateTime":"2025-02-10T12:54:58.0766667Z",
+      "CompletedDateTime":"2025-02-10T12:54:58.0966667Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Funding",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL51XBLT6087402426",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":740685879
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 740685879
+}
+```
+
+#### Example Customer Accounts Transaction Completed webhook request body for outbound SCT payment
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"2a259909-e2b5-4bb5-ba91-5e40070ce901",
+      "EndToEndIdentification":"4751967232218871296240",
+      "CreatedDateTime":"2024-07-29T09:56:59.58Z",
+      "CompletedDateTime":"2024-07-29T10:00:23.82Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Debit",
+      "Amount":224.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"deposit",
+      "DebtorAccount":{
+         "AccountId":"c182ac1e-3f15-4b58-b9c3-22719a6b6461",
+         "Iban":"NL74CLRB0113702695",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"NL32INGB0000092273",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":437327901
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 437327901
+}
+```
+
+### SCT Inst webhook examples
+
+#### Example Customer Accounts Transaction Completed webhook request body for inbound SCT Inst payment
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "EndToEndIdentification":"12345678",
+      "CreatedDateTime":"2025-02-10T12:52:43.7433333Z",
+      "CompletedDateTime":"2025-02-10T12:52:43.7666667Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"GB68INST20182441739477",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":263934935
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 263934935
+}
+```
+
+#### Example Customer Accounts Transaction Completed webhook request body for outbound SCT Inst payment
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"8fa1ceea-e592-480c-26fa-1fd040c89df1",
+      "EndToEndIdentification":"0947eaf6-2b51-496b-afba-969a0a72f38",
+      "CreatedDateTime":"2025-02-10T15:54:09.97Z",
+      "CompletedDateTime":"2025-02-10T15:54:14.29Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Debit",
+      "Amount":100.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"testing instant",
+      "DebtorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"DE25370502991000122343",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1778087803
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1778087803
 }
 ```
