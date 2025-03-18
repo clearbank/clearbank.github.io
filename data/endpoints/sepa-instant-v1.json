@@ -10,7 +10,7 @@
         "tags": [
           "Sepa Instant Payments"
         ],
-        "summary": "This endpoint is used to create an outbound SEPA ICT payment.",
+        "summary": "This endpoint is used to create an outbound SCT Inst payment. You can pay up to €100,000.00 to external accounts, and up to €999,999,999.99 for your internal ClearBank accounts. If you make an error on an internal payment, this can only be corrected with a new payment request: you cannot recall payments made to your own accounts.",
         "operationId": "Payment.Create",
         "parameters": [
           {
@@ -307,11 +307,11 @@
         "type": "object",
         "properties": {
           "amount": {
-            "maximum": 100000,
+            "maximum": 999999999.99,
             "minimum": 0,
             "exclusiveMinimum": true,
             "type": "number",
-            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR). ",
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR). Note: the maximum is €100,000.00 for external payments where the creditor's account is not yours.",
             "format": "double",
             "example": 10.00
           },
@@ -359,7 +359,7 @@
             "maxLength": 70,
             "minLength": 1,
             "type": "string",
-            "description": "The name used to identify the legal owner of the account from which to debit funds.",
+            "description": "The name used to identify the legal owner of the account to receive funds.",
             "example": "John Doe"
           },
           "accountIban": {
@@ -369,7 +369,6 @@
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
             "example": "NL01CLRB0123456789"
-
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
