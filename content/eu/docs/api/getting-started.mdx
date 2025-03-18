@@ -8,6 +8,7 @@ bannerSrc: "\/assets\/images\/Developer Portal Banner EU Cropped.jpg"
 
 import EndpointBlock from "src/components/endpoint-block";
 import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
 
 ## Get connected
 
@@ -16,8 +17,8 @@ This authentication profile includes your Digital Certificate and secure API tok
 
 | Environment | ClearBank Portal URL                     | What you need for access                                                                                                                                                                                                                                               |
 | ----------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Simulation  | https://institution-sim.eu.clearbank.io/ | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile                                                                                                                           |
-| Production  | https://institution.eu.clearbank.io/     | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
+| Simulation  | <ExternalLink href="https://institution-sim.eu.clearbank.io/">https://institution-sim.eu.clearbank.io/</ExternalLink>   | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile                                                                                                                           |
+| Production  | <ExternalLink href="https://institution.eu.clearbank.io/">https://institution.eu.clearbank.io/</ExternalLink>       | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
 
 ### Create your authentication profile
 
@@ -89,11 +90,11 @@ We use the following specifications to create a digital signature:
 5. Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all GET and DELETE requests
 
 For additional help with creating your authentication profile and digital signature, please refer to the following examples on the ClearBank GitHub repository:
-- [C# example for ClearBank API and Webhooks](https://github.com/clearbank/fi-api-101)
-- [Postman Collections for invoking the ClearBank API](https://github.com/clearbank/fi-api-postman)
-- [C# example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool)
-- [Python example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool-python)
-- [Java example for signing ClearBank API requests](https://github.com/clearbank/fi-api-signtool-java)
+- <ExternalLink href="https://github.com/clearbank/fi-api-101">C# example for ClearBank API and Webhooks</ExternalLink>
+- <ExternalLink href="https://github.com/clearbank/fi-api-postman">Postman Collections for invoking the ClearBank API</ExternalLink>
+- <ExternalLink href="https://github.com/clearbank/fi-api-signtool">C# example for signing ClearBank API requests</ExternalLink>
+- <ExternalLink href="https://github.com/clearbank/fi-api-signtool-python">Python example for signing ClearBank API requests</ExternalLink>
+- <ExternalLink href="https://github.com/clearbank/fi-api-signtool-java">Java example for signing ClearBank API requests</ExternalLink>
 
 Please note that the code in these examples is not production ready and has been simplified for brevity.
 
@@ -116,13 +117,13 @@ Different request types require different headers as shown in this table:
 Here are the details of each parameter:
 
 import ParameterDetails from 'src/components/parameter-details'
-import parameters from './parameters.json'
+import parametersEu from '../../../eu/docs/api/parameters'
 
-<ParameterDetails parameter={parameters.authorization} />
-<ParameterDetails parameter={parameters.digitalSignatureEu} />
-<ParameterDetails parameter={parameters.xRequestId} />
-<ParameterDetails parameter={parameters.xRequestTime} />
-<ParameterDetails parameter={parameters.xCorrelationId} />
+<ParameterDetails parameter={parametersEu.authorizationEu} />
+<ParameterDetails parameter={parametersEu.digitalSignatureEu} />
+<ParameterDetails parameter={parametersEu.xRequestIdEu} />
+<ParameterDetails parameter={parametersEu.xRequestTimeEu} />
+<ParameterDetails parameter={parametersEu.xCorrelationIdEu} />
 
 ### Authenticate your API calls
 
@@ -441,7 +442,7 @@ You need to verify that ClearBank is the true source of the webhook, and that th
 3. Convert the `DigitalSignature` request header value from a Base64 encoded string into the byte array.
 4. Verify the signature using the RSA algorithm.
 
-We have provided an example C# controller in the [ClearBank fi-api-101 Github Repository](https://github.com/clearbank/fi-api-101) which shows how to calculate the hash value and verify the digital signature. Once you know the webhook can be trusted, you can respond.
+We have provided an example C# controller in the <ExternalLink href="https://github.com/clearbank/fi-api-101">ClearBank fi-api-101 Github Repository</ExternalLink> which shows how to calculate the hash value and verify the digital signature. Once you know the webhook can be trusted, you can respond.
 
 #### Response
 

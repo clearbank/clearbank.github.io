@@ -1,23 +1,23 @@
 {
-  "authorizationEu": {
+  "authorizationUk": {
     "name": "Authorization",
     "type": "string",
     "location": "header",
     "required": true,
     "methods": ["get", "put", "post", "patch", "delete"],
     "body": "<p>Your API token retrieved from the ClearBank Portal.</p>",
-    "example": "curl -v -X GET https://institution-api-sim.eu.clearbank.io/v3/Accounts \\ \n -H \"Authorization: Bearer <<your api token>> \""
+    "example": "curl -v -X GET https://institution-api-sim.clearbank.co.uk/v3/Accounts \\ \n -H \"Authorization: Bearer <<your api token>> \""
   },
-  "digitalSignatureEu": {
+  "digitalSignatureUk": {
     "name": "DigitalSignature",
     "type": "string",
     "location": "header",
     "required": true,
-    "methods": ["get", "put", "post", "patch", "delete"],
-    "body": "<p>For PUT, POST, and PATCH, this is a hash of the request body signed with your private key.</p><p>For GET and DELETE, this value is generated from your <code>HTTP METHOD</code>, <code>Query Path</code>, <code>X-Request-Id</code>, and <code>X-Request-Time</code> values.</p>",
+    "methods": ["post", "patch", "put"],
+    "body": "<p>This is a hash of the request body signed with your private key.</p>",
     "example": null
   },
-  "xRequestIdEu": {
+  "xRequestIdUk": {
     "name": "X-Request-Id",
     "type": "string",
     "location": "header",
@@ -26,16 +26,7 @@
     "body": "<p>This is used to check for duplicate requests. You generate this identifier which must be unique (max length 83) for any subsequent requests sent for at least 24 hours after the initial request was sent.</p><p> If an <code>X-Request-Id</code> Header is not supplied, or is invalid, a <code>400</code>: Bad Request HTTP status code response will be returned.</p><p>If ClearBank detects a duplicate, a <code>409</code>: Conflict HTTP status code response will be returned.<p>",
     "example": null
   },
-  "xRequestTimeEu": {
-    "name": "X-Request-Time",
-    "type": "string",
-    "location": "header",
-    "required": true,
-    "methods": ["get", "delete"],
-    "body": "<p>The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.</p>",
-    "example": null
-  },
-  "xCorrelationIdEu": {
+  "xCorrelationIdUk": {
     "name": "X-Correlation-Id",
     "type": "string",
     "location": "header",
