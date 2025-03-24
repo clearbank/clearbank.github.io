@@ -73,7 +73,7 @@ const Homepage: React.FC<any> = (props) => {
                         <Styles.TableTitleCell>
                           <a href={node.url} target="_blank" rel="noopener noreferrer">{node.title}</a>
                         </Styles.TableTitleCell>
-                        <Styles.TableDateCell>{dateFormatter(node.createdAt)}</Styles.TableDateCell>
+                        <Styles.TableDateCell>{dateFormatter(node.mergedAt)}</Styles.TableDateCell>
                       </tr>
                     ))}
                 </tbody>
