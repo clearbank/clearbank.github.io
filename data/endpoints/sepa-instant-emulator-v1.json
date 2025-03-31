@@ -91,7 +91,8 @@
             "description": "Your API Token, obtained from the ClearBank Portal.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "boolean",
+              "default": false
             }
           },
           {
@@ -158,6 +159,120 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/sepa-instant-emulator/inbound-payment/recall": {
+      "post": {
+        "tags": [
+          "Sepa Instant Emulator Payments V2"
+        ],
+        "summary": "Creates Inbound SEPA Payment Recall Using The V2 Endpoint",
+        "operationId": "Payment.Recall.V2",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundRecallV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
             "content": {
               "text/plain": {
                 "schema": {
@@ -379,6 +494,48 @@
           },
           "OriginalTransactionDetails": {
             "$ref": "#/components/schemas/RecallOriginalTransactionDetails"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundRecallV2": {
+        "required": [
+          "PaymentId",
+          "EndToEndId",
+          "ReasonForRecall",
+          "Amount"
+        ],
+        "type": "object",
+        "properties": {
+          "Reference": {
+            "type": "string",
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system",
+            "nullable": true,
+            "example": "INV-00002 2020-01-21"
+          },
+          "ReasonForRecall": {
+            "type": "string",
+            "description": "Value must be one of \"DUPL, FRAD, TECH, CUST, AC03, AM09\". DUPL = Duplicate, FRAD = Fraud, TECH = Technical problem, AC03 = Invalid creditor number, CUST = Requested by customer, AM09 = Wrong amount",
+            "example": "DUPL"
+          },
+          "Amount": {
+            "maximum": 100000,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money moved between the debtor and creditor (EUR)",
+            "format": "double",
+            "example": "1000"
+          },
+          "PaymentId": {
+            "type": "string",
+            "description": "Original payment id used when sending inbound pacs008",
+            "example": "0947eaf62b51496bafba969a0a712d12"
+          },
+          "EndToEndId": {
+            "type": "string",
+            "description": "Original EndToEndId used when sending inbound pacs008",
+            "example": "0947eaf62b51496bafba969a0a712d12"
           }
         },
         "additionalProperties": false
