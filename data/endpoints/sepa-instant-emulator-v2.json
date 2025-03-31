@@ -2,16 +2,16 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Sepa Instant Inbound Emulator API",
-    "version": "1.0.SIM"
+    "version": "2.0.SIM"
   },
   "paths": {
-    "/v1/sepa-instant-emulator/inbound-payment": {
+    "/v2/sepa-instant-emulator/inbound-payment/recall": {
       "post": {
         "tags": [
-          "Sepa Instant Emulator Payments"
+          "Sepa Instant Emulator Payments V2"
         ],
-        "summary": "Simulates an inbound SCT Inst payment for testing purposes in the ClearBank simulation environment.",
-        "operationId": "Payment.Create",
+        "summary": "Creates Inbound SEPA Payment Recall Using The V2 Endpoint",
+        "operationId": "Payment.Recall.V2",
         "parameters": [
           {
             "name": "Authorization",
@@ -45,80 +45,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InboundPayment"
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Accepted"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/sepa-instant-emulator/inbound-payment/recall": {
-      "post": {
-        "tags": [
-          "Sepa Instant Emulator Payments"
-        ],
-        "summary": "Simulates an inbound SCT Inst payment recall for testing purposes in the ClearBank simulation environment.",
-        "operationId": "Payment.Recall",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Your API Token, obtained from the ClearBank Portal.",
-            "required": true,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "DigitalSignature",
-            "in": "header",
-            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InboundRecall"
+                "$ref": "#/components/schemas/InboundRecallV2"
               }
             }
           }
@@ -159,6 +86,36 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
             "content": {
               "text/plain": {
                 "schema": {
