@@ -10,7 +10,7 @@
         "tags": [
           "Sepa Instant Emulator Payments V2"
         ],
-        "summary": "Creates Inbound SEPA Payment Recall Using The V2 Endpoint",
+        "summary": "Simulates an inbound SCT Inst payment recall for testing purposes in the ClearBank simulation environment.",
         "operationId": "Payment.Recall.V2",
         "parameters": [
           {
@@ -359,6 +359,14 @@
           "ReasonForRecall": {
             "type": "string",
             "description": "Value must be one of \"DUPL, FRAD, TECH, CUST, AC03, AM09\". DUPL = Duplicate, FRAD = Fraud, TECH = Technical problem, AC03 = Invalid creditor number, CUST = Requested by customer, AM09 = Wrong amount",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
             "example": "DUPL"
           },
           "Amount": {
@@ -373,11 +381,13 @@
           "PaymentId": {
             "type": "string",
             "description": "Original payment id used when sending inbound pacs008",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
             "example": "0947eaf62b51496bafba969a0a712d12"
           },
           "EndToEndId": {
             "type": "string",
             "description": "Original EndToEndId used when sending inbound pacs008",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
             "example": "0947eaf62b51496bafba969a0a712d12"
           }
         },
