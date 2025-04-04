@@ -10,7 +10,7 @@
         "tags": [
           "Sepa Instant Emulator Payments V2"
         ],
-        "summary": "Simulates an inbound SCT Inst payment recall for testing purposes in the ClearBank simulation environment.",
+        "summary": "Generates an inbound SCT Inst recall request in our simulation environment for testing purposes.",
         "operationId": "Payment.Recall.V2",
         "parameters": [
           {
@@ -167,7 +167,7 @@
           },
           "ReasonForRecall": {
             "type": "string",
-            "description": "Value must be one of \"DUPL, FRAD, TECH, CUST, AC03, AM09\". DUPL = Duplicate, FRAD = Fraud, TECH = Technical problem, AC03 = Invalid creditor number, CUST = Requested by customer, AM09 = Wrong amount",
+            "description": "The reason code used to recall the payment. This can be 0=DUPL, 1=FRAD, 2=TECH, 3=CUST, 4=AC03 or 5=AM09.",
             "enum": [
               0,
               1,
@@ -176,20 +176,21 @@
               4,
               5
             ],
-            "example": "DUPL"
+            "example": 1,
+            "format": "int32"
           },
           "Amount": {
             "maximum": 100000,
             "minimum": 0,
             "exclusiveMinimum": true,
             "type": "number",
-            "description": "Amount of money moved between the debtor and creditor (EUR)",
+            "description": "Amount of money moved between the debtor and creditor (EUR).",
             "format": "double",
             "example": "1000"
           },
           "PaymentId": {
             "type": "string",
-            "description": "Original payment ID used when sending inbound pacs008",
+            "description": "Original payment ID used in the inbound payment to be recalled.",
             "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
             "minLength": 1,
             "maxLength": 35,
@@ -197,7 +198,7 @@
           },
           "EndToEndId": {
             "type": "string",
-            "description": "Original EndToEndId used when sending inbound pacs008",
+            "description": "Original EndToEndId used in the inbound payment to be recalled.",
             "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
             "minLength": 1,
             "maxLength": 35,
