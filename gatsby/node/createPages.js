@@ -30,7 +30,7 @@ const ALL_PAGES_SCHEMA = `
           nodes {
             title
             state
-            createdAt
+            mergedAt
             url
           }
         }
