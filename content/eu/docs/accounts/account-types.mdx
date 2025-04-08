@@ -11,12 +11,13 @@ import Callout from "src/components/callout";
 
 There are several types of accounts that can be created. Which you should use will depend on your agreement with ClearBank, and the purpose of the account.
 
-When you join ClearBank you are given these four accounts by default:
+When you join ClearBank you are given the following accounts by default:
 
-- Your **Institution Master Account** is not an account of its own; it is a superset of all your other accounts. 
 - Your **Mandated Minimum Balance (MMB)** account holds your institution's pre-agreed mandatory minimum balance. Funds here are subject to the terms of your institution's contract with ClearBank.
 - Your **Repair Suspense Account** is an account used to apply funds relating to your institution which cannot be applied to the intended creditor account. Funds held in this account should be re-routed to the correct account or sent back by you.
-- Your **Operating Account** holds your own operational funds. Your first Operating Account may be referred to as your **Primary Operating Account**.
+- Your **Operational Account** holds your own operational funds. Your first Operational Account may be referred to as your **Primary Operational Account**.
+
+Your <strong>Institution Master Account</strong> cannot be used like a normal account to send and receive payments. It is used to group all of your multi-currency accounts. Your <strong>Institution Operational Account</strong> is used to hold your own operations funds only.
 
 ![Image showing your initial set of accounts](/assets/images/accounts-eu-day-1.svg "Initial set of accounts")
 
@@ -24,19 +25,22 @@ New real accounts can be created using the [POST /mccy/v2/Accounts endpoint](./m
 
 New virtual accounts can be created against existing **General Segregation Accounts** and **General Safeguarded Accounts** using the [POST /mccy/v1/VirtualAccounts endpoint](./manage-virtual-accounts#create-a-new-account-virtual).
 
-### Ways to organise your accounts
+### Real vs Virtual accounts
 
-Your **General Segregation** and **General Safeguarded** accounts and associated virtual accounts can be enabled for a single currency or multiple, depending on your needs. You should decide on the account structure that best fits your use case before creating accounts.
+You can create multiple virtual accounts - each for a different customer - under a real account. This lets you keep several different customers' funds in a single real account.
 
-Examples you could choose are shown below:
+**Real accounts are held with ClearBank.**  
+The balances of real accounts are reconciled by ClearBank and can be checked on the ClearBank Portal or via our **[GET /v3/Accounts/\{accountId\}](/uk/docs/gbp-accounts/manage-accounts#get-information-for-an-account-real)** or **[GET /v3/Accounts](/uk/docs/gbp-accounts/manage-accounts#get-information-for-an-account-real)** endpoints.  
 
-![Image showing general segregation account options](/assets/images/mccy-account-types.svg "General segregation account options")
+Real GBP accounts can be created using the **[POST /v3/Accounts endpoint](/uk/docs/gbp-accounts/manage-accounts#get-all-accounts-real)**.
 
-- **Example 1:** You can choose to have a General Segregation account that holds one currency (e.g. USD). This means when you create a virtual account under this real account, it will be enabled for that one currency.
+<br />
 
-- **Example 2:** You can choose to have a General Segregation account that holds specific currencies (e.g. EUR, SEK, and USD). This means when you create a virtual account under this real account, it will be enabled for those specific currencies.
+**Virtual accounts are held on your platform, but their funds are kept in a real account held with ClearBank.**  
+To create a virtual account with ClearBank, you must create it under one of your real general (also known as pooled) accounts. You can then use this account's virtual IBAN (vIBAN) to send and receive payments using funds from the associated real account.  
+You can create virtual accounts using the **[POST /v2/Accounts/\{accountId\}/Virtual](/uk/docs/gbp-accounts/manage-accounts#create-accounts-virtual)** endpoint.  
 
-- **Example 3:** You can choose to have a General Segregation account that holds all currencies. This means when you create a virtual account under this real account, it will be enabled for all currencies.
+You are responsible for managing and reconciling your virtual accounts' balances.
 
 ## Account names and kinds
 
@@ -67,8 +71,8 @@ It is important to select the correct kind for an account when you create it, as
 
 ![Image showing correct usage of usageType/kind](/assets/images/accounts-eu-usage.svg "Correct usage of kind")
 
-#### Institution Operating Account (Your Funds)
-The **Institution Operating Account**, also known as a **Your Funds** account, is used to hold your own operational funds only. This can include fees, interest earnings, and so on.
+#### Institution Operational Account (Your Funds)
+The **Institution Operational Account**, also known as a **Your Funds** account, is used to hold your own operational funds only. This can include fees, interest earnings, and so on.
 
 #### Segregated accounts
 **Segregated** accounts exist to hold customer funds separate from your operational funds. For certain types of institutions, it is a regulatory requirement that customer funds are segregated from your institution's operational funds.
