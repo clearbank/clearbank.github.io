@@ -260,7 +260,7 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
 
 ## FIN to ISO20022 field mapping
 
-As part of the Bank of England's RTGS Renewal Programme, the payment message format for CHAPS has recently changed. The previous message format known as MT messages has changed to MX messages that are compliant with ISO20022.
+As part of the Bank of England's RTGS Renewal Programme, the previous message format known as MT messages has changed to MX messages that are compliant with ISO20022.
 
 This table provides information on the most relevant fields within the messages and their associated conversions.
 
@@ -279,5 +279,108 @@ This table provides information on the most relevant fields within the messages 
 |:71A|Details of Charges|Mandatory||This field specifies which party will bear the charges for the transaction.<br/><br/>Previous FIN charge codes:<br/>BEN - Beneficiary<br/>OUR - Our Customer charged<br/> SHA - Shared Charges|<ChrgBr\><br/> Borne by Creditor - CRED<br/>Borne by Debtor - DEBT<br/>Shared - SHAR||<ChrgBr\><br/> Borne by Creditor - CRED<br/>Borne by Debtor - DEBT<br/>Shared - SHAR|
 |:72|Sender to Receiver Information|Optional|Optional|This field specifies additional information for the Receiver or other party specified.<br/><br/>Previously, in FIN, if the first six characters in line 1 contain the character string /REJT/ or /RETN/, then it is mandatory to follow the Payments Reject/Return Guidelines described in the Standards MT Usage Guidelines.|<PmtTpInf\><LclInstrm\> Supercedes Field 72 –  preceded by codeword /LOCINS/<br/><br/> <PrvsInstgAgt1\><PrvsInstgAgt2\><PrvsInstgAgt3\> Supercedes Field 72 –  preceded by codeword /INS/<br/><br/><InstgAgt\> Sender<br/><br/><InstdAgt\>Receiver<br/><br/><IntrmyAgt2\><IntrmyAgt3\> Supercedes Field 72 –  preceded by codeword /INTA/<br/><br/><InstrForCdtrAgt\> Supercedes Field 72 – preceded by codeword /ACC/<br/><br/><InstrForNxtAgt\> Supercedes Field 72 – preceded by codeword /REC/<br/><br/>|<PmtTpInf\><LclInstrm\> Supercedes Field 72 – preceded by codeword /LOCINS/ Also CLS-specific codewords<br/><br/><PmtTpInf\><CtgyPurp\> Supercedes Field 72 – preceded by codeword /CATPURP/<br/><br/><PrvsInstgAgt1\><PrvsInstgAgt2\><PrvsInstgAgt3\> Supercedes Field 72 – preceded by codeword /INS/<br/><br/><IntrmyAgt2\><IntrmyAgt3\> Supercedes Field 72 – preceded by codeword /INTA/<br/><br/><DbtrAgt\> Supercedes Field 72 – preceded by codeword /INS/<br/><br/><InstrForCdtrAgt\> Supercedes Field 72 – preceded by codeword /ACC/, /PHONBEN/, /TELEBEN/<br/><br/><InstrForNxtAgt\> Supercedes Field 72 – preceded by codeword /REC/<br/><br/><Purp\> Supercedes Field 72 – preceded by codeword /PURP/<br/><br/><RmtInf\> Supercedes Field 72 – preceded by codeword /BNF/ or /TSU/<br/><br/>|<RtrRsnInf\><Rsn\><Cd\> Supercedes Field 72 - Sender to Receiver Info - Line 2<br/><br/><OrgnlEndToEndId\> Supercedes Field 72 - Sender to Receiver Info - Line 4<br/><br/><ChrgsInf\><Amt\> Supercedes Field 72 - Sender to Receiver Info - Line 5<br/><br/><OrgnlIntrBkSttlmDt\> Supercedes Field 72 - Sender to Receiver Info - Line 6|
 
+## CHAPS return reason codes
 
+The following table details the CHAPS return reason codes used to populate the `reason` field of the [Return a CHAPS payment](#return-a-chaps-payment) endpoint.
 
+| Code Value | Code Name                                | Code Definition                                                                                           |
+|------------|------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| AC01       | IncorrectAccountNumber                   | Format of the account number specified is not correct.                                                     |
+| AC02       | InvalidDebtorAccountNumber               | Debtor account number invalid or missing.                                                                 |
+| AC03       | InvalidCreditorAccountNumber             | Wrong IBAN in SCT.                                                                                         |
+| AC04       | ClosedAccountNumber                      | Account number specified has been closed on the bank of account's books.                                   |
+| AC06       | BlockedAccount                           | Account specified is blocked, prohibiting posting of transactions against it.                             |
+| AC07       | ClosedCreditorAccountNumber              | Creditor account number closed.                                                                           |
+| AC13       | InvalidDebtorAccountType                 | Debtor account type is missing or invalid.                                                                 |
+| AC14       | InvalidAgent                             | An agent in the payment chain is invalid.                                                                 |
+| AC15       | AccountDetailsChanged                    | Account details have changed.                                                                             |
+| AC16       | AccountInSequestration                   | Account is in sequestration.                                                                              |
+| AC17       | AccountInLiquidation                     | Account is in liquidation.                                                                                |
+| AG01       | TransactionForbidden                     | Transaction forbidden on this type of account (formerly NoAgreement).                                      |
+| AG02       | InvalidBankOperationCode                 | Bank Operation code specified in the message is not valid for receiver.                                    |
+| AG07       | UnsuccesfulDirectDebit                   | Debtor account cannot be debited for a generic reason. Usage: Code value may be used in general purposes and as a replacement for AM04 if debtor bank does not reveal its customer's insufficient funds for privacy reasons. |
+| AGNT       | IncorrectAgent                           | Agent in the payment workflow is incorrect.                                                               |
+| AM01       | ZeroAmount                               | Specified message amount is equal to zero.                                                                 |
+| AM02       | NotAllowedAmount                         | Specific transaction/message amount is greater than allowed maximum.                                       |
+| AM03       | NotAllowedCurrency                       | Specified message amount is a non-processable currency outside of existing agreement.                      |
+| AM04       | InsufficientFunds                        | Amount of funds available to cover specified message amount is insufficient.                              |
+| AM05       | Duplication                              | Duplication                                                                                               |
+| AM06       | TooLowAmount                             | Specified transaction amount is less than agreed minimum.                                                 |
+| AM07       | BlockedAmount                            | Amount specified in message has been blocked by regulatory authorities.                                   |
+| AM09       | WrongAmount                              | Amount received is not the amount agreed or expected.                                                      |
+| AM10       | InvalidControlSum                        | Sum of instructed amounts does not equal the control sum.                                                 |
+| ARDT       | AlreadyReturnedTransaction               | Already returned original SCT.                                                                             |
+| BE01       | InconsistenWithEndCustomer               | Identification of end customer is not consistent with associated account number, organisation ID, or private ID.   |
+| BE04       | MissingCreditorAddress                   | Specification of creditor's address, which is required for payment, is missing/not correct (formerly IncorrectCreditorAddress).  |
+| BE05       | UnrecognisedInitiatingParty              | Party who initiated the message is not recognized by the end customer.                                     |
+| BE06       | UnknownEndCustomer                       | End customer specified is not known at associated Sort/National Bank Code or does no longer exist in the books.   |
+| BE07       | MissingDebtorAddress                     | Specification of debtor's address, which is required for payment, is missing/not correct.                 |
+| BE08       | BankError                                | Returned as a result of a bank error.                                                                     |
+| BE10       | InvalidDebtorCountry                     | Debtor country code is missing or invalid.                                                                |
+| BE11       | InvalidCreditorCountry                   | Creditor country code is missing or invalid.                                                              |
+| BE16       | InvalidDebtorIdentificationCode          | Debtor or Ultimate Debtor identification code missing or invalid.                                         |
+| BE17       | InvalidCreditorIdentificationCode        | Creditor or Ultimate Creditor identification code missing or invalid.                                     |
+| CN01       | AuthorisationCancelled                   | Authorisation is cancelled.                                                                               |
+| CNOR       | CreditorBankIsNotRegistered              | Creditor bank is not registered under this BIC in the CSM.                                                 |
+| CNPC       | CashNotPickedUp                          | Cash not picked up by Creditor or cash could not be delivered to Creditor.                                 |
+| CURR       | IncorrectCurrency                        | Currency of the payment is incorrect.                                                                      |
+| CUST       | RequestedByCustomer                      | Cancellation requested by the Debtor.                                                                      |
+| DNOR       | DebtorBankIsNotRegistered                | Debtor bank is not registered under this BIC in the CSM.                                                   |
+| DS28       | ReturnForTechnicalReason                 | Return following technical problems resulting in erroneous transaction.                                   |
+| DT01       | InvalidDate                              | Invalid date (e.g., wrong settlement date).                                                                |
+| DT02       | ChequeExpired                            | Cheque has been issued but not deposited and is considered expired.                                       |
+| ED01       | CorrespondentBankNotPossible             | Correspondent bank not possible.                                                                          |
+| ED03       | BalanceInfoRequest                       | Balance of payments complementary info is requested.                                                       |
+| ED05       | SettlementFailed                         | Settlement of the transaction has failed.                                                                 |
+| EMVL       | EMVLiabilityShift                        | The card payment is fraudulent and was not processed with EMV technology for an EMV card.                 |
+| ERIN       | ERIOptionNotSupported                    | The Extended Remittance Information (ERI) option is not supported.                                        |
+| FF03       | InvalidPaymentTypeInformation            | Payment Type Information is missing or invalid. Generic usage if cannot specify Service Level or Local Instrument code.  |
+| FF04       | InvalidServiceLevelCode                  | Service Level code is missing or invalid.                                                                 |
+| FF05       | InvalidLocalInstrumentCode               | Local Instrument code is missing or invalid.                                                               |
+| FF06       | InvalidCategoryPurposeCode               | Category Purpose code is missing or invalid.                                                              |
+| FF07       | InvalidPurpose                           | Purpose is missing or invalid.                                                                            |
+| FOCR       | FollowingCancellationRequest             | Return following a cancellation request.                                                                   |
+| FR01       | Fraud                                    | Returned as a result of fraud.                                                                            |
+| FRTR       | FinalResponseMandateCancelled            | Final response/tracking is recalled as mandate is cancelled.                                              |
+| G004       | CreditPendingFunds                       | In a FIToFI Customer Credit Transfer: Credit to the creditor’s account is pending, status Originator is waiting for funds provided via a cover. Update will follow from the Status Originator. |
+| MD01       | NoMandate                                | No Mandate.                                                                                                |
+| MD02       | MissingMandatoryInformationInMandate     | Mandate related information data required by the scheme is missing.                                       |
+| MD05       | CollectionNotDue                         | Creditor or creditor's agent should not have collected the direct debit.                                  |
+| MD06       | RefundRequestByEndCustomer               | Return of funds requested by end customer.                                                                 |
+| MD07       | EndCustomerDeceased                      | End customer is deceased.                                                                                 |
+| MS02       | NotSpecifiedReasonCustomerGenerated      | Reason has not been specified by end customer.                                                             |
+| MS03       | NotSpecifiedReasonAgentGenerated         | Reason has not been specified by agent.                                                                   |
+| NARR       | Narrative                                | Reason is provided as narrative information in the additional reason information. **This reason code is not available when sending return payments but may be used by other parties when you receive inbound return payments.**                        |
+| NOAS       | NoAnswerFromCustomer                     | No response from crediting customer.                                                                              |
+| NOCM       | NotCompliant                             | Customer account is not compliant with regulatory requirements, for example FICA (in South Africa) or any other regulatory requirements which render an account inactive for certain processing.     |
+| NOOR       | NoOriginalTransactionReceived            | Original SCT never received.                                                                               |
+| PINL       | PINLiabilityShift                        | The card payment is fraudulent (lost and stolen fraud) and was processed as EMV transaction without PIN verification.     |
+| RC01       | BankIdentifierIncorrect                  | Bank Identifier code specified in the message has an incorrect format (formerly IncorrectFormatForRoutingCode).           |
+| RC07       | InvalidCreditorBICIdentifier             | Incorrect BIC of the creditor Bank in the SCTR.                                                                         |
+| RC08       | InvalidClearingSystemMemberIdentifier    | ClearingSystemMemberidentifier is invalid or missing. Generic usage if cannot specify between debit or credit account.    |
+| RC11       | InvalidIntermediaryAgent                 | Intermediary Agent is invalid or missing.                                                                                 |
+| RF01       | NotUniqueTransactionReference            | Transaction reference is not unique within the message.                                                                   |
+| RR01       | MissingDebtorAccountOrIdentification     | Specification of the debtor’s account or unique identification needed for reasons of regulatory requirements is insufficient or missing.     |
+| RR02       | MissingDebtorNameOrAddress               | Specification of the debtor’s name and/or address needed for regulatory requirements is insufficient or missing.          |
+| RR03       | MissingCreditorNameOrAddress             | Specification of the creditor’s name and/or address needed for regulatory requirements is insufficient or missing.        |
+| RR04       | RegulatoryReason                         | Regulatory Reason.                                                                                          |
+| RR05       | RegulatoryInformationInvalid             | Regulatory or Central Bank Reporting information missing, incomplete, or invalid.                          |
+| RR06       | TaxInformationInvalid                    | Tax information missing, incomplete, or invalid.                                                           |
+| RR07       | RemittanceInformationInvalid             | Remittance information structure does not comply with rules for payment type.                              |
+| RR08       | RemittanceInformationTruncated           | Remittance information truncated to comply with rules for payment type.                                    |
+| RR09       | InvalidStructuredCreditorReference       | Structured creditor reference invalid or missing.                                                          |
+| RR11       | InvalidDebtorAgentServiceIdentification  | Invalid or missing identification of a bank proprietary service.                                           |
+| RR12       | InvalidPartyIdentification               | Invalid or missing identification required within a particular country or payment type.                    |
+| RUTA       | ReturnUponUnableToApply                  | Return following investigation request and no remediation possible.                                        |
+| SL01       | SpecificServiceOfferedByDebtorAgent      | Due to specific service offered by the Debtor Agent.                                                        |
+| SL02       | SpecificServiceOfferedByCreditorAgent    | Due to specific service offered by the Creditor Agent.                                                      |
+| SL11       | CreditorNotOnWhitelistOfDebtor           | Whitelisting service offered by the Debtor Agent; Debtor has not included the Creditor on its “Whitelist” (yet). In the Whitelist, the Debtor may list all allowed Creditors to debit Debtor bank account.     |
+| SL12       | CreditorOnBlacklistOfDebtor              | Blacklisting service offered by the Debtor Agent; Debtor included the Creditor on his “Blacklist”. In the Blacklist, the Debtor may list all Creditors not allowed to debit Debtor bank account.               |
+| SL13       | MaximumNumberOfDirectDebitTransactionsExceeded | Due to Maximum allowed Direct Debit Transactions per period service offered by the Debtor Agent.     |
+| SL14       | MaximumDirectDebitTransactionAmountExceeded | Due to Maximum allowed Direct Debit Transaction amount service offered by the Debtor Agent.             |
+| SP01       | PaymentStopped                           | Payment is stopped by the account holder.                                                                  |
+| SP02       | PreviouslyStopped                        | Previously stopped by means of a stop payment advise.                                                      |
+| SVNR       | ServiceNotRendered                       | The card payment is returned since a cash amount rendered was not correct or goods or a service was not rendered to the customer, e.g., in an e-commerce situation.     |
+| TM01       | CutOffTime                               | Associated message was received after the agreed processing cut-off time.                                  |
+| TRAC       | RemovedFromTracking                      | Return following a direct debit being removed from the tracking process.                                   |
+| UPAY       | UnduePayment                             | Payment is not justified.                                                                                  |
