@@ -60,13 +60,20 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 
 Cancelled outbound payments can return the following reason codes:
 
-| Reason Code | Description                              |
-| ----------- | ---------------------------------------- |
-| AC01        | Account identifier invalid or incorrect. |
-| AM02        | Amount not allowed.                      |
-| AM04        | Insufficient funds on the account.       |
-| CB01        | Unknown error.                           |
-| CNOR        | Creditor bank is not registered.         |
+| Reason Code | Description                                |
+| ----------- | ------------------------------------------ |
+| AC01        | Account identifier invalid or incorrect.   |
+| AM02        | Amount not allowed.                        |
+| AM04        | Insufficient funds on the account.         |
+| CB01        | Unknown error.                             |
+| CNOR        | Creditor bank is not registered.           |
+| MS03        | Payment failed screening, re-send via SCT. |
+
+<Callout colour="blue">
+  If you receive cancellation reason code <code>MS03</code>, you should attempt to resend the affected payment via SEPA Credit Transfer instead of SCT Inst.
+</Callout>
+
+
 
 ## Receive an SCT Inst payment
 
