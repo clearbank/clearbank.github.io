@@ -1,0 +1,286 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Sepa Instant Inbound Emulator API",
+    "version": "2.0.SIM"
+  },
+  "paths": {
+    "/v2/sepa-instant-emulator/inbound-payment/recall": {
+      "post": {
+        "tags": [
+          "Sepa Instant Emulator Payments V2"
+        ],
+        "summary": "Generates an inbound SCT Inst recall request in our simulation environment for testing purposes.",
+        "operationId": "Payment.Recall.V2",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundRecallV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InboundRecallV2": {
+        "required": [
+          "PaymentId",
+          "EndToEndId",
+          "ReasonForRecall",
+          "Amount"
+        ],
+        "type": "object",
+        "properties": {
+          "Reference": {
+            "type": "string",
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system",
+            "nullable": true,
+            "example": "INV-00002 2020-01-21"
+          },
+          "ReasonForRecall": {
+            "type": "string",
+            "description": "The reason code used to recall the payment. ",
+            "enum": [
+              "DUPL",
+              "FRAD",
+              "TECH",
+              "CUST",
+              "AC03",
+              "AM09"
+            ],
+            "example": "DUPL"
+          },
+          "Amount": {
+            "maximum": 100000,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money moved between the debtor and creditor (EUR).",
+            "format": "double",
+            "example": "1000"
+          },
+          "PaymentId": {
+            "type": "string",
+            "description": "Original payment ID used in the inbound payment to be recalled.",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "minLength": 1,
+            "maxLength": 35,
+            "example": "0947eaf62b51496bafba969a0a712d12"
+          },
+          "EndToEndId": {
+            "type": "string",
+            "description": "Original endToEndId used in the inbound payment to be recalled.",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "minLength": 1,
+            "maxLength": 35,
+            "example": "0947eaf62b51496bafba969a0a712d12"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced,  it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available."
+          }
+        },
+        "additionalProperties": {}
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced,  it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available."
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true,
+            "description": "Identifies which field(s) contain validation errors and any requirements for the field identified."
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  }
+}
