@@ -164,6 +164,77 @@ These endpoints can be used to simulate payments. You can also use them for auto
 - Simulate a returned T2 payment (pacs.004) through the [POST /payments/t2-rtgs/v1/inbound/payment-returns](#simulate-a-return-t-2-payment) endpoint.
 - Simulate a T2 bank-to-bank payment (pacs.009) through the [POST /payments/t2-rtgs/v1/inbound/institution-payments](#simulate-a-t-2-bank-to-bank-payment) endpoint.
 
+### Example request payloads
+
+For these three endpoints, we have provided an example payload with the minimum required fields to help you test them easily.
+
+#### Submit an inbound T2 payment (pacs.008) endpoint example
+
+```
+{
+    "paymentIdentification": {
+        "instructionId": "75030e66dc7844ed9e4a1266c9e8410f",
+        "endToEndId": "Inbound Payment",
+        "uetr": "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
+    },
+    "header": {
+        "bizMsgId": "75030e66dc7844ed9e4a1266c9e8410f",
+        "from": "CLRBNL2AXXX",
+        "to": "CLRBNL2AXXX"
+    },
+    "value": {
+        "settlementAmount": 1000,
+        "settlementCurrency": "EUR"
+    },
+    "debtor": {
+        "party": {
+            "name": "Debtor Name",
+            "address": {
+                "townName": "Amsterdam",
+                "country": "NL",
+                "postcode": "BN3 1DG"
+            }
+        },
+        "account": {
+            "identification": {
+                "iban": "NL17CLRB0126793871"
+            }
+        }
+    },
+    "debtorAgent": {
+        "identification": {
+            "bicFi": "AACSDE33XXX"
+        }
+    },
+    "creditor": {
+        "party": {
+            "name": "Creditor Name",
+            "address": {
+                "townName": "Amsterdam",
+                "country": "NL",
+                "postcode": "BN3 1DG"
+            }
+        },
+        "account": {
+            "identification": {
+                "iban": "INSERT CREDITOR IBAN"
+            }
+        }
+    },
+    "creditorAgent": {
+        "identification": {
+            "bicFi": "INSERT CREDITOR BIC"
+        }
+    },
+    "instructingAgent": {
+        "bic": "CLRBNL2AXXX"
+    },
+    "instructedAgent": {
+        "bic": "CLRBNL2AXXX"
+    }
+}
+```
+
 <EndpointBlock
   type="post"
   title="Simulate a T2 payment"
