@@ -1,0 +1,233 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "ClearBank.InterestAccrual.Api",
+      "version": "1.0.Future.Interest"
+    },
+    "paths": {
+      "/interest/v1/accounts/{accountId}/future-configurations": {
+        "put": {
+          "tags": [
+            "FutureDatedAccountInterestConfigurations"
+          ],
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API Token, obtained from the ClearBank Portal.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "AccountId",
+              "in": "path",
+              "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFutureDatedAccountInterestConfigurationRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "FutureDatedAccountInterestConfigurations"
+          ],
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API Token, obtained from the ClearBank Portal",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "AccountId",
+              "in": "path",
+              "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "No Content"
+            },
+            "404": {
+              "description": "Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                },
+                "application/problem+json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemDetails"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "CreateFutureDatedAccountInterestConfigurationRequest": {
+          "type": "object",
+          "properties": {
+            "interestConfigurations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FutureDatedAccountInterestConfiguration"
+              },
+              "nullable": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "FutureDatedAccountInterestConfiguration": {
+          "type": "object",
+          "properties": {
+            "interestConfigurationId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The UUID indicating the interest configuration for the account. If you don't have this, speak to your Client Director."
+            },
+            "effectiveFrom": {
+              "type": "string",
+              "format": "date",
+              "description": "Date that the interestConfigurationID becomes effective. Format: Date.",
+              "example": "2027-10-01"
+            }
+          },
+          "additionalProperties": false
+        },
+        "ProblemDetails": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "nullable": true
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "status": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "detail": {
+              "type": "string",
+              "nullable": true
+            },
+            "instance": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "additionalProperties": { }
+        }
+      }
+    }
+  }

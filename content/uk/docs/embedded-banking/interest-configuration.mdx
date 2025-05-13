@@ -15,15 +15,15 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 You can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis, so please reach out if you'd like to use it.
 
-The initial interest configuration ID is usually set during account creation. You can later update it using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint to a different interest configuration ID specified in the `interestConfigurationId` field. You can request a new configuration ID from your usual ClearBank contact. 
+The initial interest configuration ID is usually set during account creation. You can request a new configuration ID from your usual ClearBank contact. 
 
-The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the morning based on data from midnight UK time.
+You can:
+- **Update** your interest configuration using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint
+- **Get** all interest configurations set for an account using the [GET /interest/v1/accounts/{accountId}/configurations](#get-an-accounts-interest-configurations) endpoint
+- **Set future-dated** interest configurations using the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint
+- **Delete** all future interest configurations using the [DELETE /v1/accounts/{accountId}/future-configurations](#delete-future-dated-interest-configurations) endpoint
 
-You can retrieve all past, current, and future interest configurations by using the [GET /interest/v1/accounts/{accountId}/configurations](#get-an-accounts-interest-configurations) endpoint.
-
-<Callout colour="blue">
-You currently cannot set future interest configurations for your accounts. This will be released in a later update.
-</Callout>
+The interest rate will apply for the whole of the day on which it is set. Interest is calculated in the early hours of the following morning based on data from midnight UK time.
 
 ### Daily interest example
 
@@ -40,6 +40,16 @@ If you update an interest product at 14:00 on the 5th, interest from the 1st to 
 This diagram shows the message flow:
 
 ![A message flow diagram describing the above process of setting the monthly interest configuration.](/assets/images/savings-account-monthly-interest-config.svg)
+
+### Future-dating interest configurations
+
+You can set multiple future interest configurations for your account with the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint. Once set, this endpoint also replaces any existing future-dated configurations for the account.
+
+Each selected interest configuration will apply from the start of the day provided in the `effectiveFrom` field. For example, you might set an account to move from interest config A to interest config B on 1 August. Interest will be calculated based on the balance from midnight on 31 July using interest config A. Any future interest interest calculations will be based on interest config B until any further changes to the interest configurations come into effect.
+
+If you update the interest configuration using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint while future-dated configurations are set, the update will remain active until the next future-dated configuration takes effect. For example, updating to config C on 1 October will apply until 14 October if a future-dated config D is set to start on 15 October. Config D will then take effect as scheduled.
+
+Use the [DELETE /v1/accounts/{accountId}/future-configurations](#delete-future-dated-interest-configurations) endpoint to remove all future-dated interest configurations from an account. The account will remain on its current interest configuration.
 
 <EndpointBlock
   type="post"
@@ -59,6 +69,28 @@ This diagram shows the message flow:
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
       version: "1.0.Savings.Config",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Set future-dated interest configurations"
+  endpoints={[
+    {
+      path: "/interest/v1/accounts/{accountId}/future-configurations",
+      version: "1.0.Future.Interest",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete future-dated interest configurations"
+  endpoints={[
+    {
+      path: "/interest/v1/accounts/{accountId}/future-configurations",
+      version: "1.0.Future.Interest",
     }
   ]}
 />
