@@ -80,15 +80,17 @@ The `paymentTypeCode` field of the [POST /v3/payments/fps endpoint](#send-faster
 This is an optional field. If not provided, the payment type will default to `SIP`.
 
 <Callout colour="blue"><p>We do not warehouse payment instructions or standing order mandates. While the <strong>paymentTypeCode</strong> allows you to specify the type of payment, it is your responsibility to arrange to call the <strong>POST /v3/payments/fps</strong> endpoint on the required date and time.</p>
+
+<p>You are responsible for ensuring you have an SOP mandate in place for any account that you send SOPs from.</p>
 </Callout>
 
 A bulk payment can contain a combination of SIPs, SOPs and FDPs. While SIPs and FDPs can be initiated at any time, **SOPs can only be sent Monday to Friday, excluding bank holidays, between 00:01 and 06:00am UK time**. 
 
-If a single or bulk SOP is initiated outside of the supported days/times, the request will not be accepted and a `400 Bad Request` response will be returned.
+If a single or bulk SOP is initiated outside of the supported days/times, the request will not be accepted and a `400 Bad Request` response will be returned:
 
 ![Message flow diagram showing a single or bulk SOP payment sent outside of supported hours and returning a 400 Bad Request response](/assets/images/sop-payment.svg "SOP sent outside of supported hours")
 
-If a bulk payment containing a combination of SIPs, SOPs and FDPs is initiated outside of the supported days/times, the SIPs and FDPs will be accepted and the SOPs will be rejected. 
+If a bulk payment containing a combination of SIPs, SOPs and FDPs is initiated outside of the supported days/times, the SIPs and FDPs will be accepted and the SOPs will be rejected:
 
 ![Message flow diagram showing abulk payment containing SIPs, SOPs and FDPs sent outside of supported hours, a 202 Accepted response is returned, the SIPs and FDPs are accepted for processing and the SOPs are rejected](/assets/images/bulk-sop-payment.svg "Bulk payment containing SIPs, SOPs and FDPs sent outside of supported hours")
 
