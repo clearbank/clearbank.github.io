@@ -12,17 +12,7 @@ import Callout from "src/components/callout";
 
 ## SEPA Instant Credit Transfer
 
-<Callout colour="green">
-<h2>SEPA Instant Credit Transfer is coming soon</h2>
-<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our European simulation environment.</p>
-</Callout>
-
-SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables customers to make and receive payments, up to a maximum value of €100,000 within a 10 second period. Payments can be sent at any time, including bank holidays and weekends.
-
-<Callout colour="blue">
-<p>SCT Inst is currently an optional scheme. New regulation means that by January 2025 all Eurozone participants utilising the euro currency that offer SCT (SEPA Credit Transfer) must also offer SCT Inst.</p>
-<p>In the event that a payment is initiated and the beneficiary's bank does not yet participate in SCT Inst, the payment will be rejected.</p>
-</Callout>
+SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables customers to make and receive payments quickly. It allows payments up to a maximum value of €100,000, which can settle in as little as 10 seconds - and no more than 25 seconds. Payments can be sent at any time, including bank holidays and weekends.
 
 You can:
 - [Send an SCT Inst payment](#send-an-sct-inst-payment)
@@ -70,13 +60,22 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 
 Cancelled outbound payments can return the following reason codes:
 
-| Reason Code | Description                              |
-| ----------- | ---------------------------------------- |
-| AC01        | Account identifier invalid or incorrect. |
-| AM02        | Amount not allowed.                      |
-| AM04        | Insufficient funds on the account.       |
-| CB01        | Unknown error.                           |
-| CNOR        | Creditor bank is not registered.         |
+| Reason Code | Description                                |
+| ----------- | ------------------------------------------ |
+| AC01        | Account identifier invalid or incorrect.   |
+| AM02        | Amount not allowed.                        |
+| AM04        | Insufficient funds on the account.         |
+| CB01        | Unknown error.                             |
+| CNOR        | Creditor bank is not registered.           |
+| MS03        | Payment failed screening, re-send via SCT. |
+
+<br />
+
+<Callout colour="blue">
+  If you receive cancellation reason code <strong>MS03</strong>, you should attempt to resend the affected payment via SEPA Credit Transfer instead of SCT Inst. Reattempting the payment via SCT Inst will not succeed.
+</Callout>
+
+
 
 ## Receive an SCT Inst payment
 
@@ -197,6 +196,13 @@ Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Can
   type="post"
   title="Simulate an inbound SCT Inst recall request"
   endpoints={[
+    {
+      path: "/v2/sepa-instant-emulator/inbound-payment/recall",
+      version: "2.0.SIM",
+      webhooks: [
+        'sepa-instant-recall-request-received-v2'
+      ]
+    },
     {
       path: "/v1/sepa-instant-emulator/inbound-payment/recall",
       version: "1.0.SIM",
