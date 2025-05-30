@@ -891,7 +891,68 @@
             "description": "Balances associated with the account in the given currencies."
           },
           "minimumBalance": {
-            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.MinBalance"
+            "$ref": "#/components/schemas/MinimumBalance"
+          },
+          "productType": {
+            "enum": [
+              "None",
+              "AdultCashIsa",
+              "Saving",
+              "Operating",
+              "Segregated",
+              "BareTrust",
+              "JuniorSaving",
+              "Holding",
+              "Current",
+              "PrizeSaving"
+            ],
+            "type": "string",
+            "description": "The product type of the account.",
+            "example": "AdultCashIsa"
+          },
+          "accountSubType": {
+            "enum": [
+              "YourFunds",
+              "SegregatedPooled",
+              "SegregatedDesignated",
+              "CorrespondentAccount",
+              "ClientMoneyPooled",
+              "ClientMoneyDesignated",
+              "SafeguardedPooled",
+              "SafeguardedDesignated",
+              "BareTrustPooled",
+              "BareTrustDesignated",
+              "InternalSuspense",
+              "MinimumMandatedBalance",
+              "ClientSuspense",
+              "SavingAccount",
+              "AdultCashIsa",
+              "JuniorSavingAccount",
+              "HoldingAccount",
+              "CurrentAccount",
+              "PrizeSavingAccount"
+            ],
+            "type": "string",
+            "description": "The subtype of the account.",
+            "example": "JuniorSavingAccount"
+          },
+          "legalOwnerType": {
+            "enum": [
+              "Personal",
+              "Business"
+            ],
+            "type": "string",
+            "description": "The legal owner type of the account.",
+            "example": "Personal"
+          },
+          "relationshipType": {
+            "enum": [
+              "Single",
+              "Joint"
+            ],
+            "type": "string",
+            "description": "The relationship type of the account.",
+            "example": "Single"
           },
           "status": {
             "enum": [
@@ -930,6 +991,18 @@
             "type": "string",
             "description": "The reason for the status of the account.",
             "example": "AccountHolderDeceased"
+          },
+          "timestampCreated": {
+            "type": "string",
+            "description": "The time the account was created.",
+            "format": "date-time",
+            "example": "2025-02-19T11:32:10.934Z"
+          },
+          "timestampModified": {
+            "type": "string",
+            "description": "The time the account was last modified.",
+            "format": "date-time",
+            "example": "2025-05-25T18:27:12.524Z"
           },
           "iban": {
             "type": "string",
@@ -1192,14 +1265,14 @@
           },
           "balanceLastUpdatedAt": {
             "type": "string",
-            "format": "DateTime",
+            "format": "date-time",
             "description": "The timestamp in UTC specifying when the balance value was last changed.",
             "example": "2025-04-19T10:02:00.964Z"
           }
         },
         "description": "A summary of the balance of an account, in a specific currency."
       },
-      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.MinBalance": {
+      "MinimumBalance": {
         "required": [
           "name",
           "amount",
@@ -1216,7 +1289,8 @@
           "amount": {
             "type": "number",
             "description": "Amount available to spend in the specified currency, excluding any earmarked funds (for example, pending payments that are in transit or held).",
-            "format": "double"
+            "format": "double",
+            "example": "2098.38"
           },
           "currency": {
             "enum": [
