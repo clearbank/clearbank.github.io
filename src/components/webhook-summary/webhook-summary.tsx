@@ -47,7 +47,7 @@ const WebhookSummary: React.FC<Types.WebhookSummaryProps> = ({
               <Styles.EndpointMethod type={method}>
                 {method}
               </Styles.EndpointMethod>
-              <Styles.EndpointName href={'/docs' + endpoint}>
+              <Styles.EndpointName href={endpoint}>
                 {description}
               </Styles.EndpointName>
             </Styles.EndpointTitle>
