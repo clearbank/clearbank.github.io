@@ -14,3 +14,32 @@ import ExternalLink from "src/components/external-link"
 
 ## Verification of Payee
 
+Verification of Payee (VoP) is a service designed to help users avoid making accidental payments to the wrong account. Before making a payment, you can use this API service to check the intended payee's details - usually their name - match with the specified payee account's. The VoP service response indicates how well the details match.  
+
+<Callout colour="blue">
+  From October 2025, you should conduct VoP before making any SCT Inst or SEPA CT payments under European Payment Council rules.
+</Callout>
+
+For example, if the remitter intends to pay 'Maria Green', but the account belongs to 'John Taylor', our VoP endpoint will return `NMTC` - 'No match'.
+
+| Code | Meaning     | Definition                                                                     |
+| ---- | ----------- | ------------------------------------------------------------------------------ |
+| MTCH | Exact match | The payee's and creditor account-holder's details match.                       |
+| CMTC | Close match | The payee's and creditor's account-holder details are similar.                 |
+| NMTC | No match    | The provided payee details do not match the creditor's account-holder details. |
+| NOAP | Can't match | It was not possible to conduct VoP.                                            |
+
+![Verification of Payee message flow diagram](/assets/images/vop-message-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Verify a Payee"
+  endpoints={[
+    {
+      path: "/open-banking/vop/v1/payee-verifications",
+      version: "1.0"
+    }
+  ]}
+/>
+
+
