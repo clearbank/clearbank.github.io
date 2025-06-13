@@ -8,6 +8,7 @@ showPageMenu: true
 import EndpointBlock from "src/components/endpoint-block";
 import * as CONSTANTS from "./retail-customers.constants";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
 
 ## Retail customers
 
@@ -27,7 +28,7 @@ FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-
 
 <EndpointBlock
   type="post"
-  title="Create an account"
+  title="Create a current account"
   endpoints={[
     {
       path: "/v4/Accounts",
@@ -41,9 +42,15 @@ FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
+ <Callout colour="blue">
+To close a current account, call the below endpoint and set the <b>Status</b> field to <b>Closed</b>.
+
+Current accounts, once closed, cannot be reopened.
+</Callout>
+
 <EndpointBlock
   type="patch"
-  title="Amend a current account"
+  title="Amend or update a current account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
