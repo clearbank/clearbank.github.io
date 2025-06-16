@@ -13,6 +13,15 @@ const plugins = [
     }
   },
   {
+      resolve: "gatsby-plugin-hotjar",
+      options: {
+        includeInDevelopment: true, // optional parameter to include script in development
+        addToHead: false, // optional parameter to append script to the head instead of the body
+        id: 6436297,
+        sv: 6,
+      },
+    },
+  {
     resolve: 'gatsby-plugin-react-svg',
     options: {
       rule: {
