@@ -14,6 +14,13 @@ import Callout from "src/components/callout";
 
 FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-protected deposit is a physical account held with ClearBank and is only available to our embedded banking customers for the purpose of sending and/or receiving payments. The balance of an FSCS-protected deposit is held by ClearBank and can be viewed via the ClearBank Portal and the API. Additionally, FSCS-protected deposits are reconciled for you by ClearBank.
 
+<Callout colour="blue">
+To close an embedded banking account, call the <a href="#amend-or-update-an-embedded-banking-account">PATCH /v1/accounts/accountId</a> endpoint and set the <b>Status</b> field to <b>Closed</b>.
+
+Current accounts, once closed, cannot be reopened.
+</Callout>
+
+
 <EndpointBlock
   type="post"
   title="Create a retail customer"
@@ -28,7 +35,7 @@ FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-
 
 <EndpointBlock
   type="post"
-  title="Create a current account"
+  title="Create an embedded banking account"
   endpoints={[
     {
       path: "/v4/Accounts",
@@ -42,15 +49,9 @@ FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
- <Callout colour="blue">
-To close a current account, call the below endpoint and set the <b>Status</b> field to <b>Closed</b>.
-
-Current accounts, once closed, cannot be reopened.
-</Callout>
-
 <EndpointBlock
   type="patch"
-  title="Amend or update a current account"
+  title="Amend or update an embedded banking account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
