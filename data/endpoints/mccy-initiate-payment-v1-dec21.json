@@ -1156,6 +1156,15 @@
         ],
         "type": "object",
         "properties": {
+          "chargeBearer": {
+            "type": "string",
+            "description": "Determines who will pay the fees associated with the transaction. DEBT = You as the sending party will bear the full charge (the instructionForDebotAgent field must also be populated with /PPRO/). CRED = The receiving party will bear the full charge. SHAR = The charge is split evenly between you and the receiving party. If not specified, the default value is SHAR.",
+            "enum": [
+          "DEBT",
+          "CRED",
+          "SHAR"
+        ]
+          },
           "endToEndId": {
             "type": "string",
             "description": "Unique identifier provided to ClearBank for each payment.",
@@ -1314,7 +1323,7 @@
           "instructionForDebtorAgent": {
             "type": "string",
             "nullable": true,
-            "description": "Further information related to the processing of the payment instruction that may need to be acted upon by the debtor agent (depending on an agreement between the debtor and debtor agent). Financial institutions sending payments on behalf of their customers should populate their BIC in this field preceded by '/INST/' signifying that they are the instructing institution.",
+            "description": "Further information related to the processing of the payment instruction that may need to be acted upon by the debtor agent (depending on an agreement between the debtor and debtor agent). Financial institutions sending payments on behalf of their customers should populate their BIC in this field preceded by '/INST/' signifying that they are the instructing institution. If the chargeBearer field is set to 'DEBT', this field must be populated with '/PPRO/'.",
             "minLength": 0,
             "maxLength": 140
           },

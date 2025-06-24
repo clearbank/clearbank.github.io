@@ -7,6 +7,7 @@ showPageMenu: true
 
 import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
 
 ## High value international payments
 
@@ -32,6 +33,30 @@ If you would prefer not to have the rescheduled payment processed, you can cance
 
 * Use [DELETE /v1/mccy/payments/{batchId}](#cancel-batch-payments) to cancel a whole batch of payments
 * Use [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](#cancel-a-single-payment) to cancel a single payment or an individual payment within a batch
+
+### Allocating a party to bear the transaction charges
+
+All multi-currency payments are priced according to your DSA (Definitive Service Agreement). When initiating a multi-currency payment, you can specify that a particular party will bear all associated charges or evenly split the charges between both the sending and receiving party.
+
+Note that, as well as the agreed sending price, additional charges may be added by the receiving bank and any intermediary parties. These additional charges may vary depending on the currency, country and institutions involved.
+
+To specify which party will bear the charges, you can populate the `chargeBearer` with the following options:
+
+- **CRED** - The ultimate creditor will incur all charges. Be aware that charges will be deducted from the amount being sent which may result in the ultimate creditor receiving a lesser amount than expected.
+- **DEBT** - The sending party will incur all charges. These will be billed separately on your monthly invoice and the ultimate creditor will receive the full amount sent. To ensure no fees are taken from the amount sent, the `instructionForDebtorAgent` field must be populated with `/PPRO/`.
+- **SHAR** - The sending party will incur the charges to send the payment and the ultimate creditor will incur fees charged by the receiving bank and any intermediary parties. Be aware that charges will be deducted from the amount being sent which may result in the ultimate creditor receiving a lesser amount than expected. **This is the default field value unless otherwise specified**.
+
+<Callout colour="blue">
+<p>If the <b>chargeBearer</b> field is populated with <b>DEBT</b>, the <b>instructionForDebtorAgent</b> field must be populated with <b>/PPRO/</b>, you can also include any other references or information.</p>
+</Callout>
+
+Refer to the following table to see how the different `chargeBearer` options and 'instructionForDebtorAgent` requirements impact the amount received by the ultimate creditor:
+
+| chargeBearer         | instructionForDebtorAgent | Amount received  |
+|----------------------|---------------------------|------------------|
+| CRED                 | Not required              | Charges deducted from amount sent     |
+| DEBT                 | /PPRO/                    | Full amount received by ultimate creditor, charges billed to sending party separately      |
+| SHAR                 | Not required              | Sending charges billed to sending party separately, receiving bank and intermediary party changes deducted from amount sent |
 
 <EndpointBlock
   type="post"
