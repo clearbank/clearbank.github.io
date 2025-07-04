@@ -1,0 +1,764 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Mccy Payment Orchestrator External Api V2",
+    "description": "Mccy Payment Orchestrator External Api V2",
+    "version": "v2"
+  },
+  "paths": {
+    "/api/v2/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "This endpoint is used to initiate V2 endpoint payments.",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Mccy Payment Orchestrator External Api V2",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AmountType": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "multipleOf": 0.01,
+            "maximum": 999999999.99,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "The currency code, conforming to the ISO 4217 standard (e.g., \"USD\", \"GBP\", \"EUR\").\r\nMust be a three-letter uppercase code representing a valid currency."
+          }
+        },
+        "additionalProperties": false
+      },
+      "BranchAndFinancialInstitutionIdentification": {
+        "type": "object",
+        "properties": {
+          "bicfi": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Code allocated to a financial institution as described in ISO 9362.",
+            "nullable": true
+          },
+          "clearingSystemMemberIdentification": {
+            "$ref": "#/components/schemas/ClearingSystemMemberIdentification"
+          },
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either BICFI or ClearingSystemMemberIdentification must be provided, but not both."
+      },
+      "CashAccount": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "iban": {
+            "type": "string",
+            "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
+            "nullable": true
+          },
+          "accountIdentification": {
+            "maxLength": 34,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "accountIdentificationCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either IBAN or AccountIdentification must be provided, but not both."
+      },
+      "ClearingSystemMemberIdentification": {
+        "required": [
+          "memberIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "clearingSystemIdentificationCode": {
+            "maxLength": 5,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "clearingSystemIdentificationProprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "memberIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either ClearingSystemIdentificationCode or ClearingSystemIdentificationProprietary must be provided, but not both."
+      },
+      "CreditTransferTransaction": {
+        "required": [
+          "creditor",
+          "creditorAccount",
+          "creditorAgent",
+          "instructedAmount",
+          "paymentIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentIdentification": {
+            "$ref": "#/components/schemas/PaymentIdentification"
+          },
+          "paymentTypeInformation": {
+            "$ref": "#/components/schemas/PaymentTypeInformation"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "chargeBearer": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "DEBT",
+              "CRED",
+              "SHAR",
+              "SLEV"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "intermediaryAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/CashAccount"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "instructionForCreditorAgent": {
+            "$ref": "#/components/schemas/InstructionForCreditorAgent"
+          },
+          "instructionForDebtorAgent": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/Purpose"
+          },
+          "regulatoryReporting": {
+            "maxItems": 10,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegulatoryReporting"
+            },
+            "nullable": true
+          },
+          "relatedRemittanceIdentification": {
+            "maxItems": 10,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "remittanceInformation": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InstructionForCreditorAgent": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "CHQB",
+              "HOLD",
+              "PHOB",
+              "TELB"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "instructionInformation": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either Code or InstructionInformation must be provided, but not both."
+      },
+      "OrganisationIdentification": {
+        "type": "object",
+        "properties": {
+          "anyBIC": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Code allocated to a financial institution as described in ISO 9362.",
+            "nullable": true
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "description": "Code allocated to a party as described in ISO 17442.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either AnyBIC or LEI must be provided, but not both."
+      },
+      "PartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PersonIdentification"
+          },
+          "countryOfResidence": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentIdentification": {
+        "required": [
+          "endToEndIdentification",
+          "instructionIdentification",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          },
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          },
+          "uetr": {
+            "minLength": 1,
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+            "type": "string",
+            "description": "Universally Unique Identifier (UUID) version 4, as described in IETC RFC 4122."
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInstruction": {
+        "required": [
+          "creditTransferTransactionInformation",
+          "debtor",
+          "debtorAccount",
+          "paymentInformationIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentInformationIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          },
+          "requestedExecutionDate": {
+            "type": "string",
+            "description": "Must be today's date.",
+            "format": "date",
+            "nullable": true
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "debtorAccount": {
+            "$ref": "#/components/schemas/CashAccount"
+          },
+          "debtorAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditTransferTransactionInformation": {
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditTransferTransaction"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentRequest": {
+        "required": [
+          "messageIdentification",
+          "paymentInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "messageIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier for the message."
+          },
+          "paymentInformation": {
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentInstruction"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PaymentTypeInformation": {
+        "type": "object",
+        "properties": {
+          "instructionPriority": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "URGT",
+              "HIGH",
+              "NORM",
+              "LOWW"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "serviceLevelCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "enum": [
+              "SEPA"
+            ],
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true
+          },
+          "localInstrumentCode": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true
+          },
+          "categoryPurposeCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonIdentification": {
+        "required": [
+          "birthDate",
+          "cityOfBirth",
+          "countryOfBirth"
+        ],
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Formatted as YYYY-MM-DD, in alignment with the ISO 8601 standard.",
+            "format": "date"
+          },
+          "provinceOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "cityOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          },
+          "countryOfBirth": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard."
+          }
+        },
+        "additionalProperties": false
+      },
+      "PostalAddress": {
+        "required": [
+          "country",
+          "postCode",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "department": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "subDepartment": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "streetName": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "buildingNumber": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "buildingName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "floor": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "postBox": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "room": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "postCode": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string"
+          },
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string"
+          },
+          "townLocationName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "districtName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "countrySubdivision": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Purpose": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true
+          },
+          "proprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Either Code or Proprietary must be provided, but not both."
+      },
+      "RegulatoryReporting": {
+        "type": "object",
+        "properties": {
+          "debitCreditReportingIndicator": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "CRED",
+              "DEBT",
+              "BOTH"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "authorityName": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "authorityCountry": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "nullable": true
+          },
+          "type": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "description": "Formatted as YYYY-MM-DD, in alignment with the ISO 8601 standard.",
+            "format": "date",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "nullable": true
+          },
+          "code": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "multipleOf": 0.01,
+            "maximum": 999999999.99,
+            "minimum": 0,
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "information": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
