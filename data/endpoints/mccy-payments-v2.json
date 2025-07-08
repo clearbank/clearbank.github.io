@@ -3,10 +3,10 @@
   "info": {
     "title": "Mccy Payment Orchestrator External Api V2",
     "description": "Mccy Payment Orchestrator External Api V2",
-    "version": "v2"
+    "version": "2.0v2"
   },
   "paths": {
-    "/api/v2/payments": {
+    "/api/v2/payments/{institutionId}": {
       "post": {
         "tags": [
           "Payments"
@@ -16,11 +16,38 @@
           {
             "name": "institutionId",
             "in": "path",
-            "description": "",
+            "description": "test",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -666,7 +693,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": false
       },
       "Purpose": {
         "type": "object",
