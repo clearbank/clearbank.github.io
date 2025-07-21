@@ -23,11 +23,12 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 
 Things to note:
 
-- You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent after this window closes will be rejected with a 400 Bad Request response.
-- If you use version 2, you do not need to provide the details of the intermediary agent. Instead, we'll use the details of the creditor to identify the correct intermediary agent on your behalf. We recommend using version 2 due to this benefit.
-- If you use version 1 of the endpoint, you'll need to include a GBP Direct Participant in the intermediary agent field.
+- You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
+- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
+  - Whether the Intermediary Agent field is present or not, we will always attempt to route the payment through the provided Creditor Agent BIC.
+- If you use **version 2**, you do not need to provide the details of the intermediary agent. Instead, we'll use the details of the creditor to identify the correct intermediary agent on your behalf.
+- If you use **version 1** of the endpoint, you'll need to include a GBP Direct Participant in the intermediary agent field.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
-
 
 <Callout colour="blue">
   It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
