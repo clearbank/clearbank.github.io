@@ -1,0 +1,58 @@
+---
+title: "Verification of Payee"
+order: 4
+metaTitle: "Verification of Payee"
+metaDescription: "ClearBank Europe VoP endpoint"
+showPageMenu: true
+---
+
+import Callout from "src/components/callout"
+import EndpointBlock from "src/components/endpoint-block"
+import WebhookSummary from "src/components/webhook-summary"
+import WebhookPlaceholder from "src/components/webhook-placeholder"
+import ExternalLink from "src/components/external-link"
+
+## Verification of Payee
+
+Verification of Payee (VoP) is a service designed to help users avoid making payments to the wrong person, mitigating fraud and increasing confidence in payments. 
+
+You can call our VoP endpoint to check an intended payee's name matches the name held against the payee account. The VoP service will indicate if the details match, and if so, whether there is a full or partial match.  
+
+<Callout colour="blue">
+  From October 2025, you should conduct VoP before making any SCT Inst or SEPA CT payments under European Payment Council rules.
+</Callout>
+
+For example, if the remitter intends to pay 'Maria Green', but the account belongs to 'John Taylor', our VoP endpoint will return `NMTC` - 'No match'.
+
+| Code | Meaning     | Definition                                                                     |
+| ---- | ----------- | ------------------------------------------------------------------------------ |
+| MTCH | Exact match | The payee's and creditor account-holder's details match.                       |
+| CMTC | Close match | The payee's and creditor's account-holder details are similar.                 |
+| NMTC | No match    | The provided payee details do not match the creditor's account-holder details. |
+| NOAP | Can't match | It was not possible to conduct VoP.                                            |
+  
+The following message flow diagram  
+![Verification of Payee message flow diagram showing the VoP POST /open-banking/vop/v1/payees/single endpoint being called and providing the intended payee's details. ClearBank then conduct the VoP check and provide the result in the 200 response. The result is presented to the end user who can then decide whether to proceed with the payment depending on the result.](/assets/images/vop-message-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Verify a Payee"
+  endpoints={[
+    {
+      path: "/open-banking/vop/v1/payees/single",
+      version: "1.0VOP"
+    }
+  ]}
+/>
+
+## Simulate Verification of Payee responses
+
+You can test your handling of the VoP outcomes in our simulation environment by populating the `unstructuredRemittanceInformation` field with the following:
+
+
+| Field value | Result |
+| ----------- | ------ |
+| --match--   | Simulates a **match** response   |
+| --nomatch--   | Simulates a **no match** response   |
+| --closematch--   | Simulates a **close match** response   |
+| --notapplicable--   | Simulates a **not applicable** response   |
