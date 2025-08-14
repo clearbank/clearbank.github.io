@@ -13,9 +13,9 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Interest configuration
 
-You can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis, so please reach out if you'd like to use it.
+Using the interest configuration endpoints, you can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis. If you're interested in using this functionality, please speak to your Client Director.
 
-The initial interest configuration ID is usually set during account creation. You can request a new configuration ID from your usual ClearBank contact. 
+The initial `interestConfigurationId` is usually set during account creation. You can request a new configuration ID from your usual ClearBank contact. 
 
 You can:
 - **Update** your interest configuration using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint
@@ -43,7 +43,11 @@ This diagram shows the message flow:
 
 ### Future-dating interest configurations
 
-You can set multiple future interest configurations for your account with the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint. Once set, this endpoint also replaces any existing future-dated configurations for the account.
+You can set multiple future interest configurations for your account with the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint. 
+
+<Callout colour="blue">
+Once set, this endpoint also replaces any existing future-dated configurations for the account.
+</Callout>
 
 Each selected interest configuration will apply from the start of the day provided in the `effectiveFrom` field. For example, you might set an account to move from interest config A to interest config B on 1 August. Interest will be calculated based on the balance from midnight on 31 July using interest config A. Any future interest interest calculations will be based on interest config B until any further changes to the interest configurations come into effect.
 
