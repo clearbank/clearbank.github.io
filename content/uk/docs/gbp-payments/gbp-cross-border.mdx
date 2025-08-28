@@ -92,6 +92,53 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
+### Populating the Creditor field in pacs.008 Payments
+
+The `Creditor` field in GBP Cross-Border pacs.008 messages identifies the party receiving the funds. This party may be an **individual**, a **business**, or a **financial institution**. The correct population of this field is essential for accurate payment routing and compliance with ISO 20022 standards.
+
+#### Creditor vs Creditor Agent
+
+Under ISO 20022 terminology:
+
+- **Creditor**: The recipient of the funds. This may be an individual, business, or financial institution.
+- **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This party **must always** be a financial institution and **must always** have a valid BIC.
+
+<Callout colour="blue">
+For the GBP Cross-Border v3 endpoint, the **CreditorAgent** BIC is mandatory. While the **Creditor** BIC field is still present in the pacs.008 schema, it is **optional** and should only be populated if the end creditor is a financial institution.
+</Callout>
+
+This distinction is part of Enhanced Data requirements, which aim to improve clarity around the roles of parties in a payment transaction.
+
+#### Population guidance
+
+|Creditor type	|Creditor field population	|CreditorAgent field population|
+|---------------|---------------------------|-------------------------------|
+|Individual	|Full name of the individual	|BIC of the financial institution holding the account|
+|Business	|Registered business name	|BIC of the financial institution holding the account|
+|Financial Institution	|Institution name (if acting as Creditor)	|BIC of the financial institution holding the account|
+
+- The **Creditor** does **not** require a BIC.
+- The **Creditor Agent** must always be populated with a valid BIC to enable correct payment routing.
+
+#### Example scenarios
+
+1. 
+. **Payment to a non-GB individual**  
+   - Creditor: `Carlos Mendoza` (based in Spain)  
+   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
+
+2. **Payment to a non-GB business**  
+   - Creditor: `TechNova GmbH` (based in Germany)  
+   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
+
+3. **Payment directly to a financial institution**  
+   - Creditor: `Banco Ejemplo` (based in Spain)  
+   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
+
+<Callout colour="blue">
+In the third example, the **creditor** and **creditor agent** are both financial institutions. In this case, the creditor BIC may be optionally populated to reflect the identity of the receiving institution.
+</Callout>
+
 <EndpointBlock
     type="post"
     title="Send a GBP cross-border payment"
