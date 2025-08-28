@@ -47,7 +47,7 @@ For example, if the remitter intends to pay 'Maria Green', but the account belon
 A `NOAP` result may be received if:
 - The account is not reachable via VoP.
 - The account is held at a PSP not participating in the VoP scheme.
-- VoP check timed out due to slow or no response from receiving PSP
+- VoP check timed out due to slow or no response from receiving PSP (response SLA of 5 seconds)
 - Technical issues prevent the check.
 <br />
 
@@ -55,6 +55,20 @@ The following message flow diagram shows the steps involved in using the Verific
 <br />
 
 ![Verification of Payee message flow diagram showing the VoP POST /open-banking/vop/v1/payees/single endpoint being called and providing the intended payee's details. ClearBank then conduct the VoP check with the responding PSP and provide the result in the 200 response. The result is presented to the end user who can then decide whether to proceed with the payment depending on the result.](/assets/images/vop-check-message-flow.svg)
+
+### Valid VoP field combinations
+
+Only the following field combinations are valid when submitting a VoP request. Note that **IBAN** is a required field so must be populated in every request in combination with:
+
+- **Name**
+- Identification > OrganisationId > **LEI**
+- Identification > OrganisationId > **anyBIC** 
+- Identification > OrganisationId > Others > **IdentificationNumber** and **SchemeNameCode**
+- Identification > OrganisationId > Others > **IdentificationNumber** and **SchemeNameProprietary**
+
+<Callout colour="blue">
+ If additional fields are populated, you will receive a 400 Bad Request response with the reason 'Presence of two fields that are mutually exclusive'.
+ </Callout>
 
 <EndpointBlock
   type="post"
@@ -74,7 +88,7 @@ You can test your handling of the VoP outcomes in our simulation environment by 
 
 | Field value | Result |
 | ----------- | ------ |
-| [--match--]   | Simulates a **match** response   |
-| [--nomatch--]   | Simulates a **no match** response   |
-| [--closematch--]   | Simulates a **close match** response   |
-| [--notapplicable--]   | Simulates a **not applicable** response   |
+| ["--match--"]   | Simulates a **match** response   |
+| ["--nomatch--"]   | Simulates a **no match** response   |
+| ["--closematch--"]   | Simulates a **close match** response   |
+| ["--notapplicable--"]   | Simulates a **not applicable** response   |
