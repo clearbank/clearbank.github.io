@@ -61,9 +61,24 @@ This diagram shows an example scenario where you have an introductory interest r
 
 For monthly interest payments, it works similarly: if you future-date an interest product to change on 10 November, interest from 1 to 9 November will be calculated at the initial rate. Interest from 10 November until the end of the month will be calculated using the new rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid at the end of the month.
 
+### Multiple interest configurations example
+
+Multiple interest configurations allow you to offer different interest rates based on the type of product or membership a customer has. Customers can seamlessly switch between different products without closing and reopening their account.
+
+In this example, three different savings account memberships are available:
+
+1. Standard Membership (Product A): This is a non-paid membership where customers earn a 2% interest rate on their savings.
+2. Silver Membership (Product B): For a £5 monthly fee, customers earn a 5% interest rate on their savings.
+3. Gold Membership (Product C): For a £10 monthly fee, customers earn an 8% interest rate on their savings.
+
+- If a customer with a Gold Membership decides to downgrade to a Standard Membership, they would start earning a 2% interest rate instead of 8%.
+- If a customer with a Standard Membership decides to upgrade to a Silver Membership, they would start earning a 5% interest rate instead of 2%.
+
+![A diagram showing the flow of customers subscribed to 3 different interest configurations and how their interest rate changes as they change product.](/assets/images/interest-config-example.svg)
+
 <EndpointBlock
-  type="post"
-  title="Update interest configuration"
+  type="get"
+  title="Get an account's interest configurations"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
@@ -74,7 +89,18 @@ For monthly interest payments, it works similarly: if you future-date an interes
 
 <EndpointBlock
   type="get"
-  title="Get an account's interest configurations"
+  title="Get an institution's interest configurations"
+  endpoints={[
+    {
+      path: "/interest/v1/configurations/{interestConfigurationId}",
+      version: "1.0.Savings.Config",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Update interest configuration"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
