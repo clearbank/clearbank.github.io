@@ -1,0 +1,94 @@
+---
+title: "Verification of Payee"
+order: 4
+metaTitle: "Verification of Payee"
+metaDescription: "ClearBank Europe VoP endpoint"
+showPageMenu: true
+---
+
+import Callout from "src/components/callout"
+import EndpointBlock from "src/components/endpoint-block"
+import WebhookSummary from "src/components/webhook-summary"
+import WebhookPlaceholder from "src/components/webhook-placeholder"
+import ExternalLink from "src/components/external-link"
+
+## Verification of Payee
+
+<Callout colour="green">
+<h2>Verification of Payee is coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our European simulation environment.</p>
+</Callout>
+
+Verification of Payee (VoP) is a name and IBAN verification service that checks whether the payee name provided by the payer matches the account holder name at the receiving PSP. 
+
+VoP is designed to help users avoid making payments to the wrong person, designed to reduce fraud and misdirected payments while enhancing payer confidence. VoP is a pre-authorisation check, meaning it must be completed before each payment is initiated.
+
+<Callout colour="blue">
+Under the EU Instant Payments Regulation, from <b>October 2025</b>, integration with a VoP service is required to continue sending and receiving SEPA Credit Transfer (SCT) and SEPA Instant Credit Transfer (SCT Inst) payments. A VoP check is required each time a payment is sent, not just when sending to a new payee for the first time.
+<br />
+<br />
+Clients may choose to utilise our VOP Requesting service to initiate VoP checks, or alternatively, integrate with a provider of their choice. Clients must utilise ClearBank's VoP Responding service, when using a ClearBank BIC, however this requires no integration on your side. If your PSP is based outside of the Eurozone, then you will not automatically become VoP reachable as the VoP regime will only be applicable to those PSPs from 2027.
+<br />
+<br />
+<b>Note:</b> In order to use the VoP endpoint in the production environment, you must complete a test pack and self-certify your testing. For more details, please reach out to our FI API team.
+</Callout>
+
+The VoP service will query the account holder name at the receiving PSP in real-time and indicate if the details match, and if so, whether there is a full or partial match. 
+
+For example, if the remitter intends to pay 'Maria Green', but the account belongs to 'John Taylor', our VoP endpoint will return `NMTC` - No match. The following table defines each of the VoP outcomes with examples:
+
+| Code | Meaning     | Definition                                                                              | Provided name | Actual name |
+| ---- | ----------- | --------------------------------------------------------------------------------------- |---------------|-------------|
+| MTCH | Exact match | The name provided by the payer matches the account holder’s name at the receiving bank. | Maria Green   | Maria Green |
+| CMTC | Close match | The name is similar but not identical, or there’s a mismatch in account type (e.g. personal vs business). | ABC Solicitors | ABC Solicitor Ltd |
+| NMTC | No match    | The name provided does not match the account holder’s name. | Maria Green | John Taylor |
+| NOAP | Can't match/Verification not possible | The check cannot be completed due to missing or incompatible data.  | N/A | N/A |
+
+A `NOAP` result may be received if:
+- The account is not reachable via VoP.
+- The account is held at a PSP not participating in the VoP scheme.
+- VoP check timed out due to slow or no response from receiving PSP (response SLA of 5 seconds)
+- Technical issues prevent the check.
+<br />
+
+The following message flow diagram shows the steps involved in using the Verification of Payee endpoint:
+<br />
+
+![Verification of Payee message flow diagram showing the VoP POST /open-banking/vop/v1/payees/single endpoint being called and providing the intended payee's details. ClearBank then conduct the VoP check with the responding PSP and provide the result in the 200 response. The result is presented to the end user who can then decide whether to proceed with the payment depending on the result.](/assets/images/vop-check-message-flow.svg)
+
+### Valid VoP field combinations
+
+Only the following field combinations are valid when submitting a VoP request. Note that **IBAN** is a required field so must be populated in every request in combination with:
+
+- **Name**
+- Identification > OrganisationId > **LEI**
+- Identification > OrganisationId > **anyBIC** 
+- Identification > OrganisationId > Others > **IdentificationNumber** and **SchemeNameCode**
+- Identification > OrganisationId > Others > **IdentificationNumber** and **SchemeNameProprietary**
+
+<Callout colour="blue">
+ If additional fields are populated, you will receive a 400 Bad Request response with the reason 'Presence of two fields that are mutually exclusive'.
+ </Callout>
+
+<EndpointBlock
+  type="post"
+  title="Verify a Payee"
+  endpoints={[
+    {
+      path: "/open-banking/vop/v1/payees/single",
+      version: "1.0VOP"
+    }
+  ]}
+/>
+
+## Simulate Verification of Payee responses
+
+You can test your handling of the VoP outcomes in our simulation environment by populating the `unstructuredRemittanceInformation` field with the following:
+
+
+| Field value | Result |
+| ----------- | ------ |
+| ["--match--"]   | Simulates a **match** response   |
+| ["--nomatch--"]   | Simulates a **no match** response   |
+| ["--closematch--"]   | Simulates a **close match** response   |
+| ["--notapplicable--"]   | Simulates a **not applicable** response   |
