@@ -358,7 +358,8 @@
             "required": true,
             "description": "This must match the end-to-end ID submitted in the payment request.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "[A-Za-z0-9/\\-?:.,\"+ ]"
             }
           }
         ],
@@ -1235,6 +1236,7 @@
             "description": "Unique identifier provided to ClearBank for each payment.",
             "minLength": 1,
             "maxLength": 35,
+            "pattern": "[A-Za-z0-9/\\-?:.,\"+ ]",
             "example": "pd0G4d9XCLOzpM5lBA86YNXU8KU3I0etZ5T"
           },
           "reference": {
@@ -1242,12 +1244,12 @@
             "description": "Reference provided by the debtor for the payment.",
             "minLength": 1,
             "maxLength": 140,
-            "example": "Example reference text"
+            "example": "Human readable example text"
           },
           "amount": {
             "type": "number",
             "description": "Instructed payment amount in the batch's specified currency.",
-            "minimum": 0,
+            "minimum": 0.01,
             "multipleOf": 0.01,
             "example": 1234.56
           },
