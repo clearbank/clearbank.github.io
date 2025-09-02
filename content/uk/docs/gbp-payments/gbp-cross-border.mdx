@@ -92,52 +92,39 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
-### Populating the Creditor field in pacs.008 Payments
+### Populating the Creditor field in pacs.008 messages
 
-The `Creditor` field in GBP Cross-Border pacs.008 messages identifies the party receiving the funds. This party may be an **individual**, a **business**, or a **financial institution**. The correct population of this field is essential for accurate payment routing and compliance with ISO 20022 standards.
+The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
 
-#### Creditor vs Creditor Agent
+Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
 
-Under ISO 20022 terminology:
+#### Understanding Creditor and Creditor Agent roles
 
-- **Creditor**: The recipient of the funds. This may be an individual, business, or financial institution.
-- **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This party **must always** be a financial institution and **must always** have a valid BIC.
+There are two key parties in a payment transaction:
 
-<Callout colour="blue">
-For the GBP Cross-Border v3 endpoint, the **CreditorAgent** BIC is mandatory. While the **Creditor** BIC field is still present in the pacs.008 schema, it is **optional** and should only be populated if the end creditor is a financial institution.
-</Callout>
+- **Creditor**: The person or organisation receiving the funds. This could be an individual, a business, or a financial institution.
+- **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character **Business Identifier Code (BIC)**.
 
-This distinction is part of Enhanced Data requirements, which aim to improve clarity around the roles of parties in a payment transaction.
+To ensure correct population of fields in pacs.008 payment messages:
 
-#### Population guidance
+- **Creditor > OrganisationIdentifier > BIC**
+  - Do **not** populate this field if the Creditor is an **individual** or a **business**.
+  - It is **optional** if the Creditor is a **financial institution**.
 
-|Creditor type	|Creditor field population	|CreditorAgent field population|
-|---------------|---------------------------|-------------------------------|
-|Individual	|Full name of the individual	|BIC of the financial institution holding the account|
-|Business	|Registered business name	|BIC of the financial institution holding the account|
-|Financial Institution	|Institution name (if acting as Creditor)	|BIC of the financial institution holding the account|
+  - **CreditorAgent > BIC**
+  - This field is **always required**.
+  - It must contain the 11-character Business Identifier Code (BIC) of the financial institution that holds the Creditor’s account.
 
-- The **Creditor** does **not** require a BIC.
-- The **Creditor Agent** must always be populated with a valid BIC to enable correct payment routing.
+- **Creditor identification blocks**
+  - Use the **privateIdentifier object** when the Creditor is an individual.
+  - Use the **organisationIdentifier object** when the Creditor is a business or financial institution.
+  - The organisation block may include a BIC, but only if the Creditor is a financial institution.
 
-#### Example scenarios
-
-1. 
-. **Payment to a non-GB individual**  
-   - Creditor: `Carlos Mendoza` (based in Spain)  
-   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
-
-2. **Payment to a non-GB business**  
-   - Creditor: `TechNova GmbH` (based in Germany)  
-   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
-
-3. **Payment directly to a financial institution**  
-   - Creditor: `Banco Ejemplo` (based in Spain)  
-   - Creditor Agent: `ESXXEXAMPLEXXX` (example non-GB BIC)
-
-<Callout colour="blue">
-In the third example, the **creditor** and **creditor agent** are both financial institutions. In this case, the creditor BIC may be optionally populated to reflect the identity of the receiving institution.
-</Callout>
+|Creditor type|Populate Creditor > OrganisationIdentifier > BIC?|Populate CreditorAgent > BIC?| Populate Creditor > organisationIdentifier object? | Populate Creditor > privateIdentifier object? |
+|-------------|-------------------------------------------------|-----------------------------|-----|-----|
+| Individual  | No                                              | Yes                         | No | Yes  |
+| Business    |  No                                             | Yes                         | Yes | No  |
+| Financial institution  |  Optional                            | Yes                         | Yes | No  |
 
 <EndpointBlock
     type="post"
