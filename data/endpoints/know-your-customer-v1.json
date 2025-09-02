@@ -1,0 +1,520 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Customer Due Diligence API",
+    "version": "1.0xyzabc"
+  },
+  "paths": {
+    "/v1/customercheck/retail": {
+      "post": {
+        "tags": [
+          "CustomerCheck"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "499": {
+            "description": "Client Error"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          },
+          "405": {
+            "description": "Request method is not supported for requested resource."
+          },
+          "415": {
+            "description": "Content type is not supported by the server."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "required": [
+          "buildingNameNumber",
+          "countryCode",
+          "postalCode",
+          "streetName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNameNumber": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string"
+          },
+          "streetName": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string"
+          },
+          "city": {
+            "maxLength": 40,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "county": {
+            "maxLength": 40,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "maxLength": 10,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9 ]+$",
+            "type": "string"
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryCode": {
+        "enum": [
+          "AFG",
+          "ALB",
+          "ATA",
+          "DZA",
+          "ASM",
+          "AND",
+          "AGO",
+          "ATG",
+          "AZE",
+          "ARG",
+          "AUS",
+          "AUT",
+          "BHS",
+          "BHR",
+          "BGD",
+          "ARM",
+          "BRB",
+          "BEL",
+          "BMU",
+          "BTN",
+          "BOL",
+          "BIH",
+          "BWA",
+          "BVT",
+          "BRA",
+          "BLZ",
+          "IOT",
+          "SLB",
+          "VGB",
+          "BRN",
+          "BGR",
+          "MMR",
+          "BDI",
+          "BLR",
+          "KHM",
+          "CMR",
+          "CAN",
+          "CPV",
+          "CYM",
+          "CAF",
+          "LKA",
+          "TCD",
+          "CHL",
+          "CHN",
+          "TWN",
+          "CXR",
+          "CCK",
+          "COL",
+          "COM",
+          "MYT",
+          "COG",
+          "COD",
+          "COK",
+          "CRI",
+          "HRV",
+          "CUB",
+          "CYP",
+          "CZE",
+          "BEN",
+          "DNK",
+          "DMA",
+          "DOM",
+          "ECU",
+          "SLV",
+          "GNQ",
+          "ETH",
+          "ERI",
+          "EST",
+          "FRO",
+          "FLK",
+          "SGS",
+          "FJI",
+          "FIN",
+          "ALA",
+          "FRA",
+          "GUF",
+          "PYF",
+          "ATF",
+          "DJI",
+          "GAB",
+          "GEO",
+          "GMB",
+          "PSE",
+          "DEU",
+          "GHA",
+          "GIB",
+          "KIR",
+          "GRC",
+          "GRL",
+          "GRD",
+          "GLP",
+          "GUM",
+          "GTM",
+          "GIN",
+          "GUY",
+          "HTI",
+          "HMD",
+          "VAT",
+          "HND",
+          "HKG",
+          "HUN",
+          "ISL",
+          "IND",
+          "IDN",
+          "IRN",
+          "IRQ",
+          "IRL",
+          "ISR",
+          "ITA",
+          "CIV",
+          "JAM",
+          "JPN",
+          "KAZ",
+          "JOR",
+          "KEN",
+          "PRK",
+          "KOR",
+          "KWT",
+          "KGZ",
+          "LAO",
+          "LBN",
+          "LSO",
+          "LVA",
+          "LBR",
+          "LBY",
+          "LIE",
+          "LTU",
+          "LUX",
+          "MAC",
+          "MDG",
+          "MWI",
+          "MYS",
+          "MDV",
+          "MLI",
+          "MLT",
+          "MTQ",
+          "MRT",
+          "MUS",
+          "MEX",
+          "MCO",
+          "MNG",
+          "MDA",
+          "MNE",
+          "MSR",
+          "MAR",
+          "MOZ",
+          "OMN",
+          "NAM",
+          "NRU",
+          "NPL",
+          "NLD",
+          "CUW",
+          "ABW",
+          "SXM",
+          "BES",
+          "NCL",
+          "VUT",
+          "NZL",
+          "NIC",
+          "NER",
+          "NGA",
+          "NIU",
+          "NFK",
+          "NOR",
+          "MNP",
+          "UMI",
+          "FSM",
+          "MHL",
+          "PLW",
+          "PAK",
+          "PAN",
+          "PNG",
+          "PRY",
+          "PER",
+          "PHL",
+          "PCN",
+          "POL",
+          "PRT",
+          "GNB",
+          "TLS",
+          "PRI",
+          "QAT",
+          "REU",
+          "ROU",
+          "RUS",
+          "RWA",
+          "BLM",
+          "SHN",
+          "KNA",
+          "AIA",
+          "LCA",
+          "MAF",
+          "SPM",
+          "VCT",
+          "SMR",
+          "STP",
+          "SAU",
+          "SEN",
+          "SRB",
+          "SYC",
+          "SLE",
+          "SGP",
+          "SVK",
+          "VNM",
+          "SVN",
+          "SOM",
+          "ZAF",
+          "ZWE",
+          "ESP",
+          "SSD",
+          "SDN",
+          "ESH",
+          "SUR",
+          "SJM",
+          "SWZ",
+          "SWE",
+          "CHE",
+          "SYR",
+          "TJK",
+          "THA",
+          "TGO",
+          "TKL",
+          "TON",
+          "TTO",
+          "ARE",
+          "TUN",
+          "TUR",
+          "TKM",
+          "TCA",
+          "TUV",
+          "UGA",
+          "UKR",
+          "MKD",
+          "EGY",
+          "GBR",
+          "GGY",
+          "JEY",
+          "IMN",
+          "TZA",
+          "USA",
+          "VIR",
+          "BFA",
+          "URY",
+          "UZB",
+          "VEN",
+          "WLF",
+          "WSM",
+          "YEM",
+          "ZMB"
+        ],
+        "type": "string"
+      },
+      "CustomerData": {
+        "required": [
+          "currentAddress",
+          "dateOfBirth",
+          "email",
+          "name",
+          "nationalInsuranceNumber",
+          "nationalities",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/PersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "nationalities": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            }
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "nationalInsuranceNumber": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z]{2}\\d{6}[a-zA-Z]$",
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "mobile": {
+            "pattern": "^\\+?[1-9]\\d{7,19}$",
+            "type": "string",
+            "nullable": true
+          },
+          "currentAddress": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonName": {
+        "required": [
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string"
+          },
+          "surname": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string"
+          },
+          "middleName": {
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "RetailCustomerCheckRequest": {
+        "required": [
+          "customerData",
+          "institutionId"
+        ],
+        "type": "object",
+        "properties": {
+          "institutionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customerData": {
+            "$ref": "#/components/schemas/CustomerData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    }
+  }
+}
