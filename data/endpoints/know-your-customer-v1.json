@@ -60,25 +60,39 @@
         },
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
-          },
-          "499": {
-            "description": "Client Error"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          },
-          "405": {
-            "description": "Request method is not supported for requested resource."
-          },
-          "415": {
-            "description": "Content type is not supported by the server."
+            "description": "Bad Request",
+            "content": {              
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -99,31 +113,36 @@
             "maxLength": 40,
             "minLength": 1,
             "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
-            "type": "string"
+            "type": "string",
+            "example": "22"
           },
           "streetName": {
             "maxLength": 50,
             "minLength": 1,
             "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
-            "type": "string"
+            "type": "string",
+            "example": "Long Road"
           },
           "city": {
             "maxLength": 40,
             "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "example": "York"
           },
           "county": {
             "maxLength": 40,
             "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "example": "Yorkshire"
           },
           "postalCode": {
             "maxLength": 10,
             "minLength": 1,
             "pattern": "^[a-zA-Z0-9 ]+$",
-            "type": "string"
+            "type": "string",
+            "example": "YO31 7UH"
           },
           "countryCode": {
             "$ref": "#/components/schemas/CountryCode"
@@ -383,7 +402,8 @@
           "YEM",
           "ZMB"
         ],
-        "type": "string"
+        "type": "string",
+        "example": "GBR"
       },
       "CustomerData": {
         "required": [
@@ -402,7 +422,8 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "26-11-1976"
           },
           "nationalities": {
             "minItems": 1,
@@ -417,17 +438,22 @@
           "nationalInsuranceNumber": {
             "minLength": 1,
             "pattern": "^[a-zA-Z]{2}\\d{6}[a-zA-Z]$",
-            "type": "string"
+            "example": "AB112233C",
+            "type": "string",
+            "description": "The National Insurance (NI) of the customer. Should not include whitespace."
           },
           "email": {
             "minLength": 1,
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "example": "example@emailprovider.co.uk"
           },
           "mobile": {
             "pattern": "^\\+?[1-9]\\d{7,19}$",
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "The customer's mobile number. May include the country-code.",
+            "example": "7725666777"
           },
           "currentAddress": {
             "$ref": "#/components/schemas/Address"
@@ -446,19 +472,22 @@
             "maxLength": 40,
             "minLength": 1,
             "pattern": "^[a-zA-Z.'\\- ]+$",
-            "type": "string"
+            "type": "string",
+            "example": "Adrien"
           },
           "surname": {
             "maxLength": 40,
             "minLength": 1,
             "pattern": "^[a-zA-Z.'\\- ]+$",
-            "type": "string"
+            "type": "string",
+            "example": "Reed-Myers"
           },
           "middleName": {
             "maxLength": 100,
             "pattern": "^[a-zA-Z.'\\- ]+$",
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "example": "Edin"
           }
         },
         "additionalProperties": false
@@ -468,27 +497,32 @@
         "properties": {
           "type": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced,  it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
           },
           "title": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type."
           },
           "status": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
           },
           "detail": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
           },
           "instance": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available."
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "RetailCustomerCheckRequest": {
         "required": [
