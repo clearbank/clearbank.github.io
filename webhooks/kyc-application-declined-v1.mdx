@@ -1,0 +1,51 @@
+---
+title: "SEPA CT Outbound Payment Failed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms an outgoing SCT payment request has failed.
+
+#### Request body
+
+```json
+{
+    "Type": "RetailCustomer.ApplicationDeclined",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+
+| Element                  | Description                                                                                                                                                                                                                                                                                                |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`              | **Required**<br />ClearBank identifier that uniquely identifies the payment instruction.<br/>Type: `string`<br/>Format: `guid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                                  |
+| `Reason`                 | **Required**<br />Specifies the reason for the failure.<br/>Type: `string`<br/>Max. Length: `4`<br/>Min. Length: `1`<br />Pattern: `^[^\n]{1,4}$`                                                                                                                           |
+| `AdditionalInformation`  | **Required**<br />Further details on the reason.<br/>Type: `string`<br/>Max. Length: `105`<br/>Min. Length: `1`                                                                                                                                                                                            |
+| `EndToEndIdentification` | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/> Pattern: `^[^\n]{1,35}$` |
+
+
+#### Example SEPA CT Outbound Payment Failed webhook request body
+
+```json
+{
+    "Type": "Sepa.Ct.OutboundPayment.Failed",
+    "Version": 1,
+    "Payload": {
+        "PaymentId": "f9902c78-f25d-4fb7-b29f-68cb3c0caf01",
+        "Reason": "CODE",
+        "AdditionalInformation": "AdditionalInformation",
+        "EndToEndIdentification": "f70w45r3cxbg15"
+    },
+    "Nonce": 185037285
+}
+```
+
+#### Example webhook response
+```
+{
+    "Nonce": 185037285
+}
+```
