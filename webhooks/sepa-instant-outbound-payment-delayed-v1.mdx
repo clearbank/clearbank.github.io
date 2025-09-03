@@ -1,0 +1,57 @@
+---
+title: "SEPA Instant Outbound Payment Delayed webhook"
+version: 1
+webhook: true
+---
+
+
+This webhook notifies that an SCT Inst outbound payment has been delayed by more than 10 seconds. After receiving this, you can still expect a payment settled or payment cancelled webhook.
+
+#### Request body
+
+```json
+{
+    "Type":"Sepa.Instant.Outbound.Payment.Delayed",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+
+| Element                       | Description                                                                                                                                                                                                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`               | **Optional**<br />Unique identifier as assigned by ClearBank.<br/>Type: `string`<br/>Format: `uuid`                                                                                                                                                                                                       |
+| `PaymentId`                   | **Required**<br />Unique identifier for payment assigned by ClearBank. This will match the paymentId returned in the 202 response when you initiated the payment.<br/>Type: `string` <br/>Format: `uuid`                                                                                                  |
+| `TimestampReceived`           | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                             |
+| `TimestampSubmitted`          | **Optional**<br />Date and time transaction was sent to scheme, if known, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                            |
+| `EndToEndId`                  | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
+| `AdditionalPaymentProperties` | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`                                                                |
+
+
+#### Example SEPA Instant Outbound Payment Delayed webhook request body
+
+```json
+{
+  "Type": "Sepa.Instant.Outbound.Payment.Delayed",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "2a4cfec4-3285-5028-81c8-452c71a21e39",
+    "PaymentId": "c98ef592-fb52-54ac-b49d-54c10bfde8bf",
+    "TimestampReceived": "2025-01-21T12:54:15.5337199Z",
+    "TimestampSubmitted": "2025-01-21T12:54:20.5337358Z",
+    "EndToEndId": "bzuImc97ohDbzvPNgtfME8zysCOdRQrel52",
+    "AdditionalPaymentProperties": null 
+  }, 
+  "Nonce": 5800496862
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 5800496862
+}
+```
