@@ -4,7 +4,7 @@ version: 1
 webhook: true
 ---
 
-This webhook confirms a KYC application has passed checks.
+This webhook confirms a KYC application has passed checks, and that a customer has been created.
 
 #### Request body
 
@@ -19,32 +19,31 @@ This webhook confirms a KYC application has passed checks.
 
 #### Payload
 
-| Element         | Description                                                                                                                                                                                               |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Element         | Description                                                                                                                                                                                                                                                                                   |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `applicationId` | **Required**<br /> The original `applicationId` value you received in the 202 response to this KYC request. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
-| `customerId`    | **Required**<br /> The unique identifier of the created customer. <br/>Type: `string`<br/>Format: `uuid`<br/>Min. Length: `1`<br />Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                         |
-| `kycStatus`     | **Required**<br /> Will always read `Pass` for this webhook <br/>Type: `string`                                                                                                                           |
+| `customerId`    | **Required**<br /> The unique identifier of the created customer. <br/>Type: `string`<br/>Format: `uuid`<br/>Min. Length: `1`<br />Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                                                                   |
+| `kycStatus`     | **Required**<br /> Will always read `Pass` for this webhook <br/>Type: `string`                                                                                                                                                                                                               |
 
 
-#### Example SEPA CT Outbound Payment Failed webhook request body
+#### Example KYC Application Successful webhook request body
 
 ```json
 {
-    "Type": "Sepa.Ct.OutboundPayment.Failed",
+    "Type": "RetailCustomer.ApplicationSuccessful",
     "Version": 1,
     "Payload": {
-        "PaymentId": "f9902c78-f25d-4fb7-b29f-68cb3c0caf01",
-        "Reason": "CODE",
-        "AdditionalInformation": "AdditionalInformation",
-        "EndToEndIdentification": "f70w45r3cxbg15"
+        "applicationId": "f9902c78-f25d-4fb7-b29f-68cb3c0caf01",
+        "customerId": "a1e22390-9049-53f4-a598-de39856bde50",
+        "kycStatus": "Pass",
     },
-    "Nonce": 185037285
+    "Nonce": 747000128
 }
 ```
 
 #### Example webhook response
-```
+```json
 {
-    "Nonce": 185037285
+    "Nonce": 747000128
 }
 ```
