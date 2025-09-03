@@ -13,17 +13,17 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Know Your Customer (KYC)
 
-With out Know Your Customer (KYC) service, you can conveniently conduct KYC checks for your customers via API. By simply sharing key customer information, we'll conduct the checks and then return you the result in a webhook.
+Meet KYC obligations straightforwardly with our API endpoint. By simply sharing key customer information, we'll conduct KYC checks then return their result in a webhook.
 
-If the check comes back successful, we'll automatically create a new customer for you using the original details provided.
+For convenience, we'll also use the provided information to register a new customer if the checks pass.
 
 <EndpointBlock
   type="post"
-  title="Check and Create a Customer"
+  title="KYC Check and Create a new Customer"
   endpoints={[
     {
       path: "/v1/customercheck/retail",
-      version: "1.0xyzabc",
+      version: "1.0know-your-customer",
       webhooks: [
         'kyc-application-successful-v1',
         'kyc-application-declined-v1',
@@ -31,4 +31,7 @@ If the check comes back successful, we'll automatically create a new customer fo
     }
   ]}
 />
+
+<WebhookPlaceholder render='kyc-application-successful-v1' />
+<WebhookPlaceholder render='kyc-application-declined-v1' />
 
