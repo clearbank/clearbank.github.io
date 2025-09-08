@@ -363,8 +363,8 @@
         "tags": [
           "InterestConfigurations"
         ],
-        "summary": "Fetch interest configurations for a specific institution.",
-        "description": "Returns the most recent active interest configuration for a specified institution based on a given date. If no date is specified, it retrieves the configuration currently in effect. For a past date, it provides the configuration that was active on that date. Configurations with future start dates are excluded, so providing a future date will yield the same result as using the current date.",
+        "summary": "Get the parameter values of a given interest configuration ID at present or on a previous date.",
+        "description": "Returns the setup details of an interest configuration for an institution based on a given date. If no date is specified, it retrieves the configuration currently in effect. For a past date, it provides the configuration that was active on that date. Configurations with future start dates are excluded, so providing a future date will yield the same result as using the current date.",
         "parameters": [
           {
             "name": "interestConfigurationId",
@@ -562,13 +562,13 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for the interest configuration.",
+            "description": "The unique identifier of the interest configuration.",
             "example": "a7a907c5-7062-4d76-8e6c-3b203a758839"
           },
           "institutionId": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for the institution.",
+            "description": "The unique identifier of the institution.",
             "example": "1f7304b5-5029-432e-8009-bf2ea2ab47fd"
           },
           "payablePeriod": {
@@ -579,20 +579,20 @@
           "payableAccountId": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for the payable account.",
+            "description": "The unique identifier of the account that interest accrued will be paid into.",
             "example": "7e5e3b83-d76e-4821-9566-a83b322ce2dd"
           },
           "effectiveFrom": {
             "type": "string",
             "format": "date",
-            "description": "The start date for the interest configuration.",
+            "description": "The start date of the interest configuration.",
             "example": "2025-08-15"
           },
           "effectiveTo": {
             "type": "string",
             "format": "date",
             "nullable": true,
-            "description": "The end date for the interest configuration. Can be null for a currently active configuration. It can have a future date if the configuration has a scheduled end.",
+            "description": "The end date of the interest configuration. Can be null for a currently active configuration. It can have a future date if the configuration has a scheduled end.",
             "example": "2025-09-15"
           },
           "timeStampCreated": {
@@ -605,34 +605,36 @@
             "type": "string",
             "format": "date-time",
             "nullable": true,
-            "description": "The timestamp when the interest configuration was last modified. Null on creation, populated after the first update."
+            "description": "The timestamp when the interest configuration was last modified. Null on creation, populated after the first update.",
+            "example": "2025-09-18T09:00:45.5666667"
           },
           "payablePeriodOffset": {
             "type": "integer",
             "minimum": 0,
-            "description": "Offset in days for when interest is paid relative to the start of each payable period. Can only be set when the payment frequency is set to monthly with a value within 0-27. For other payment frequencies it will be 0.",
+            "maximum": 27,
+            "description": "Offset in days for when interest is paid relative to the start of each payable period. For example, interest payments are paid by default on the 1st of each month, so an offset value of 4 means the interest payment will be made on the 5th of each month. Can only be set when the payment frequency is set to monthly, value must be 0-27. For other payment frequencies it will be 0.",
             "example": 0
           },
           "interestPaymentRoundingAlgorithm": {
             "type": "string",
-            "description": "Defines the algorithm used for rounding interest payments when dealing with amounts less than a penny. Possible values: 'ToEven' (round to nearest even number) and 'Truncate' (drop extra decimal places without rounding up).",
+            "description": "Defines the algorithm used for rounding interest payments when dealing with amounts less than a penny. Possible values: 'ToEven' (round to nearest even number) or 'Truncate' (drop extra decimal places without rounding up).",
             "example": "Truncate"
           },
           "doUnpaidAccrualFractionsRollover": {
             "type": "boolean",
-            "description": "Whether unpaid accrual fractions (e.g., less than 1 penny) roll over to the next day. Available when the rounding algorithm is set to 'Truncate'.",
+            "description": "Whether unpaid accrual fractions (less than 1 penny) roll over to the next day. Available when the rounding algorithm is set to 'Truncate'.",
             "example": "false"
           },
           "tierBalanceAllocation": {
             "type": "string",
-            "description": "Determines how interest is applied across tiers in the interest configuration. Possible values: 'Segregated' (apply each tier’s rate only to the portion of the balance within that tier) and 'Whole' (apply the rate of the highest qualifying tier to the entire balance).",
+            "description": "Determines how interest is applied across tiers in the interest configuration. Possible values: 'Segregated' (apply each tier’s rate only to the portion of the balance within that tier) or 'Whole' (apply the rate of the highest qualifying tier to the entire balance).",
             "example": "Whole"
           },
           "interestRate": {
             "type": "number",
             "format": "double",
-            "description": "The base interest rate used in the configuration, expressed as a percentage. This rate may reflect a central bank reference rate (e.g. the Bank of England base rate). Represented as percentage, e.g. a value of 7 represents 7%.",
-            "example": 7.00
+            "description": "The base interest rate used in the configuration, expressed as a percentage. This rate may reflect a central bank reference rate (for example, the Bank of England base rate). Represented as percentage, for example, a value of 7 represents 7%.",
+            "example": 7
           },
           "tiers": {
             "type": "array",
@@ -654,38 +656,38 @@
           "fromAmount": {
             "type": "number",
             "format": "double",
-            "description": "This is the initial amount for this tier. For instance, if the tier begins at 0, it will apply starting from 0 and above.",
+            "description": "This is the initial amount for this tier. For instance, if the tier begins at 0, it will apply to values above 0.",
             "example": 0.00
           },
           "toAmount": {
             "type": "number",
             "format": "double",
             "nullable": true,
-            "description": "This is the maximum amount covered by this tier. For instance, if the tier ends at 100, it includes all amounts up to and including 10000. If the value is null, there is no upper limit for this tier.",
-            "example": 10000.00
+            "description": "This is the maximum amount covered by this tier. For instance, if the tier ends at 1000.00, it includes all amounts up to and including 1000.00. If the value is null, there is no upper limit for this tier.",
+            "example": 1000.00
           },
           "percentPayable": {
             "type": "number",
             "format": "double",
-            "description": "The percentage of the base rate payable to the customer (EBP) for this tier. Represented as a percentage value, e.g. 0.5 means 0.5%.",
+            "description": "The percentage of the base rate payable to you (the financial institution) for this tier. Represented as a percentage value, for example, 0.50 means 0.5%.",
             "example": 0.50
           },
           "clearbankMargin": {
             "type": "number",
             "format": "double",
-            "description": "The ClearBank margin applied to the tier. Represented as a percentage value, e.g. 0.2 means 0.2%.",
+            "description": "The ClearBank margin applied to the tier. Represented as a percentage value, for example, 0.20 means 0.2%.",
             "example": 0.20
           },
           "grossRate": {
             "type": "number",
             "format": "double",
-            "description": "The gross annual rate for the tier, shown as a percentage. It is calculated by subtracting both the clearbank margin and the percentage paid to the customer from the interest rate. For instance, a value of 6.3 indicates a 6.3% rate.",
+            "description": "The gross annual rate for the tier, shown as a percentage. It is calculated by subtracting both the ClearBank margin and the percentage paid to the end customer from the interest rate. For example, a value of 6.30 indicates a 6.3% rate.",
             "example": 6.30
           },
           "aer": {
             "type": "number",
             "format": "double",
-            "description": "The Annual Equivalent Rate (AER) for the tier, represented as a percentage value. It is calculated using the formula AER = (1 + r/n)^n − 1, where r is the gross annual rate (expressed as a decimal) and n represents the number of payment periods per year (Daily=365, Weekly=52, Monthly=12, Quarterly=4, Biannual=2, Annual=1). Leap years (366 days) and years with 53 Sundays are not considered, as this only affects values after the fifth decimal place. The API returns the raw AER value with up to 8 decimal places. When presenting to customers, it should be rounded to 2 decimal places in line with agreed standards and approach.",
+            "description": "The Annual Equivalent Rate (AER) for the tier, represented as a percentage value. It is calculated using the formula AER = (1 + r/n)^n − 1, where r is the gross annual rate (expressed as a decimal) and n represents the number of payment periods per year (Daily=365, Weekly=52, Monthly=12, Quarterly=4, Biannual=2, Annual=1). Leap years (366 days) and years with 53 Sundays are not considered, as this only affects values after the fifth decimal place. The API returns the raw AER value with up to 8 decimal places. When presenting to the end customer, it should be rounded to 2 decimal places in line with agreed standards and approach, for example, 6.50210494 becomes 6.50.",
             "example": 6.50210494
           }
         }
