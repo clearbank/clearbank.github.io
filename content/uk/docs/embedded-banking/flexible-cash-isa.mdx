@@ -33,8 +33,10 @@ You can create and manage customers with cash ISAs using the endpoints listed on
 The sections below explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
 - [Close, cancel, or discontinue a cash ISA](#end-of-life-for-a-cash-isa)
-- [Transfer in a cash ISA](#transfer-in)
-- [Transfer out a cash ISA](#transfer-out)
+- [Manual cash ISA transfer in](#manual-transfer-in)
+- [Manual cash ISA transfer out](#manual-transfer-out)
+- [Automated cash ISA transfer in](#automated-transfer-in)
+- [Automated cash ISA transfer out](#automated-transfer-out)
 
 ### Set up a cash ISA
 
@@ -344,11 +346,19 @@ endpoints={[
   ]}
 />
 
+## Manual cash ISA transfer in or out
+ClearBank offers 2 methods of transferring a cash ISA in or out:
 
-## Transfer in
+**Manual transfer:** Transfers are initiated and managed manually via ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF).
+**Timeline:** Governed by HMRC’s SLA of **15 working days**.
+
+**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests.
+**Timeline:** Voluntary SLA under Pay.UK of **7 working days**.
+
+### Manual transfer in
 ClearBank supports full or partial transfers in of cash ISAs.
 
-During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub in account into the cash ISA.
+During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub account to the cash ISA.
 
 If you want to reject an existing transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
 
@@ -412,7 +422,7 @@ To transfer in a cash ISA:
   ]}
 />
 
-## Transfer out
+### Manual transfer out
 
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
@@ -451,6 +461,56 @@ The process is shown in this message flow diagram:
     {
       path: "/v1/isas/{accountId}/transfer-outs/rejection",
       version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Automated cash ISA transfer in or out
+
+### Automated transfer in
+
+<EndpointBlock
+  type="post"
+  title="Automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in",
+      version: "1.0AutomatedTransfer",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Resubmit an automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in/{urn}",
+      version: "1.0AutomatedTransfer",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in/{urn}",
+      version: "1.0AutomatedTransfer",
+    }
+  ]}
+/>
+
+### Automated transfer out
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing automated cash ISA transfer out"
+  endpoints={[
+    {
+      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-out/{urn}",
+      version: "1.0AutomatedTransfer",
     }
   ]}
 />
