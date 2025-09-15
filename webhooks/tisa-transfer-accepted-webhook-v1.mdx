@@ -1,0 +1,96 @@
+---
+title: "Tisa Transfer Accepted webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies that a cash ISA transfer request has been accepted by the ceding party.
+
+
+
+#### Request body
+
+```json
+{
+    "Type":"TisaTransferAccepted",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+
+#### Payload
+| Element                   | Description  |
+|---------------------------|--------------|
+| `MessageId`               | **Required**<br /> The unique message reference from the XML. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[A-Z0-9\\-]{35}$` |
+| `TimestampCreation`               | **Required**<br />Timestamp created. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `Surname`               | **Required**<br />Surname of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `GivenName`               | **Required**<br />Given name (first name) of customer. <br /> Type: `string` <br /> Min length: `1` |
+| `BirthDate`               | **Required**<br />Birth date of the customer. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `NINumber`               | **Required**<br />National Insurance number of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `AddressLines`               | **Required**<br />Address of the customer. <br /> Type: `array` <br /> Min length: `1` |
+| `PostCode`               | **Required**<br />Post code of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `Country`               | **Required**<br />Country of the customer. Must be a Valid ISO Country Code. Use GB for the United Kingdom. Use ISO 3166-1 alpha-2 codes, for example, GB. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[A-Z]{2}$` |
+| `CedingPartyClientAccountIdentification`               | **Required**<br />Sort Code, Account number of the investor in the ceding party's system, or alternative account identifier (Roll Number)". <br /> Type: `string` <br /> Min length: `1` |
+| `AcquiringPartyClientAccountIdentification`               | **Required**<br />Sort Code, Account number of the investor in the acquiring party's system, or alternative account identifier (Roll Number)". <br /> Type: `string` <br /> Min length: `1` |
+| `CedingPartySun`               | **Required**<br />Ceding party's SUN (Service User Number). <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[0-9]{6}$` |
+| `AcquiringPartyCollectionAccount`               | **Required**<br />Acquiring party's collection account. <br /> Type: `string` <br /> Min length: `1` |
+| `AcquiringPartySun`               | **Required**<br />Acquiring party's SUN (Service User Number). <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[0-9]{6}$` |
+| `Urn`               | **Required**<br />Unique reference number. <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `18` <br /> Pattern: `^[A-Z0-9]{18}$` | 
+| `ActualTransferDate`               | **Optional**<br />Mandatory element but currently not used. It has default value of 2000-01-01. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `ActualTransferAmount`               | **Optional**<br />The total amount transferred. <br /> Type: `number` <br /> Format: `decimal` |
+| `ActualTransferMethod`               | **Required**<br />The method used to transfer the funds. Valid options include: `BACS`, `CHAPS`, `FPS`. <br /> Type: `string` |
+| `ResidualCashIndicator`               | **Optional**<br />Indicates whether the ISA contains a residual cash asset for transfer. <br /> Type: `boolean` |
+| `CashComponentIndicator`               | **Optional**<br />Indicates whether the ISA contains a residual cash asset for transfer. <br /> Type: `boolean` |
+| `ExtendedCurrentYearType`               | **Required**<br />Include or exclude the current year subscriptions from the transfer. Valid options include: `DEFAULT`, `INCLUDECURRENT`, `EXCLUDECURRENT` <br /> Type: `string` <br /> Min length: `1` | 
+| `DateOfFirstSubscription`               | **Required**<br />The date of the first subscription made by the customer. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `TotalAmountYearToDate`               | **Required**<br />Maximum amount (excluding interest and withdrawals) that could be transferred by ceding party under current year subscription. <br /> Type: `number` <br /> Format: `decimal` |
+| `AcquiringPartyProductType`               | **Optional**<br />Used to indicate the class of assets permitted by the acquiring party's product. Valid options include: `CASH`, `STCK`. <br /> Type: `string` |
+
+
+
+#### Example Tisa Transfer Request webhook request body
+
+```json
+{
+    "Type":"TisaTransferRequest",
+    "Version":1,
+    "Payload":{
+        "MessageId":"56de3483-a569-42eb-90cc-acf59661356",
+        "TimestampCreation":"2025-10-20T09:54:44.000209Z",
+        "Surname":"Green",
+        "GivenName":"Mary",
+        "BirthDate":"1977-08-22",
+        "NINumber":"QQ123456C",
+        "AddressLines":"84 Fairview Close",
+        "PostCode":"SW1A 1AA",
+        "Country":"GB",
+        "CedingPartyClientAccountIdentification":"04044485574996",
+        "AcquiringPartyClientAccountIdentification":"04772265339175",
+        "CedingPartySun":"118647",
+        "AcquiringPartyCollectionAccount":"",
+        "AcquiringPartySun":"163599",
+        "Urn":"54dazwsgv4moi3qbvf",
+        "ActualTransferDate":"2025-10-25",
+        "ActualTransferAmount":"14550.00",
+        "ActualTransferMethod":"FPS",
+        "ResidualCashIndicator":"true",
+        "CashComponentIndicator":"false",
+        "ExtendedCurrentYearType":"DEFAULT",
+        "DateOfFirstSubscription":"2024-01-01",
+        "TotalAmountYearToDate":"14550.00",
+        "AcquiringPartyProductType":"CASH",
+
+    },
+    "Nonce": 122672772
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 122672772
+}
+```
