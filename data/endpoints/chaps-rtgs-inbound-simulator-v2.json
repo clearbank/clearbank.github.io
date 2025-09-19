@@ -1,0 +1,1239 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank.Chaps.RtgsPortalManager.Container",
+    "version": "2.0-ChapsSim"
+  },
+  "paths": {
+    "/inbound-payment-simulation/chaps/v2/customer-payments": {
+      "post": {
+        "tags": [
+          "InboundSimulationV2"
+        ],
+        "description": "Create a simulated inbound customer payment",
+        "operationId": "CreateInboundCustomerPayment-v2",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundCustomerPaymentDtoV2"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundCustomerPaymentDtoV2"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundCustomerPaymentDtoV2"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundCustomerPaymentDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound-payment-simulation/chaps/v2/institution-payments": {
+      "post": {
+        "tags": [
+          "InboundSimulationV2"
+        ],
+        "description": "Create a simulated inbound institution payment",
+        "operationId": "CreateInboundInstitutionPayment-v2",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV2"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV2"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV2"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundInstitutionPaymentDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound-payment-simulation/chaps/v2/return-payments": {
+      "post": {
+        "tags": [
+          "InboundSimulationV2"
+        ],
+        "description": "Create a simulated inbound return payment",
+        "operationId": "CreateInboundReturnPayment-v2",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV2"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV2"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV2"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountIdentificationDtoV2": {
+        "type": "object",
+        "properties": {
+          "identification": {
+            "description": "Identification assigned by an institution, specifying an account.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountIdentificationIbanDtoV2": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountIdentificationDtoV2"
+          }
+        ],
+        "properties": {
+          "iban": {
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountIdentificationOtherDtoV2": {
+        "required": [
+          "identification",
+          "schemeName"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountIdentificationDtoV2"
+          }
+        ],
+        "properties": {
+          "schemeName": {
+            "description": "Qualifier for scheme name that identifies an organisation provided as either a code or free form text.\nShould be populated based on instructions published on ClearBank Developer Portal or supplied in onboarding guide.\n",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35,
+            "enum": [
+              "BBan",
+              "SortCodeAccountNumber"
+            ]
+          },
+          "identification": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInboundCustomerPaymentDtoV2": {
+        "required": [
+          "categoryPurpose",
+          "creditor",
+          "creditorAccount",
+          "debtor",
+          "debtorAccount",
+          "endToEndIdentification",
+          "instructedAmount",
+          "instructionIdentification",
+          "purpose"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "endToEndIdentification": {
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "example": "202509190123456",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "instructedAmount": {
+            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+            "$ref": "#/components/schemas/InstructionAmountDtoV2"
+          },
+          "instructingAgentBic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": " The instructing agent's BIC. Must be exactly 8 or 11 characters long.",
+            "type": "string",
+            "maxLength": 11,
+            "minLength": 8,
+            "example": "ABCD1234XYZ"
+          },
+          "debtorAccount": {
+            "description": "Information on the account of the debtor. You should use either the IBAN or the scheme name and other identification.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV2"
+              }
+            ]
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyDetailsDtoV2"
+          },
+          "creditorAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV2"
+              }
+            ]
+          },
+          "creditor": {
+            "description": "Information to identify the creditor. Both name and postal address are required.",
+            "$ref": "#/components/schemas/PartyDetailsDtoV2"
+          },
+          "purpose": {
+            "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
+            "enum": [
+              "ACCT",
+              "ADCS",
+              "AGRT",
+              "ALMY",
+              "AREN",
+              "BECH",
+              "BENE",
+              "BEXP",
+              "BLDM",
+              "BKFE",
+              "BKIP",
+              "BKPP",
+              "BNET",
+              "BOCE",
+              "BONU",
+              "CBLK",
+              "CBTV",
+              "CASH",
+              "CDBL",
+              "CHAR",
+              "CLPR",
+              "CMDT",
+              "COLL",
+              "COMM",
+              "COMC",
+              "COMT",
+              "COMP",
+              "CORT",
+              "CPKC",
+              "CPYR",
+              "CSDB",
+              "DBTC",
+              "DEPT",
+              "DERI",
+              "DIVD",
+              "DNTS",
+              "EDUC",
+              "ECPR",
+              "ELEC",
+              "EPAY",
+              "ESTX",
+              "EXTD",
+              "FAND",
+              "FEES",
+              "FNET",
+              "FORW",
+              "FREX",
+              "FUTR",
+              "GAMB",
+              "GASB",
+              "GDSV",
+              "GIFT",
+              "GOVT",
+              "GSCB",
+              "HEDG",
+              "HREC",
+              "HLRP",
+              "HLST",
+              "HLTI",
+              "HSTX",
+              "INPC",
+              "INPR",
+              "INSC",
+              "INSM",
+              "INSU",
+              "INTE",
+              "INTC",
+              "INTP",
+              "INTX",
+              "INVS",
+              "IVPT",
+              "LICF",
+              "LIFI",
+              "LIMA",
+              "LOAN",
+              "LOAR",
+              "LOTT",
+              "LREB",
+              "LREV",
+              "LTCF",
+              "MDCS",
+              "NETT",
+              "OTCD",
+              "PDEP",
+              "PEFC",
+              "PENO",
+              "PHON",
+              "PLDS",
+              "PLRF",
+              "PPTI",
+              "PTXP",
+              "REBT",
+              "REFU",
+              "RELG",
+              "RENT",
+              "REOD",
+              "REPO",
+              "RDTX",
+              "ROYA",
+              "SALA",
+              "SAVG",
+              "SBSC",
+              "SECU",
+              "SERV",
+              "SLEB",
+              "SSBE",
+              "SUBS",
+              "SUPP",
+              "SWFP",
+              "SWPP",
+              "SWRS",
+              "SWUF",
+              "TAXR",
+              "TAXS",
+              "TCSC",
+              "TRAD",
+              "TRFD",
+              "TREA",
+              "UBIL",
+              "VATX",
+              "VIEW",
+              "WTER",
+              "WHLD"
+            ],
+            "type": "string"
+          },
+          "categoryPurpose": {
+            "description": "Category purpose, in a proprietary form.",
+            "enum": [
+              "BONU",
+              "CASH",
+              "CBLK",
+              "CCRD",
+              "CORT",
+              "DCRD",
+              "DIVI",
+              "DVPM",
+              "FCOL",
+              "GP2P",
+              "GOVT",
+              "HEDG",
+              "INTC",
+              "INTE",
+              "LOAN",
+              "MP2P",
+              "OTHR",
+              "PENS",
+              "RRCT",
+              "SALA",
+              "SECU",
+              "SSBE",
+              "SUPP",
+              "TAXS",
+              "TRAD",
+              "TREA",
+              "VATX",
+              "WHLD"
+            ],
+            "type": "string"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV2"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInboundInstitutionPaymentDtoV2": {
+        "required": [
+          "categoryPurpose",
+          "creditor",
+          "creditorAccount",
+          "creditorBic",
+          "debtor",
+          "debtorAccount",
+          "debtorBic",
+          "endToEndIdentification",
+          "instructingAgentBic",
+          "instructionIdentification",
+          "purpose",
+          "instructedAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "endToEndIdentification": {
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "instructingAgentBic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": "Must be exactly 8 or 11 characters long.",
+            "type": "string"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/InstructionAmountDtoV2"
+          },
+          "debtorAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV2"
+              }
+            ]
+          },
+          "debtorBic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": "Must be exactly 8 or 11 characters long.",
+            "type": "string"
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/FinancialInstitutionIdentificationV2"
+          },
+          "creditorBic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": "The creditor's Bank Identifier Code. Must be exactly 8 or 11 characters long.",
+            "type": "string"
+          },
+          "creditorAccount": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV2"
+              }
+            ]
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/FinancialInstitutionIdentificationV2"
+          },
+          "purpose": {
+            "enum": [
+              "ACCT",
+              "ADCS",
+              "AGRT",
+              "ALMY",
+              "AREN",
+              "BECH",
+              "BENE",
+              "BEXP",
+              "BLDM",
+              "BKFE",
+              "BKIP",
+              "BKPP",
+              "BNET",
+              "BOCE",
+              "BONU",
+              "CBLK",
+              "CBTV",
+              "CASH",
+              "CDBL",
+              "CHAR",
+              "CLPR",
+              "CMDT",
+              "COLL",
+              "COMM",
+              "COMC",
+              "COMT",
+              "COMP",
+              "CORT",
+              "CPKC",
+              "CPYR",
+              "CSDB",
+              "DBTC",
+              "DEPT",
+              "DERI",
+              "DIVD",
+              "DNTS",
+              "EDUC",
+              "ECPR",
+              "ELEC",
+              "EPAY",
+              "ESTX",
+              "EXTD",
+              "FAND",
+              "FEES",
+              "FNET",
+              "FORW",
+              "FREX",
+              "FUTR",
+              "GAMB",
+              "GASB",
+              "GDSV",
+              "GIFT",
+              "GOVT",
+              "GSCB",
+              "HEDG",
+              "HREC",
+              "HLRP",
+              "HLST",
+              "HLTI",
+              "HSTX",
+              "INPC",
+              "INPR",
+              "INSC",
+              "INSM",
+              "INSU",
+              "INTE",
+              "INTC",
+              "INTP",
+              "INTX",
+              "INVS",
+              "IVPT",
+              "LICF",
+              "LIFI",
+              "LIMA",
+              "LOAN",
+              "LOAR",
+              "LOTT",
+              "LREB",
+              "LREV",
+              "LTCF",
+              "MDCS",
+              "NETT",
+              "OTCD",
+              "PDEP",
+              "PEFC",
+              "PENO",
+              "PHON",
+              "PLDS",
+              "PLRF",
+              "PPTI",
+              "PTXP",
+              "REBT",
+              "REFU",
+              "RELG",
+              "RENT",
+              "REOD",
+              "REPO",
+              "RDTX",
+              "ROYA",
+              "SALA",
+              "SAVG",
+              "SBSC",
+              "SECU",
+              "SERV",
+              "SLEB",
+              "SSBE",
+              "SUBS",
+              "SUPP",
+              "SWFP",
+              "SWPP",
+              "SWRS",
+              "SWUF",
+              "TAXR",
+              "TAXS",
+              "TCSC",
+              "TRAD",
+              "TRFD",
+              "TREA",
+              "UBIL",
+              "VATX",
+              "VIEW",
+              "WTER",
+              "WHLD"
+            ],
+            "type": "string"
+          },
+          "categoryPurpose": {
+            "enum": [
+              "BONU",
+              "CASH",
+              "CBLK",
+              "CCRD",
+              "CORT",
+              "DCRD",
+              "DIVI",
+              "DVPM",
+              "FCOL",
+              "GP2P",
+              "GOVT",
+              "HEDG",
+              "INTC",
+              "INTE",
+              "LOAN",
+              "MP2P",
+              "OTHR",
+              "PENS",
+              "RRCT",
+              "SALA",
+              "SECU",
+              "SSBE",
+              "SUPP",
+              "TAXS",
+              "TRAD",
+              "TREA",
+              "VATX",
+              "WHLD"
+            ],
+            "type": "string"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/UnstructuredRemittanceInformationDtoV2"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInboundReturnPaymentDtoV2": {
+        "required": [
+          "creditorBic",
+          "debtorBic",
+          "instructedAmount",
+          "originalEndToEndIdentification",
+          "originalInstructionIdentification",
+          "originalReference",
+          "originalUetr",
+          "returnReasonCode"
+        ],
+        "type": "object",
+        "properties": {
+          "originalUetr": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "returnReasonCode": {
+            "enum": [
+              "AC01",
+              "AC02",
+              "AC03",
+              "AC04",
+              "AC06",
+              "AC07",
+              "AC13",
+              "AC14",
+              "AC15",
+              "AC16",
+              "AC17",
+              "AG01",
+              "AG02",
+              "AG07",
+              "AGNT",
+              "AM01",
+              "AM02",
+              "AM03",
+              "AM04",
+              "AM05",
+              "AM06",
+              "AM07",
+              "AM09",
+              "AM10",
+              "ARDT",
+              "BE01",
+              "BE04",
+              "BE05",
+              "BE06",
+              "BE07",
+              "BE08",
+              "BE10",
+              "BE11",
+              "BE16",
+              "BE17",
+              "CN01",
+              "CNOR",
+              "CNPC",
+              "CURR",
+              "CUST",
+              "DNOR",
+              "DS28",
+              "DT01",
+              "DT02",
+              "ED01",
+              "ED03",
+              "ED05",
+              "EMVL",
+              "ERIN",
+              "FF03",
+              "FF04",
+              "FF05",
+              "FF06",
+              "FF07",
+              "FOCR",
+              "FR01",
+              "FRTR",
+              "G004",
+              "MD01",
+              "MD02",
+              "MD05",
+              "MD06",
+              "MD07",
+              "MS02",
+              "MS03",
+              "NOAS",
+              "NOCM",
+              "NOOR",
+              "PINL",
+              "RC01",
+              "RC07",
+              "RC08",
+              "RC11",
+              "RF01",
+              "RR01",
+              "RR02",
+              "RR03",
+              "RR04",
+              "RR05",
+              "RR06",
+              "RR07",
+              "RR08",
+              "RR09",
+              "RR11",
+              "RR12",
+              "RUTA",
+              "SL01",
+              "SL02",
+              "SL11",
+              "SL12",
+              "SL13",
+              "SL14",
+              "SP01",
+              "SP02",
+              "SVNR",
+              "TM01",
+              "TRAC",
+              "UPAY"
+            ],
+            "type": "string"
+          },
+          "originalInstructionIdentification": {
+            "description": "The original unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "originalEndToEndIdentification": {
+            "description": "The original unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "originalReference": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/InstructionAmountDtoV2"
+          },
+          "debtorName": {
+            "type": "string",
+            "description": "Name of the person or business who owns the debtor account."
+          },
+          "debtorBic": {
+            "minLength": 1,
+            "description": "Valid BIC for the debtor account.",
+            "type": "string"
+          },
+          "creditorName": {
+            "type": "string",
+            "description": "Name of the person or business who owns the creditor account."
+          },
+          "creditorBic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": "The creditor's Bank Identifier Code. Must be exactly 8 or 11 characters long.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinancialInstitutionIdentificationV2": {
+        "required": [
+          "lei",
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV2"
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InstructionAmountDtoV2": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Amount of money in the transaction."
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "Set to 'GBP' as other currencies are not supported.",
+            "example": "GBP"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganisationIdentifierV2": {
+        "type": "object",
+        "properties": {
+          "bic": {
+            "pattern": "^(\\w{8}|\\w{11})$",
+            "description": "Must be exactly 8 or 11 characters long.",
+            "type": "string"
+          },
+          "lei": {
+            "maxLength": 20,
+            "type": "string"
+          },
+          "otherIdentification": {
+            "maxLength": 35,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PartyAddressDetailsDtoV2": {
+        "required": [
+          "country",
+          "postCode",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNumber": {
+            "description": "Number or name that identifies the position of a building on a street.",
+            "type": "string"
+          },
+          "buildingName": {
+            "description": "Name that identifies a building.",
+            "type": "string"
+          },
+          "streetName": {
+            "description": "Name of a street or thoroughfare.",
+            "type": "string"
+          },
+          "townName": {
+            "description": "Name of a town, city or village.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "country": {
+            "description": "Country as a two-letter ISO country code.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "postCode": {
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "addressLine1": {
+            "description": "First line of the address.",
+            "maxLength": 70,
+            "type": "string"
+          },
+          "addressLine2": {
+            "description": "Second line of the address.",
+            "maxLength": 70,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PartyDetailsDtoV2": {
+        "required": [
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the person or business who owns the account.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "postalAddress": {
+            "description": "Address of the person or business who owns the account.",
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV2"
+          },
+          "organisationIdentifier": {
+            "description": "Identification of an organisation.",
+            "$ref": "#/components/schemas/OrganisationIdentifierV2"
+          },
+          "privateIdentifier": {
+            "description": "Identification of a private individual.",
+            "$ref": "#/components/schemas/PrivateIdentifierV2"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreatedResponseDtoV2": {
+        "required": [
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
+            "type": "string",
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrivateIdentifierV2": {
+        "type": "object",
+        "properties": {
+          "otherIdentification": {
+            "maxLength": 35,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem.",
+            "type": "string"
+          },
+          "errors": {},
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported. ",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API. ",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type.",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported.",
+            "type": "string"
+          }
+        }
+      },
+      "StructuredRemittanceInformationDtoV2": {
+        "type": "object",
+        "properties": {
+          "creditorReferenceInformation": {
+            "x-flattened-from-source-iso-type": true,
+            "x-source-iso-type-name": "CreditorReferenceType2",
+            "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
+      },
+      "UnstructuredRemittanceInformationDtoV2": {
+        "type": "object",
+        "properties": {
+          "unstructured": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
