@@ -30,7 +30,7 @@ In line with the Bank of England's ISO 20022 data enhancement requirements, you 
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: [UK recommended Purpose Code PDF](https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf)  
 
-#### Legal Entity Identifer (LEI)
+#### Legal Entity Identifier (LEI)
 The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
@@ -143,9 +143,17 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 
 These endpoints can be used to simulate payments. You can also use them for automated testing.
 
-- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v1/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
-- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v1/return-payments](#simulate-a-return-chaps-payment) endpoint.
-- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v1/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+To support upcoming Bank of England changes effective 24 November 2025, we recommend using version 2 of the simulator endpoints for inbound CHAPS payments. Version 2 introduces support for both structured and hybrid address formats. From this date, unstructured address fields will no longer be accepted.
+
+<Callout colour="blue">
+    Outbound CHAPS payments sent via ClearBank already use structured address formatting. No changes are required to your outbound integration.
+</Callout>
+
+Version 1 of the simulator endpoints will be deprecated after November 2025. Please update your test integration to ensure continued compatibility.
+
+- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v2/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v2/return-payments](#simulate-a-return-chaps-payment) endpoint.
+- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v2/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
 
 The ClearBank Payment Simulator should no longer be used for CHAPS payments.
 
@@ -153,6 +161,13 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     type="post"
     title="Simulate an inbound CHAPS payment"
     endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v2/customer-payments",
+        version: "2.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
     {
         path: "/inbound-payment-simulation/chaps/v1/customer-payments",
         version: "1.0-ChapsSim",
@@ -168,6 +183,13 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     title="Simulate a returned CHAPS payment"
     endpoints={[
     {
+        path: "/inbound-payment-simulation/chaps/v2/return-payments",
+        version: "2.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
+    {
         path: "/inbound-payment-simulation/chaps/v1/return-payments",
         version: "1.0-ChapsSim",
         webhooks: [
@@ -181,6 +203,13 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     type="post"
     title="Simulate a CHAPS bank-to-bank payment"
     endpoints={[
+        {
+        path: "/inbound-payment-simulation/chaps/v2/institution-payments",
+        version: "2.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
     {
         path: "/inbound-payment-simulation/chaps/v1/institution-payments",
         version: "1.0-ChapsSim",
