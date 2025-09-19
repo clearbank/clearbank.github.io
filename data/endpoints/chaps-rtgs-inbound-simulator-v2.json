@@ -399,20 +399,22 @@
         "properties": {
           "instructionIdentification": {
             "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "example": "202509190123456",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "endToEndIdentification": {
             "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
-            "example": "202509190123456",
+            "example": "E2E202509190123456",
             "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
           },
           "instructedAmount": {
-            "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.",
+            "description": "Amount of money to be moved between the debtor and creditor expressed in GBP as ordered by the initiating party.",
             "$ref": "#/components/schemas/InstructionAmountDtoV2"
           },
           "instructingAgentBic": {
@@ -424,7 +426,7 @@
             "example": "ABCD1234XYZ"
           },
           "debtorAccount": {
-            "description": "Information on the account of the debtor. You should use either the IBAN or the scheme name and other identification.",
+            "description": "Information on the account of the debtor.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
@@ -435,9 +437,11 @@
             ]
           },
           "debtor": {
+            "description": "Information to identify the debtor.",
             "$ref": "#/components/schemas/PartyDetailsDtoV2"
           },
           "creditorAccount": {
+            "description": "Information on the account of the creditor.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
@@ -448,7 +452,7 @@
             ]
           },
           "creditor": {
-            "description": "Information to identify the creditor. Both name and postal address are required.",
+            "description": "Information to identify the creditor.",
             "$ref": "#/components/schemas/PartyDetailsDtoV2"
           },
           "purpose": {
@@ -639,6 +643,7 @@
         "properties": {
           "instructionIdentification": {
             "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
             "type": "string",
             "minLength": 1,
             "maxLength": 35
@@ -655,6 +660,7 @@
             "type": "string"
           },
           "instructedAmount": {
+            "description": "Amount of money to be moved between the debtor and creditor expressed in GBP as ordered by the initiating party.",
             "$ref": "#/components/schemas/InstructionAmountDtoV2"
           },
           "debtorAccount": {
@@ -673,6 +679,7 @@
             "type": "string"
           },
           "debtor": {
+            "description": "Information to identify the debtor.",
             "$ref": "#/components/schemas/FinancialInstitutionIdentificationV2"
           },
           "creditorBic": {
@@ -691,6 +698,7 @@
             ]
           },
           "creditor": {
+            "description": "Information to identify the creditor.",
             "$ref": "#/components/schemas/FinancialInstitutionIdentificationV2"
           },
           "purpose": {
@@ -875,7 +883,10 @@
         "properties": {
           "originalUetr": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
+            "description": "Universally unique identifier to provide the original end-to-end reference of a payment transaction.",
+            "example": "A1B2C3D4-5E6F-4A1B-8C2D-3E4F5A6B7C8D"
           },
           "returnReasonCode": {
             "enum": [
@@ -983,7 +994,9 @@
           "originalInstructionIdentification": {
             "description": "The original unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
             "minLength": 1,
-            "type": "string"
+            "maxLength": 35,
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$"
           },
           "originalEndToEndIdentification": {
             "description": "The original unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
@@ -992,10 +1005,14 @@
             "maxLength": 35
           },
           "originalReference": {
-            "minLength": 1,
-            "type": "string"
+            "maxLength": 35,
+            "minLength": 0,
+            "type": "string",
+            "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction.",
+            "nullable": true
           },
           "instructedAmount": {
+            "description": "Amount of money to be moved between the debtor and creditor expressed in GBP as ordered by the initiating party.",
             "$ref": "#/components/schemas/InstructionAmountDtoV2"
           },
           "debtorName": {
@@ -1035,9 +1052,11 @@
             "$ref": "#/components/schemas/PartyAddressDetailsDtoV2"
           },
           "lei": {
+            "description": "Legal Entity Identifier of the party.",
             "maxLength": 20,
             "minLength": 20,
-            "type": "string"
+            "type": "string",
+            "example": "2138007ZQ1A2B3C4D5E6"
           }
         },
         "additionalProperties": false
@@ -1051,6 +1070,7 @@
         "properties": {
           "amount": {
             "type": "number",
+            "example": "100.00",
             "description": "Amount of money in the transaction."
           },
           "currency": {
@@ -1067,12 +1087,16 @@
         "properties": {
           "bic": {
             "pattern": "^(\\w{8}|\\w{11})$",
-            "description": "Must be exactly 8 or 11 characters long.",
-            "type": "string"
+            "description": "Party's Business Identifier Code (BIC). Must be exactly 8 or 11 characters long.",
+            "type": "string",
+            "example": "GB45Q2P1N0M"
           },
           "lei": {
+                        "description": "Legal Entity Identifier of the party.",
+            "minLength": 20,
             "maxLength": 20,
-            "type": "string"
+            "type": "string",
+            "example": "5493001KJH8B2Q3L5X79"
           },
           "otherIdentification": {
             "maxLength": 35,
