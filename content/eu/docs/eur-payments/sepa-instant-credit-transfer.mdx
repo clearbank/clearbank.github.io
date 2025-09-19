@@ -68,6 +68,7 @@ Cancelled outbound payments can return the following reason codes:
 | AM02        | Amount not allowed.                        |
 | AM04        | Insufficient funds on the account.         |
 | CB01        | Unknown error.                             |
+| CB05        | Payment delayed.                           |
 | CNOR        | Creditor bank is not registered.           |
 | MS03        | Payment failed screening, re-send via SCT. |
 
@@ -184,10 +185,10 @@ Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Can
 
 To test the SEPA Instant Outbound Payment Delayed webhook, you can provide one of the following values in the `reference` field of a Send SCT Inst Payment request:
 
-| Reference field value      | Simulated behavior                                                                    |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `--DelayPayment--`         | Delays the payment by 10 seconds, then proceeds as normal - validation still applies. |
-| `--CancelDelayedPayment--` | Delays the payment by 10 seconds, then cancels the payment (AC01).                    |
+| Reference field value      | Simulated behavior                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------- |
+| `--DelayPayment--`         | Delays the payment by 10 seconds, then proceeds as normal - validation still applies.     |
+| `--CancelDelayedPayment--` | Delays the payment by 10 seconds, then cancels the payment with cancellation code `CB05`. |
 
 
 <Callout colour="blue">
