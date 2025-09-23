@@ -10,7 +10,7 @@
         "tags": [
           "InboundSimulationV2"
         ],
-        "description": "Create a simulated inbound customer payment",
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simulated inbound CHAPS payment, so that you will have a payment available to return. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.",
         "operationId": "CreateInboundCustomerPayment-v2",
         "parameters": [
           {
@@ -115,7 +115,7 @@
         "tags": [
           "InboundSimulationV2"
         ],
-        "description": "Create a simulated inbound institution payment",
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simulated inbound bank-to-bank payment. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.",
         "operationId": "CreateInboundInstitutionPayment-v2",
         "parameters": [
           {
@@ -220,7 +220,7 @@
         "tags": [
           "InboundSimulationV2"
         ],
-        "description": "Create a simulated inbound return payment",
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simulated returned CHAPS payment. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.",
         "operationId": "CreateInboundReturnPayment-v2",
         "parameters": [
           {
@@ -377,6 +377,7 @@
             ]
           },
           "identification": {
+            "description": "Information to identify an account.",
             "minLength": 1,
             "type": "string"
           }
@@ -664,6 +665,7 @@
             "$ref": "#/components/schemas/InstructionAmountDtoV2"
           },
           "debtorAccount": {
+            "description": "Information on the account of the debtor.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
@@ -688,6 +690,7 @@
             "type": "string"
           },
           "creditorAccount": {
+            "description": "Information on the account of the creditor.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV2"
@@ -1009,7 +1012,8 @@
             "minLength": 0,
             "type": "string",
             "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction.",
-            "nullable": true
+            "nullable": true,
+            "example": "RF84930217563829"
           },
           "instructedAmount": {
             "description": "Amount of money to be moved between the debtor and creditor expressed in GBP as ordered by the initiating party.",
@@ -1017,21 +1021,25 @@
           },
           "debtorName": {
             "type": "string",
-            "description": "Name of the person or business who owns the debtor account."
+            "description": "Name of the person or business who owns the debtor account.",
+            "example": "Jane Smith"
           },
           "debtorBic": {
             "minLength": 1,
             "description": "Valid BIC for the debtor account.",
-            "type": "string"
+            "type": "string",
+            "example": "GB45Q2P1N0M"
           },
           "creditorName": {
             "type": "string",
-            "description": "Name of the person or business who owns the creditor account."
+            "description": "Name of the person or business who owns the creditor account.",
+            "example": "John Doe"
           },
           "creditorBic": {
             "pattern": "^(\\w{8}|\\w{11})$",
             "description": "The creditor's Bank Identifier Code. Must be exactly 8 or 11 characters long.",
-            "type": "string"
+            "type": "string",
+            "example": "GB29X7L5Q2R"
           }
         },
         "additionalProperties": false
@@ -1046,9 +1054,12 @@
         "properties": {
           "name": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "Bank of Example Ltd",
+            "description": "Name of the financial institution."
           },
           "postalAddress": {
+            "description": "Address of the person or business who owns the account.",
             "$ref": "#/components/schemas/PartyAddressDetailsDtoV2"
           },
           "lei": {
@@ -1092,15 +1103,17 @@
             "example": "GB45Q2P1N0M"
           },
           "lei": {
-                        "description": "Legal Entity Identifier of the party.",
+            "description": "Legal Entity Identifier of the party.",
             "minLength": 20,
             "maxLength": 20,
             "type": "string",
             "example": "5493001KJH8B2Q3L5X79"
           },
           "otherIdentification": {
+            "description": "Other identification of the organisation, such as company registration number.",
             "maxLength": 35,
-            "type": "string"
+            "type": "string",
+            "example": "12345678"
           }
         },
         "additionalProperties": false
@@ -1115,40 +1128,48 @@
         "properties": {
           "buildingNumber": {
             "description": "Number or name that identifies the position of a building on a street.",
-            "type": "string"
+            "type": "string",
+            "example": "10"
           },
           "buildingName": {
             "description": "Name that identifies a building.",
-            "type": "string"
+            "type": "string",
+            "example": "Example House"
           },
           "streetName": {
             "description": "Name of a street or thoroughfare.",
-            "type": "string"
+            "type": "string",
+            "example": "Generic Street"
           },
           "townName": {
             "description": "Name of a town, city or village.",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "London"
           },
           "country": {
             "description": "Country as a two-letter ISO country code.",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "GB"
           },
           "postCode": {
             "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "E1 8QS"
           },
           "addressLine1": {
             "description": "First line of the address.",
             "maxLength": 70,
-            "type": "string"
+            "type": "string",
+            "example": "10 Generic Street"
           },
           "addressLine2": {
             "description": "Second line of the address.",
             "maxLength": 70,
-            "type": "string"
+            "type": "string",
+            "example": "Example House, London"
           }
         },
         "additionalProperties": false
@@ -1163,18 +1184,19 @@
           "name": {
             "description": "Name of the person or business who owns the account.",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "John Doe"
           },
           "postalAddress": {
             "description": "Address of the person or business who owns the account.",
             "$ref": "#/components/schemas/PartyAddressDetailsDtoV2"
           },
           "organisationIdentifier": {
-            "description": "Identification of an organisation.",
+            "description": "Option to provide either OrganisationIdentifier or PrivateIdentifier, but not both. Identification of an organisation.",
             "$ref": "#/components/schemas/OrganisationIdentifierV2"
           },
           "privateIdentifier": {
-            "description": "Identification of a private individual.",
+            "description": "Option to provide either OrganisationIdentifier or PrivateIdentifier, but not both. Identification of a private individual.",
             "$ref": "#/components/schemas/PrivateIdentifierV2"
           }
         },
@@ -1189,7 +1211,8 @@
           "uetr": {
             "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
             "type": "string",
-            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+            "example": "a1b2c3d4-5e6f-4a1b-8c2d-3e4f5a6b7c8d"
           }
         },
         "additionalProperties": false
@@ -1198,8 +1221,10 @@
         "type": "object",
         "properties": {
           "otherIdentification": {
+            "description": "Other identification of the private individual, such as national insurance number.",
             "maxLength": 35,
-            "type": "string"
+            "type": "string",
+            "example": "AB123456C"
           }
         },
         "additionalProperties": false
@@ -1243,7 +1268,8 @@
             "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 35
+            "maxLength": 35,
+            "example": "RF18539007547034"
           }
         },
         "additionalProperties": false,
@@ -1253,10 +1279,15 @@
         "type": "object",
         "properties": {
           "unstructured": {
-            "type": "string"
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form."
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system."
       }
     }
   }
