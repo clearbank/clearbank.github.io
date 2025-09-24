@@ -33,10 +33,10 @@ You can create and manage customers with cash ISAs using the endpoints listed on
 The sections below explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
 - [Close, cancel, or discontinue a cash ISA](#end-of-life-for-a-cash-isa)
-- [Manual cash ISA transfer in](#manual-transfer-in)
-- [Manual cash ISA transfer out](#manual-transfer-out)
-- [Automated cash ISA transfer in](#automated-transfer-in)
-- [Automated cash ISA transfer out](#automated-transfer-out)
+- [Manually transfer in a cash ISA](#manual-transfer-in)
+- [Manually transfer out a cash ISA ](#manual-transfer-out)
+- [Automatically transfer in a cash ISA ](#automated-transfer-in)
+- [Automatically transfer out cash ISA ](#automated-transfer-out)
 
 ### Set up a cash ISA
 
@@ -76,7 +76,7 @@ There are several ways you can close a cash ISA. You need to choose the appropri
 | [Close](#close)               | Closes the account.                                                                                                                                             |
 | [Cancel](#cancel)             | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
 | [Transfer out](#transfer-out) | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account.                              |
-| [Discontinue](#discontinue)   | Only applicable where the ISA account holder is deceased. Triggers the payment of unpaid interest to allow for account closure.                                 |
+| [Discontinue](#discontinue)   | Only applicable where the ISA holder is deceased. Triggers the payment of unpaid interest to allow for account closure.                                 |
 
 You can use this diagram to validate if the account should be closed, cancelled or transferred out:
 
@@ -132,7 +132,7 @@ The process is shown in this message flow diagram:
 
 #### Discontinue
 
-The process to discontinue a cash ISA account begins with the notification that the account holder is deceased. Once you have received the notification, use the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) to update the `status` to `Suspended` using the `statusReason`  of `AccountHolderDeceased`.  
+The process to discontinue a cash ISA begins with the notification that the account holder is deceased. Once you have received the notification, use the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) to update the `status` to `Suspended` using the `statusReason`  of `AccountHolderDeceased`.  
 
 As per HMRC rules, if an ISA investor passes away, their account must be treated as **'continuing account of a deceased investor'**. This allows the account to continue to accrue interest and benefit from the tax advantages of an ISA for the period beginning with the death of the account holder and ending either:
 
@@ -144,7 +144,7 @@ The account can then be closed as normal using the [POST /v1/accounts/{accountId
 
 The process is shown in this flow diagram:
 
-![Message flow diagram of process to discontinue an account following the death of the ISA account holder.](/assets/images/cash-isa-discontinue.svg)
+![Message flow diagram of process to discontinue an account following the death of the ISA holder.](/assets/images/cash-isa-discontinue.svg)
 
 
 
@@ -345,15 +345,25 @@ endpoints={[
     }
   ]}
 />
+## Cash ISA transfers
 
-## Manual cash ISA transfer in or out
 ClearBank offers 2 methods of transferring a cash ISA in or out:
 
-**Manual transfer:** Transfers are initiated and managed manually via ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF).
-**Timeline:** Governed by HMRC’s SLA of **15 working days**.
+**Manual transfer:** Transfers are initiated and managed manually via ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF). <br/>
+**Timeline:** Governed by HMRC’s SLA (Service Level Agreement) of **15 working days**.
 
-**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests.
+**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests. <br/>
 **Timeline:** Voluntary SLA under Pay.UK of **7 working days**.
+
+<Callout colour="blue">
+<p>Automated transfers are only available when both ISA providers are accredited participants of the Pay.UK scheme. If one provider is not a participant, the existing <a href="https://clearbank.github.io/uk/docs/embedded-banking/flexible-cash-isa#manual-cash-isa-transfer-in-or-out">manual transfer process</a> must be used.</p>
+</Callout>
+
+Each transfer is assigned a **Unique Reference Number (URN)**, which is a system-generated identifier used to track and manage a transfer throughout its lifecycle. Key functions of the URN include:
+- **Identification** - The URN uniquely identifies a specific transfer request, allowing both the ceding and acquiring ISA providers to reference the same transaction
+- **Lifecycle tracking** - Various systems allow for the tracking of the current transfer state using the URN
+- **Exception handling** - In cases of escalation or failure, the URN helps determine whether the issue lies with the originating provider or the receiving institution
+- **Validation** - The ceding or acquiring ISA provider uses the URN to match incoming messages to its records and validate transfer details such as account info, subscription limits, and customer identity
 
 ### Manual transfer in
 ClearBank supports full or partial transfers in of cash ISAs.
@@ -465,66 +475,96 @@ The process is shown in this message flow diagram:
   ]}
 />
 
-## Automated cash ISA transfer in or out
+### Automated transfer in
 
-The Pay.UK Automated Cash ISA Transfer Service is a secure, digital system that enables customers to move their Cash ISA savings from one provider to another without paperwork, faster, and with greater transparency.
+An automated transfer in refers to a ceding party (the current holders of the ISA) requesting the transfer of an existing ISA to ClearBank via Pay.UK’s automated service.
 
-It replaces the traditional manual process—where forms are exchanged between banks—with a fully electronic workflow. 
-
-<Callout colour="blue">
-This is only available when both ISA providers are accredited participants of the Pay.UK scheme.
-</Callout>
-
-To begin a transfer in, the customer must request the transfer from the current institution holding the account (the ceding party).
+To complete an automated transfer in: 
+1. The customer requests you to transfer the cash ISA from the current institution holding the account (the ceding party)
+2. You call the **POST /v1/isas/{accountId}/automated-transfer-in** endpoint providing the necessary details
+3. The transfer request is validated and submitted to the Pay.UK transfer service for further validation
+4. You receive the **Transfer Request webhook** confirming the transfer request has been sent
+5. The ceding party receives a **Transfer Request **, validate the details and respond with a **Transfer Acceptance message**
+6. You receive the **Transfer Request Accepted webhook** 
+7. The ceding party is sent a **Ready For Payment Request message**
+8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`
+9. The ceding party sends the funds to a ClearBank transfer hub account
+10. You receive the **Transfer Status Update webhook** with the `State` of `PaymentReceived`
+11. You call the **POST /v3/payments/fps** endpoint to move the funds from the transfer hub account (created during onboarding) to the customers new account
+12. You receive the **Transaction Settled webhook**
+13. The ceding party receives a **Transfer Complete message**
+14. You receive the **Transfer Status Update webhook** with the State of `Completed`
 
 ![Message flow diagram of the automated transfer in process, as detailed above.](/assets/images/tisa-transfer-in-success-message-flow.svg)
 
-<EndpointBlock
-  type="post"
-  title="Automated cash ISA transfer in"
-  endpoints={[
-    {
-      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in",
-      version: "1.0AutomatedTransfer",
-    }
-  ]}
-/>
+**Automated transfer in referred**
+
+When the ceding party receives the Transfer Request message, they may respond advising the request has been referred. This typically means that the transfer request has encountered a condition that prevents it from proceeding automatically and requires manual review or intervention. For example, they may contact the customer who holds the ISA to confirm that they requested the transfer.
+
+Following the referral, the ceding party can:
+
+**Accept the transfer:**
+
+![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred.](/assets/images/tisa-transfer-in-referred-accepted-message-flow.svg)
+
+**or reject the transfer:**
+
+ ![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred.](/assets/images/tisa-transfer-in-referred-rejected-message-flow.svg)
+
+If the transfer is rejected, the customer should decide how they wish to proceed, either:
+
+- **Resubmit the transfer request** - you can do this by calling the **PUT /v1/isas/{accountId}/automated-transfer-in/{urn}** and providing the URN of the existing transfer, or
+- **Abandon the transfer request** - you can update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and update the `State` to `Abandoned`
+
+### Automated transfer out
+
+To complete an automated transfer out:
+
+1. The customer contacts the acquiring party (the financial institution they want to transfer their current cash ISA to)
+2. The acquiring party sends a **Transfer Request message** to ClearBank through the Pay.UK transfer service
+3. You receive the **Transfer Request webhook**
+4. The transfer request is validated and a **Transfer Acceptance message** is sent to the acquiring party
+5. You receive the **Transfer Accepted webhook**
+6. Before transferring the funds, you can contact the customer to confirm the transfer
+7. The acquiring party sends a **Ready For Payment Request message**
+8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`
+9. You call the **POST /v3/payments/fps** endpoint to move the funds from the cash ISA to the transfer hub account (created during onboarding)
+10. You receive the **Transaction Settled webhook**
+11. You call the **POST /v3/payments/fps** endpoint to move the funds from the transfer hub account to the account details provided by the acquiring party
+12. You receive the **Transaction Settled webhook**
+13. The acquiring party sends a **Transfer Completed message**
+14. You receive the **Transfer Status Update webhook** with the `State` of `Completed`
+
+![Message flow diagram of the automated transfer out process, as detailed above.](/assets/images/tisa-transfer-out-success-message-flow.svg)
+
+**Automated transfer out referred or rejected** 
+
+When the Transfer Request message is received from the acquiring party, the provided details are validated against the following which can result in the transfer request being **referred** or **rejected**:
+
+**Referred:**
+- Fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns a close but not exact match
+- Balance of the ISA is £50,000.00 or more 
+
+If transfer is referred, a Transfer Referral message is sent to the acquiring party. Once referred:
+
+- You can contact the customer to confirm if they requested the transfer. Depending on their answer, you can then use the **PATCH /v1/isas/{accountId}/automated-transfer-out/{urn}** to update the `State` to `Accept` or `Rejected` and provide a reason
+- The acquiring party can choose to abandon the transfer by sending a Transfer Abandoned message or take no action if they want to continue with the transfer
+
+**Rejected:**
+- A fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns no match or too fuzzy
+- The request is for a partial transfer out (not currently supported)
+- Account has insufficient funds to meet the transfer request
+- The amount to transfer would result in the ISA exceeding the annual allowance
+
+If the transfer is rejected, a Transfer Rejected message is sent to the acquiring party. Once rejected, the acquiring party can choose to:
+- Amend the transfer request and resubmit using the existing or a new URN
+- Abdandon the transfer by sending a Transfer Abandoned message
+
+
+Webhooks:
 
 <WebhookPlaceholder render='tisa-transfer-request-webhook-v1' />
 <WebhookPlaceholder render='tisa-transfer-status-update-webhook-v1' />
 <WebhookPlaceholder render='tisa-transfer-accepted-webhook-v1' />
 
-<EndpointBlock
-  type="put"
-  title="Resubmit an automated cash ISA transfer in"
-  endpoints={[
-    {
-      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in/{urn}",
-      version: "1.0AutomatedTransfer",
-    }
-  ]}
-/>
 
-<EndpointBlock
-  type="patch"
-  title="Update an existing automated cash ISA transfer in"
-  endpoints={[
-    {
-      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-in/{urn}",
-      version: "1.0AutomatedTransfer",
-    }
-  ]}
-/>
-
-### Automated transfer out
-
-<EndpointBlock
-  type="patch"
-  title="Update an existing automated cash ISA transfer out"
-  endpoints={[
-    {
-      path: "/v1/institutions/{institutionId}/isas/{accountId}/automated-transfer-out/{urn}",
-      version: "1.0AutomatedTransfer",
-    }
-  ]}
-/>
