@@ -178,6 +178,109 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     ]}
 />
 
+### Examples of valid payloads
+
+**Payload for a structured address**
+
+```
+{
+  "InstructionIdentification": "12345678TEST1234567899100",
+  "EndToEndIdentification": "12345678TEST12345678100",
+  "InstructedAmount": {
+    "Amount": 1001,
+    "Currency": "GBP"
+  },
+  "InstructingAgentBic": "LOYDGB22XXX",
+  "DebtorAccount": {
+    "Iban": "GB71CPBK08929969687998"
+  },
+  "Debtor": {
+    "Name": "Name 1",
+    "PostalAddress": {
+      "BuildingNumber": "No 12",
+      "BuildingName": "LL House",
+      "StreetName": "StreetName Value 5",
+      "TownName": "TownName Value 6",
+      "Country": "GB",
+      "PostCode": "NN4 5QQ"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "CreditorAccount": {
+    "Iban": "GB86CLRB04056810005205"
+  },
+  "Creditor": {
+    "Name": "Name 2",
+    "PostalAddress": {
+      "BuildingNumber": "No 27",
+      "BuildingName": "AA House",
+      "StreetName": "StreetName Value 20",
+      "TownName": "TownName Value 21",
+      "Country": "GB",
+      "PostCode": "CC9 0FF"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "Purpose": "CASH",
+  "CategoryPurpose": "CASH",
+  "RemittanceInformation": null
+}
+```
+
+**Payload for an unstructured address**
+```
+{
+  "InstructionIdentification": "12345678TEST1234567810011",
+  "EndToEndIdentification": "12345678TEST1234567810011",
+  "InstructedAmount": {
+    "Amount": 1001,
+    "Currency": "GBP"
+  },
+  "InstructingAgentBic": "LOYDGB22XXX",
+  "DebtorAccount": {
+    "Iban": "GB71CPBK08929969687998"
+  },
+  "Debtor": {
+    "Name": "Name 1",
+    "PostalAddress": {
+      "BuildingNumber": "No 12",
+      "BuildingName": "LL House",
+      "StreetName": "StreetName Value 5",
+      "TownName": "TownName Value 6",
+      "Country": "GB",
+      "PostCode": "NN4 5QQ",
+      "AddressLine1": "57 Hello World Street, London, EC3A 1AB",
+      "AddressLine2": "57 Hello World Street, London, EC3A 1AB"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "CreditorAccount": {
+    "Iban": "GB86CLRB04056810005205"
+  },
+  "Creditor": {
+    "Name": "Name 2",
+    "PostalAddress": {
+      "BuildingNumber": "No 27",
+      "BuildingName": "AA House",
+      "StreetName": "StreetName Value 20",
+      "TownName": "TownName Value 21",
+      "Country": "GB",
+      "PostCode": "CC9 0FF",
+      "AddressLine1": "57 Hello World Street, London, EC3A 1AB",
+      "AddressLine2": "57 Hello World Street, London, EC3A 1AB"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "Purpose": "CASH",
+  "CategoryPurpose": "CASH",
+  "RemittanceInformation": null
+}
+```
+
 <EndpointBlock
     type="post"
     title="Simulate a returned CHAPS payment"
