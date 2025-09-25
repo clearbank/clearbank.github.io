@@ -1,0 +1,215 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Mccy Internal Transfers API",
+    "description": "Internal Transfers API v1.0",
+    "version": "1.0.Internal-Transfers"
+  },
+  "paths": {
+    "/v1/mccy/internaltransfers": {
+      "post": {
+        "tags": [
+          "InternalTransfers"
+        ],
+        "summary": "This endpoint is used to initiate an internal transfer request.",
+        "parameters": [
+          {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Your API token, obtained from the ClearBank Portal.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "DigitalSignature",
+              "in": "header",
+              "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          },
+          {
+              "name": "X-Request-Id",
+              "in": "header",
+              "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+              "required": true,
+              "schema": {
+                  "type": "string"
+              }
+          }
+      ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InternalTransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountIdentifier": {
+        "required": [
+          "kind",
+          "identifier"
+        ],
+        "description": "The unique identifier for the specified account if an IBAN is not provided. It is an object with a Kind and an Identifier. Mandatory only if the IBAN is not provided.",
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "The kind of account identifier provided. This can only be AccountId.",
+            "minLength": 1,
+            "example": "AccountId"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "Unique account identifier value that corresponds to the specified account identifier kind.",
+            "minLength": 1,
+            "maxLength": 36,
+            "format": "uuid",
+            "example": "4c4fcf12-6f9f-5fe5-bac5-a75cb1d6382d"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InternalTransferRequest": {
+        "required": [
+          "instructedAmount",
+          "endToEndId",
+          "instructedCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "debitAccountIban": {
+            "type": "string",
+            "description": "International Bank Account Number for the debtor account.",
+            "nullable": true,
+            "example": "GB29BBUK21081873903941"
+          },
+          "debitAccountOther": {
+            "$ref": "#/components/schemas/AccountIdentifier"
+          },
+          "creditAccountIban": {
+            "type": "string",
+            "description": "International Bank Account Number for the creditor account.",
+            "nullable": true,
+            "example": "GB22CBUK53857446495102"
+          },
+          "creditAccountOther": {
+            "$ref": "#/components/schemas/AccountIdentifier"
+          },
+          "instructedAmount": {
+            "type": "number",
+            "description": "Instructed internal transfer amount.",
+            "minimum": 0.01,
+            "multipleOf": 0.01,
+            "example": 1234.56
+          },
+          "instructedCurrency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "enum": ["EUR", "USD", "CAD", "CHF", "CZK", "DKK", "HUF", "NOK", "PLN", "RON", "SEK"],
+            "type": "string",
+            "description": "Currency of the instructed internal transfer. This is the 3-letter ISO currency code.",
+            "example": "EUR"
+          },
+          "endToEndId": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[A-Za-z0-9/\\-?:.,\"+ ]",
+            "type": "string",
+            "description": "Unique identifier provided to ClearBank for each payment.",
+            "example": "c2051e84-0c68-51f1-94db-4605ddb62ddd"
+          },
+          "reference": {
+            "maxLength": 140,
+            "minLength": 0,
+            "pattern": "^[a-zA-Z0-9/\\?:\\-., ]+",
+            "type": "string",
+            "description": "Reference provided by the debtor for the internal transfer.",
+            "nullable": true,
+            "example": "Human readable example text"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the internal transfer request."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced, it provides a human-readable documentation for the problem type. When not present, default value is assumed to be \"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type. "
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available"
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  }
+}
