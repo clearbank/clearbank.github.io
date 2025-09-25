@@ -6706,6 +6706,12 @@
             "description": "Indicates whether the ISA is discontinued.",
             "example": "False"
           },
+          "dateOfFirstSubscriptionInCurrentTaxYear": {
+          "format": "date-time",
+          "description": "The date of the first subscription in the current tax year.",
+          "type": "string",
+          "example": "2024-01-01T12:34:56.789Z"
+        },
           "accountId": {
             "type": "string",
             "description": "The unique identifier for the account.",
@@ -7455,12 +7461,11 @@
               "Suspended"
             ],
             "type": "string",
-            "description": "Current status of the account. Valid options include Not Provided, Enabled, Closed, Suspended.",
-            "example": "Enabled"
+            "description": "Use this field to set the status of the account. If closing or suspending the account, you should provide a StatusReason. If you are not updating the account's status, either use 'NotProvided' or omit this field.",
+            "example": "Closed"
           },
           "statusReason": {
             "enum": [
-              "NotProvided",
               "AccountHolderBankrupt",
               "AccountHolderDeceased",
               "AccountSwitched",
@@ -7470,7 +7475,6 @@
               "FinancialCrime",
               "FraudFirstParty",
               "FraudThirdParty",
-              "Other",
               "FraudConfirmed",
               "InternallyDormant",
               "KYCRequired",
@@ -7478,10 +7482,11 @@
               "PotentialSanctionedIndividual",
               "SanctionedIndividual",
               "SuspectMoneyLaundering",
-              "TransactionDispute"
+              "TransactionDispute",
+              "Other"
             ],
             "type": "string",
-            "description": "Reason that the account is Closed or Suspended. Valid options include NotProvided, AccountHolderBankrupt, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DissatisfiedCustomer, DuplicateSoleTraderAccount, FinancialCrime, FraudFirstParty, FraudThirdParty, FraudConfirmed, InternallyDormant, KYCRequired, LegallyDisputed, PotentialSanctionedIndividual, SanctionedIndividual, SuspectMoneyLaundering, TransactionDispute, Other.",
+            "description": "If the account Status is Closed or Suspended, use this field to provide a reason. Use 'Other' if no other options apply. Do not provide this field if you are updating the status to 'Enabled'.",
             "example": "AccountHolderDeceased"
           },
           "ownerName": {
@@ -7651,7 +7656,6 @@
         "properties": {
           "closureReason": {
             "enum": [
-              "NotProvided",
               "AccountHolderBankrupt",
               "AccountHolderDeceased",
               "AccountSwitched",
@@ -7661,7 +7665,6 @@
               "FinancialCrime",
               "FraudFirstParty",
               "FraudThirdParty",
-              "Other",
               "FraudConfirmed",
               "InternallyDormant",
               "KYCRequired",
@@ -7669,10 +7672,11 @@
               "PotentialSanctionedIndividual",
               "SanctionedIndividual",
               "SuspectMoneyLaundering",
-              "TransactionDispute"
+              "TransactionDispute",
+              "Other"
             ],
             "type": "string",
-            "description": "Reason for the account closure request. Valid options include AccountHolderBankrupt, AccountHolderDeceased, AccountSwitched, CompanyNoLongerTrading, DissatisfiedCustomer, DuplicateSoleTraderAccount, FinancialCrime, FraudFirstParty, FraudThirdParty, FraudConfirmed, InternallyDormant, KYCRequired, LegallyDisputed, PotentialSanctionedIndividual, SanctionedIndividual, SuspectMoneyLaundering, TransactionDispute, Other.",
+            "description": "The reason for closing the account. Use 'Other' if no other options apply.",
             "example": "AccountHolderDeceased"
           }
         },
