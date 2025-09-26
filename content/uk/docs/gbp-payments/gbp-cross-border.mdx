@@ -98,6 +98,12 @@ The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send
 
 Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
 
+### Populating the Creditor field in pacs.008 messages
+
+The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
+
+Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
+
 #### Understanding Creditor and Creditor Agent roles
 
 There are two key parties in a payment transaction:
@@ -107,24 +113,26 @@ There are two key parties in a payment transaction:
 
 To ensure correct population of fields in pacs.008 payment messages:
 
-- **Creditor > OrganisationIdentifier > BIC**
-  - Do **not** populate this field if the Creditor is an **individual** or a **business**.
-  - It is **optional** if the Creditor is a **financial institution**.
+##### If the Creditor is an individual:
+  - Do **not** populate the Creditor > OrganisationIdentifier > BIC field.
+  - **Populate** the CreditorAgent > BIC field with the 11-character Business Identifier Code (BIC) of the financial institution that holds the Creditor’s account.
+  - Use the `privateIdentifier` object for the Creditor identification block.
 
-  - **CreditorAgent > BIC**
-  - This field is **always required**.
-  - It must contain the 11-character Business Identifier Code (BIC) of the financial institution that holds the Creditor’s account.
+##### If the Creditor is a business:
+  - Do **not** populate the Creditor > OrganisationIdentifier > BIC field.
+  - **Populate** the CreditorAgent > BIC field with the 11-character Business Identifier Code (BIC) of the financial institution that holds the Creditor’s account.
+  - Use the `organisationIdentifier` object for the Creditor identification block.
 
-- **Creditor identification blocks**
-  - Use the **privateIdentifier object** when the Creditor is an individual.
-  - Use the **organisationIdentifier object** when the Creditor is a business or financial institution.
-  - The organisation block may include a BIC, but only if the Creditor is a financial institution.
+##### If the Creditor is a financial institution:
+  - Optionally **populate** the Creditor > OrganisationIdentifier > BIC field.
+  - **Populate** the CreditorAgent > BIC field with the 11-character Business Identifier Code (BIC) of the financial institution that holds the Creditor’s account.
+  - Use the `organisationIdentifier` object for the Creditor identification block.
 
 |Creditor type|Populate Creditor > OrganisationIdentifier > BIC?|Populate CreditorAgent > BIC?| Populate Creditor > organisationIdentifier object? | Populate Creditor > privateIdentifier object? |
 |-------------|-------------------------------------------------|-----------------------------|-----|-----|
 | Individual  | No                                              | Yes                         | No | Yes  |
 | Business    |  No                                             | Yes                         | Yes | No  |
-| Financial institution  |  Optional                            | Yes                         | Yes | No  |
+| Financial institution  |  Optional                            | Yes                         | Yes | No  | 
 
 <EndpointBlock
     type="post"
@@ -142,6 +150,63 @@ To ensure correct population of fields in pacs.008 payment messages:
     }
     ]}
 />
+
+#### Valid payload examples
+
+**Sending a payment to a private individual**
+
+```
+{
+  "instructionIdentification": "INST202509190001",
+  "endToEndIdentification": "202509190123456",
+  "instructedAmount": {
+    "amount": 1416.98,
+    "currency": "GBP"
+  },
+  "sourceAccount": {
+    "iban": "GB12CLBK01020312345678"
+  },
+  "debtorAccount": {
+    "iban": "GB12CLBK01020387654321"
+  },
+  "debtor": {
+    "name": "Jane Smith",
+    "postalAddress": {
+      "buildingNumber": "40",
+      "streetName": "Dennenlaan",
+      "townName": "Het Ambacht",
+      "country": "NL",
+      "postCode": "3901"
+    }
+  },
+  "creditorAccount": {
+    "iban": "DE89370470440532013000"
+  },
+  "creditor": {
+    "name": "Johnny James",
+    "postalAddress": {
+      "buildingNumber": "38",
+      "streetName": "Gotthardstrasse",
+      "townName": "Freistaat Sachsen",
+      "country": "DE",
+      "postCode": "09052"
+    },
+    "privateIdentifier": {
+      "otherIdentification": "568237456"
+    }
+  },
+  "creditorAgent": {
+    "bic": "CITIDEFFXXX"
+  },
+  "purpose": "SALA",
+  "categoryPurpose": "SALA",
+  "remittanceInformation": {
+    "creditorReferenceInformation": "SALARY25112024"
+  }
+}
+```
+
+
 
 <WebhookPlaceholder render='transaction-settled-webhook-v6' />
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
