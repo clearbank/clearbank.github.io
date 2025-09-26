@@ -13,9 +13,9 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Interest configuration
 
-You can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis, so please reach out if you'd like to use it.
+Using the interest configuration endpoints, you can update the interest configuration of your existing savings accounts. This functionality is enabled on a per-client basis. If you're interested in using this functionality, please speak to your Client Director.
 
-The initial interest configuration ID is usually set during account creation. You can request a new configuration ID from your usual ClearBank contact. 
+The initial `interestConfigurationId` is usually set during account creation. You can request a new configuration ID from your usual ClearBank contact. 
 
 You can:
 - **Update** your interest configuration using the [POST /interest/v1/accounts/{accountId}/configurations](#update-interest-configuration) endpoint
@@ -43,7 +43,11 @@ This diagram shows the message flow:
 
 ### Future-dating interest configurations
 
-You can set multiple future interest configurations for your account with the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint. Once set, this endpoint also replaces any existing future-dated configurations for the account.
+You can set multiple future interest configurations for your account with the [PUT /v1/accounts/{accountId}/future-configurations](#set-future-dated-interest-configurations) endpoint. 
+
+<Callout colour="blue">
+Once set, this endpoint also replaces any existing future-dated configurations for the account.
+</Callout>
 
 Each selected interest configuration will apply from the start of the day provided in the `effectiveFrom` field. For example, you might set an account to move from interest config A to interest config B on 1 August. Interest will be calculated based on the balance from midnight on 31 July using interest config A. Any future interest interest calculations will be based on interest config B until any further changes to the interest configurations come into effect.
 
@@ -57,9 +61,51 @@ This diagram shows an example scenario where you have an introductory interest r
 
 For monthly interest payments, it works similarly: if you future-date an interest product to change on 10 November, interest from 1 to 9 November will be calculated at the initial rate. Interest from 10 November until the end of the month will be calculated using the new rate. The Interest Paid and Transaction Settled webhooks will notify you of the amount of interest paid at the end of the month.
 
+### Multiple interest configurations example
+
+Multiple interest configurations allow you to offer different interest rates based on the type of product or membership a customer has. Customers can seamlessly switch between products without closing and reopening their account.
+
+<Callout colour="blue">
+<p>Note: to switch the customer to a different interest configuration, you'll need to call the <a href="#update-interest-configuration">Update interest configuration</a> or <a href="#set-future-dated-interest-configurations">Set future-dated interest configurations</a> endpoint.</p>
+</Callout>
+
+In this example, three different savings account memberships are available:
+
+1. Standard Membership (Product A): This is a non-paid membership where customers earn a 2% interest rate on their savings.
+2. Silver Membership (Product B): For a £5 monthly fee, customers earn a 5% interest rate on their savings.
+3. Gold Membership (Product C): For a £10 monthly fee, customers earn an 8% interest rate on their savings.
+
+- If a customer with a Standard Membership decides to upgrade to a Silver Membership, they would start earning a 5% interest rate instead of 2%.
+- If a customer with a Gold Membership decides to downgrade to a Standard Membership, they would start earning a 2% interest rate instead of 8%.
+
+![A diagram showing the flow of customers subscribed to 3 different interest configurations and how their interest rate changes as they change product.](/assets/images/interest-config-example.svg)
+
+### Interest tiers
+
+You can configure multiple interest tiers when agreeing an interest configuration with us. Tiers allow you to specify balance ranges, each with its own interest rate, allowing you to offer different levels of interest depending on account balance. There are two methods for applying interest to tiers:
+
+- **Whole** - The total balance of the account earns the rate of the tier it falls into.
+- **Segregated** - Each part of the account balance earns the rate for its range.
+
+**Interest tiers example:**
+
+| Tier | Balance range | Interest rate |
+|------|---------------|---------------|
+| 1    | £0.00 - £1,000.00 | 3.00%     |
+| 2    | £1,000.01 - £5,000.00 | 4.00% |
+| 3    | £5,000.01 - £10,000.00 | 4.75% |
+
+Using the tier examples above, an account with a balance of **£7,500.00** would earn interest in the following way depending on the method applied:
+
+- **Whole:** The total balance is in the range of **tier 3**, so an interest rate of **4.75%** applies to the whole balance
+- **Segregated:** 
+  - The first £1,000.00 falls into **tier 1** and earns an interest rate of **3.00%**
+  - The next £4,000.00 falls into **tier 2** and earns an interest rate of **4.00%**
+  - The remaining £2,500.00 falls into **tier 3** and earns an interest rate of **4.75%**
+
 <EndpointBlock
-  type="post"
-  title="Update interest configuration"
+  type="get"
+  title="Get an account's interest configurations"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
@@ -70,7 +116,18 @@ For monthly interest payments, it works similarly: if you future-date an interes
 
 <EndpointBlock
   type="get"
-  title="Get an account's interest configurations"
+  title="Get details of an interest configuration"
+  endpoints={[
+    {
+      path: "/interest/v1/configurations/{interestConfigurationId}",
+      version: "1.0.Savings.Config",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Update interest configuration"
   endpoints={[
     {
       path: "/interest/v1/accounts/{accountId}/configurations",
