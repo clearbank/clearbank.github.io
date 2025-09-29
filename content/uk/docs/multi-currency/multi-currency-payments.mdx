@@ -8,6 +8,8 @@ showPageMenu: true
 import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 
+import Callout from "src/components/callout";
+
 ## High value international payments
 
 You can send single or bulk high value payments overseas in currencies other than GBP. To be able to initiate high value international payments, we will need you to first [fund your SIM account](#fund-your-account-in-the-simulation-environment) while integrating with our API in the simulation environment. As part of our fund assessment control framework, you will not be able to initiate high value international payments without doing so.
@@ -16,17 +18,29 @@ ClearBank accepts inbound and outbound euro payments via the T2 scheme only. Inb
 
 For more information about the countries that you can send high value payments to, currencies supported by ClearBank and currency cut-off times, please speak to your Client Director.
 
-### Post cut-off payments are rescheduled
-If a multi-currency payment request is received outside of the payment window for a given currency, you will normally receive a success response (202 – Accepted) including an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed on the next available business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
+### Payment cut-off times and scheduling
+If a multi-currency payment request is received outside of the payment window for a given currency, you will normally receive a success response (202 - Accepted) including an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed on the next available business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
 
-If a payment is scheduled for processing on the next available business day, the time at which the payment will be processed will vary depending on the currency selected as follows:
+When a payment is scheduled for processing on the next available business day, the time at which the payment will be processed will vary depending on the currency selected as follows:
 
-| Currency                           | Currency Code | Scheduled processing time  |
-|------------------------------------|---------------|----------------------------|
-| Czech Koruna                       | CZK           | 8:20 AM                    |
-| Romanian Leu                       | RON           | 8:20 AM                    |
-| All other supported currencies     |               | 8:30 AM                    |
 
+| Currency             | Currency Code | Window Open Time | Window Close Time | Scheduled Payment Time |
+| -------------------- | ------------- | ---------------- | ----------------- | ---------------------- |
+| Canadian dollar      | CAD           | 07:00 AM         | 17:00 PM          | 08:30 AM               |
+| Swiss franc          | CHF           | 07:00 AM         | 11:00 AM          | 08:30 AM               |
+| Czech koruna         | CZK           | 07:00 AM         | 08:30 AM          | 08:20 AM               |
+| Danish krone         | DKK           | 07:00 AM         | 11:00 AM          | 08:30 AM               |
+| Euro                 | EUR           | 07:00 AM         | 14:30 PM          | 08:30 AM               |
+| Hungarian forint     | HUF           | 07:00 AM         | 09:30 AM          | 08:30 AM               |
+| Norwegian krone      | NOK           | 07:00 AM         | 11:00 AM          | 08:30 AM               |
+| Polish zloty         | PLN           | 07:00 AM         | 09:30 AM          | 08:30 AM               |
+| Romanian leu         | RON           | 07:00 AM         | 08:30 AM          | 08:20 AM               |
+| Swedish krona        | SEK           | 07:00 AM         | 11:00 AM          | 08:30 AM               |
+| United States dollar | USD           | 07:00 AM         | 17:00 PM          | 08:30 AM               |
+
+<Callout colour="blue">
+  Currency availability is affected by both UK bank holidays and the holidays observed in each currency's country. For more information about currency availability, please speak to your Client Director.
+</Callout>
 
 If you would prefer not to have the rescheduled payment processed, you can cancel the payment by using the cancellation endpoints. The cancellation must be received no later than 1 hour prior to the scheduled processing time. Note that to be able to cancel a payment, you must have specified a **batch ID** in the original payment request.
 
