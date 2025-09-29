@@ -1,0 +1,53 @@
+---
+title: "Know Your Customer (KYC)"
+metaTitle: "KYC Service"
+order: 7
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Retail customer KYC
+
+<Callout colour="green">
+<h2>KYC is coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+Using our retail KYC endpoint makes it easy to meet your due diligence requirements when onboarding retail customers. By simply sharing key customer information, you can conduct know your customer checks and receive the results via webhook.
+
+For convenience, we'll also use the provided information to register a new customer if the checks succeed.
+
+If you'd like access to this product, please speak to your Client Director.
+
+<Callout colour="blue">
+  This service can only conduct KYC checks on customers who:<br />
+  • Currently live and have tax residency in the UK<br />
+  • Do not have dual tax-residency with another country<br />
+  • Are not US nationals
+</Callout>
+
+![A message flow diagram demonstrating how KYC works for a success and a declined check](/assets/images/kyc-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="KYC Check and Create a new Customer"
+  endpoints={[
+    {
+      path: "/v1/customercheck/retail",
+      version: "1.0know-your-customer",
+      webhooks: [
+        'kyc-application-successful-v1',
+        'kyc-application-declined-v1',
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='kyc-application-successful-v1' />
+<WebhookPlaceholder render='kyc-application-declined-v1' />
+
