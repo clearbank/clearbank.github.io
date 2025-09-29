@@ -18,6 +18,16 @@ Transaction endpoints allow you to retrieve:
 
 You can also access [Account statements](./statements).
 
+### Delayed SCT Inst transactions
+
+When an outbound SCT Inst payment is delayed, its original associated transaction will show as `"status": "cancelled"`. If the payment is then settled, an additional transaction with a different `transactionId` will represent this.
+
+You should subscribe to the associated SCT Inst webhooks for the latest details of a payment's status:
+* [SEPA Instant Outbound Payment Created](../eur-payments/sepa-instant-credit-transfer#sepa-instant-outbound-payment-created-webhook)
+* [SEPA Instant Outbound Payment Settled](../eur-payments/sepa-instant-credit-transfer#sepa-instant-outbound-payment-settled-webhook)
+* [SEPA Instant Outbound Payment Cancelled](../eur-payments/sepa-instant-credit-transfer#sepa-instant-outbound-payment-cancelled-webhook)
+* [SEPA Instant Outbound Payment Delayed](../eur-payments/sepa-instant-credit-transfer#sepa-instant-outbound-payment-delayed-webhook)
+
 <EndpointBlock
   type="get"
   title="Get full transaction list for an account"
