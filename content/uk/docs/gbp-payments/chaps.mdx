@@ -80,6 +80,22 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
+#### Populating the Creditor field in pacs.008 messages
+
+The Creditor field in CHAPS pacs.008 messages identifies the party receiving the funds. This party may be an **individual**, a **business**, or a **financial institution**. The correct population of this field is essential for accurate payment routing and compliance with ISO 20022 standards.
+
+<Callout colour="blue">
+The <strong>CreditorAgent</strong> field is not required in the CHAPS pacs.008 endpoint, as this information can be inferred from the UK sort code.
+</Callout>
+
+Depending on the creditor type, you will need to populate either the `PrivateIdentifier` or `OrganisationIdentifier` block within the `Creditor` object:
+
+|Creditor type	|Creditor object population	| Creditor name field population |
+|---------------|---------------------------|--------------------------------|
+|Individual	|PrivateIdentifier	| Full name of the individual |
+|Business	|OrganisationIdentifier	| Registered business name |
+|Financial institution	|OrganisationIdentifier	| Institution name (if acting as creditor)|
+
 <EndpointBlock
     type="post"
     title="Send a CHAPS payment"
@@ -449,3 +465,4 @@ The following table details the CHAPS return reason codes used to populate the `
 | TM01       | CutOffTime                               | Associated message was received after the agreed processing cut-off time.                                  |
 | TRAC       | RemovedFromTracking                      | Return following a direct debit being removed from the tracking process.                                   |
 | UPAY       | UnduePayment                             | Payment is not justified.                                                                                  |
+
