@@ -501,7 +501,7 @@
       },
       "Identification": {
         "type": "object",
-        "description": "Identification for creditor or debtor.",
+        "description": "Identification for creditor.",
         "oneOf": [
           {
             "$ref": "#/components/schemas/OrganisationIdentification"
@@ -567,6 +567,42 @@
           }
         }
       },
+      "DebtorIdentification": {
+        "type": "object",
+        "description": "Identification for debtor.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          {
+            "$ref": "#/components/schemas/PrivateIdentification"
+          }
+        ]
+      },
+      "DebtorOrganisationIdentification": {
+        "type": "object",
+        "description": "Description for OrganisationIdentification",
+          "properties": {
+          "bic": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
+            "type": "string",
+            "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority",
+            "example": "CLRBNL2AXXX"
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "description": "Legal Entity Identifier (LEI) - Unique alphanumeric code that has 20 characters and is based on the ISO 17442 standard.",
+            "example": "724500EAW1MTCM9M1X68"
+          },
+          "$ref": "#/components/schemas/GenericIdentificationObject"
+
+        }
+          },
       "PaymentCreated": {
         "type": "object",
         "properties": {
