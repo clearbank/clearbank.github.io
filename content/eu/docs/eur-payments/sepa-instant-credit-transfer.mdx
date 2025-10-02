@@ -60,17 +60,35 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 
 ### Cancellation reason codes
 
-Cancelled outbound payments can return the following reason codes:
+Cancelled outbound payments can return a reason code which will be reflected in the `CancellationCode` field of the [SEPA Instant Outbound Payment Cancelled webhook](#sepa-instant-outbound-payment-cancelled-webhook). The cancellation codes include, but are not limited to:
 
-| Reason Code | Description                                |
-| ----------- | ------------------------------------------ |
-| AC01        | Account identifier invalid or incorrect.   |
-| AM02        | Amount not allowed.                        |
-| AM04        | Insufficient funds on the account.         |
-| CB01        | Unknown error.                             |
-| CB05        | Payment delayed.                           |
-| CNOR        | Creditor bank is not registered.           |
-| MS03        | Payment failed screening, re-send via SCT. |
+| Reason Code | Description |
+| ----------- | ----------- |
+| AB05 | Timeout Creditor Agent |
+| AB08 | Offline Creditor Agent |
+| AB09 | Error Creditor Agent |
+| AB10 | Error Instructed Agent |
+| AC01 | Account identifier invalid or incorrect. |
+| AC04 | Closed Account Number |
+| AC06 | Blocked account |
+| AG01 | Transaction Forbidden |
+| AG10 | Agent Suspended |
+| AG11 | Creditor Agent Suspended |
+| AM02 | Amount not allowed. |
+| AM04 | Insufficient funds on the account. |
+| AM05 | Duplication |
+| BE04 | Missing Creditor Address |
+| CB01 | Unknown error. |
+| CB05 | Payment delayed. |
+| CNOR | Creditor bank is not registered. |
+| DNOR | Debtor Bank Is Not Registered |
+| MD07 | End Customer Deceased |
+| MS02 | Not Specified Reason Customer Generated |
+| MS03 | Payment failed screening, re-send via SCT. |
+| RC01 | Bank Identifier Incorrect |
+| RR03 | Missing Creditor’s Name Or Address |
+| RR04 | Regulatory Reason |
+| TM01 | Invalid Cut Off Time |
 
 <br />
 
@@ -97,6 +115,23 @@ Recall requests remain valid for a maximum of **15 business days**.  If after 15
 ![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sct-inst-successful-recall.svg)
 
 ![A message flow diagram explaining a rejected SCT Inst recall which results in receiving a SEPA Instant Recall Request Rejected webhook](/assets/images/sct-inst-rejected-recall.svg)
+
+If the receiving party rejects the recall request, a rejection code will be provided and populated in the `RejectionCode` field of the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-request-rejected-webhook). The recall rejection codes include, but are not limited to:
+
+| Reason Code | Description |
+|-------------|-------------|
+| AC04        | Closed Account Number |
+| AM04        | Insufficient Funds |
+| ARDT        | The Transaction Has Already Been Returned |
+| ARJT        | Already rejected original SCT (SEPA Credit Transfer) |
+| CUST        | Requested By Customer |
+| LEGL        | Legal Decision |
+| NOAS        | No Answer From Customer |
+| NOOR        | No Original Transaction Received |
+| RNPR        | Original credit transfer was received but is not processable |
+| RR04        | Regulatory reason |
+
+External code sets can be downloaded from [iso20022.org](https://www.iso20022.org)
 
 <EndpointBlock
   type="post"
