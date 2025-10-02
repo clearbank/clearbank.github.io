@@ -357,7 +357,7 @@ ClearBank offers 2 methods of transferring a cash ISA in or out:
 **Timeline:** Voluntary SLA under Pay.UK of **7 working days**.
 
 <Callout colour="blue">
-<p>Automated transfers are only available when both ISA providers are accredited participants of the Pay.UK scheme. If one provider is not a participant, the existing <a href="https://clearbank.github.io/uk/docs/embedded-banking/flexible-cash-isa#manual-cash-isa-transfer-in-or-out">manual transfer process</a> must be used.</p>
+<p>Automated transfers are only available when both ISA providers are accredited participants of the Pay.UK scheme. If one provider is not a participant, the manual transfer process must be used.</p>
 </Callout>
 
 Each transfer is assigned a **Unique Reference Number (URN)**, which is a system-generated identifier used to track and manage a transfer throughout its lifecycle. Key functions of the URN include:
@@ -366,7 +366,7 @@ Each transfer is assigned a **Unique Reference Number (URN)**, which is a system
 - **Exception handling** - In cases of escalation or failure, the URN helps determine whether the issue lies with the originating provider or the receiving institution
 - **Validation** - The ceding or acquiring ISA provider uses the URN to match incoming messages to its records and validate transfer details such as account info, subscription limits, and customer identity
 
-### Manual transfer in
+## Manually transfer a cash ISA in
 ClearBank supports full or partial transfers in of cash ISAs.
 
 During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub account to the cash ISA.
@@ -386,7 +386,7 @@ To transfer in a cash ISA:
 
 <EndpointBlock
   type="post"
-  title="Transfer in a cash ISA"
+  title="Manual cash ISA transfer in"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-in",
@@ -413,7 +413,7 @@ To transfer in a cash ISA:
 
 <EndpointBlock
   type="get"
-  title="Get information on a transfer in"
+  title="Get information on a manual transfer in"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-in/{transferInId}",
@@ -433,7 +433,7 @@ To transfer in a cash ISA:
   ]}
 />
 
-### Manual transfer out
+## Manually transfer a cash ISA out
 
 You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
@@ -456,7 +456,7 @@ The process is shown in this message flow diagram:
 
 <EndpointBlock
   type="post"
-  title="Transfer out a cash ISA"
+  title="Manual cash ISA transfer out"
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
@@ -476,27 +476,65 @@ The process is shown in this message flow diagram:
   ]}
 />
 
-### Automated transfer in
+## Automate a cash ISA transfer in
 
 An automated transfer in refers to a ceding party (the current holders of the ISA) requesting the transfer of an existing ISA to ClearBank via Pay.UK’s automated service.
 
 To complete an automated transfer in: 
-1. The customer requests you to transfer the cash ISA from the current institution holding the account (the ceding party)
-2. You call the **POST /v1/isas/{accountId}/automated-transfer-in** endpoint providing the necessary details
-3. The transfer request is validated and submitted to the Pay.UK transfer service for further validation
-4. You receive the **Transfer Request webhook** confirming the transfer request has been sent
-5. The ceding party receives a **Transfer Request **, validate the details and respond with a **Transfer Acceptance message**
-6. You receive the **Transfer Request Accepted webhook** 
-7. The ceding party is sent a **Ready For Payment Request message**
-8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`
-9. The ceding party sends the funds to a ClearBank transfer hub account
-10. You receive the **Transfer Status Update webhook** with the `State` of `PaymentReceived`
-11. You call the **POST /v3/payments/fps** endpoint to move the funds from the transfer hub account (created during onboarding) to the customers new account
-12. You receive the **Transaction Settled webhook**
-13. The ceding party receives a **Transfer Complete message**
-14. You receive the **Transfer Status Update webhook** with the State of `Completed`
+1. The customer requests you to transfer the cash ISA from the current institution holding the account (the ceding party).
+2. You call the **POST /v1/isas/{accountId}/automated-transfer-in** endpoint providing the necessary details.
+3. The transfer request is validated and submitted to the Pay.UK transfer service for further validation.
+4. You receive the **Transfer Request webhook** confirming the transfer request has been sent.
+5. The ceding party receives a **Transfer Request message**, validates the details and responds with a **Transfer Acceptance message**.
+6. You receive the **Transfer Request Accepted webhook**.
+7. The ceding party is sent a **Ready For Payment Request message**.
+8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`.
+9. The ceding party sends the funds to your ClearBank transfer hub account (created during onboarding).
+10. You receive the **Transfer Status Update webhook** with the `State` of `PaymentReceived`.
+11. You call the **POST /v3/payments/fps** endpoint to move the funds from your transfer hub account to the customers new account.
+12. You receive the **Transaction Settled webhook**.
+13. The ceding party receives a **Transfer Complete message**.
+14. You receive the **Transfer Status Update webhook** with the State of `Completed`.
 
 ![Message flow diagram of the automated transfer in process, as detailed above.](/assets/images/tisa-transfer-in-success-message-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/automated-transfer-in",
+      version: "1.0.SterlingAutomatedTransfer",
+      webhooks: [
+        'tisa-transfer-request-webhook-v1',
+        'tisa-transfer-accepted-webhook-v1',
+        'transaction-settled-webhook-v6',
+        'tisa-transfer-status-update-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='tisa-transfer-request-webhook-v1' />
+<WebhookPlaceholder render='tisa-transfer-status-update-webhook-v1' />
+<WebhookPlaceholder render='tisa-transfer-accepted-webhook-v1' />
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/automated-transfer-in/{urn}",
+      version: "1.0.SterlingAutomatedTransfer",
+      webhooks: [
+        'tisa-transfer-request-webhook-v1',
+        'tisa-transfer-accepted-webhook-v1',
+        'transaction-settled-webhook-v6',
+        'tisa-transfer-status-update-webhook-v1'
+      ]
+    }
+  ]}
+/>
 
 **Automated transfer in referred**
 
@@ -510,62 +548,72 @@ Following the referral, the ceding party can:
 
 **or reject the transfer:**
 
- ![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred.](/assets/images/tisa-transfer-in-referred-rejected-message-flow.svg)
+ ![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred. The ceding party will then advise of the rejection via the Transfer Rejected Message which triggers another status update webhook with a state of Rejected.](/assets/images/tisa-transfer-in-referred-rejected-message-flow.svg)
 
 If the transfer is rejected, the customer should decide how they wish to proceed, either:
 
 - **Resubmit the transfer request** - you can do this by calling the **PUT /v1/isas/{accountId}/automated-transfer-in/{urn}** and providing the URN of the existing transfer, or
-- **Abandon the transfer request** - you can update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and update the `State` to `Abandoned`
+- **Abandon the transfer request** - you can update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and update the `State` to `Abandoned`.
 
-### Automated transfer out
+## Automate a cash ISA transfer out
 
 To complete an automated transfer out:
 
-1. The customer contacts the acquiring party (the financial institution they want to transfer their current cash ISA to)
-2. The acquiring party sends a **Transfer Request message** to ClearBank through the Pay.UK transfer service
-3. You receive the **Transfer Request webhook**
-4. The transfer request is validated and a **Transfer Acceptance message** is sent to the acquiring party
-5. You receive the **Transfer Accepted webhook**
-6. Before transferring the funds, you can contact the customer to confirm the transfer
-7. The acquiring party sends a **Ready For Payment Request message**
-8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`
-9. You call the **POST /v3/payments/fps** endpoint to move the funds from the cash ISA to the transfer hub account (created during onboarding)
-10. You receive the **Transaction Settled webhook**
-11. You call the **POST /v3/payments/fps** endpoint to move the funds from the transfer hub account to the account details provided by the acquiring party
-12. You receive the **Transaction Settled webhook**
-13. The acquiring party sends a **Transfer Completed message**
-14. You receive the **Transfer Status Update webhook** with the `State` of `Completed`
+1. The customer contacts the acquiring party (the financial institution they want to transfer their current cash ISA to).
+2. The acquiring party sends a **Transfer Request message** to ClearBank through the Pay.UK transfer service.
+3. You receive the **Transfer Request webhook**.
+4. The transfer request is validated and a **Transfer Acceptance message** is sent to the acquiring party.
+5. You receive the **Transfer Accepted webhook**.
+6. Before transferring the funds, you can contact the customer to confirm the transfer.
+7. The acquiring party sends a **Ready For Payment Request message**.
+8. You receive the **Transfer Status Update webhook** with the `State` of `ReadyForPayment`.
+9. You call the **POST /v3/payments/fps** endpoint to move the funds from the cash ISA to your transfer hub account (created during onboarding).
+10. You receive the **Transaction Settled webhook**.
+11. You call the **POST /v3/payments/fps** endpoint to move the funds from your transfer hub account to the account details provided by the acquiring party.
+12. You receive the **Transaction Settled webhook**.
+13. The acquiring party sends a **Transfer Completed message**.
+14. You receive the **Transfer Status Update webhook** with the `State` of `Completed`.
 
 ![Message flow diagram of the automated transfer out process, as detailed above.](/assets/images/tisa-transfer-out-success-message-flow.svg)
+
+<EndpointBlock
+  type="patch"
+  title="Update an existing automated cash ISA transfer out"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/automated-transfer-out/{urn}",
+      version: "1.0.SterlingAutomatedTransfer",
+      webhooks: [
+        'tisa-transfer-request-webhook-v1',
+        'tisa-transfer-accepted-webhook-v1',
+        'transaction-settled-webhook-v6',
+        'tisa-transfer-status-update-webhook-v1'
+      ]
+    }
+  ]}
+/>
 
 **Automated transfer out referred or rejected** 
 
 When the Transfer Request message is received from the acquiring party, the provided details are validated against the following which can result in the transfer request being **referred** or **rejected**:
 
 **Referred:**
-- Fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns a close but not exact match
-- Balance of the ISA is £50,000.00 or more 
+- Fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns a close but not exact match.
+- Balance of the ISA is £50,000.00 or more .
 
-If transfer is referred, a Transfer Referral message is sent to the acquiring party. Once referred:
+If the transfer is referred, a Transfer Referral message is sent to the acquiring party. Once referred:
 
-- You can contact the customer to confirm if they requested the transfer. Depending on their answer, you can then use the **PATCH /v1/isas/{accountId}/automated-transfer-out/{urn}** to update the `State` to `Accept` or `Rejected` and provide a reason
-- The acquiring party can choose to abandon the transfer by sending a Transfer Abandoned message or take no action if they want to continue with the transfer
+- You can contact the customer to confirm if they requested the transfer. Depending on their answer, you can then use the **PATCH /v1/isas/{accountId}/automated-transfer-out/{urn}** to update the `State` to `Accept` or `Rejected` and provide a reason.
+- The acquiring party can choose to abandon the transfer by sending a Transfer Abandoned message or take no action if they want to continue with the transfer.
 
 **Rejected:**
-- A fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns no match or too fuzzy
-- The request is for a partial transfer out (not currently supported)
-- Account has insufficient funds to meet the transfer request
-- The amount to transfer would result in the ISA exceeding the annual allowance
+- A fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, or account details returns no match or too fuzzy.
+- The request is for a partial transfer out (not currently supported).
+- Account has insufficient funds to meet the transfer request.
+- The amount to transfer would result in the ISA exceeding the annual allowance.
 
 If the transfer is rejected, a Transfer Rejected message is sent to the acquiring party. Once rejected, the acquiring party can choose to:
-- Amend the transfer request and resubmit using the existing or a new URN
-- Abdandon the transfer by sending a Transfer Abandoned message
-
-
-Webhooks:
-
-<WebhookPlaceholder render='tisa-transfer-request-webhook-v1' />
-<WebhookPlaceholder render='tisa-transfer-status-update-webhook-v1' />
-<WebhookPlaceholder render='tisa-transfer-accepted-webhook-v1' />
+- Amend the transfer request and resubmit using the existing or a new URN.
+- Abdandon the transfer by sending a Transfer Abandoned message.
 
 
