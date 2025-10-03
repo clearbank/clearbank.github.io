@@ -1,0 +1,49 @@
+---
+title: "KYC Application Successful webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that the checks for a  KYC application have succeeded, and that a retail customer has been created.
+
+#### Request body
+
+```json
+{
+    "Type": "RetailCustomer.ApplicationSuccessful",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+
+| Element         | Description                                                                                                                                                                                                                                                                                   |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `applicationId` | **Required**<br /> The original `applicationId` value you received in the 202 response to this KYC request. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
+| `customerId`    | **Required**<br /> The unique identifier of the created customer. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                                           |
+| `kycStatus`     | **Required**<br /> Will always read `Pass` for this webhook <br/>Type: `string`                                                                                                                                                                                                               |
+
+
+#### Example KYC Application Successful webhook request body
+
+```json
+{
+    "Type": "RetailCustomer.ApplicationSuccessful",
+    "Version": 1,
+    "Payload": {
+        "applicationId": "aac7c700-1ea6-5664-8804-ceeb066d3cf5",
+        "customerId": "a1e22390-9049-53f4-a598-de39856bdb50",
+        "kycStatus": "Pass",
+    },
+    "Nonce": 747000128
+}
+```
+
+#### Example webhook response
+```json
+{
+    "Nonce": 747000128
+}
+```

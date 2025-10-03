@@ -30,7 +30,7 @@ It is essential to integrate with the <a href="#customer-accounts-transaction-co
 
 To send an SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-an-sct-inst-payment) endpoint.
 
-You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). If 10 seconds pass without settlement, you'll receive the [SEPA Instant Outbound Payment Delayed webhook](#sepa-instant-outbound-payment-delayed-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 ![A message flow diagram explaining how to send an SCT Inst payment](/assets/images/sct-inst-send-payment.svg)
 
@@ -45,7 +45,8 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
         'sepa-instant-outbound-payment-created-v1',
         'sepa-instant-outbound-payment-settled-v1',
         'sepa-instant-outbound-payment-cancelled-v1',
-        'eu-customer-accounts-transaction-completed-v1'
+        'eu-customer-accounts-transaction-completed-v1',
+        'sepa-instant-outbound-payment-delayed-v1'
       ]
     }
   ]}
@@ -54,20 +55,40 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 <WebhookPlaceholder render='sepa-instant-outbound-payment-created-v1' />
 <WebhookPlaceholder render='sepa-instant-outbound-payment-settled-v1'/>
 <WebhookPlaceholder render='sepa-instant-outbound-payment-cancelled-v1' />
+<WebhookPlaceholder render='sepa-instant-outbound-payment-delayed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 ### Cancellation reason codes
 
-Cancelled outbound payments can return the following reason codes:
+Cancelled outbound payments can return a reason code which will be reflected in the `CancellationCode` field of the [SEPA Instant Outbound Payment Cancelled webhook](#sepa-instant-outbound-payment-cancelled-webhook). The cancellation codes include, but are not limited to:
 
-| Reason Code | Description                                |
-| ----------- | ------------------------------------------ |
-| AC01        | Account identifier invalid or incorrect.   |
-| AM02        | Amount not allowed.                        |
-| AM04        | Insufficient funds on the account.         |
-| CB01        | Unknown error.                             |
-| CNOR        | Creditor bank is not registered.           |
-| MS03        | Payment failed screening, re-send via SCT. |
+| Reason Code | Description |
+| ----------- | ----------- |
+| AB05 | Timeout Creditor Agent |
+| AB08 | Offline Creditor Agent |
+| AB09 | Error Creditor Agent |
+| AB10 | Error Instructed Agent |
+| AC01 | Account identifier invalid or incorrect. |
+| AC04 | Closed Account Number |
+| AC06 | Blocked account |
+| AG01 | Transaction Forbidden |
+| AG10 | Agent Suspended |
+| AG11 | Creditor Agent Suspended |
+| AM02 | Amount not allowed. |
+| AM04 | Insufficient funds on the account. |
+| AM05 | Duplication |
+| BE04 | Missing Creditor Address |
+| CB01 | Unknown error. |
+| CB05 | Payment delayed. |
+| CNOR | Creditor bank is not registered. |
+| DNOR | Debtor Bank Is Not Registered |
+| MD07 | End Customer Deceased |
+| MS02 | Not Specified Reason Customer Generated |
+| MS03 | Payment failed screening, re-send via SCT. |
+| RC01 | Bank Identifier Incorrect |
+| RR03 | Missing Creditor’s Name Or Address |
+| RR04 | Regulatory Reason |
+| TM01 | Invalid Cut Off Time |
 
 <br />
 
@@ -94,6 +115,23 @@ Recall requests remain valid for a maximum of **15 business days**.  If after 15
 ![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sct-inst-successful-recall.svg)
 
 ![A message flow diagram explaining a rejected SCT Inst recall which results in receiving a SEPA Instant Recall Request Rejected webhook](/assets/images/sct-inst-rejected-recall.svg)
+
+If the receiving party rejects the recall request, a rejection code will be provided and populated in the `RejectionCode` field of the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-request-rejected-webhook). The recall rejection codes include, but are not limited to:
+
+| Reason Code | Description |
+|-------------|-------------|
+| AC04        | Closed Account Number |
+| AM04        | Insufficient Funds |
+| ARDT        | The Transaction Has Already Been Returned |
+| ARJT        | Already rejected original SCT (SEPA Credit Transfer) |
+| CUST        | Requested By Customer |
+| LEGL        | Legal Decision |
+| NOAS        | No Answer From Customer |
+| NOOR        | No Original Transaction Received |
+| RNPR        | Original credit transfer was received but is not processable |
+| RR04        | Regulatory reason |
+
+External code sets can be downloaded from [iso20022.org](https://www.iso20022.org)
 
 <EndpointBlock
   type="post"
@@ -177,6 +215,22 @@ Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Can
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
 
 ## Simulate SCT Inst payment scenarios
+
+### Simulate a delayed outbound SCT Inst payment
+
+To test the SEPA Instant Outbound Payment Delayed webhook, you can provide one of the following values in the `reference` field of a Send SCT Inst Payment request:
+
+| Reference field value      | Simulated behavior                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------- |
+| `--DelayPayment--`         | Delays the payment by 10 seconds, then proceeds as normal - validation still applies.     |
+| `--CancelDelayedPayment--` | Delays the payment by 10 seconds, then cancels the payment with cancellation code `CB05`. |
+
+
+<Callout colour="blue">
+  When a payment is delayed and then settles, it will settle under a new TransactionId for regulatory reasons. You can instead use the PaymentId for an identifier that remains unchanged throughout the payment's lifecycle.
+</Callout>
+
+
 
 <EndpointBlock
   type="post"

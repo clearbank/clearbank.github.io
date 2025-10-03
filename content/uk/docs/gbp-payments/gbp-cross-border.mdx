@@ -42,7 +42,7 @@ In line with the Bank of England's ISO 20022 data enhancement requirements, you 
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.
 
-#### Legal Entity Identifer (LEI)
+#### Legal Entity Identifier (LEI)
 The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
@@ -92,6 +92,37 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
+### Populating the Creditor field in pacs.008 messages
+
+The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
+
+Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
+
+#### Understanding Creditor and Creditor Agent roles
+
+In a payment transaction, there are two key parties:
+
+1. **Creditor**: The person or organisation receiving the funds. This could be an individual, a business, or a financial institution (FI).
+2. **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character or 8-character **Business Identifier Code (BIC)**.
+
+To ensure correct population of fields in pacs.008 payment messages, follow these guidelines based on the type of Creditor:
+
+##### If the Creditor is an individual:
+- Use the `privateIdentifier` object for the Creditor identification block.
+- Do **not** populate the `Creditor > OrganisationIdentifier` object.
+- **Populate** the `CreditorAgent > BIC` field with the BIC of the FI that holds the Creditor’s account.
+
+##### If the Creditor is a business:
+- Use the `organisationIdentifier` object for the Creditor identification block.
+- Do **not** populate the `Creditor > PrivateIdentifier` object.
+- **Populate** the `CreditorAgent > BIC` field with the BIC of the FI that holds the Creditor’s account.
+
+##### If the Creditor is a financial institution:
+- Use the `organisationIdentifier` object for the Creditor identification block.
+- Do **not** populate the `Creditor > PrivateIdentifier` object.
+- Optionally **populate** the `Creditor > OrganisationIdentifier > BIC` field with details of the FI's BIC.
+- **Populate** the `CreditorAgent > BIC` field with the BIC of the FI that holds the Creditor’s account.
+
 <EndpointBlock
     type="post"
     title="Send a GBP cross-border payment"
@@ -108,6 +139,168 @@ The following table details common uses of Purpose Codes and Category Purpose Co
     }
     ]}
 />
+
+#### Valid payload examples
+
+**Sending a payment to a private individual**
+
+```
+{
+  "instructionIdentification": "INST202509190001",
+  "endToEndIdentification": "202509190123456",
+  "instructedAmount": {
+    "amount": 1416.98,
+    "currency": "GBP"
+  },
+  "sourceAccount": {
+    "iban": "GB00FAKE00000000000000"
+  },
+  "debtorAccount": {
+    "iban": "GB00FAKE11111111111111"
+  },
+  "debtor": {
+    "name": "Jane Smith",
+    "postalAddress": {
+      "buildingNumber": "40",
+      "streetName": "Dennenlaan",
+      "townName": "Het Ambacht",
+      "country": "NL",
+      "postCode": "3901"
+    }
+  },
+  "creditorAccount": {
+    "iban": "DE89370470440532013000"
+  },
+  "creditor": {
+    "name": "Johnny James",
+    "postalAddress": {
+      "buildingNumber": "38",
+      "streetName": "Gotthardstrasse",
+      "townName": "Freistaat Sachsen",
+      "country": "DE",
+      "postCode": "09052"
+    },
+    "privateIdentifier": {
+      "otherIdentification": "568237456"
+    }
+  },
+  "creditorAgent": {
+    "bic": "CITIDEFFXXX"
+  },
+  "purpose": "SALA",
+  "categoryPurpose": "SALA",
+  "remittanceInformation": {
+    "creditorReferenceInformation": "SALARY25112024"
+  }
+}
+```
+
+**Sending a payment to a business**
+```
+{
+  "instructionIdentification": "INST202509190002",
+  "endToEndIdentification": "202509190654321",
+  "instructedAmount": {
+    "amount": 2500.00,
+    "currency": "GBP"
+  },
+  "sourceAccount": {
+    "iban": "GB00FAKE00000000000001"
+  },
+  "debtorAccount": {
+    "iban": "GB00FAKE11111111111112"
+  },
+  "debtor": {
+    "name": "Jane Smith",
+    "postalAddress": {
+      "buildingNumber": "40",
+      "streetName": "Dennenlaan",
+      "townName": "Het Ambacht",
+      "country": "NL",
+      "postCode": "3901"
+    }
+  },
+  "creditorAccount": {
+    "iban": "DE89370470440532013000"
+  },
+  "creditor": {
+    "name": "Business Limited",
+    "postalAddress": {
+      "buildingNumber": "38",
+      "streetName": "Gotthardstrasse",
+      "townName": "Freistaat Sachsen",
+      "country": "DE",
+      "postCode": "09052"
+    },
+    "organisationIdentifier": {
+      "lei": "844517J3KKERBCP9QQ94",
+      "otherIdentification": "2132334343434"
+    }
+  },
+  "creditorAgent": {
+    "bic": "CITIDEFFXXX"
+  },
+  "purpose": "SALA",
+  "categoryPurpose": "SALA",
+  "remittanceInformation": {
+    "creditorReferenceInformation": "INVOICE20250919"
+  }
+}
+```
+
+**Sending a payment to a financial institution**
+```
+{
+  "instructionIdentification": "INST202509190003",
+  "endToEndIdentification": "202509190987654",
+  "instructedAmount": {
+    "amount": 50000.00,
+    "currency": "GBP"
+  },
+  "sourceAccount": {
+    "iban": "GB00FAKE00000000000002"
+  },
+  "debtorAccount": {
+    "iban": "GB00FAKE11111111111113"
+  },
+  "debtor": {
+    "name": "Jane Smith",
+    "postalAddress": {
+      "buildingNumber": "40",
+      "streetName": "Dennenlaan",
+      "townName": "Het Ambacht",
+      "country": "NL",
+      "postCode": "3901"
+    }
+  },
+  "creditorAccount": {
+    "iban": "DE89370470440532013000"
+  },
+  "creditor": {
+    "name": "Bank PLC",
+    "postalAddress": {
+      "buildingNumber": "38",
+      "streetName": "Gotthardstrasse",
+      "townName": "Freistaat Sachsen",
+      "country": "DE",
+      "postCode": "09052"
+    },
+    "organisationIdentifier": {
+      "bic": "CITIDEFFXXX",
+      "lei": "844517J3KKERBCP9QQ94",
+      "otherIdentification": "2132334343434"
+    }
+  },
+  "creditorAgent": {
+    "bic": "CITIDEFFXXX"
+  },
+  "purpose": "TREA",
+  "categoryPurpose": "TREA",
+  "remittanceInformation": {
+    "creditorReferenceInformation": "TREASURY20250919"
+  }
+}
+```
 
 <WebhookPlaceholder render='transaction-settled-webhook-v6' />
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
