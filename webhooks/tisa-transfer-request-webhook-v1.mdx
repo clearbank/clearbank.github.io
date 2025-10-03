@@ -1,0 +1,103 @@
+---
+title: "Tisa Transfer Request webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies that a cash ISA transfer request has been sent to the ceding party for a transfer in, or has been received from the acquiring party for a transfer out.
+
+
+
+#### Request body
+
+```json
+{
+    "Type":"TisaTransferRequest",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+
+#### Payload
+| Element                   | Description  |
+|---------------------------|--------------|
+| `MessageId`               | **Required**<br /> The unique message reference from the XML. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[A-Z0-9\\-]{35}$` |
+| `TimestampCreation`               | **Required**<br />Timestamp created. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `TransferDateRequested`               | **Required**<br />The date the transfer request was received by the acquirer. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `EffectiveDateOfTransfer`               | **Required**<br />The effective date of the transfer. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `Surname`               | **Required**<br />Surname of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `GivenName`               | **Required**<br />Given name (first name) of customer. <br /> Type: `string` <br /> Min length: `1` |
+| `BirthDate`               | **Required**<br />Birth date of the customer. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `NINumber`               | **Required**<br />National Insurance number of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `AddressLines`               | **Required**<br />Address of the customer. <br /> Type: `array` <br /> Min length: `1` |
+| `PostCode`               | **Required**<br />Post code of the customer. <br /> Type: `string` <br /> Min length: `1` |
+| `Country`               | **Required**<br />Country of the customer. Must be a Valid ISO Country Code, for example, GB for the United Kingdom. Use ISO 3166-1 alpha-2 codes. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[A-Z]{2}$` |
+| `CedingPartyClientAccountIdentification`               | **Required**<br />Sort Code, Account number of the investor in the ceding party's system, or alternative account identifier (Roll Number). <br /> Type: `string` <br /> Min length: `1` |
+| `AcquiringPartyClientAccountIdentification`               | **Required**<br />Sort Code, Account number of the investor in the acquiring party's system, or alternative account identifier (Roll Number)". <br /> Type: `string` <br /> Min length: `1` |
+| `CedingPartySun`               | **Required**<br />Ceding party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[0-9]{6}$` |
+| `AcquiringPartyCollectionAccount`               | **Required**<br />Sort code and account number of the account the ceding party is to send the transfer funds to. <br /> Type: `string` <br /> Min length: `1` |
+| `AcquiringPartySun`               | **Required**<br />Acquiring party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. <br /> Type: `string` <br /> Min length: `1` <br /> Pattern: `^[0-9]{6}$` |
+| `Urn`               | **Required**<br />Unique reference number. <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `18` <br /> Pattern: `^[A-Z0-9]{18}$` | 
+| `ResidualCashIndicator`               | **Optional**<br />Indicates whether the ISA contains a residual cash asset for transfer. This is an optional field as it is only relevant for stocks and shares ISA transfers. <br /> Type: `boolean` |
+| `CashComponentIndicator`               | **Optional**<br />Indicates whether the ISA contains a residual cash asset for transfer. This is an optional field as it is only relevant for stocks and shares ISA transfers. <br /> Type: `boolean` |
+| `ExtendedCurrentYearType`               | **Required**<br />Include or exclude the current year subscriptions from the transfer. Valid options include: `DEFAULT`, `INCLUDECURRENT`, `EXCLUDECURRENT` <br /> Type: `string` <br /> Min length: `1` | 
+| `IncludeAllPreviousYears`               | **Optional**<br />Indicates whether investor wants to transfer all previous years. <br /> Type: `boolean` |
+| `AmountFromPreviousYearsSubscription`               | **Optional**<br />Partial amount that can be made up of previous years subscriptions only or a combination of the current and previous years subscriptions. <br /> Type: `number` <br /> Format: `decimal` |
+| `EarlyClosureWaiver`               | **Optional**<br />Idicates whether the customer has acknowledged and agreed to pay a fee to exit a fixed-term product early. <br /> Type: `boolean` |
+| `DateOfFirstSubscription`               | **Required**<br />The date of the first subscription made by the customer in the current tax year. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `LatestPaymentDate`               | **Optional**<br />The date by which payment must be made. <br /> Type: `string` <br /> Format: `date-time` |
+| `AcquiringPartyProductType`               | **Optional**<br />Used to indicate the class of assets permitted by the acquiring party's product. Valid options include: `CASH`, `STCK` <br /> Type: `string` |
+| `TotalAmountYearToDate`               | **Required**<br />Maximum amount (excluding interest and withdrawals) that could be transferred by ceding party under current year subscription. <br /> Type: `number` <br /> Format: `decimal` |
+
+
+#### Example Tisa Transfer Request webhook request body
+
+```json
+{
+    "Type":"TisaTransferRequest",
+    "Version":1,
+    "Payload":{
+        "MessageId":"CC539800B25E0128-260406A25248TA0001",
+        "TimestampCreation":"2025-09-05T17:19:01.3292634Z",
+        "TransferDateRequested":"2025-09-05T17:19:01.3292634Z",
+        "EffectiveDateOfTransfer":"2025-09-05T17:18:56.931104Z",
+        "Surname":"Green",
+        "GivenName":"Mary",
+        "BirthDate":"1977-08-22",
+        "NINumber":"QQ123456C",
+        "AddressLines": [
+            "84 Fairview Close",
+            "London"
+        ],
+        "PostCode":"SW1A 1AA",
+        "Country":"GB",
+        "CedingPartyClientAccountIdentification":"04044485574996",
+        "AcquiringPartyClientAccountIdentification":"04772265339175",
+        "CedingPartySun":"118647",
+        "AcquiringPartyCollectionAccount":"45512287",
+        "AcquiringPartySun":"163599",
+        "Urn":"54dazwsgv4moi3qbvf",
+        "ResidualCashIndicator":"true",
+        "CashComponentIndicator":"false",
+        "ExtendedCurrentYearType":"DEFAULT",
+        "IncludeAllPreviousYears":"true",
+        "AmountFromPreviousYearsSubscription":"4550.00",
+        "EarlyClosureWaiver":"true",
+        "DateOfFirstSubscription":"2024-01-01",
+        "LatestPaymentDate":"2025-10-01",
+        "AcquiringPartyProductType":"CASH",
+        "TotalAmountYearToDate":"14550.00",
+    },
+    "Nonce": 178642722
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 178642722
+}
+```

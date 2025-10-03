@@ -1,0 +1,61 @@
+---
+title: "Tisa Transfer Status Update webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies you that the status of an automated cash ISA transfer has been updated.
+
+
+
+#### Request body
+
+```json
+{
+    "Type":"TisaTransferStatusUpdate",
+    "Version":1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+
+#### Payload
+| Element                   | Description  |
+|---------------------------|--------------|
+| `MessageId`               | **Required**<br /> The unique message reference from the Swift message. <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `35` <br /> Pattern: `^[A-Z0-9\\-]{35}$` |
+| `TimestampCreated`               | **Required**<br />Timestamp created. <br /> Type: `string` <br /> Min length: `1` <br /> Format: `date-time` |
+| `ReceiverSun`               | **Required**<br />The SUN (Service User Number) of the party receiving the status. <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `6` <br /> Pattern: `^[0-9]{6}$` |
+| `InitiatorSun`               | **Required**<br />The SUN (Service User Number) of the party issuing the status. <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `6` <br /> Pattern: `^[0-9]{6}$` |
+| `Reference`               | **Required**<br />This will normally be set to NA. If TECHREJECT, the ID of the rejected message will be inserted into this field. <br /> Type: `string` <br /> Min length: `1` |
+| `Urn`               | **Required**<br />Unique Reference Number(URN). <br /> Type: `string` <br /> Min length: `1` <br /> Max length: `18` <br /> Pattern: `^[A-Z0-9]{18}$` |
+| `State`               | **Required**<br />The updated state of the transfer. Valid options include: `Default`, `Completed`, `Abandoned`, `Pending`, `Referred`, `Rejected`, `ReadyForPayment`, `Failure`, `TechnicalRejection`, `PaymentReceived`, `InvalidPaymentReceived` <br /> Type: `string` |
+| `Reason`               | **Optional**<br />The reason for the updated state of the transfer. Valid options include: `None`, `AbandonCustomerChangedMind`, `AbandonNoResponse`, `AbandonPendTooLong`, `AbandonTermsOfIsaBreached`, `FailAccountClosedOrBlocked`, `FailLatePayment`, `FailPaymentAmountIncorrect`, `RejectedAccountBalanceChanged`, `RejectedAccountClosed`, `RejectedAccountHolderDeceased`, `RejectedAccountNotFound`, `RejectedAccountStatusTransferError`, `RejectedCannotMakePaymentForDate`, `RejectedCustomerDeniedRequest`, `RejectedCurrentYearTransferLimit`, `RejectedFixedTermAccountTooLong`, `RejectedInsufficientFunds`, `RejectedMismatchInformation`, `RejectedNotCisaAccount`, `RejectedPaymentDateTooLate`, `AcquiringPartyAccountSortCodeAndAccountNumberModulusCheckFailed`, `AcquiringPartyAccountMismatchTransferRequest`, `MandatoryIfRollNumberExists`, `AcquiringPartyInvalidAccountSortCode`, `AcquiringPartyCustomerAccountSortCodeAndAccountNumberModulusCheckFailed`, `AcquiringPartyCustomerAccountMismatchTransferRequest`, `AcquiringPartyInvalidCustomerAccountSortCode`, `AcquiringPartyServiceUserNumberMismatchTransferRequest`, `SubmitterNotAuthorized`, `ServiceUserNumberNotAuthorized`, `NotAuthorizedForAccountType`, `JisaRules`, `AmountFromPreviousYearsSubscriptionNotAllowed`, `BirthDateInFuture`, `BirthDateTooOld`, `BirthDateTooOldForProductType`, `BirthDateTooYoungForProductType`, `CedingPartyAccountSortCodeAndAccountNumberModulusCheckFailed`, `CedingPartyInvalidCustomerAccountSortCode`, `CedingPartyServiceUserNumberMismatchTransferRequest`, `CedingPartyServiceUserNumberIsAssociatedWithStocksAndSharesOnly`, `CedingPartySubmitterNotAuthorized`, `CedingPartyServiceUserNumberNotAuthorized`, `CreationDateTimeInFuture`, `MismatchLastPaymentDate`, `CreationDateTimeTooOld`, `InvalidCountryCode`, `DateOfFirstSubscriptionInFuture`, `DateOfFirstSubscriptionInvalidForCurrentTaxYear`, `DateTransferRequestReceivedInFuture`, `DateTransferRequestReceivedTooOld`, `EffectiveDateInFuture`, `EffectiveDateTooOld`, `GroupHeaderCreationDateTimeInvalid`, `GroupHeaderMessageIdDayOfYearMismatch`, `GroupHeaderIdNotUnique`, `GroupHeaderIdSunMismatch`, `GroupHeaderIdYearMismatch`, `GroupHeaderSubmitterSunMismatch`, `GroupHeaderNumberOfTransactionsMismatch`, `LastPaymentDateInPast`, `LastPaymentDateTooFarInFuture`, `LegalGuardianSurnameIsMandatory`, `LegalGuardianGivenNameIsMandatory`, `LegalGuardianAddressLineIsMandatory`, `LegalGuardianPostCodeIsMandatory`, `LegalGuardianCountryCodeIsMandatory`, `LegalGuardianBirthDate`, `LegalGuardianSocialSecurityNumberMustNotBePresent`, `LegalGuardianNameAndAddressAreProhibited`, `LegalGuardianPostCodeMissingForGbCountry`, `LegalGuardianPostCodeProhibited`, `MessageIdentifierInvalidSystemType`, `MessageIdentifierInvalidProductClassificationCode`, `MessageIdentifierCedingPartySunMismatch`, `MessageIdentifierDayNumberMismatchWithCreationDateTime`, `MessageIdentifierYearMismatchWithCreationDateTime`, `MessageIdentifierOriginatorInvalid`, `MessageIdentifierMessageTypeInvalid`, `MessageIdentifierNotUnique`, `MessageIdentifierProductTypeInvalid`, `OriginatingPartyServiceUserNumberMismatchAcquiringPartyServiceUserNumber`, `OriginatingPartyServiceUserNumberMismatchCedingPartyServiceUserNumber`, `OriginatingPartyServiceUserNumberSubmitterNotAuthorized`, `PostCodeMandatoryForGbCountry`, `PostCodeMustNotBePresentForNonGbCountries`, `ReceivingPartyServiceUserNumberMismatchAcquiringPartyServiceUserNumber`, `ReceivingPartyServiceUserNumberMismatchCedingPartyServiceUserNumber`, `ReasonContainsInvalidDate`, `ReasonIsMandatoryForCertainStates`, `ReasonDateIsNotInFuture`, `TotalAmountYearToDateIsMandatory`, `TotalAmountYearToDateProhibited`, `TotalAmountYearToDateExceedTransferLimit`, `UrnServiceUserNumberMismatchAcquiringPartySun`, `UrnServiceUserNumberMismatchMessageId`, `UrnMismatchOriginatingSun`, `UrnMismatchTransferRequestUrn`, `UrnNotUnique`, `UrnContainsInvalidProductType`, `UrnMessageNotInCorrectStateForStatusChange`, `UrnMessageNotInCorrectStateForAcceptTransfer`, `InvalidExtendedCurrentYearTypeForJisa` <br /> Type: `string` |
+
+#### Example Tisa Transfer Status Update webhook request body
+
+```json
+{
+    "Type":"TisaTransferStatusUpdate",
+    "Version":1,
+    "Payload":{
+        "MessageId":"CC539800B25E0128-260406A25251SA0004",
+        "TimestampCreated":"2025-10-20T09:54:44.000209Z",
+        "ReceiverSun":"118647",
+        "InitiatorSun":"163599",
+        "Reference":"NA",
+        "Urn":"CISA539800B25E0128",
+        "State":"Abandoned",
+        "Reason":"AbandonCustomerChangedMind",
+    },
+    "Nonce": 108246778
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 1082946778
+}
+```
