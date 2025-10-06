@@ -12,7 +12,7 @@ import Callout from "src/components/callout";
 
 ## SEPA Instant Credit Transfer
 
-SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables customers to make and receive payments quickly. It allows payments up to a maximum value of €100,000, which can settle in as little as 10 seconds - and no more than 25 seconds. Payments can be sent at any time, including bank holidays and weekends.
+SEPA Instant Credit Transfer (SCT Inst) is a pan-European payment scheme that enables real-time euro transfers, delivering funds to the recipient within 10 seconds, 24 hours a day, 365 days a year.
 
 You can:
 - [Send an SCT Inst payment](#send-an-sct-inst-payment)
@@ -29,6 +29,10 @@ It is essential to integrate with the <a href="#customer-accounts-transaction-co
 ## Sending an SCT Inst payment
 
 To send an SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-an-sct-inst-payment) endpoint.
+
+The SCT Inst scheme does not have a limit for maximum payment amounts, and ClearBank does not impose one. Instead, our clients are responsible for provisioning and managing transaction limits for their underlying customers in accordance with their own operational and risk requirements.
+
+Transactions must be settled within a normal maximum of **5 seconds**, with an upper limit of **10 seconds** permitted only in exceptional circumstances, as mandated by SCT Inst 2025 rulebook.
 
 You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). If 10 seconds pass without settlement, you'll receive the [SEPA Instant Outbound Payment Delayed webhook](#sepa-instant-outbound-payment-delayed-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
