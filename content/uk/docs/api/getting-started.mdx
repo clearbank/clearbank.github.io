@@ -199,7 +199,7 @@ When you send a request, the response will include a HTTP status code to indicat
 | `423`       | **Locked** - The resource that is being accessed is locked.  |
 | `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting))  |
 | `500`       | **Internal server error** |
-| `503`       | **Server error** - Service unavailable. |
+| `503`       | **Server error** - Service unavailable (see [5XX status codes](#5-xx-status-codes)). |
 
 #### 2XX status codes
 Responses with a `2XX` status code indicate the request was successfully received and verified. The status code will indicate if the request has been completed or is due to be completed shortly (asynchronously).
@@ -238,8 +238,14 @@ See the below examples of some common 4XX responses and their meaning which may 
 "status": 400
 ```
 
-#### 5xx status codes
-Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same X-Request-Id header and payload to prevent duplication. In exceptional circumstances where the initial request was effectively processesed, the second request would make that clear either in the response or via an appropriate webhook. In the event this response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
+#### 5XX status codes
+Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same **X-Request-Id** header and payload to prevent duplication.
+
+In exceptional circumstances where the initial request was effectively processed despite returning a `5XX` status, your second request would make that clear either in the response or via an appropriate webhook. 
+
+In the event a `5XX` response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
+
+You may receive a `503 - Service unavailable` response containing a **Retry-After** header. The value of this header denotes a duration in seconds expressed as an integer. If you receive a `503` with this header, you should reattempt the request after the specified number of seconds pass.
 
 #### Example of a response containing detailed errors
 
@@ -270,7 +276,7 @@ We use rate limiting to protect our systems from excessive load and to ensure a 
 Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to be able to handle rate limits and react accordingly. 
 </Callout>
 
-Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try and again later. All requests are safe to retry after a short period of time. To aid with the testing of this our rate limits are significantly lower in our simulation environment. This should make it easier to hit the limit and validate that your systems behave accordingly.
+Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try and again later. All requests are safe to retry after a short period of time. To aid with the testing of this, our rate limits are significantly lower in our simulation environment. This should make it easier to hit the limit and validate that your systems behave accordingly.
 
 ### HAL Links
 

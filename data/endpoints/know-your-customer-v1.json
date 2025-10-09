@@ -1,0 +1,358 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Customer Due Diligence API",
+    "version": "1.0know-your-customer"
+  },
+  "paths": {
+    "/v1/customercheck/retail": {
+      "post": {
+        "description": "Use this endpoint to conduct KYC checks for a new customer. If the checks pass, the provided details are then used to create a new retail customer.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetailCustomerCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetailCustomerCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {              
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "required": [
+          "buildingNameNumber",
+          "countryCode",
+          "postalCode",
+          "streetName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNameNumber": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "22(A)",
+            "description": "The name or number of the customer's home at their address."
+          },
+          "streetName": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "Long Road",
+            "description": "The street of the customer's address."
+          },
+          "city": {
+            "maxLength": 40,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "York",
+            "description": "The postal city of the customer's address."
+          },
+          "county": {
+            "maxLength": 40,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Yorkshire",
+            "description": "The county of the customer's address."
+          },
+          "postalCode": {
+            "maxLength": 10,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9 ]+$",
+            "type": "string",
+            "example": "YO31 7UH",
+            "description": "The postal code of the customer's address."
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country of the customer's address, represented as an ISO 3166 Alpha-3 country-code."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryCode": {
+        "format": "ISO 3166 Alpha-3 country-code",
+        "type": "string",
+        "example": "GBR"
+      },
+      "CustomerData": {
+        "required": [
+          "currentAddress",
+          "dateOfBirth",
+          "email",
+          "name",
+          "nationalInsuranceNumber",
+          "nationality",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/PersonName",
+            "description": "The customer's full name. Their first name and surname are required."
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1976-01-26",
+            "maxLength": 10,
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd."
+          },
+          "nationality": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the customer's nationalities as ISO 3166 Alpha-3 country-codes. You can provide multiple values for customers with more than one nationality. Does not accept US nationals.",
+            "example": ["GBR", "IRL"]
+          },
+          "taxResidency": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the country the customer resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
+            "example": ["GBR"]
+          },
+          "nationalInsuranceNumber": {
+            "minLength": 9,
+            "maxLength": 9,
+            "pattern": "^[a-zA-Z]{2}\\d{6}[a-zA-Z]$",
+            "example": "AB112233C",
+            "type": "string",
+            "description": "The UK National Insurance (NI) number of the customer. Should not include whitespace."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "example@emailprovider.co.uk",
+            "description": "The customer's email address."
+          },
+          "mobile": {
+            "pattern": "^(?:[+][1-9])?\\d{11,14}$",
+            "type": "string",
+            "nullable": true,
+            "description": "The customer's international mobile number, including its country-code prefix. For example '+44' for UK numbers. The use of '+' is optional.",
+            "example": "+447725666777"
+          },
+          "currentAddress": {
+            "$ref": "#/components/schemas/Address",
+            "description": "The customer's current residential address."
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonName": {
+        "required": [
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Adrien"
+          },
+          "middleName": {
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Edin"
+          },
+          "surname": {
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Reed-Myers"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced,  it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available."
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RetailCustomerCheckRequest": {
+        "required": [
+          "customerData"
+        ],
+        "type": "object",
+        "properties": {
+          "customerData": {
+            "$ref": "#/components/schemas/CustomerData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RetailCustomerCheckResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "aac7c700-1ea6-5664-8804-ceeb066d3cf5",
+            "description": "A unique ID for each submitted application. Use this to identify which application a corresponding webhook pertains to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    }
+  }
+}

@@ -13,18 +13,21 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Savings accounts
 
-ClearBank supports savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
+ClearBank supports singular and joint savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
 
 You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configuration](./interest-configuration).
 
+<Callout colour="blue">
+Both single and joint savings accounts can be created using the v2 endpoint.  For joint accounts, include multiple customer IDs in the <b>Customers</b> array.</Callout>
+
 **To create a savings account:**
 1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Use the [POST /v1/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
+2. Use the [POST /v2/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
 > The `interestConfigurationId` field is used to provide the initial interest configuration ID when creating the savings account (refer to [Interest configuration](./interest-configuration)).
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 > **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
 
-![Submit the POST /v1/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
+![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
 <Callout colour="blue">
 Always note down the X-Request-Id when creating an account. If you receive a 500 response, resubmitting the request with the same X-Request-Id will avoid creating a duplicate account.
@@ -87,6 +90,13 @@ If account closure fails and hasn't been resolved by the end of the month, then 
   type="post"
   title="Create a savings account"
   endpoints={[
+        {
+      path: "/v2/savings",
+      version: "2.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    },
     {
       path: "/v1/savings",
       version: "1.0.Sterling",
@@ -96,6 +106,46 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     }
   ]}
 />
+
+#### Example request bodies for creating a savings account with multiple customers
+
+##### Example joint account with two customers
+
+```json
+{
+  "ownerName": "John and Jane Smith",
+  "sortCode": "010203",
+  "productId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+  "customers": [
+    {
+      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f",
+      "customerId": "abcdef12-3456-7890-1234-56789abcdef0"
+    }
+  ],
+  "interestConfigurationId": "1234abcd-5678-9ef0-1234-56789abcdef0"
+}
+```
+While joint accounts will typically have two customers, we can support any amount with a valid use case.
+
+##### Example joint account with four customers
+
+```json
+{
+  "ownerName": "John Smith, Jane Smith, Steve Doe, and Emily Doe",
+  "sortCode": "010203",
+  "productId": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+  "customers": [
+    {
+      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f",
+      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6",
+      "customerId": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
+    }
+  ],
+  "interestConfigurationId": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a"
+}
+```
+
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
