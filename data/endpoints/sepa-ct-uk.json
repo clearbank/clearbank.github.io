@@ -206,7 +206,16 @@
             "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
           },
           "creditor": {
-            "$ref": "#/components/schemas/PartyIdentification"
+            "type": "object",
+            "description": "The creditor's organisation or private details",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/organisationPartyIdentification"
+              },
+              {
+                "$ref": "#/components/schemas/privatePartyIdentification"
+              }
+            ]
           },
           "creditorAccount": {
             "$ref": "#/components/schemas/CashAccount"
@@ -230,10 +239,30 @@
             "example": "AB12GB1A123"
           }
         },
-        "additionalProperties": false,
-        "description": "Either AnyBIC or LEI must be provided, but not both."
+        "additionalProperties": false
       },
-      "PartyIdentification": {
+      "organisationPartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "example": "Pinto Corporation"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "privatePartyIdentification": {
         "required": [
           "name"
         ],
@@ -247,9 +276,6 @@
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
-          },
-          "organisationIdentification": {
-            "$ref": "#/components/schemas/OrganisationIdentification"
           },
           "privateIdentification": {
             "$ref": "#/components/schemas/PersonIdentification"
@@ -311,7 +337,16 @@
             "example": "2025-11-13"
           },
           "debtor": {
-            "$ref": "#/components/schemas/PartyIdentification"
+            "type": "object",
+            "description": "The debtor's organisation or private details.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/organisationPartyIdentification"
+              },
+              {
+                "$ref": "#/components/schemas/privatePartyIdentification"
+              }
+            ]
           },
           "debtorAccount": {
             "$ref": "#/components/schemas/CashAccount"
