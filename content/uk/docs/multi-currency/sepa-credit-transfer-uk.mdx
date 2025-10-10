@@ -16,17 +16,23 @@ import Callout from "src/components/callout";
   <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Our new SCT UK service lets you send and receive euro payments via SEPA Credit Transfer (SCT), enabling seamless euro transactions with any country in the SEPA network.
+Our SCT UK service lets you send and receive euro payments via SEPA Credit Transfer (SCT), enabling seamless euro transactions with any country in the SEPA network.
 
 If you're interested in using this new service, please contact your Client Director.
 
 ### Availability and hours
 
-SCT UK is only available on business days in the Netherlands. Payments submitted during Netherlands bank holidays or weekends will be rejected.
+SCT UK is only available on business days in the Netherlands. Payments submitted during Netherlands bank holidays or weekends will be rejected. Details of public holidays in the Netherlands are available from [the Dutch government's website](https://www.government.nl/topics/working-hours/question-and-answer/public-holidays-in-the-netherlands).
 
 Inbound payments can be received between 02:30 and 16:30 CET, while outbound payments can be requested between 07:00 and 16:00 CET. Payments requested outside of these hours will be rejected.
 
-If a valid payments is requested before the cutoff time but cannot be submitted to scheme, it will be queued until outbound payments reopen.
+If a valid payment is requested before the cutoff time but cannot be submitted to scheme, it will be queued until scheme becomes available again.
+
+### Bulk payments
+
+SCT UK supports bulk payments, which can be useful for making many simultaneous payments - for example, payroll. Each payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
+
+Each payment request contains a nested structure of debtor accounts and their associated payments. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists individual payments to creditor accounts.
 
 <EndpointBlock
   type="post"
@@ -34,7 +40,7 @@ If a valid payments is requested before the cutoff time but cannot be submitted 
   endpoints={[
     {
       path: "/api/v2/payments",
-      version: "1.0-SEPA-CT-UK",
+      version: "2.0-SCT-UK",
       webhooks: [
         'sctuk-outbound-payment-completed-webhook-v1',
         'sctuk-outbound-payment-failed-webhook-v1'
