@@ -102,13 +102,16 @@
           "accountNumber": {
             "type": "string",
             "description": "Beneficiary's account number.",
-            "pattern": "^\\d{8}&"          },
+            "pattern": "^\\d{8}&",
+            "example": "83746592"
+          },
           "sortCode": {
             "type": "string",
             "maxLength": 6,
             "minLength": 6,
             "description": "Beneficiary's sort code.",
-            "pattern": "^\\d{6}&"
+            "pattern": "^\\d{6}&",
+            "example": "109238"
           },
           "names": {
             "type": "array",
@@ -118,9 +121,13 @@
               "type": "string",
               "maxLength": 140,
               "minLength": 1,
-              "pattern" : "^.{1,140}$"
+              "pattern": "^.{1,140}$"
             },
-            "description": "Names of the beneficiaries that are on the cheque."
+            "description": "Names of the account holder(s) the cheque is to be paid into.  Up to two names can be provided.",
+            "example": [
+              "Emily Taylor",
+              "Daniel Taylor"
+            ]
           }
         },
         "description": "Information about the cheque's beneficiary."
@@ -135,11 +142,13 @@
         "properties": {
           "frontImage": {
             "type": "string",
-            "description": "Base64 representation of the front image of the cheque."
+            "description": "Base64 representation of the front image of the cheque.",
+            "example": "iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAASUVORK5CYII="
           },
           "backImage": {
             "type": "string",
-            "description": "Base64 representation of the back image of the cheque."
+            "description": "Base64 representation of the back image of the cheque.",
+            "example": "dGVzdGJhY2tpbWFnZUJhc2U2NAo="
           },
           "imageType": {
             "type": "string",
@@ -169,14 +178,16 @@
             "description": "Cheque amount in pounds sterling, up to two decimal places.",
             "format": "decimal",
             "default": 0,
-            "pattern": "^\\d+(\\.\\d{1,2})?$"
+            "pattern": "^\\d+(\\.\\d{1,2})?$",
+            "example": 250.75
           },
           "currency": {
             "type": "string",
             "maxLength": 3,
             "minLength": 3,
             "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
-            "pattern" : "^GBP$"
+            "pattern" : "^GBP$",
+            "example": "GBP"
           },
           "chequeImages": {
             "$ref": "#/components/schemas/chequeImages"
@@ -206,7 +217,8 @@
             "maxLength": 35,
             "minLength": 1,
             "description": "The unique identifier for the message.",
-            "pattern": "^\\S{1,35}$"
+            "pattern": "^\\S{1,35}$",
+            "example": "MSG20251015ABC123456789XYZ"
           }
         },
         "description": "Submit cheque deposit request."
