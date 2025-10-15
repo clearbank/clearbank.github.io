@@ -59,40 +59,41 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 <WebhookPlaceholder render='sepa-instant-outbound-payment-created-v1' />
 <WebhookPlaceholder render='sepa-instant-outbound-payment-settled-v1'/>
 <WebhookPlaceholder render='sepa-instant-outbound-payment-cancelled-v1' />
-<WebhookPlaceholder render='sepa-instant-outbound-payment-delayed-v1' />
-<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
-### Cancellation reason codes
+#### Cancellation reason codes
 
-Cancelled outbound payments can return a reason code which will be reflected in the `CancellationCode` field of the [SEPA Instant Outbound Payment Cancelled webhook](#sepa-instant-outbound-payment-cancelled-webhook). The cancellation codes include, but are not limited to:
+Outbound payments may be cancelled due to **internal validation failure** (the payment did not pass our internal validation rules) or **external validation failure** (the payment did not pass SEPA scheme or beneficiary bank validation rules). Cancelled payments return a reason code which is reflected in the `CancellationCode` field of the [SEPA Instant Outbound Payment Cancelled webhook](#sepa-instant-outbound-payment-cancelled-webhook). The cancellation codes include, but are not limited to:
 
-| Reason Code | Description |
-| ----------- | ----------- |
-| AB05 | Timeout Creditor Agent |
-| AB08 | Offline Creditor Agent |
-| AB09 | Error Creditor Agent |
-| AB10 | Error Instructed Agent |
-| AC01 | Account identifier invalid or incorrect. |
-| AC04 | Closed Account Number |
-| AC06 | Blocked account |
-| AG01 | Transaction Forbidden |
-| AG10 | Agent Suspended |
-| AG11 | Creditor Agent Suspended |
-| AM02 | Amount not allowed. |
-| AM04 | Insufficient funds on the account. |
-| AM05 | Duplication |
-| BE04 | Missing Creditor Address |
-| CB01 | Unknown error. |
-| CB05 | Payment delayed. |
-| CNOR | Creditor bank is not registered. |
-| DNOR | Debtor Bank Is Not Registered |
-| MD07 | End Customer Deceased |
-| MS02 | Not Specified Reason Customer Generated |
-| MS03 | Payment failed screening, re-send via SCT. |
-| RC01 | Bank Identifier Incorrect |
-| RR03 | Missing Creditor’s Name Or Address |
-| RR04 | Regulatory Reason |
-| TM01 | Invalid Cut Off Time |
+| Reason code | Description                                                     | Internal validation failure | External validation failure |
+|-------------|-----------------------------------------------------------------|-----------------------------|-----------------------------|
+| AB05        | Timeout Creditor Agent                                          |                             | X                           |
+| AB08        | Offline Creditor Agent                                          |                             | X                           |
+| AB09        | Error Creditor Agent                                            |                             | X                           |
+| AB10        | Error Instructed Agent                                          |                             | X                           |
+| AB15        | Account Is Held Suspense Account / Account Is Repair Suspense Account | X                     |                             |
+| AC01        | Account identifier invalid or incorrect                         | X                           | X                           |
+| AC04        | Account Not Active / Closed                                     | X                           | X                           |
+| AC06        | Blocked Account                                                 | X                           | X                           |
+| AG01        | Transaction Forbidden                                           |                             | X                           |
+| AG10        | Agent Suspended                                                 |                             | X                           |
+| AG11        | Creditor Agent Suspended                                        |                             | X                           |
+| AM03        | EUR Currency Not Enabled                                        | X                           |                             |
+| AM04        | Insufficient Funds                                              | X                           | X                           |
+| AM05        | Duplication                                                     |                             | X                           |
+| BE01        | Account Does Not Belong To Institution                          | X                           |                             |
+| BE04        | Missing Creditor Address                                        |                             | X                           |
+| CB01        | Unknown Error                                                   | X                           | X                           |
+| CB05        | Payment delayed                                                 |                             | X                           |
+| CNOR        | Creditor Bank Is Not Registered                                 | X                           | X                           |
+| DNOR        | Debtor Bank Is Not Registered                                   |                             | X                           |
+| MD07        | End Customer Deceased                                           |                             | X                           |
+| MS02        | Not Specified Reason Customer Generated                         |                             | X                           |
+| MS03        | Payment failed screening, re-send via SCT                       |                             | X                           |
+| RC01        | Bank Identifier Incorrect                                       |                             | X                           |
+| RC05        | Invalid BIC Identifier                                          | X                           |                             |
+| RR03        | Missing Creditor’s Name Or Address                              |                             | X                           |
+| RR04        | Regulatory Reason                                               |                             | X                           |
+| TM01        | Invalid Cut Off Time                                            |                             | X                           |
 
 <br />
 
@@ -100,6 +101,8 @@ Cancelled outbound payments can return a reason code which will be reflected in 
   If you receive cancellation reason code <strong>MS03</strong>, you should attempt to resend the affected payment via SEPA Credit Transfer instead of SCT Inst. Reattempting the payment via SCT Inst will not succeed.
 </Callout>
 
+<WebhookPlaceholder render='sepa-instant-outbound-payment-delayed-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
 
 ## Receive an SCT Inst payment
