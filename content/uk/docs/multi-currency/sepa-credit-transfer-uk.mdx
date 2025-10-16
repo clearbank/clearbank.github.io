@@ -22,15 +22,22 @@ If you're interested in using this new service, please contact your Client Direc
 
 ### Availability and hours
 
-[SCT UK is only available on business days in the Netherlands]. Payments submitted during Netherlands bank holidays or weekends will be rejected. Details of public holidays in the Netherlands are available from [the Dutch government's website](https://www.government.nl/topics/working-hours/question-and-answer/public-holidays-in-the-netherlands).
+SCT UK is available to use Monday to Friday from 06:00 to 15:30 UK time. Outbound payment requests made outside of these hours, on weekends, or during TARGET2 scheme holidays will be automatically rejected with a 4XX error.
 
-Inbound payments can be received between [02:30 / 01:30] and [16:30 CET / 15:30 UK time], while outbound payments can be requested between [07:00/06:00] and [15:30 CET / 14:30 UK time]. Payments requested outside of these hours will be rejected.
+TARGET2 scheme holidays applicable to SCT UK are listed below:
 
-If a valid payment is requested before the cutoff time but cannot be submitted to scheme, it will be queued until scheme becomes available again.
+* New Year's Day
+* Good Friday
+* Easter Monday
+* Labour Day
+* Christmas Day
+* Boxing Day
+
+Exact dates can be found on [the ECB's website](https://www.ecb.europa.eu/ecb/contacts/working-hours/html/index.en.html).
 
 ### Bulk payments
 
-SCT UK supports bulk payments, which can be useful for making many simultaneous payments - for example, payroll. Each payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
+SCT UK supports bulk payments, which can be useful for making many simultaneous payments - for example, payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
 
 Each payment request contains a nested structure of debtor accounts and their associated payments. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
 
