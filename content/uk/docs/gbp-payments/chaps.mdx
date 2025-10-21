@@ -25,6 +25,37 @@ However, you can only send or return CHAPS payments between 08:00 – 17:00 Mond
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
+### Hybrid address
+
+From 24 November 2025, some inbound CHAPS payments may include a new address format called hybrid address. A hybrid address is an address format that includes both structured fields (such as town name and country) and unstructured address lines.
+
+The structured and unstructured address formats will also continue to be used alongside the hybrid address format. These formats appear in the `Iso20022XmlDocument` field in the [Transaction Settled webhook](#transaction-settled-webhook).
+
+Hybrid address is being introduced as part of the Bank of England’s CHAPS updates to harmonise payment standards across jurisdictions in line with the Cross Border Payment Reporting Plus (CBPR+) requirements.
+
+Each format has different requirements:
+- Hybrid address formats contain up to two `<AdrLine>` XML tags of up to 70 characters each, alongside mandatory `<TwnNm>` and `<Ctry>` address tags
+> Information received in the `<AdrLine>` XML tags should be distinct from what is received in the structured address elements. If a payment message contains duplicate information across structured and unstructured fields, we expect it will be rejected by the Bank of England.
+- Unstructured address formats contain up to three `<AdrLine>` XML tags of up to 35 characters each
+
+You can extract all address information from `<AdrLine>` XML tags, regardless of whether you receive a hybrid or unstructured address.
+
+<Callout colour="blue">
+In November 2026, the Bank of England will fully retire unstructured address formats.
+</Callout>
+
+Ensure your systems can process hybrid address formats for inbound payments. No changes are required for outbound payments as they already use structured address.
+
+Here is an example hybrid address:
+```
+<Nm>Jane Doe</Nm>
+<PstlAdr>
+  <TwnNm>Chicago</TwnNm>
+  <Ctry>US</Ctry>
+  <AdrLine>222 Merchandise Plaza 20th Floor Suite 2024, IL 60654</AdrLine>
+</PstlAdr>
+```
+
 ### Version 5 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
@@ -80,38 +111,7 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
-### Hybrid address
-
-From 24 November 2025, some inbound CHAPS payments may include a new address format called hybrid address. A hybrid address is an address format that includes both structured fields (such as town name and country) and unstructured address lines.
-
-The structured and unstructured address formats will also continue to be used alongside the hybrid address format. These formats appear in the `Iso20022XmlDocument` field in the [Transaction Settled webhook](#transaction-settled-webhook).
-
-Hybrid address is being introduced as part of the Bank of England’s CHAPS updates to harmonise payment standards across jurisdictions in line with the Cross Border Payment Reporting Plus (CBPR+) requirements.
-
-Each format has different requirements:
-- Hybrid address formats contain up to two `<AdrLine>` XML tags of up to 70 characters each, alongside mandatory `<TwnNm>` and `<Ctry>` address tags
-> Information received in the `<AdrLine>` XML tags should be distinct from what is received in the structured address elements. If a payment message contains duplicate information across structured and unstructured fields, we expect it will be rejected by the Bank of England.
-- Unstructured address formats contain up to three `<AdrLine>` XML tags of up to 35 characters each
-
-You can extract all address information from `<AdrLine>` XML tags, regardless of whether you receive a hybrid or unstructured address.
-
-<Callout colour="blue">
-In November 2026, the Bank of England will fully retire unstructured address formats.
-</Callout>
-
-Ensure your systems can process hybrid address formats for inbound payments. No changes are required for outbound payments as they already use structured address.
-
-Here is an example hybrid address:
-```
-<Nm>Jane Doe</Nm>
-<PstlAdr>
-  <TwnNm>Chicago</TwnNm>
-  <Ctry>US</Ctry>
-  <AdrLine>222 Merchandise Plaza 20th Floor Suite 2024, IL 60654</AdrLine>
-</PstlAdr>
-```
-
-### Populating the Creditor field in pacs.008 messages
+#### Populating the Creditor field in pacs.008 messages
 
 The Creditor field in CHAPS pacs.008 messages identifies the party receiving the funds. This party may be an **individual**, a **business**, or a **financial institution**. The correct population of this field is essential for accurate payment routing and compliance with ISO 20022 standards.
 
