@@ -16,15 +16,17 @@ import Callout from "src/components/callout";
   <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Our SCT UK service lets you send and receive euro payments via SEPA Credit Transfer (SCT), enabling seamless euro transactions with any country in the SEPA network.
+Our SEPA UK service lets you transact euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SEPA UK, you'll need a Euro denominated account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
+
+> You cannot send or receive euro outside of the SEPA zone with SEPA UK. To transact euro outside of SEPA UK, please refer to our [multi-currency payments service](./multi-currency-payments.mdx).
 
 If you're interested in using this new service, please contact your Client Director.
 
 ### Availability and hours
 
-SCT UK is available to use Monday to Friday from 06:00 to 15:30 UK time. Outbound payment requests made outside of these hours, on weekends, or during TARGET2 scheme holidays will be automatically rejected with a 4XX error.
+SCT UK is available to use Monday to Friday from 06:00 to 14:30 UK time. Outbound payment requests made outside of these hours, on weekends, or during TARGET2 scheme holidays will be automatically rejected with a 422 Unprocessable Request error.
 
-TARGET2 scheme holidays applicable to SCT UK are listed below:
+The TARGET2 scheme holidays applicable to SCT UK are listed below:
 
 * New Year's Day
 * Good Friday
@@ -39,7 +41,9 @@ Exact dates can be found on [the ECB's website](https://www.ecb.europa.eu/ecb/co
 
 SCT UK supports bulk payments, which can be useful for making many simultaneous payments - for example, payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
 
-Each payment request contains a nested structure of debtor accounts and their associated payments. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
+Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
+
+
 
 <EndpointBlock
   type="post"
