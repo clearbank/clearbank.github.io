@@ -1409,10 +1409,16 @@
           "creditorAgent": {
             "$ref": "#/components/schemas/CreditorAgent"
           },
+          "chargeBearer":{
+            "type": "string",
+            "description": "Optional field controlling how transaction fees are paid. By default, transaction fees are deducted from the payment principle. If you provide 'DEBT', your institution will pay for any transaction fees, thereby protecting the payment principle. You must also provide '/PPRO/' in the instructionForDebtorAgent field for this to work.",
+            "enum": ["DEBT"],
+            "example": "DEBT"
+          },
           "instructionForDebtorAgent": {
             "type": "string",
             "nullable": true,
-            "description": "Further information related to the processing of the payment instruction that may need to be acted upon by the debtor agent (depending on an agreement between the debtor and debtor agent). Financial institutions sending payments on behalf of their customers should populate their BIC in this field preceded by '/INST/' signifying that they are the instructing institution.",
+            "description": "Further information about processing the payment instruction for the debtor agent to act upon. If using the chargeBearer field, you should include '/PPRO/' in this field. To send payments on behalf of a customer, you should include their BIC in this field preceded by '/INST/' to signify that they are the instructing institution.",
             "minLength": 0,
             "maxLength": 140,
             "example": "Example further instruction text"
