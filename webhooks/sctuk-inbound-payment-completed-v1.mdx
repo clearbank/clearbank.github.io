@@ -1,0 +1,183 @@
+---
+title: "SEPA UK Inbound Payment Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms an inbound SEPA UK payment has completed.
+
+#### Request body
+
+```json
+{
+    "Type": "MccyInboundPaymentCompleted",
+    "Version": 2,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element         | Description                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId` | **Required**<br />A unique identifier assigned by ClearBank that uniquely identifies the payment instruction.<br/>Type: `string`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Format: `guid` |
+| `PaymentIdentification` | **Required**<br/>Set of elements used to reference the payment ProcessingInstruction.<br/>Type: `object`<br/><br/>`InstructionIdentification`<br/> Unique identification assigned by an instructing party for an instructed party to unambiguously identify the instruction. <br/> Type: `string` <br/> Min. Length: `1` <br/> Max. Length: `35` <br/><br/> `EndToEndIdentification` <br/>Unique identifier assigned by the original initiating party to trace the payment from origin to destination. <br/> Type: `string` <br/> Min. Length: `1` <br/> Max. Length: `35` <br/><br/> `TransactionIdentification` <br/> Unique identification assigned by the first instructing agent to unambiguously identify the transaction. <br/> Type: `string` <br/> Min. Length: `1` <br/> Max. Length: `35` <br/><br/> `UETR` <br/> A universally unique transaction reference (UETR) used to track the payment end-to-end across the payment chain. <br/>Type: `string` <br/>Format: `uuid` <br/>Min. Length: `1` <br/>Pattern: `[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}` <br/><br/> |
+| `InstructedAmount` | **Required**<br />Type: `object`<br/><br/> `Amount` <br/> Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party. <br/>Type: `number` <br/>Format: `decimal` <br/>Minimum: `0 <br/>Multiple of: `0.01 <br/><br/> `Currency` <br/> A code allocated to a currency by a Maintenance Agency under an international identification scheme. <br/>Type: `string` <br/>Min. Length: `3` <br/>Max. Length: `3` <br/>Pattern: `^[A-Z]{3}$` <br/><br/> |
+| `DebtorAccount` | *Optional*<br />Type: `object`<br/><br/> `Identification` <br/> International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. <br/>Type: `string` <br/>Pattern: `^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$`|
+| `CreditorAccount` | *Optional*<br />Type: `object`<br/><br/>`Identification` <br/> International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. <br/>Type: `string` <br/>Pattern: `^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$`|
+| `CreditorAgent` | *Optional*<br />Type: `object`<br/><br/>`FinancialInstitutionIdentification` <br/> Code allocated to a financial institution by the ISO 9362 Registration Authority. <br/>Type: `string` <br/>Min. Length: `8` <br/>Max. Length: `11` <br/>Pattern: `^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$`|
+| `DebtorAgent` | *Optional*<br />Type: `object`<br/><br/>`FinancialInstitutionIdentification` <br/> Code allocated to a financial institution by the ISO 9362 Registration Authority. <br/>Type: `string` <br/>Min. Length: `8` <br/>Max. Length: `11` <br/>Pattern: `^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$`|
+| `InstructingAgent` | *Optional*<br />Type: `object`<br/><br/>`FinancialInstitutionIdentification` <br/> Code allocated to a financial institution by the ISO 9362 Registration Authority. <br/>Type: `string` <br/>Min. Length: `8` <br/>Max. Length: `11` <br/>Pattern: `^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$`|
+| `UltimateDebtor`,<br />`Debtor`,<br />`Creditor`,<br />`UltimateCreditor` | *Optional*<br />Type: `object`<br/><br/> --name-- <br/><br/> `PostalAddress` <br/> Type: `object` <br/> `Department` <br/> Identification of a division of a large organisation or building. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `70` <br/><br/>`SubDepartment` <br/> Identification of a sub-division of a large organisation or building. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `70` <br/><br/>`StreetName` <br/> Name of a street or thoroughfare. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `70` <br/><br/>`BuildingNumber` <br/> Number that identifies the position of a building on a street. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `16` <br/><br/>`BuildingName` <br/> Name of the building or house. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `35` <br/><br/>`Floor` <br/> Floor or storey within a building. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `70` <br/><br/>`PostBox` <br/> Numbered box in a post office, assigned to a person or organisation, where letters are kept until called for. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `16` <br/><br/>`Room` <br/> Building room number. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `70` <br/><br/>`PostCode` <br/> Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `16` <br/><br/>`TownName` <br/> Name of a built-up area, with defined boundaries, and a local government. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `35` <br/><br/>`TownLocationName` <br/> Specific location name within the town. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `35` <br/><br/>`DistrictName` <br/> Identifies a subdivision within a country subdivision. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `35` <br/><br/>`CountrySubDivision` <br/> Identifies a subdivision of a country such as state, region, county. <br/>Type: `string` <br/>Min. Length: `1` <br/>Max. Length: `35` <br/><br/>`Country` <br/> Nation with its own government. <br/>Type: `string` <br/>Min. Length: `2` <br/>Max. Length: `2` <br/>Pattern: `^[A-Z]{2}$` <br/><br/>`AddressLine` <br/> A specific address presented in free format text. <br/>Type: `array`<br/> Min. Items: `0` <br/> Max. Items: `2` <br/> Item Type: `string` <br/> Item Min. Length: `1` <br/> Item Max. Length: `70` |
+
+TODO: RemittanceInformation
+
+#### Example SEPA UK Inbound Payment Completed webhook request body
+
+```json
+{
+    "Type": "MccyInboundPaymentCompleted",
+    "Version": 1,
+    "Payload": {
+        "TransactionId": "ad8021b5-0cd1-45bc-91e8-e47bea662f69",
+        "EndToEndIdentification": "o3oytft7uo48uiy",
+        "PaymentIdentification": {
+            "InstructionIdentification": "BfaipYhhr184MQLFBmrQs7PMpO4y13yFzDz",
+            "EndToEndIdentification": "6iqsW0O1cv9MIVpEmUnkCkY9nPrrvhhPZUJ",
+            "TransactionIdentification": "UXHKaXkADAEEZcFQt4aWKBKBRFfBqh6eU4m",
+            "UETR": "8ea63ded-79f8-5517-950b-37afc483c2e3"
+        },
+        "InstructedAmount": {
+            "Amount": 72.59,
+            "Currency": "EUR"
+        },
+        "DebtorAccount": {
+            "Identification": "ES92421000432450212351332"
+        },
+        "CreditorAccount": {
+            "Identification": "ES46929096037748994023823"
+        },
+        "CreditorAgent": {
+            "FinancialInstitutionIdentification": "CLRBNL2A011"
+        },
+        "DebtorAgent": {
+            "FinancialInstitutionIdentification": "ABCDDEAA123"
+        },
+        "InstructingAgent": {
+            "FinancialInstitutionIdentification": "DCBADEAA123"
+        },
+        "UltimateDebtor": {
+            "Name": "Large Corporation",
+            "PostalAddress": {
+                "Department": "Department name",
+                "SubDepartment": "Sub department name",
+                "StreetName": "Long road",
+                "BuildingNumber": "47",
+                "BuildingName": "Big Building",
+                "Floor": "211",
+                "PostBox": "12",
+                "Room": "5A",
+                "PostCode": "330554",
+                "TownName": "Paris",
+                "TownLocationName": "Market Quarter",
+                "DistrictName": "Central",
+                "CountrySubDivision": "Paris",
+                "Country": "FR",
+                "AddressLine": [
+                    "Large Corporation, 47 Long road, Market Quarter",
+                    "Paris, France"
+                ]
+            }
+        },
+        "Debtor": {
+            "Name": "Rico Hernandes",
+            "PostalAddress": {
+                "Department": "Department name",
+                "SubDepartment": "Sub department name",
+                "StreetName": "Long road",
+                "BuildingNumber": "12",
+                "BuildingName": "Big Building",
+                "Floor": "Basement",
+                "PostBox": "2",
+                "Room": "1B",
+                "PostCode": "210554",
+                "TownName": "Bilbao",
+                "TownLocationName": "Market Quarter",
+                "DistrictName": "Basque Country",
+                "CountrySubDivision": "North Spain",
+                "Country": "ES",
+                "AddressLine": [
+                    "47 Long Road, Big Building, Market Quarter, Bilbao",
+                    "210554, Basque Country, Spain"
+                ]
+            }
+        },
+        "Creditor": {
+            "Name": "Denbank",
+            "PostalAddress": {
+                "Department": "Department name",
+                "SubDepartment": "Sub department name",
+                "StreetName": "Finance road",
+                "BuildingNumber": "1",
+                "BuildingName": "Small Building",
+                "Floor": "5",
+                "PostBox": "12",
+                "Room": "101",
+                "PostCode": "123456",
+                "TownName": "Copenhagen",
+                "TownLocationName": "Banking square",
+                "DistrictName": "Zealand",
+                "CountrySubDivision": "Capital Region of Denmark",
+                "Country": "DK",
+                "AddressLine": [
+                    "1 Finance road, Banking square, Zealand",
+                    "123456, Copenhagen, Denmark"
+                ]
+            }
+        },
+        "UltimateCreditor": {
+            "Name": "Mila De Jong",
+            "PostalAddress": {
+                "Department": "Department name",
+                "SubDepartment": "Sub department name",
+                "StreetName": "Long road",
+                "BuildingNumber": "47",
+                "BuildingName": "Big Building",
+                "Floor": "Basement",
+                "PostBox": "12",
+                "Room": "5A",
+                "PostCode": "366554",
+                "TownName": "Amsterdam",
+                "TownLocationName": "Zuid",
+                "DistrictName": "Greater Amsterdam",
+                "CountrySubDivision": "Noord-Holland",
+                "Country": "NL",
+                "AddressLine": [
+                    "47 Long Road, Big Building, Zuid, Amsterdam",
+                    "366554, Noord-Holland, Netherlands"
+                ]
+            }
+        },
+        "RemittanceInformation": {
+            "Unstructured": "PAYREF72947-ABCD-5590",
+            "Structured": {
+                "CreditorReferenceInformation":{                    
+                    "Type": {
+                        "Code": "SCOR",
+                        "Issuer": "ISO"
+                    },
+                    "Reference": "RF23549607328184098173911"
+                }
+            }
+        }
+    },
+    "Nonce": 8530454988
+}
+```
+
+#### Example webhook response
+```json
+{
+    "Nonce": 8530454988
+}
+```
