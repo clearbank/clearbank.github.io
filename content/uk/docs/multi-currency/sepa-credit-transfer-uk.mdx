@@ -12,13 +12,15 @@ import Callout from "src/components/callout";
 ## SEPA Credit Transfer UK
 
 <Callout colour="green">
-  <h2>SCT UK is coming soon</h2>
+  <h2>SEPA Credit Transfer UK (SCT UK) is coming soon</h2>
   <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Our SEPA UK service lets you transact euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SEPA UK, you'll need a euro denominated account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
+Our SEPA Credit Transfer UK (SCT UK) service lets you transact euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro denominated account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
 
-> You cannot send or receive euro outside of the SEPA zone with SEPA UK. To transact euro outside of SEPA, please refer to our [multi-currency payments service](./multi-currency-payments.mdx).
+<Callout colour="blue">
+  You can only send euro inside the SEPA zone with SCT UK. To transact euro outside of the SEPA zone, please refer to our multi-currency payments service.
+</Callout>
 
 If you're interested in using this new service, please contact your Client Director.
 
@@ -43,7 +45,7 @@ SCT UK supports bulk payments, which can be useful for making many simultaneous 
 
 Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
 
-
+## Outbound payments
 
 <EndpointBlock
   type="post"
@@ -60,9 +62,10 @@ Each payment request contains a nested structure of debtor accounts and their as
   ]}
 />
 
-## Payment webhooks
-
 <WebhookPlaceholder render='sctuk-outbound-payment-completed-webhook-v1' />
 <WebhookPlaceholder render='sctuk-outbound-payment-failed-webhook-v1' />
+
+## Inbound payments
+
 <WebhookPlaceholder render='sctuk-inbound-payment-completed-v1' />
 
