@@ -1,5 +1,5 @@
 ---
-title: "SCT UK Outbound Payment Failed webhook"
+title: "MCCY Outbound Payment Failed webhook"
 version: 1
 webhook: true
 ---
@@ -10,7 +10,7 @@ This webhook notifies that an outbound SCT UK payment has failed.
 
 ```json
 {
-    "Type":"OutboundPaymentFailed",
+    "Type":"Payments.Mccy.OutboundPaymentFailed",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -20,7 +20,7 @@ This webhook notifies that an outbound SCT UK payment has failed.
 #### Payload
 | Element                            | Description                                                                                                                                                                                                                                                                                |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `TransactionId`                    | **Required**<br /> A unique identifier assigned by ClearBank referencing the debit transaction that relates to this outbound payment. <br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                                              |
+| `TransactionId`                    | **Required**<br /> A unique identifier assigned by ClearBank to reference the debit transaction that relates to this outbound payment. <br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                                              |
 | `MessageIdentification`            | **Required**<br /> A reference assigned by the original instructing party to uniquely identify the original message. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length `35` <br />                                                                       |
 | `PaymentInformationIdentification` | **Required**<br /> A unique identifier assigned by the original sending party to distinguish the original payment information group. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                            |
 | `InstructionIdentification`        | **Required**<br /> A unique identifier assigned by the original instructing party to identify the original payment instruction. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                                 |
@@ -34,15 +34,20 @@ This webhook notifies that an outbound SCT UK payment has failed.
 
 ```json
 {
-    {
-    "TransactionId":"fb7d026f-cbf6-4412-b498-47fb5a94e1ad",
-    "MessageIdentification":"KEcWcYmgBQrKMbDvxbAuwQlcZhviAr93ZON",
-    "PaymentInformationIdentification":"kqSnIlSF8cfox1ddyHhn2mY4OFLd1JbA4ms",
-    "InstructionIdentification":"VMV3qZeUO8gCjaD2nAJ7ec3nFkEsdyBq19D",
-    "EndToEndIdentification":"JUMxafIxicvtLZCazHf1N99XKb5bkM4NTEd",
-    "UETR":"0a36aa76-e27c-4591-b0d3-27088fa5a70b",
-    "InstructedAmount":"147.30",
-    "InstructedCurrency":"EUR"
+    "Type": "Payments.Mccy.OutboundPaymentFailed",
+    "Version": 1,
+    "Payload": {
+        "TransactionId":"fb7d026f-cbf6-4412-b498-47fb5a94e1ad",
+        "MessageIdentification":"MSGID-1234-DEC25-MYREF",
+        "PaymentInformationIdentification":"PYMID-1234-DEC25-MYREF",
+        "InstructionIdentification":"INSTID-4771-MYID",
+        "EndToEndIdentification":"E2EREF-BB44-MYID",
+        "UETR":"0a36aa76-e27c-4591-b0d3-27088fa5a70b",
+        "InstructedAmount":"147.30",
+        "InstructedCurrency":"EUR",
+        "AdditionalInformation": [
+            "UETR already in use"
+        ]
     },
     "Nonce": 961306540
 }
