@@ -16,7 +16,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API token, retrieved from the ClearBank portal.",
+            "description": "Your API token, retrieved from the ClearBank Portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -133,6 +133,7 @@
           "currency"
         ],
         "type": "object",
+        "description": "Details the currency and amount to be sent for this payment.",
         "properties": {
           "amount": {
             "description": "The monetary amount to be sent.",
@@ -230,6 +231,7 @@
       },
       "OrganisationIdentification": {
         "type": "object",
+        "description": "Contains identification information for this organisation.",
         "properties": {
           "anyBIC": {
             "maxLength": 11,
@@ -276,7 +278,8 @@
             "minLength": 1,
             "type": "string",
             "example": "Elias Pinto",
-            "pattern": "^.{1,140}$"
+            "pattern": "^.{1,140}$",
+            "description": "The name of this person or organisation."
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -294,12 +297,14 @@
           "uetr"
         ],
         "type": "object",
+        "description": "Contains identifiers relating to this payment.",
         "properties": {
           "instructionIdentification": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "example": "i5gdyVa8qnoOBGveXEuNHo9lvAqdPyAd4tK",
+            "description": "A unique identifier assigned by you to unambiguously identify this instruction.",
             "pattern": "^.{1,35}$"
           },
           "endToEndIdentification": {
@@ -307,7 +312,7 @@
             "minLength": 1,
             "type": "string",
             "example": "GcP5LyftYyLPNa4OQ5bZThRTlSZPCR7GbR2",
-            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "description": "A unique identifier as assigned by you to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
             "pattern": "^.{1,35}$"
           },
           "uetr": {
@@ -315,7 +320,7 @@
             "maxLength": 36,
             "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
             "type": "string",
-            "description": "Universally Unique Identifier (UUID) version 4, as described in IETC RFC 4122.",
+            "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
             "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
           }
         },
@@ -334,13 +339,14 @@
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Unique identification to unambiguously identify the payment group - there is one identifier per debtor account.",
+            "description": "Unique identifier to unambiguously identify this payment group - there is one identifier per debtor account.",
             "example": "rJawA91MHPLoMU89AG0HpobF1Vo7zOzcQVG",
             "pattern": "^.{1,35}$"
           },
           "requestedExecutionDate": {
             "type": "string",
-            "description": "Must be today's date, formatted as YYYY-MM-DD.",
+            "description": "Must always be today's date, formatted as YYYY-MM-DD.",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
             "format": "date",
             "nullable": true,
             "example": "2025-11-13"
@@ -384,7 +390,7 @@
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Unique identifier for the message.",
+            "description": "Unique identifier for this payment message.",
             "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
             "pattern": "^.{1,35}$"
           },
@@ -410,7 +416,7 @@
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Unique identifier for the message.",
+            "description": "Unique identifier for this payment message.",
             "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
             "pattern": "^.{1,35}$"
           }
@@ -427,7 +433,7 @@
               "SEPA"
             ],
             "type": "string",
-            "description": "This should always be \"SEPA\"",
+            "description": "Set to \"SEPA\".",
             "nullable": true,
             "example": "SEPA"
           }
@@ -441,6 +447,7 @@
           "countryOfBirth"
         ],
         "type": "object",
+        "description": "Contains identification information for this person.",
         "properties": {
           "birthDate": {
             "minLength": 1,
@@ -476,6 +483,7 @@
           "townName"
         ],
         "type": "object",
+        "description": "Contains a full postal address for this person or organisation.",
         "properties": {
           "streetName": {
             "maxLength": 70,
@@ -517,7 +525,7 @@
             "type": "string",
             "nullable": true,
             "example": "Cumberland",
-            "description": "This can be a county or other region within a country.",
+            "description": "The county or other region within a country of this address.",
             "pattern": "^.{1,35}$"
           },
           "country": {

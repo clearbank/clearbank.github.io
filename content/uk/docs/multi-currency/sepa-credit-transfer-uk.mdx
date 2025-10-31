@@ -16,10 +16,10 @@ import Callout from "src/components/callout";
   <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Our SEPA Credit Transfer UK (SCT UK) service lets you transact euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro denominated account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
+Our SEPA Credit Transfer UK (SCT UK) service lets you exchange euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
 
 <Callout colour="blue">
-  You can only send euro inside the SEPA zone with SCT UK. To transact euro outside of the SEPA zone, please refer to our multi-currency payments service.
+  You can only send euros inside the SEPA zone with SCT UK. To send euros outside of the SEPA zone, please refer to our multi-currency payments service.
 </Callout>
 
 If you're interested in using this new service, please contact your Client Director.
@@ -41,7 +41,7 @@ Exact dates can be found on [the ECB's website](https://www.ecb.europa.eu/ecb/co
 
 ### Bulk payments
 
-SCT UK supports bulk payments, which can be useful for making many simultaneous payments - for example, payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
+SCT UK supports bulk payments, which can be useful for making many simultaneous payments - such as payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
 
 Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
 
@@ -49,7 +49,7 @@ Each payment request contains a nested structure of debtor accounts and their as
 
 <EndpointBlock
   type="post"
-  title="Initiate a euro payment"
+  title="Send euro payments"
   endpoints={[
     {
       path: "/v2/mccy/payments",
@@ -61,6 +61,83 @@ Each payment request contains a nested structure of debtor accounts and their as
     }
   ]}
 />
+
+### Example request
+
+You can use the below example request payload to test the **POST /v2/mccy/payments** endpoint.  
+Take care to update the `RequestedExecutionDate` to today's date.
+
+```json
+{
+  "MessageIdentification": "MSGID-25OCT23-TEST03",
+  "PaymentInformation": [
+    {
+      "PaymentInformationIdentification": "PYMTID-25OCT23-DEBT-03",
+      "RequestedExecutionDate": "2025-10-23",
+      "Debtor": {
+        "Name": "John Smith",
+        "PostalAddress": {
+          "StreetName": "High Street",
+          "BuildingNumber": "100",
+          "PostCode": "DN40 2AB",
+          "TownName": "Immingham",
+          "CountrySubdivision": "Lincolnshire",
+          "Country": "GB"
+        },
+        "OrganisationIdentification": {
+          "AnyBIC": "PAEEGB22"
+        }
+      },
+      "DebtorAccount": {
+        "IBAN": "GB96CLRB04056700273872"
+      },
+      "CreditTransferTransactionInformation": [
+        {
+          "PaymentIdentification": {
+            "InstructionIdentification": "INSTID-25OCT23-03A",
+            "EndToEndIdentification": "E2E-25OCT23-03A",
+            "UETR": "107367a1-99c3-411e-abd1-fcbbb74a8b01"
+          },
+          "PaymentTypeInformation": {
+            "ServiceLevelCode": "SEPA"
+          },
+          "InstructedAmount": {
+            "Amount": 1.03,
+            "Currency": "EUR"
+          },
+          "CreditorAgent": {
+            "BICFI": "BCOEESM0"
+          },
+          "Creditor": {
+            "Name": "Maria Garcia",
+            "PostalAddress": {
+              "StreetName": "Calle de Alcala",
+              "BuildingNumber": "45",
+              "PostCode": "28014",
+              "TownName": "Madrid",
+              "CountrySubdivision": "Community of Madrid",
+              "Country": "ES"
+            },
+            "PrivateIdentification": {
+              "BirthDate": "1987-11-10",
+              "CityOfBirth": "Madrid",
+              "CountryOfBirth": "ES"
+            }
+          },
+          "CreditorAccount": {
+            "IBAN": "ES9121000418450200051332"
+          },
+          "RemittanceInformation": {
+            "Unstructured": [
+              "RemittanceInformation Unstructured 2025OCT23C"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
 
 <WebhookPlaceholder render='sctuk-outbound-payment-completed-webhook-v1' />
 <WebhookPlaceholder render='sctuk-outbound-payment-failed-webhook-v1' />
