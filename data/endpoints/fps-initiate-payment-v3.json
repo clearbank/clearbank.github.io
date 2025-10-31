@@ -6,7 +6,7 @@
         "version": "3.0.FPS-payment"
     },
     "paths": {
-      "/v3/payments/fps": {
+        "/v3/payments/fps": {
             "post": {
                 "tags": [
                     "FpsPayments"
@@ -70,112 +70,110 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                              }
-                          }
-                      }
-                  },
-                  "404": {
-                      "description": "Not Found"
-                  },
-                  "422": {
-                    "description": "Client Error",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "$ref": "#/components/schemas/ValidationProblemDetails"
-                        }
-                      }
-                    }
-                  }
-              }
-          }
-      },
-      "/v3/payments/fps/return": {
-          "post": {
-            "tags": [
-              "FpsPayments"
-            ],
-            "summary": "Return an inbound Faster Payment. This endpoint can be used to return domestic payments and payments originating overseas.",
-            "description":"This endpoint is the recommended method for returning faster payments that cannot be completed for any reason.",
-
-            "operationId": "PostReturn",
-            "parameters": [
-              {
-                "name": "Authorization",
-                "in": "header",
-                "description": "Your API token, retrieved from the web portal.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
-              {
-                "name": "DigitalSignature",
-                "in": "header",
-                "description": "Signed hash of the body of the request. The hash is signed by your private key.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
-              {
-                "name": "X-Request-Id",
-                "in": "header",
-                "description": "A unique identifier for the request.",
-                "required": true,
-                "schema": {
-                  "type": "string"
+                                    "$ref": "#/components/schemas/ValidationProblemDetails"
                                 }
                             }
-            ],
-            "requestBody": {
-              "description": "Information that should be used to create an FPS return.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                      "$ref": "#/components/schemas/CreateReturnCreditTransferRequest"
-                  },
-                  "description": "Information that should be used to create a single credit return."
                         }
                     },
-              "x-bodyName": "request"
-            },
-            "responses": {
-              "202": {
-                  "description": "Accepted"                  
-              },
-              "400": {
-                "description": "Bad Request",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/ValidationProblemDetails"
-                    }
-                  }
-                }
-              },
-              "403": {
-                "description": "Forbidden"
-              },
                     "404": {
                         "description": "Not Found"
-              },
-              "422": {
-                "description": "Client Error",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "$ref": "#/components/schemas/ValidationProblemDetails"
+                    },
+                    "422": {
+                        "description": "Client Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationProblemDetails"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
+            }
+        },
+        "/v3/payments/fps/return": {
+            "post": {
+                "tags": [
+                    "FpsPayments"
+                ],
+                "summary": "Return an inbound Faster Payment. This endpoint can be used to return domestic payments and payments originating overseas.",
+                "description": "This endpoint is the recommended method for returning faster payments that cannot be completed for any reason.",
+                "operationId": "PostReturn",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Your API token, retrieved from the web portal.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DigitalSignature",
+                        "in": "header",
+                        "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Request-Id",
+                        "in": "header",
+                        "description": "A unique identifier for the request.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Information that should be used to create an FPS return.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateReturnCreditTransferRequest"
+                            },
+                            "description": "Information that should be used to create a single credit return."
+                        }
+                    },
+                    "x-bodyName": "request"
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Client Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationProblemDetails"
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     },
-    
     "components": {
         "schemas": {
             "BatchAmount": {
@@ -366,14 +364,15 @@
                             "XXX"
                         ],
                         "type": "string",
-                      "example": "GBP",
-                      "description": "Set to 'GBP' as other currencies are not supported.",
+                        "example": "GBP",
+                        "description": "Set to 'GBP' as other currencies are not supported.",
                         "nullable": true
                     },
                     "instructedAmount": {
                         "type": "number",
                         "description": "Amount of funds to be moved between the debtor and creditor (prior to deduction of charges) in GBP.",
-                        "format": "double"
+                        "format": "double",
+                        "example": 100.00
                     }
                 },
                 "additionalProperties": false,
@@ -391,13 +390,15 @@
                         "minLength": 0,
                         "type": "string",
                         "description": "The name of the entity that assigns the identification.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "Example Passport"
                     },
                     "identification": {
                         "maxLength": 34,
                         "minLength": 1,
                         "type": "string",
-                        "description": "Identification assigned by an institution."
+                        "description": "Identification assigned by an institution.",
+                        "example": "123456789012345678"
                     },
                     "schemeName": {
                         "$ref": "#/components/schemas/CounterpartAccountGenericIdentificationScheme",
@@ -454,11 +455,11 @@
                     },
                     "remittanceInformation": {
                         "$ref": "#/components/schemas/BatchRemittanceInformation",
-                      "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts receivable system."
+                        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts receivable system."
                     },
                     "enforceSendToScheme": {
-                      "type": "boolean",
-                      "description": "If set to true, then the payment will be sent to scheme for processing. If set to false or not supplied, then it will be processed as an internal transfer if eligible."    
+                        "type": "boolean",
+                        "description": "If set to true, then the payment will be sent to scheme for processing. If set to false or not supplied, then it will be processed as an internal transfer if eligible."
                     }
                 },
                 "additionalProperties": false,
@@ -497,18 +498,35 @@
                         "maxLength": 140,
                         "minLength": 1,
                         "type": "string",
-                        "description": "The name of the account holder."
+                        "description": "The name of the account holder.",
+                        "example": "Aisha Khan"
                     },
                     "legalEntityIndentifier": {
                         "maxLength": 35,
                         "minLength": 0,
                         "type": "string",
                         "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "9485839XYZ"
                     }
                 },
                 "additionalProperties": false,
                 "description": "The name and, optionally, the legal entity identifier of the account."
+            },
+            "BatchAdditionalReferenceInformation": {
+                "type": "object",
+                "properties": {
+                    "reference": {
+                        "maxLength": 140,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Additional remittance information.",
+                        "nullable": true,
+                        "example": "Plumbing payment"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor."
             },
             "BatchCreditorReferenceInformation": {
                 "type": "object",
@@ -517,8 +535,9 @@
                         "maxLength": 35,
                         "minLength": 0,
                         "type": "string",
-                        "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction. Conditionally required if supplied by the ultimate debtor.",
-                        "nullable": true
+                        "description": "A reference, as assigned by the debtor to unambiguously refer to the payment transaction. Conditionally required if supplied by the debtor.",
+                        "nullable": true,
+                        "example": "Payment for invoice 12345"
                     }
                 },
                 "additionalProperties": false,
@@ -535,19 +554,20 @@
                         "minLength": 0,
                         "type": "string",
                         "description": "The legal entity identifier of the account holder (eg: charity number). This should be supplied if known.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "9485839XYZ"
                     },
                     "address": {
                         "maxLength": 140,
                         "minLength": 1,
                         "pattern": "^[a-zA-Z0-9\\/\\-?:().,'+ ]*$",
                         "type": "string",
-                        "description": "The full postal address of the account holder. For UK addresses, the order of this information MUST be: country, town, city, state/province/municipality, street name, building number and/or name, postal code."
+                        "description": "The full postal address of the account holder. For UK addresses, the order of this information MUST be: country, town, city, state/province/municipality, street name, building number and/or name, postal code.",
+                        "example": "UK, Manchester, Greater Manchester, Oxford Road, 123, M13 9PL"
                     }
                 },
                 "additionalProperties": false,
-              "description": "Optionally, the Legal Entity Identifier of the account.\r\nMandatory the Address of the account."
-
+                "description": "Optionally, the Legal Entity Identifier of the account.\r\nMandatory the Address of the account."
             },
             "BatchPaymentIdentification": {
                 "required": [
@@ -560,13 +580,15 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+                        "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+                        "example": "PAYMENT12345"
                     },
                     "endToEndIdentification": {
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "description": "Unique identification, as assigned by the initiating party to unambiguously identify the transaction. This identification is passed on unchanged throughout the entire end-to-end chain."
+                        "description": "Unique identification, as assigned by the initiating party to unambiguously identify the transaction. This identification is passed on unchanged throughout the entire end-to-end chain.",
+                        "example": "E2E12345"
                     }
                 },
                 "additionalProperties": false,
@@ -589,7 +611,8 @@
                         "maxLength": 35,
                         "minLength": 1,
                         "type": "string",
-                        "description": "The unique identifier for the payment instruction."
+                        "description": "The unique identifier for the payment instruction.",
+                        "example": "INSTRUCTION12345"
                     },
                     "paymentTypeCode": {
                         "type": "string",
@@ -601,7 +624,7 @@
                             "SOP",
                             "FDP"
                         ]
-                        },
+                    },
                     "debtorAccount": {
                         "$ref": "#/components/schemas/BatchPaymentInstructionCounterpartAccount",
                         "description": "Information about the counterpart in a given transaction."
@@ -639,7 +662,8 @@
                     "iban": {
                         "type": "string",
                         "description": "The International Bank Account Number of the account.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "GB29NWBK60161331926819"
                     },
                     "other": {
                         "$ref": "#/components/schemas/BatchCounterpartAccountGenericIdentification",
@@ -657,24 +681,39 @@
                         "$ref": "#/components/schemas/BatchStructured",
                         "description": "Information supplied by the remitter (in a structured form), to reconcile an entry with item(s) that the payment intends to settle (e.g., a purchase reference number).",
                         "nullable": true
+                    },
+                    "unstructured": {
+                        "$ref": "#/components/schemas/BatchUnstructured",
+                        "description": "Information supplied by the remitter (in an unstructured form) to reconcile an entry with item(s) that the payment intends to settle.",
+                        "nullable": true
                     }
                 },
                 "additionalProperties": false,
-              "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts receivable system."
-
+                "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts receivable system."
             },
             "BatchStructured": {
                 "type": "object",
                 "properties": {
                     "creditorReferenceInformation": {
                         "$ref": "#/components/schemas/BatchCreditorReferenceInformation",
-                        "description": "Reference information provided by the ultimate debtor to allow the identification of underlying documents by the creditor.",
+                        "description": "Reference information provided by the debtor to allow the identification of underlying documents by the creditor.",
                         "nullable": true
                     }
                 },
                 "additionalProperties": false,
-              "description": "Information supplied by the remitter (in a structured form), to reconcile an entry with item(s) that the payment intends to settle (for example, a purchase reference number)."
-
+                "description": "Information supplied by the remitter (in a structured form), to reconcile an entry with item(s) that the payment intends to settle (for example, a purchase reference number)."
+            },
+            "BatchUnstructured": {
+                "type": "object",
+                "properties": {
+                    "additionalReferenceInformation": {
+                        "$ref": "#/components/schemas/BatchAdditionalReferenceInformation",
+                        "description": "Additional unstructured remittance information.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information supplied by the remitter (in a structured form), to reconcile an entry with item(s) that the payment intends to settle (for example, a purchase reference number)."
             },
             "CounterpartAccountGenericIdentificationScheme": {
                 "type": "object",
@@ -686,8 +725,7 @@
                             "UPIC"
                         ],
                         "type": "string",
-                      "description": "Name of the identification scheme in coded form. No need to specify if you are providing this information in free-form text in the \"proprietary\" field.",
-
+                        "description": "Name of the identification scheme in coded form. No need to specify if you are providing this information in free-form text in the \"proprietary\" field.",
                         "nullable": true
                     },
                     "proprietary": {
@@ -695,26 +733,27 @@
                         "minLength": 0,
                         "type": "string",
                         "description": "Name of the identification scheme in free-form text. No need to specify if you are providing this name in coded form (i.e., in the \"code\" field).",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "Example scheme"
                     }
                 },
                 "additionalProperties": false,
                 "description": "Information about the identification scheme in coded form or free-form text."
             },
-          "CreateReturnCreditTransferRequest": {
-              "required": [
-                "paymentReturnInstruction"
-              ],
-              "type": "object",
-              "properties": {
-                "paymentReturnInstruction": {
-                  "$ref": "#/components/schemas/PaymentReturnInstruction",
-                  "description": "Information about the payment return."
-                }
-              },
-              "additionalProperties": false,
-              "description": "Information that should be used to create a single credit return."
-          },
+            "CreateReturnCreditTransferRequest": {
+                "required": [
+                    "paymentReturnInstruction"
+                ],
+                "type": "object",
+                "properties": {
+                    "paymentReturnInstruction": {
+                        "$ref": "#/components/schemas/PaymentReturnInstruction",
+                        "description": "Information about the payment return."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Information that should be used to create a single credit return."
+            },
             "HalLink": {
                 "required": [
                     "href",
@@ -766,42 +805,42 @@
                 "additionalProperties": false,
                 "description": "The acceptance or rejection status of a payment instruction."
             },
-          "PaymentReturnInstruction": {
-              "required": [
-                "TransactionId",
-                "ReasonForReturn"
-              ],
-              "type": "object",
-              "properties": {
-                "TransactionId": {
-                  "maxLength": 36,
-                  "minLength": 1,
-                  "type": "string",
-                  "description": "The ID of the transaction to be returned.",
-                  "format": "uuid"
-                },
-                "ReasonForReturn": {
-                  "type": "string",
-                  "description": "A scheme compliant return code. Accepted values: [ BeneficiarySortCodeOrAccountUnknown, BeneficiaryAccountClosed, BeneficiaryAccountStopped, BeneficiaryDeceased, AccountCannotBeIdentified, BeneficiaryAccountNameDoesNotMatchBeneficiaryAccountNumber, ReturnRequestedBySenderOfOriginalPayment, AccountIsNotInCurrencyQuoted, BeneficiaryNotExpectingFundsOrInstructedReturn, TermsAndConditionsOfAccountDoNotPermitCreditingOfFunds, SendingFpsInstitutionActionRequired, AccountTransferred, PaymentCannotBeAppliedBecauseOfBeneficiarySensitivities, Other ]"
-                }
-              },
-              "additionalProperties": false,
-              "description": "Information about the single payment return instruction."
-          },
-          "ValidationProblemDetails": {
+            "PaymentReturnInstruction": {
+                "required": [
+                    "TransactionId",
+                    "ReasonForReturn"
+                ],
                 "type": "object",
                 "properties": {
-              "errors": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                    "TransactionId": {
+                        "maxLength": 36,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "The ID of the transaction to be returned.",
+                        "format": "uuid"
+                    },
+                    "ReasonForReturn": {
+                        "type": "string",
+                        "description": "A scheme compliant return code. Accepted values: [ BeneficiarySortCodeOrAccountUnknown, BeneficiaryAccountClosed, BeneficiaryAccountStopped, BeneficiaryDeceased, AccountCannotBeIdentified, BeneficiaryAccountNameDoesNotMatchBeneficiaryAccountNumber, ReturnRequestedBySenderOfOriginalPayment, AccountIsNotInCurrencyQuoted, BeneficiaryNotExpectingFundsOrInstructedReturn, TermsAndConditionsOfAccountDoNotPermitCreditingOfFunds, SendingFpsInstitutionActionRequired, AccountTransferred, PaymentCannotBeAppliedBecauseOfBeneficiarySensitivities, Other ]"
+                    }
                 },
-                "description": "The validation errors.",
-                "nullable": true
-              },
+                "additionalProperties": false,
+                "description": "Information about the single payment return instruction."
+            },
+            "ValidationProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "The validation errors.",
+                        "nullable": true
+                    },
                     "type": {
                         "type": "string",
                         "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
@@ -814,7 +853,7 @@
                     },
                     "status": {
                         "type": "integer",
-                "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+                        "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
                         "format": "int32",
                         "nullable": true
                     },
