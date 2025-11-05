@@ -1,6 +1,6 @@
 ---
-title: "Bacs Direct Debit Instructions"
-metaTitle: "Bacs Direct Debit Instructions"
+title: "Bacs Service Users"
+metaTitle: "Bacs Service Users"
 order: 4
 showPageMenu: true
 ---
@@ -10,6 +10,10 @@ import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from "src/components/callout";
+
+## Bacs Origination
+ 
+As an **Service User** (also known as Originator) of Direct Debits, your responsibility is to construct and submit the payment instruction. This involves identifying the source and destination accounts, specifying the amount of the collection, and assigning a transaction reference. You are also responsible for collecting the payer's authority to debit (called a **Direct Debit Instruction**), notifying the payer when the collection will take place and how much will be collected (a process called **Advance Notice**), and all other communication relating to the Direct Debit.
 
 ## Direct Debit Instructions
 
@@ -177,6 +181,13 @@ You may also receive a [Bacs Mandate Migrated webhook](#bacs-mandate-migrated-we
 <WebhookPlaceholder render='bacs-mandate-returned-webhook-v1' />
 <WebhookPlaceholder render='bacs-mandate-return-failed-webhook-v1' />
 <WebhookPlaceholder render='bacs-mandate-migrated-webhook-v2' />
+
+## Bacs inbound DDI payments
+The following webhooks relate to the origination of Direct Debit payments as they appear in your account as the Service User:
+- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - Indicates funds received as a result of a Direct Debit file being processed. This is the bulk settlement.
+- [Bacs Unpaid Direct Debit Received webhook](#bacs-unpaid-direct-debit-received-webhook) - Indicates that a Direct Debit could not be paid.
+<WebhookPlaceholder render='bacs-debit-contra-received-webhook-v3' />
+<WebhookPlaceholder render='bacs-unpaid-direct-debit-received-webhook-v3' />
 
 ## Bacs DDI codes reference
 
