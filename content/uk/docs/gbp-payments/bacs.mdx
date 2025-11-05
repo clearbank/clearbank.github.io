@@ -27,6 +27,20 @@ Only Service Users are permitted to originate Direct Debits. While all Service U
 Note that the ClearBank system will perform the majority of these tasks for you - the only task we cannot perform is a balance check against a Virtual Account.
 </Callout>
 
+Bacs (Bankers' Automated Clearing Services) is a UK payment system used for direct debit and direct credit transactions.
+
+There are two types of participants within Bacs:
+- Payment Service Providers (PSPs)
+- Service Users (often called Originator)
+
+PSPs are authorised participants within the Bacs scheme. They can receive Bacs Direct Debit instructions and return them if necessary (for example, due to insufficient funds or account closure). PSPs cannot initiate or originate Direct Debits themselves.
+
+Only Service Users are permitted to originate Direct Debits. While all Service Users are PSPs, not all PSPs act as Service Users. If you are a Service User, refer to [Bacs Service Users](#bacs-service-users).
+
+<Callout colour="blue">
+Note that the ClearBank system will perform the majority of these tasks for you - the only task we cannot perform is a balance check against a Virtual Account.
+</Callout>
+
 Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**. Bacs does not operate on weekends or bank holidays.
 
 ![Image showing 3-day Bacs payment cycle](/assets/images/BacsOverview-Days.svg "Bacs payment cycle")
@@ -43,34 +57,6 @@ Whether a payment is successfully applied to the end-customer's account is deter
 ![Image showing a Inbound Bacs decision tree](/assets/images/BacsOverview-DecisionTree.svg "Inbound Bacs decision tree")
 
 If the payment cannot be applied to the account, ClearBank will automatically raise an ARUCS (Automated Return of Unapplied Credits Service) item  or an ARUDD (Automated Return of Unpaid Direct Debit) item. You will be notified with a [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) webhook. Note that if a Direct Debit is paid from a virtual account, it is your responsibility to ensure that the account has sufficient funds. If it does not, use the returns endpoints below.
-
-### Bacs Processing
- 
-When integrating with Bacs, you operate as either an **Originator (Often called Service User)** or a **Clearing PSP**, depending upon your role within the payment flow. These roles define how transactions are initiated, validated, and completed.
-
-If you (or one of your customers) wish to be an originator of Direct Debits you will need to apply to your client director separately.
- 
-#### Bacs Origination
- 
-As an **Originator / Service User** of Direct Debits, your responsibility is to construct and submit the payment instruction. This involves identifying the source and destination accounts, specifying the amount of the collection, and assigning a transaction reference. You are also responsible for collecting the payer's authority to debit (called a **Direct Debit Instruction**), notifying the payer when the collection will take place and how much will be collected (a process called **Advance Notice**), and all other communication relating to the Direct Debit.
- 
-This role centres around initiating payments and defining the transaction details. It requires ensuring that each payment is properly prepared and documented prior to being routed through the Bacs network.
- 
-#### Bacs Clearing
- 
-Acting as a **Clearing PSP** means applying the transaction to the correct account once it has been output from Bacs to ClearBank. The task includes identifying the correct destination account and performing necessary validation checks. These checks confirm that the account exists, is open, and can accept the payment.
- 
-In the case of Direct Debits, additional steps are required in:
-- Confirming the availability of funds
-- Verifying the authority to debit the account
-
-Once all conditions are met, the transaction is recorded in your ledger to complete the process.
-
-This role focuses on validating and applying payments, ensuring that each transaction complies with operational and regulatory requirements before finalisation
-
-<Callout colour="blue">
-Note that the ClearBank system will perform the majority of these tasks for you - the only task we cannot perform is a balance check against a Virtual Account.
-</Callout>
 
 ## Returning a Bacs payment
 
