@@ -8,6 +8,7 @@ showPageMenu: true
 import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import Callout from "src/components/callout";
+import ExternalLink from "src/components/external-link";
 
 ## SEPA Credit Transfer UK
 
@@ -37,13 +38,15 @@ The TARGET2 scheme holidays applicable to SCT UK are listed below:
 * Christmas Day
 * Boxing Day
 
-Exact dates can be found on [the ECB's website](https://www.ecb.europa.eu/ecb/contacts/working-hours/html/index.en.html).
+Exact dates can be found on <ExternalLink href="https://www.ecb.europa.eu/ecb/contacts/working-hours/html/index.en.html">the ECB's website</ExternalLink>.
 
 ### Bulk payments
 
 SCT UK supports bulk payments, which can be useful for making many simultaneous payments - such as payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
 
 Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
+
+When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive [MCCY Outbound Payment Failed](#mccy-outbound-payment-failed-webhook) and [Outbound Payment Completed](#mccy-outbound-payment-completed-webhook) webhooks for each payment in the batch, so you can keep track of their status.
 
 ## Outbound payments
 
