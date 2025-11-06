@@ -46,7 +46,9 @@ SCT UK supports bulk payments, which can be useful for making many simultaneous 
 
 Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
 
-When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive [MCCY Outbound Payment Failed](#mccy-outbound-payment-failed-webhook) and [Outbound Payment Completed](#mccy-outbound-payment-completed-webhook) webhooks for each payment in the batch, so you can keep track of their status.
+![Diagram showing the PaymentInformation array, containing 3 debtors](/assets/images/sct-uk-bulk-payments-diagram.svg "")
+
+When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive a [MCCY Outbound Payment Failed](#mccy-outbound-payment-failed-webhook) or [MCCY Outbound Payment Completed](#mccy-outbound-payment-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
 
 ## Outbound payments
 
@@ -65,7 +67,7 @@ When you send several payments at once in bulk, each payment is processed indivi
   ]}
 />
 
-### Example request
+### Example outbound payment request
 
 You can use the below example request payload to test the **POST /v2/mccy/payments** endpoint.  
 Take care to update the `RequestedExecutionDate` field to today's date, and to use a different `UETR` if using this example more than once.
