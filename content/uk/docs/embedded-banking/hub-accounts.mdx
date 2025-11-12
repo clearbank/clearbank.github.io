@@ -1,7 +1,7 @@
 ---
-title: "Savings accounts"
-metaTitle: "Savings accounts"
-order: 2
+title: "Hub accounts"
+metaTitle: "Hub accounts"
+order: 3
 showPageMenu: true
 ---
 
@@ -11,20 +11,54 @@ import Callout from "src/components/callout";
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary';
 
-## Savings accounts
+## Hub accounts
 
-ClearBank supports singular and joint savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
+Hub accounts are FSCS protected bank accounts held with ClearBank that serve specific embedded banking use cases. These use cases typically involve sending and receiving payments from a limited set of 'associated' accounts. A hub account is held in the name of a retail or a business customer. This account type is available on a per-client basis; if you're interested in using hub accounts, please speak to you Client Director.
 
-You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configuration](./interest-configuration).
+### Hub account creation
+
+Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint.
+
+**Holding customer**
+
+Before you can create a hub account, you'll first need to create the retail customer or business customer it will be held by. Refer to our [retail customers page](./retail-customers) for details on creating a retail customers, or contact your Client Director for guidance on creating business customers.
+
+After creating your retail or business customer, take note of their `customerId` and legal name - you'll need these to associate the customer with their new hub account.
 
 <Callout colour="blue">
-Both single and joint savings accounts can be created using the v2 endpoint.  For joint accounts, include multiple customer IDs in the <b>Customers</b> array.</Callout>
+  If you're using joint hub accounts where there is more than one account holder, you'll need to associate more than one customer. Take note of both customers' identifier and legal name.
+</Callout>
 
-**To create a savings account:**
-1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Use the [POST /v2/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
-> The `interestConfigurationId` field is used to provide the initial interest configuration ID when creating the savings account (refer to [Interest configuration](./interest-configuration)).
-3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+**Sort code**
+
+A sort code will have been assigned to you as part of your onboarding process.
+
+**Product identity**
+
+The `productId` you should use will be provided to you as part of onboarding.
+
+**Interest configuration** (optional)
+
+Hub accounts may be interest bearing. This will have been agreed between your institution and ClearBank. If your hub accounts are interest bearing, you can set up their [interest configuration profile](./interest-configuration). Once created, the profile's `interestConfigurationId` may be reused across subsequent hub accounts to refer to the same configuration profile.
+
+<EndpointBlock
+  type="post"
+  title="Create a hub account"
+  endpoints={[
+    {
+      path: "/accounts/sterling/v1/hub-accounts",
+      version: "1.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+### Set up a nominated account
+
+A hub account can only have just one nominated account.
+Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 > **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
 
 ![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
@@ -88,63 +122,26 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 
 <EndpointBlock
   type="post"
-  title="Create a savings account"
+  title="Create a hub account"
   endpoints={[
-        {
-      path: "/v2/savings",
-      version: "2.0.Sterling",
-       webhooks: [
-        'account-created-webhook-v1'
-      ]
-    },
     {
-      path: "/v1/savings",
+      path: "/accounts/sterling/v1/hub-accounts",
       version: "1.0.Sterling",
-       webhooks: [
+      webhooks: [
         'account-created-webhook-v1'
       ]
     }
   ]}
 />
 
-#### Example request bodies for creating a savings account with multiple customers
+### Hub account details
 
-##### Example joint account with two customers
+Hub accounts exist to facilitate innovative financial products that require more flexibility than standard savings accounts. Hub accounts are usually restricted in one or more of the following ways:
+* Transactions may be limited to specific purposes
+* Payments may be made only to and from specific accounts
+* Payments may only be made at limited frequency
 
-```json
-{
-  "ownerName": "John and Jane Smith",
-  "sortCode": "010203",
-  "productId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
-  "customers": [
-    {
-      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f",
-      "customerId": "abcdef12-3456-7890-1234-56789abcdef0"
-    }
-  ],
-  "interestConfigurationId": "1234abcd-5678-9ef0-1234-56789abcdef0"
-}
-```
-While joint accounts will typically have two customers, we can support any amount with a valid use case.
-
-##### Example joint account with four customers
-
-```json
-{
-  "ownerName": "John Smith, Jane Smith, Steve Doe, and Emily Doe",
-  "sortCode": "010203",
-  "productId": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
-  "customers": [
-    {
-      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f",
-      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
-      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6",
-      "customerId": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
-    }
-  ],
-  "interestConfigurationId": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a"
-}
-```
+Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. All other API functionality for hub accounts is the same as for savings accounts shown on this page.
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
