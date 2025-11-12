@@ -13,16 +13,22 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Savings accounts
 
+### Overview
+
 ClearBank supports singular and joint savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
+
+ClearBank also supports hub accounts. A hub account is a type of savings account with bespoke restrictions and privileges set by prior arrangement with ClearBank. If you have a use case for savings accounts that doesn't quite fit, ask your Client Director about hub accounts.
 
 You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configuration](./interest-configuration).
 
 <Callout colour="blue">
 Both single and joint savings accounts can be created using the v2 endpoint.  For joint accounts, include multiple customer IDs in the <b>Customers</b> array.</Callout>
 
-**To create a savings account:**
+### Savings and hub account usage guide
+
+**To create a savings or hub account:**
 1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Use the [POST /v2/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
+2. Use the [POST /v2/savings](#create-a-savings-account) (or [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) for hub accounts) endpoint to create the account on behalf of the customer.
 > The `interestConfigurationId` field is used to provide the initial interest configuration ID when creating the savings account (refer to [Interest configuration](./interest-configuration)).
 3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 > **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
@@ -146,6 +152,28 @@ While joint accounts will typically have two customers, we can support any amoun
 }
 ```
 
+<EndpointBlock
+  type="post"
+  title="Create a hub account"
+  endpoints={[
+    {
+      path: "/accounts/sterling/v1/hub-accounts",
+      version: "1.0.Sterling",
+      webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+### Hub account details
+
+Hub accounts should only be used by prior arrangement with ClearBank. They exist to facilitate innovative financial products that require more flexibility than standard savings accounts. Hub accounts are usually restricted in one or more of the following ways:
+* Transactions may be limited to specific purposes
+* Payments may be made only to and from specific accounts
+* Payments may only be made at limited frequency
+
+Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. All other API functionality for hub accounts is the same as for savings accounts shown on this page.
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
