@@ -74,7 +74,7 @@ A hub account can only be funded and defunded via a single nominated account tha
 A nominated account does not have to be provided by ClearBank, it can be from another external institution.
 To set or replace the nominated account for a hub account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
-You can make payments from a hub account to a nominated account via [Faster Payments](../gbp-payments/faster-payments).
+You can make payments from a hub account to its nominated account via [Faster Payments](../gbp-payments/faster-payments).
 
 > **Note:** If a hub account accrues any interest during closure, this will be transferred to its nominated account once account closure finishes.
 
@@ -137,7 +137,7 @@ These are the same endpoints used to retrieve and amend information for real and
 
 ## Updating hub accounts
 
-You can use the below endpoints to update the details of a hub account.
+You can use the below endpoint to update the details of a hub account.
 
 <EndpointBlock
   type="patch"
@@ -156,7 +156,7 @@ To close a hub account, follow the below steps:
 
 1. Withdraw all funds from the account.
 2. Use the [POST /v1/accounts/{id}/closure](#close-a-hub-account) endpoint to request closure.
-> **Note**: If the hub account is interest bearing, it must have a nominated account before it can be closed. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
+> **Note**: If the hub account is interest bearing, it must have a nominated account before it can be closed. If there is no interest to be paid, then you can close the account without defining a nominated account.
 3. OPTIONAL You can check the closure status of a hub account using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
 4. You'll receive an [Account Closure Completed webhook](#account-closure-completed-webhook) once the account has closed.
 
@@ -166,7 +166,7 @@ Webhooks are not instant and may take up to the following day to arrive. Wait un
 
 Account closure may fail due to the nominated account details being incorrect. If this happens, you'll be notified via the `ClosureFailureReason` field in the [Account Closure Failed](#account-closure-failed-webhook) webhook.
 
-See the following possible combinations of `accountStatus` and `closureStatus`:
+You can receive the following combinations of `accountStatus` and `closureStatus` from the Account Closure Failed webhook:
 
 | accountStatus | closureStatus | Description                                                           |
 | ------------- | ------------- | --------------------------------------------------------------------- |
