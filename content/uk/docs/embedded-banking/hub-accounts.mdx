@@ -11,39 +11,49 @@ import Callout from "src/components/callout";
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary';
 
-## Hub accounts
+## Hub accounts overview
 
-Hub accounts are FSCS protected bank accounts held with ClearBank that serve specific embedded banking use cases. These use cases typically involve sending and receiving payments from a limited set of 'associated' accounts. A hub account is held in the name of a retail or a business customer. This account type is available on a per-client basis; if you're interested in using hub accounts, please speak to you Client Director.
+Hub accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for hub accounts typically involve making payments to and from a defined set of accounts.
 
-### Hub account creation
+To ensure regulatory compliance, hub accounts may be subject to one or more of the following constraints:
+* Payments may only be made for specific purposes.
+* Payments may only be made to and from designated bank accounts.
+* Payment frequency may be restricted.
 
-Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint.
+Exact details will be agreed with your institution directly.
 
-**Holding customer**
+Hub accounts are available by prior agreement with ClearBank; if you're interested in using these, please speak with your Client Director.
 
-Before you can create a hub account, you'll first need to create the retail customer or business customer it will be held by. Refer to our [retail customers page](./retail-customers) for details on creating a retail customers, or contact your Client Director for guidance on creating business customers.
+## Creating hub accounts
 
-After creating your retail or business customer, take note of their `customerId` and legal name - you'll need these to associate the customer with their new hub account.
+Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. Before creating a hub account, you'll need the following information:
+
+* The account-holder's details.
+* Your sort code, provided to you by ClearBank.
+* A `productId`, also provided to you by ClearBank.
+* Optionally, if your hub accounts are interest bearing, an `interestConfigurationId`.
+
+**Account holding customer**  
+Each hub account must be held by a retail customer or business customer. The holder of a hub account is entitled to its funds. Refer to our [retail customers page](./retail-customers), or contact your Client Director for guidance on creating business customers.
+
+Once you've created a retail or business customer, take note of their `customerId` and legal name - you'll need these to associate the customer with their new hub account.
 
 <Callout colour="blue">
-  If you're using joint hub accounts where there is more than one account holder, you'll need to associate more than one customer. Take note of both customers' identifier and legal name.
+  Hub accounts may be created with more than one account holding customer. These are known as joint hub accounts. To create a joint hub account, you'll need each holding customer's identifier and legal name.
 </Callout>
 
-**Sort code**
-
+**Sort code**  
 A sort code will have been assigned to you as part of your onboarding process.
 
-**Product identity**
+**Product identity**  
+The `productId` you should use will be provided to you as part of onboarding. This ID determines how your hub account behaves.
 
-The `productId` you should use will be provided to you as part of onboarding.
-
-**Interest configuration** (optional)
-
+**Interest configuration** (optional)  
 Hub accounts may be interest bearing. This will have been agreed between your institution and ClearBank. If your hub accounts are interest bearing, you can set up their [interest configuration profile](./interest-configuration). Once created, the profile's `interestConfigurationId` may be reused across subsequent hub accounts to refer to the same configuration profile.
 
 <EndpointBlock
   type="post"
-  title="Create a hub account"
+  title="Create a hub account endpoint"
   endpoints={[
     {
       path: "/accounts/sterling/v1/hub-accounts",
@@ -55,99 +65,22 @@ Hub accounts may be interest bearing. This will have been agreed between your in
   ]}
 />
 
-### Set up a nominated account
-
-A hub account can only have just one nominated account.
-Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-> **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
-
-![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
-
-<Callout colour="blue">
-Always note down the X-Request-Id when creating an account. If you receive a 500 response, resubmitting the request with the same X-Request-Id will avoid creating a duplicate account.
-</Callout>
-
-Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
-
-You can retrieve information on all savings accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-savings-accounts) endpoint and filtering for savings accounts, or retrieve information for a specific savings account through the [GET /v3/Accounts/{accountId}](#get-information-for-a-savings-account) endpoint.
-
-You can amend a savings account with the [PATCH /v1/accounts/{accountId}](#amend-a-savings-account) endpoint.
-
-To retrieve end of day balances for a savings account, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
-
-<Callout colour="blue">
-These are the same endpoints used to retrieve and amend information on real accounts.
-</Callout>
-
-**To close a savings account:**
-1. Withdraw all funds from the account.
-2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
-3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
-> The process is asynchronous and can take longer if an interest calculation is pending. Unpaid accrued interest, if any, will be deposited into the nominated account. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
-4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
-5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
-
-![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
-
-<Callout colour="blue">
-Webhooks are not instant and may take up to the following day to arrive. Wait until you receive a webhook before trying to close the account again.
-</Callout>
-
-Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
-
-See the following possible combinations of `accountStatus` and `closureStatus`:
-
-| accountStatus | closureStatus | Description                 |
-|---------------|---------------|-----------------------------|
-| Enabled       | None          | No closure request submitted |
-| Enabled       | Pending       | Closure requested, interest being calculated |
-| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
-| Suspended     | Pending       | Closure requested for suspended account, interest being calculated |
-| Closed        | Complete      | Closure completed successfully |
-
-<br/> <br/>
-<Callout colour="blue">
-If account closure fails and hasn't been resolved by the end of the month, then accrued interest, if any, will be paid into the account. You will need to empty the account again before retrying the closure.
-</Callout>
-
-**To reset the nominated account and close the account:**
-1. OPTIONAL Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
-2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-4. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
-> The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
-5. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
-6. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
-
-![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close-fail-nominated-account.svg)
-
-<EndpointBlock
-  type="post"
-  title="Create a hub account"
-  endpoints={[
-    {
-      path: "/accounts/sterling/v1/hub-accounts",
-      version: "1.0.Sterling",
-      webhooks: [
-        'account-created-webhook-v1'
-      ]
-    }
-  ]}
-/>
-
-### Hub account details
-
-Hub accounts exist to facilitate innovative financial products that require more flexibility than standard savings accounts. Hub accounts are usually restricted in one or more of the following ways:
-* Transactions may be limited to specific purposes
-* Payments may be made only to and from specific accounts
-* Payments may only be made at limited frequency
-
-Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. All other API functionality for hub accounts is the same as for savings accounts shown on this page.
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
+## Paying into and out of a hub account
+
+A hub account can only be funded and defunded via a single nominated account that you assign.  
+A nominated account does not have to be provided by ClearBank, it can be from another external institution.
+To set or replace the nominated account for a hub account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+
+You can make payments from a hub account to a nominated account via [Faster Payments](../gbp-payments/faster-payments).
+
+> **Note:** If a hub account accrues any interest during closure, this will be transferred to its nominated account once account closure finishes.
+
 <EndpointBlock
   type="put"
-  title="Set a nominated account"
+  title="Set a nominated account endpoint"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -158,7 +91,7 @@ Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](
 
 <EndpointBlock
   type="get"
-  title="Get a nominated account"
+  title="Get a nominated account endpoint"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -169,9 +102,20 @@ Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
 
+## Get information about hub accounts
+
+You can retrieve information on all hub accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-hub-accounts) endpoint and filtering for hub accounts.  
+To retrieve information about a specific hub account, you can use the [GET /v3/Accounts/{accountId}](#get-information-for-a-hub-account) endpoint.
+
+You can amend the details of a hub account using the [PATCH /v1/accounts/{accountId}](#amend-a-hub-account) endpoint.
+
+<Callout colour="blue">
+These are the same endpoints used to retrieve and amend information for real and savings accounts.
+</Callout>
+
 <EndpointBlock
   type="get"
-  title="Get all real accounts, including savings accounts"
+  title="Get all real accounts, including hub accounts"
   endpoints={[
     {
       path: "/v3/Accounts",
@@ -182,7 +126,7 @@ Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](
 
 <EndpointBlock
   type="get"
-  title="Get information for a savings account"
+  title="Get information for a hub account"
   endpoints={[
     {
       path: "/v3/Accounts/{accountId}",
@@ -191,9 +135,13 @@ Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](
   ]}
 />
 
+## Updating hub accounts
+
+You can use the below endpoints to update the details of a hub account.
+
 <EndpointBlock
   type="patch"
-  title="Amend a savings account"
+  title="Amend a hub account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
@@ -202,9 +150,40 @@ Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](
   ]}
 />
 
+## Hub account closure
+
+To close a hub account, follow the below steps:
+
+1. Withdraw all funds from the account.
+2. Use the [POST /v1/accounts/{id}/closure](#close-a-hub-account) endpoint to request closure.
+> **Note**: If the hub account is interest bearing, it must have a nominated account before it can be closed. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
+3. OPTIONAL You can check the closure status of a hub account using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+4. You'll receive an [Account Closure Completed webhook](#account-closure-completed-webhook) once the account has closed.
+
+<Callout colour="blue">
+Webhooks are not instant and may take up to the following day to arrive. Wait until you receive a webhook before trying to close the account again.
+</Callout>
+
+Account closure may fail due to the nominated account details being incorrect. If this happens, you'll be notified via the `ClosureFailureReason` field in the [Account Closure Failed](#account-closure-failed-webhook) webhook.
+
+See the following possible combinations of `accountStatus` and `closureStatus`:
+
+| accountStatus | closureStatus | Description                                                           |
+| ------------- | ------------- | --------------------------------------------------------------------- |
+| Enabled       | None          | No closure request submitted                                          |
+| Enabled       | Pending       | Closure requested, interest being calculated                          |
+| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
+| Suspended     | Pending       | Closure requested for suspended account, interest being calculated    |
+| Closed        | Complete      | Closure completed successfully                                        |
+
+<br/> <br/>
+<Callout colour="blue">
+If account closure fails and hasn't been resolved by the end of the month, then accrued interest, if any, will be paid into the account. You'll need to fully withdraw these funds from the account again before reattempting account closure.
+</Callout>
+
 <EndpointBlock
   type="post"
-  title="Close a savings account"
+  title="Close a hub account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",
