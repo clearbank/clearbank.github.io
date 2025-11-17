@@ -13,6 +13,11 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Hub accounts overview
 
+<Callout colour="green">
+<h2>Hub accounts are coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
 Hub accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for hub accounts typically involve making payments to and from a defined set of accounts.
 
 To ensure regulatory compliance, hub accounts may be subject to one or more of the following constraints:
@@ -28,7 +33,7 @@ Hub accounts are available by prior agreement with ClearBank; if you're interest
 
 Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. Before creating a hub account, you'll need the following information:
 
-* The account-holder's details.
+* The account-holding customer's details.
 * Your sort code, provided to you by ClearBank.
 * A `productId`, also provided to you by ClearBank.
 * Optionally, if your hub accounts are interest bearing, an `interestConfigurationId`.
@@ -68,15 +73,19 @@ Hub accounts may be interest bearing. This will have been agreed between your in
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
-## Paying into and out of a hub account
+## Funding a hub account
 
 A hub account can only be funded and defunded via a single nominated account that you assign.  
-A nominated account does not have to be provided by ClearBank, it can be from another external institution.
+Nominated accounts do not have to be provided by ClearBank, they can be from another external provider.
 To set or replace the nominated account for a hub account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
-You can make payments from a hub account to its nominated account via [Faster Payments](../gbp-payments/faster-payments).
+You can make payments from a hub account to its nominated account via [Faster Payments](../gbp-payments/faster-payments). To receive updates about transactions for a hub account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
 
-> **Note:** If a hub account accrues any interest during closure, this will be transferred to its nominated account once account closure finishes.
+If your hub accounts are configured to accrue interest, you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
+
+<Callout colour="blue">
+  If a hub account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
+</Callout>
 
 <EndpointBlock
   type="put"
@@ -102,15 +111,15 @@ You can make payments from a hub account to its nominated account via [Faster Pa
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
 
-## Get information about hub accounts
+## Retrieve and update hub account information
 
 You can retrieve information on all hub accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-hub-accounts) endpoint and filtering for hub accounts.  
 To retrieve information about a specific hub account, you can use the [GET /v3/Accounts/{accountId}](#get-information-for-a-hub-account) endpoint.
 
-You can amend the details of a hub account using the [PATCH /v1/accounts/{accountId}](#amend-a-hub-account) endpoint.
+To make any updates to an existing hub account, you can use the [PATCH /v1/accounts/{accountId}](#amend-a-hub-account-endpoint) endpoint.
 
 <Callout colour="blue">
-These are the same endpoints used to retrieve and amend information for real and savings accounts.
+These are the same endpoints used to retrieve and update information for real accounts and savings accounts.
 </Callout>
 
 <EndpointBlock
@@ -135,13 +144,11 @@ These are the same endpoints used to retrieve and amend information for real and
   ]}
 />
 
-## Updating hub accounts
-
 You can use the below endpoint to update the details of a hub account.
 
 <EndpointBlock
   type="patch"
-  title="Amend a hub account"
+  title="Amend a hub account endpoint"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
