@@ -75,8 +75,8 @@ Hub accounts may be interest bearing. This will have been agreed between your in
 
 ## Funding a hub account
 
-A hub account can only be funded and defunded via a single nominated account that you assign.  
-Nominated accounts do not have to be provided by ClearBank, they can be from another external provider.
+A hub account can be funded and defunded via a nominated account that you assign, or via certain designated accounts.  
+Nominated accounts do not have to be provided by ClearBank: they can be from another external provider. However, the nominated account must be owned by the same account holder as the hub account.
 To set or replace the nominated account for a hub account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
 You can make payments from a hub account to its nominated account via [Faster Payments](../gbp-payments/faster-payments). To receive updates about transactions for a hub account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
@@ -159,6 +159,8 @@ You can use the below endpoint to update the details of a hub account.
 
 ## Hub account closure
 
+Before attempting to close a hub account, you should ensure you are subscribed to both the [Account Closure Completed](#account-closure-completed-webhook) and [Account Closure Failed](#account-closure-failed-webhook) webhooks.
+
 To close a hub account, follow the below steps:
 
 1. Withdraw all funds from the account.
@@ -173,20 +175,7 @@ Webhooks are not instant and may take up to the following day to arrive. Wait un
 
 Account closure may fail due to the nominated account details being incorrect. If this happens, you'll be notified via the `ClosureFailureReason` field in the [Account Closure Failed](#account-closure-failed-webhook) webhook.
 
-You can receive the following combinations of `accountStatus` and `closureStatus` from the Account Closure Failed webhook:
-
-| accountStatus | closureStatus | Description                                                           |
-| ------------- | ------------- | --------------------------------------------------------------------- |
-| Enabled       | None          | No closure request submitted                                          |
-| Enabled       | Pending       | Closure requested, interest being calculated                          |
-| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
-| Suspended     | Pending       | Closure requested for suspended account, interest being calculated    |
-| Closed        | Complete      | Closure completed successfully                                        |
-
-<br/> <br/>
-<Callout colour="blue">
-If account closure fails and hasn't been resolved by the end of the month, then any accrued interest will be paid into the account. You'll need to fully withdraw these funds from the account again before reattempting account closure.
-</Callout>
+If account closure fails and isn't resolved before the end of the month, then any accrued interest will be paid into the account. You'll need to fully withdraw these funds from the account again before reattempting closure.
 
 <EndpointBlock
   type="post"
@@ -213,6 +202,18 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     }
   ]}
 />
+
+You can receive the following combinations of `accountStatus` and `closureStatus` from the [GET /v1/accounts/{accountId}/closure](#get-account-closure-status) endpoint:
+
+| accountStatus | closureStatus | Description                                                           |
+| ------------- | ------------- | --------------------------------------------------------------------- |
+| Enabled       | None          | No closure request submitted                                          |
+| Enabled       | Pending       | Closure requested, interest being calculated                          |
+| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
+| Suspended     | Pending       | Closure requested for suspended account, interest being calculated    |
+| Closed        | Complete      | Closure completed successfully                                        |
+
+<br/> <br/>
 
 <WebhookPlaceholder render='account-closure-completed-webhook-v1' />
 <WebhookPlaceholder render='account-closure-failed-webhook-v1' />
