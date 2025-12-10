@@ -1,16 +1,18 @@
 ---
-title: "Retail Customer Application Pending webhook"
+title: "Retail Customer Additional Info Required webhook"
 version: 1
 webhook: true
 ---
 
-This webhook notifies that a KYC application is pending, and action is required from the customer before the check can complete. This webhook will only be sent if you are subscribed to it and have provided
+This webhook notifies that additional information is required before a decision can be made on this application. The `RequiredActions` object specifies which information is required from the customer, and includes a URL where the customer can upload this information.
+
+You will only receive this webhook if you are subscribed to it.
 
 #### Request body
 
 ```json
 {
-    "Type": "RetailCustomer.ApplicationPending",
+    "Type": "RetailCustomer.AdditionalInfoRequired",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -19,24 +21,25 @@ This webhook notifies that a KYC application is pending, and action is required 
 
 #### Payload
 
-| Element         | Description                                                                                                                                                                                                                                                                                   |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ApplicationId` | **Required**<br /> The original `applicationId` value you received in the 202 response to this KYC request. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` |
-| `KycStatus`     | **Required**<br /> Will always read `Pending` for this webhook <br/>Type: `string`                                                                                                                                                                                                               |
-| `RequiredActions`     | **Required**<br /> Details the user actions necessary to complete this KYC check, and provides an associated URL. <br/>Type: `array` of `objects` <br/><br/> **Required**<br/>`action`<br/>Type: `string`<br/>Specifies the customer action required.<br/><br/> **Required** <br/> `url` <br/>A unique URL for the customer to follow so they may complete the associated action.|
+| Element           | Description                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ApplicationId`   | **Required**<br /> The original `applicationId` value you received in the 202 response to this KYC request. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                                                                                     |
+| `KycStatus`       | **Required**<br /> Will always read `Pending` for this webhook <br/>Type: `string`                                                                                                                                                                                                                                                                                                |
+| `RequiredActions` | **Required**<br /> Details the user actions necessary to complete this KYC check, and provides an associated URL. <br/>Type: `array` of `objects` <br/><br/> **Required**<br/>`action`<br/>Type: `string`<br/>Specifies the customer action required.<br/><br/> **Required** <br/> `url` <br/>A unique URL for the customer to follow so they may complete the associated action. |
 
 
-#### Example Retail Customer Application Declined webhook request body
+#### Example Retail Customer Additional Info Required webhook request body
 
 ```json
 {
-    "Type": "RetailCustomer.ApplicationPending",
+    "Type": "RetailCustomer.AdditionalInfoRequired",
     "Version": 1,
     "Payload": {
         "ApplicationId": "aac7c700-1ea6-5664-8804-ceeb066d3cf5",
         "KycStatus": "Pending",
         "RequiredActions": [
-            {"action": "CustomerIdentificationDocumentUpload", "url": "https://kycchecker.com/?sessionId=123"}
+            {"action": "CustomerIdentificationDocumentUpload", "url": "https://kycchecker.com/?sessionId=123"},
+            {"action": "CustomerProofOfAddressDocumentUpload", "url": "https://kycchecker.com/?sessionId=456"},
         ]
     },
     "Nonce": 332172156
