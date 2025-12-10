@@ -32,7 +32,9 @@ If you'd like access to this product, please speak to your Client Director.
   • Are not US nationals
 </Callout>
 
-![A message flow diagram demonstrating how retail customer KYC work for a success and declined check, and for a check requiring additional information.](/assets/images/kyc-flow.svg)
+![A message flow diagram demonstrating a successful KYC check. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs the checks, results a success, and creates a new retail customer. ClearBank then emits a Retail Customer Application Successful webhook to the client, which includes a customer ID and an application ID.](/assets/images/kyc-flow-success.svg)
+![A message flow diagram demonstrating a KYC check that required additional information before succeeding or failing. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete this check, and emits a Retail Customer Additional Info Required webhook, including the required actions of the client's customer. The retail customer uploads the information, which is received by ClearBank. KYC checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the check.](/assets/images/kyc-flow-pending.svg)
+![A message flow diagram demonstrating a declined KYC check. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs the checks, which are declined. ClearBank then emits a Retail Customer Application Declined webhook to the client, which includes the original application ID.](/assets/images/kyc-flow-declined.svg)
 
 <EndpointBlock
   type="post"
