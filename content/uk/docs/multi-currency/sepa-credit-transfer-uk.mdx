@@ -20,7 +20,7 @@ import ExternalLink from "src/components/external-link";
 Our SEPA Credit Transfer UK (SCT UK) service lets you exchange euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
 
 <Callout colour="blue">
-  You can only send euros inside the SEPA zone with SCT UK. To send euros outside of the SEPA zone, please refer to our multi-currency payments service.
+  You can only send euros inside the SEPA zone with SCT UK. To send euros outside of the SEPA zone, please refer to our <a href="">multi-currency payments</a> service.
 </Callout>
 
 If you're interested in using this new service, please contact your Client Director.
@@ -48,7 +48,7 @@ Each payment request contains a nested structure of debtor accounts and their as
 
 ![Diagram showing the PaymentInformation array, containing 3 debtors](/assets/images/sct-uk-bulk-payments-diagram.svg "")
 
-When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either a [SCT UK Outbound Payment Failed](#sct-uk-outbound-payment-failed-webhook), or a [SCT UK Outbound Payment Completed](#sct-uk-outbound-payment-completed-webhook) and a [SCT UK Outbound Payment Completed](#sctuk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
+When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either an [SCT UK Outbound Payment Failed](#sct-uk-outbound-payment-failed-webhook), or an [SCT UK Outbound Payment Completed](#sct-uk-outbound-payment-completed-webhook) and an [SCT UK Outbound Payment Completed](#sctuk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
 
 ## Outbound payments
 
@@ -57,7 +57,7 @@ When you send several payments at once in bulk, each payment is processed indivi
   title="Send euro payments"
   endpoints={[
     {
-      path: "/payments/cross-border-mccy/v2/payments",
+      path: "/payments/cross-border/v2/payments",
       version: "2.0-SCT-UK",
       webhooks: [
         'sctuk-outbound-payment-completed-webhook-v1',
@@ -70,7 +70,7 @@ When you send several payments at once in bulk, each payment is processed indivi
 
 ### Example outbound payment request
 
-You can use the below example request payload to test the **POST /payments/cross-border-mccy/v2/payments** endpoint.  
+You can use the below example request payload to test the **POST /payments/cross-border/v2/payments** endpoint.  
 Take care to update the `RequestedExecutionDate` field to today's date, and to use a different `UETR` if using this example more than once.
 
 ```json
