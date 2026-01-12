@@ -19,15 +19,19 @@ GITHUB_TOKEN=<token>
 ### Option 1 - Run in vs code dev container (Recommended)
 
 1) Open repository in vscode.
-2) Open the Command Palette (Ctrl+Shift+P) and type `Dev Containers: Reopen in Container`
+2) Open `postCreate.sh` and ensure that it has Unix line endings (LF)
+
+![alt text](image-5.png)
+
+3) Open the Command Palette (Ctrl+Shift+P) and type `Dev Containers: Reopen in Container`
 
 ![alt text](image-1.png)
 
-3) The dev container will be created and npm install will run. Once finished you should see output like below.
+4) The dev container will be created and npm install will run. Once finished you should see output like below.
 
 ![alt text](image-2.png)
 
-4) Open a new terminal and run `npm run start`. You should see output like below and be able to access the site on `https://localhost:8000`
+5) Open a new terminal and run `npm run start`. You should see output like below and be able to access the site on `https://localhost:8000`
 
 ![alt text](image-3.png)
 
