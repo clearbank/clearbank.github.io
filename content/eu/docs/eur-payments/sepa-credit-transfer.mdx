@@ -53,31 +53,34 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 />
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
-<WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+<WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
 
 #### Failure reason codes 
 
-SCT outbound payments can fail for several reasons. Refer to the below list of possible failure codes and their definitions for more detail:
+Outbound payments may fail due to **internal validation failure** (the payment did not pass our internal validation rules) or **external validation failure** (the payment did not pass SEPA scheme or beneficiary bank validation rules).
 
-| Reason code | Description                                                           |
-| ----------- | --------------------------------------------------------------------- |
-| AB15        | Account is held suspense account / account is repair suspense account |
-| AC01        | Account identifier invalid or incorrect                               |
-| AC04        | Account not active / closed                                           |
-| AC06        | Blocked account                                                       |
-| AM03        | EUR currency not enabled                                              |
-| AM04        | Insufficient funds                                                    |
-| BE01        | Account does not belong to institution                                |
-| CB01        | Unknown error                                                         |
-| CB02        | A valid creditor agent BIC cannot be derived from the supplied IBAN   |
-| CNOR        | Creditor bank is not registered                                       |
-| CUST        | Requested by customer                                                 |
-| RR04        | Regulatory reason                                                     |
+When a payment fails, you'll receive an [Outbound Payment Failed webhook](#sepa-ct-outbound-payment-failed-webhook), which includes a `reason` code specifying the reason for failure. The failure codes include, but are not limited to:
+
+
+| Reason code | Description                                                           | Internal validation failure | External validation failure |
+| ----------- | --------------------------------------------------------------------- | --------------------------- | --------------------------- |
+| AB15        | Account is held suspense account / account is repair suspense account | X                           |                             |
+| AC01        | Account identifier invalid or incorrect                               | X                           | X                           |
+| AC04        | Account not active / closed                                           | X                           | X                           |
+| AC06        | Blocked account                                                       | X                           | X                           |
+| AM03        | EUR currency not enabled                                              | X                           |                             |
+| AM04        | Insufficient funds                                                    | X                           | X                           |
+| BE01        | Account does not belong to institution                                | X                           |                             |
+| CB01        | Unknown error                                                         | X                           | X                           |
+| CB02        | A valid creditor agent BIC cannot be derived from the supplied IBAN   | X                           |                             |
+| CNOR        | Creditor bank is not registered                                       | X                           | X                           |
+| CUST        | Requested by customer                                                 |                             | X                           |
+| RR04        | Regulatory reason                                                     |                             | X                           |
 
 ### Testable IBANs
 
-When you call our endpoints in simulation, any IBANs you provide are checked for validity. The below table lists valid and invalid IBANs you can use to support your testing:
+When you call our endpoints in simulation, any IBANs you provide are validated. To support your testing, refer to the below tables of valid and invalid IBANs:
 
 | Valid IBAN                  | Country     |
 | --------------------------- | ----------- |
