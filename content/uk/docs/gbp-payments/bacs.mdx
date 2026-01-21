@@ -11,13 +11,13 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from 'src/components/callout'
 
-## Bacs
+## Bacs Payment Services Providers
 
 Bacs (Bankers' Automated Clearing Services) is a UK payment system used for direct debit and direct credit transactions.
 
 There are two types of participants within Bacs:
 - Payment Service Providers (PSPs)
-- Service Users (often called Originators)
+- Service Users (often called Originator)
 
 PSPs are authorised participants within the Bacs scheme. They can receive Bacs Direct Debit instructions and return them if necessary (for example, due to insufficient funds or account closure). PSPs cannot initiate or originate Direct Debits themselves.
 
@@ -261,6 +261,12 @@ The webhooks that relate to inbound Direct Debit payments have no direct associa
 - [Bacs Direct Debit Inbound Payment Created webhook](#bacs-direct-debit-inbound-payment-created-webhook)
 - [Transaction Settled webhook](#transaction-settled-webhook)
 - [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) (this can occur automatically if ClearBank returns a payment, or in response to the Bacs returns endpoint)
+- [Bacs Direct Debit Indemnity Claim Received Event webhook](#bacs-direct-debit-indemnity-claim-received-event-webhook)
+
+These two webhooks relate to the origination of Direct Debit payments as they appear in the **service user's account**. You would see these if you were collecting the Direct Debit rather than paying it:
+- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - indicates funds received as a result of a Direct Debit file being processed. This is the bulk settlement.
+- [Bacs Unpaid Direct Debit Received webhook](#bacs-unpaid-direct-debit-received-webhook) - indicates that a Direct Debit could not be paid.
+
 
 <WebhookPlaceholder render='bacs-direct-debit-inbound-payment-created-webhook-v2' />
 <WebhookPlaceholder render='bacs-direct-debit-return-created-webhook-v4' />
