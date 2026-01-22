@@ -1,0 +1,263 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "end-of-day-api",
+    "description": "Ledger Application",
+    "version": "1.0-end-of-day"
+  },
+  "paths": {
+    "/accounts/sterling/v1/accounts/{accountId}/end-of-day-balance": {
+      "get": {
+        "tags": [
+          "ExternalBalanceManagement"
+        ],
+        "description": "Retrieves the end-of-day balance for a specific real account at 23:59:59 for the specified timezone. If no timezone is provided, information will be returned at 23:59:59 UTC.",
+        "operationId": "GetEndOfDayBalance",
+        "parameters": [
+                      {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "The date to retrieve the end of day balance for (format: yyyy-mm-dd). Example: 2026-01-20",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2026-01-20"
+          },
+          {
+            "name": "timeZone",
+            "in": "query",
+            "description": "The timezone identifier for the balance calculation. Use IANA identifiers. Example: Europe/London",
+            "schema": {
+              "type": "string",
+              "default": "UTC"
+            },
+            "example": "Europe/London"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEndOfDayBalanceResponse"
+                },
+                "example": {
+                  "endOfDayBalance": {
+                    "amount": 15234.56,
+                    "balanceAsOf": "2026-01-21T00:00:00Z"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEndOfDayBalanceResponse"
+                },
+                "example": {
+                  "endOfDayBalance": {
+                    "amount": 15234.56,
+                    "balanceAsOf": "2026-01-21T00:00:00Z"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEndOfDayBalanceResponse"
+                },
+                "example": {
+                  "endOfDayBalance": {
+                    "amount": 15234.56,
+                    "balanceAsOf": "2026-01-21T00:00:00Z"
+                  }
+                }
+              }
+            }
+        },
+        "404": {
+            "description": "Not found"
+        },
+        "422": {
+            "description": "Client error",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "errors": {
+                            "description": "Identifies which field(s) contain validation errors and any requirements for the field identified",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "code",
+                                        "message"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            }
+                        },
+                        "required": [
+                            "errors"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "examples": {
+                        "InvalidTimezone": {
+                            "summary": "Invalid timezone",
+                    "description": "Returned when the provided timezone is not a valid IANA timezone identifier.",
+                    "value": {
+                      "errors": [
+                        {
+                          "code": "TIMEZONE_INVALID",
+                          "message": "The specified timezone 'Invalid/Zone' is not a valid IANA timezone identifier."
+                        }
+                      ]
+                    }
+                  },
+                  "InvalidDate": {
+                    "summary": "Invalid date",
+                    "description": "Returned when the provided date is invalid or in the future.",
+                    "value": {
+                      "errors": [
+                        {
+                          "code": "DATE_INVALID",
+                          "message": "The specified date '2099-01-01' is invalid or in the future."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExternalEndOfDayAccountBalanceResponseModel": {
+        "required": [
+          "amount",
+          "balanceAsOf"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The account balance at end of day in the account's currency.",
+            "format": "double",
+            "example": 15234.56
+          },
+          "balanceAsOf": {
+            "type": "string",
+            "description": "The UTC timestamp representing the end of the requested day in the specified timezone.",
+            "format": "date-time",
+            "example": "2026-01-21T00:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the end-of-day account balance information."
+      },
+      "GetEndOfDayBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "endOfDayBalance": {
+            "$ref": "#/components/schemas/ExternalEndOfDayAccountBalanceResponseModel"
+          },
+          "halLinks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HalLink"
+            },
+            "description": "HAL-compliant links to related resources.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response containing the end-of-day balance for an account."
+      },
+      "HalLink": {
+        "required": [
+          "href",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The name/relation type of the link.",
+            "example": "Account"
+          },
+          "href": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The URL of the related resource.",
+            "example": "https://api.clearbank.co.uk/v3/accounts/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+          },
+          "templated": {
+            "type": "boolean",
+            "description": "Indicates if the href contains URI template variables that need substitution.",
+            "example": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "A single hypermedia link following HAL specification."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "ExternalBalanceManagement",
+      "description": "Provides balance management queries for external API consumers, including end-of-day balance retrieval with timezone support."
+    }
+  ]
+}
