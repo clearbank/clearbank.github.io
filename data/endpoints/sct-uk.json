@@ -123,6 +123,113 @@
           }
         }
       }
+    },
+    "/payments/cross-border/v2/inbound/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "You can call this endpoint to simulate an inbound payment. After submitting a valid request, you'll receive a Payments.Mccy.InboundPaymentCompleted webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -225,6 +332,109 @@
           },
           "remittanceInformation": {
             "$ref": "#/components/schemas/RemittanceInformation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_SimulateInboundPaymentRequest": {
+        "required": [
+          "creditorAccount",
+          "interbankSettlementAmount",
+          "paymentIdentification",
+          "remittanceInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "interbankSettlementAmount": {
+            "$ref": "#/components/schemas/InboundSimulation_CurrencyAndAmount"
+          },
+          "paymentIdentification": {
+            "$ref": "#/components/schemas/InboundSimulation_PaymentIdentification"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/InboundSimulation_CashAccount"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/InboundSimulation_RemittanceInformation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_CashAccount": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "minLength": 1,
+            "type": "string",
+            "example": "GB13CBAB2233441234567",
+            "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.\r\n<example>GB33BUKB20201555555555</example>"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_CurrencyAndAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "multipleOf": 0.01,
+            "maximum": 999999999.99,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money moved between the instructing agent and the instructed agent.\r\n<example>2.99</example>",
+            "format": "double",
+            "example": 1234.50
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "example": "EUR",
+            "type": "string",
+            "description": "The currency code, conforming to the ISO 4217 standard.\r\nMust be a three-letter uppercase code representing a valid currency.\r\n\r\nOnly \"EUR\" is allowed currently.<example>EUR</example>"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_PaymentIdentification": {
+        "required": [
+          "endToEndIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "example": "GcP5LyftYyLPNa4OQ5bZThRTlFRPCR7GbR2",
+            "type": "string",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\r\n<example>E2E1234567890</example>"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_RemittanceInformation": {
+        "required": [
+          "unstructured"
+        ],
+        "type": "object",
+        "properties": {
+          "unstructured": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "maxLength": 140,
+              "minLength": 1,
+              "type": "string",
+              "example": "myRemittanceInformation-111-ABC"
+            },
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.\r\n<example>TestReference</example>"
           }
         },
         "additionalProperties": false
