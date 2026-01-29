@@ -88,6 +88,88 @@ If the payment fails, you will receive the [T2 Customer Credit Transfer Outbound
 <WebhookPlaceholder render='t2-customer-credit-transfer-outbound-failed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
+**Example Customer Accounts Transaction Completed webhook request body for inbound T2 payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"70e7d2ff-bbb2-4f1f-90f0-f2221029447a",
+      "EndToEndIdentification":"Inbound Payment",
+      "CreatedDateTime":"2025-02-10T12:49:55.5733333Z",
+      "CompletedDateTime":"2025-02-10T12:49:55.6Z",
+      "ClearingChannel":"Target2",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"75030e66dc7844ed9e4a1266c9e8410f",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL17CLRB0126793871",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":944609635
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 944609635
+}
+```
+
+**Example Customer Accounts Transaction Completed webhook request body for outbound T2 payment**
+
+```
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"a94a49f7-9007-419a-8722-bc45b0ddc7ec",
+      "EndToEndIdentification":"46189668732340195406845",
+      "CreatedDateTime":"2025-02-20T10:44:06.7833333Z",
+      "CompletedDateTime":"2025-02-20T10:44:09.7633333Z",
+      "ClearingChannel":"Target2",
+      "DebitCreditCode":"Debit",
+      "Amount":424.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Example Remittance",
+      "DebtorAccount":{
+         "AccountId":"c182ac1e-3f15-4b58-b9c3-22719a6b6461",
+         "Iban":"NL74CLRB0113702695",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"NL91ABNA0417164300",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1269251375
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 1269251375
+}
+```
+
 ## Returning a T2 payment
 
 To return a T2 payment, use the [/payments/t2-rtgs/v1/payment-returns](#return-a-t2-payment) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook) when the return successfully goes through.
