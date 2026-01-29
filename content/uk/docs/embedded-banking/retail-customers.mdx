@@ -1,16 +1,215 @@
 ---
 title: "Retail customers"
 metaTitle: "Retail customers"
-order: 1
+order: 2
 showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
-import * as CONSTANTS from "./retail-customers.constants";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
 
-## Retail customers
+## Retail customers V2
+
+<Callout colour="green">
+<h2>Retail customers V2 is coming soon</h2>
+<p>All information in this section describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+**Retail customers** are individual consumers of financial services in a personal capacity. You can manage your retail customer data with ClearBank directly as an embedded banking partner. Creating a retail customer is necessary before you can create a bank account for them.
+
+<Callout colour="blue">
+  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, please refer to our <a href="/uk/docs/know-your-customer">Know Your Customer</a> page.
+</Callout>
+
+### Compatible account types
+
+Retail customers are compatible with several account types:
+* [Savings accounts](./savings-accounts) - For earning interest on saved deposits.
+* [Flexible cash ISAs](./flexible-cash-isa) - For earning tax-free interest on saved deposits.
+* [Hub accounts](./hub-accounts) - For specific innovative use cases.
+
+## Create and update retail customers
+
+#### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
+
+When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+* `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
+* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+
+If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/retail/{customerId}**](#update-a-retail-customer) endpoint.
+
+#### Addresses
+
+When you create a retail customer, you'll also need to provide their current address in the `addressHistory.currentAddress` object. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
+
+<EndpointBlock
+  type="post"
+  title="Create a retail customer"
+  endpoints={[
+    {
+      path: "/customers/v2/retail",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a retail customer"
+  endpoints={[
+    {
+      path: "/customers/v2/retail/{customerId}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a retail customer"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+## Retail customer addresses
+
+You can update a customer's address using the **POST /customers/v2/customers/{customerId}/addresses/current** endpoint. When you do this, the customer's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
+
+It is not currently possible to delete a previous address.
+
+<EndpointBlock
+  type="post"
+  title="Update a retail customer's address"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/addresses/current",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+## Retail customer ID documents
+
+You can optionally provide identity document information for your retail customers. For example, you can provide a customer's passport number `idNumber` and its date of expiry `idExpiryDate` in the `identityDocuments` array in the [**POST /customers/v2/retail**](#create-a-retail-customer) endpoint.
+
+If you provide customer identity information, you must always include its `idCountryOfIssue`, `idType`, `idNumber`, and `idExpiryDate`. The combination of `idCountryOfIssue` and `idType` uniquely identifies a customer's identity documents in our APIs. You can therefore only provide one `idCountryOfIssue` and `idType` combination per customer.
+
+To update or delete an existing customer's identity information, use the [**PUT /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#update-a-retail-customers-id-document) or [**DELETE /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#delete-a-retail-customers-id-document) endpoint accordingly.
+
+There is no functionality to upload images or scans of customer ID.
+
+<EndpointBlock
+  type="put"
+  title="Update a retail customer's ID document"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a retail customer's ID document"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+## Tax residency endpoints
+
+When you create a retail customer, you must specify at least one tax residency for them. A customer can have dual tax residency in certain situations, such as if they live in one country but earn income in another. You should specify all currently active tax residencies for a customer when you create them.
+
+US citizens are generally considered to be US tax residents regardless of where they live.
+
+To change a customer's tax residency from one country to another, follow the below steps:
+1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-customer) endpoint.
+2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-customers-tax-residency) endpoint.
+
+<Callout colour="blue">
+  If a customer has only one tax residency, you have to must add a new tax residency before you can delete the current one. If you attempt to delete a retail customer's only tax residency you will receive a 422 - Unprocessable Entity error.
+</Callout>
+
+<EndpointBlock
+  type="put"
+  title="Update a retail customer's tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a customer's tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+## Customer relation endpoints
+
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-retail-customer-and-another-customer) endpoint allows you to link two parties by providing their `customerId`s and specifying the nature of the relation.
+
+**Note:** The arrangement of `customerId`s in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
+The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
+For example, when defining a UBO relationship, the customer referred to in the `relatedCustomerId` will become the Ultimate Beneficial Owner of the `customerId` specified in the path.
+
+To retrieve all existing relations to a customer, you can call the [**GET /customers/v2/customers/{customerId}/related-parties**](#get-all-relations-of-a-retail-customer).
+
+To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-customers) using the `customerId` of each party.
+
+<EndpointBlock
+  type="post"
+  title="Relate a retail customer and another customer"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all relations of a retail customer"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a relation between two customers"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+## Retail customers V1
 
 FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-protected deposit is a physical account held with ClearBank and is only available to our embedded banking customers for the purpose of sending and/or receiving payments. The balance of an FSCS-protected deposit is held by ClearBank and can be viewed via the ClearBank Portal and the API. Additionally, FSCS-protected deposits are reconciled for you by ClearBank.
 
@@ -23,8 +222,8 @@ Embedded banking accounts created using the <a href="#create-an-embedded-banking
 
 <EndpointBlock
   type="post"
-  title="Create a retail customer"
-  description={CONSTANTS.postCustomersRetailDescription}
+  title="Create a retail customer V1"
+  description="Once you have created a retail customer, create a new FSCS-protected embedded banking account using the retail customer's unique ID."
   endpoints={[
     {
       path: "/v1/customers/retail",
