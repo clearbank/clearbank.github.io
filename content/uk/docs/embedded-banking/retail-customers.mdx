@@ -20,7 +20,7 @@ import ExternalLink from 'src/components/external-link';
 **Retail customers** are individual consumers of financial services in a personal capacity. You can manage your retail customer data with ClearBank directly as an embedded banking partner. Creating a retail customer is necessary before you can create a bank account for them.
 
 <Callout colour="blue">
-  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, please refer to our <a href="/uk/docs/know-your-customer">Know Your Customer</a> page.
+  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, please refer to our <a href="/uk/docs/embedded-banking/know-your-customer">Know Your Customer</a> page.
 </Callout>
 
 Retail customers V1 documentation can be found at [the bottom of this page](#retail-customers-v-1).
@@ -83,7 +83,7 @@ When you create a retail customer, you'll also need to provide their current add
 
 ## Retail customer addresses
 
-You can update a customer's address using the **POST /customers/v2/customers/{customerId}/addresses/current** endpoint. When you do this, the customer's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
+You can update a customer's address using the [**POST /customers/v2/customers/{customerId}/addresses/current**](#update-a-retail-customers-address) endpoint. When you do this, the customer's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
 
 It is not currently possible to delete a previous address.
 
@@ -137,7 +137,7 @@ When you create a retail customer, you must specify at least one tax residency f
 US citizens are generally considered to be US tax residents regardless of where they live.
 
 To change a customer's tax residency from one country to another, follow the below steps:
-1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-customer) endpoint.
+1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#update-a-retail-customers-tax-residency) endpoint.
 2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-customers-tax-residency) endpoint.
 
 <Callout colour="blue">
