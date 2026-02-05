@@ -16,7 +16,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Gets the customer by customer ID",
+        "summary": "You can call this endpoint to retrieve a sole trader by their customer ID.",
         "operationId": "V2CustomerGet",
         "parameters": [
           {
@@ -58,7 +58,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer",
+            "description": "The ID of the customer, given as a UUID V4.",
             "required": true,
             "schema": {
               "type": "string",
@@ -113,7 +113,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Gets the related parties data of a customer by customer ID",
+        "summary": "You can call this endpoint to retrieve all related parties to a given customer by their customer ID.",
         "operationId": "V2RelatedPartiesGet",
         "parameters": [
           {
@@ -155,7 +155,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer",
+            "description": "The ID of the customer.",
             "required": true,
             "schema": {
               "type": "string",
@@ -216,7 +216,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Adds related party to customer",
+        "summary": "You can use this endpoint to relate one customer to another.",
         "operationId": "V2RelatedPartyPost",
         "parameters": [
           {
@@ -249,7 +249,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer",
+            "description": "The ID of the original customer.",
             "required": true,
             "schema": {
               "type": "string",
@@ -339,7 +339,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Updates a Customer's current address, maintains the previous addresses history.",
+        "summary": "You can use this endpoint to update a customer's current address. When you add a new current address, the the previous address history is retained.",
         "operationId": "V2CustomersCurrentAddressPost",
         "parameters": [
           {
@@ -372,7 +372,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer",
+            "description": "The ID of the customer.",
             "required": true,
             "schema": {
               "type": "string",
@@ -437,7 +437,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Removes a related party link between two customers.",
+        "summary": "You can call this endpoint to removes a related party link between two customers.",
         "operationId": "V2RelatedPartyDelete",
         "parameters": [
           {
@@ -489,7 +489,7 @@
           {
             "name": "relatedCustomerId",
             "in": "path",
-            "description": "The ID of the related customer to unlink",
+            "description": "The ID of the related customer to unlink.",
             "required": true,
             "schema": {
               "type": "string",
@@ -562,7 +562,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Adds or updates a customer's identity document. Returns 200 OK when updating an existing ID, or 201 Created when adding a new ID.",
+        "summary": "You can use this endpoint to add to or update a sole trader's identity documents. This endpoint returns 200 OK when you update an existing ID, or 201 Created when you add a new ID.",
         "operationId": "V2CustomerIdentityDocumentPut",
         "parameters": [
           {
@@ -694,7 +694,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Removes a customer's identity document.",
+        "summary": "You can call this endpoint to removes a customer's existing identity document.",
         "operationId": "V2CustomerIdentityDocumentDelete",
         "parameters": [
           {
@@ -1049,7 +1049,7 @@
         "tags": [
           "SoleTrader"
         ],
-        "summary": "Requests creation of sole trader customer",
+        "summary": "You can use this endpoint to create a new sole trader customer.",
         "operationId": "V2SoleTraderPost",
         "parameters": [
           {
@@ -1142,7 +1142,7 @@
         "tags": [
           "SoleTrader"
         ],
-        "summary": "Requests update of sole trader",
+        "summary": "You can use this endpoint to update certain details of an existing sole trader customer.",
         "operationId": "V2SoleTraderPatch",
         "parameters": [
           {
@@ -1184,7 +1184,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The Id of the customer",
+            "description": "The ID of the customer.",
             "required": true,
             "schema": {
               "type": "string",
@@ -1407,7 +1407,7 @@
             "items": {
               "$ref": "#/components/schemas/AddressGetResponse"
             },
-            "description": "The Current Address",
+            "description": "The current addresses of the customer. Contains at most 1 of each type.",
             "nullable": true
           },
           "previousAddresses": {
@@ -1415,7 +1415,7 @@
             "items": {
               "$ref": "#/components/schemas/PreviousAddressGetResponse"
             },
-            "description": "Previous Addresses",
+            "description": "The previous addresses of the customer.",
             "nullable": true
           }
         },
@@ -1962,7 +1962,8 @@
           "relatedCustomerId": {
             "type": "string",
             "description": "The ID of the customer to be linked as a related party.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "32e67bbf-9276-4dd4-b51b-bb65a95d4224"
           },
           "relatedPartyType": {
             "$ref": "#/components/schemas/RelatedPartyType"
@@ -2090,12 +2091,14 @@
           "customerId": {
             "type": "string",
             "description": "Unique identifier for the linked customer",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "relatedCustomerId": {
             "type": "string",
             "description": "Unique identifier for the linked individual",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "32e67bbf-9276-4dd4-b51b-bb65a95d4224"
           }
         },
         "additionalProperties": false,
@@ -2195,7 +2198,8 @@
           "customerId": {
             "type": "string",
             "description": "The ID of the customer under which the subresource was created.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           }
         },
         "additionalProperties": false,
@@ -2206,7 +2210,7 @@
           "SoleTrader"
         ],
         "type": "string",
-        "description": "The customer's type"
+        "description": "The customer's type."
       },
       "IdType": {
         "enum": [
@@ -2366,31 +2370,31 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "Customer's first name",
+            "description": "Customer's first name.",
             "nullable": true,
             "example": "Karol"
           },
           "middleName": {
             "type": "string",
-            "description": "Customer's middle name",
+            "description": "Customer's middle name.",
             "nullable": true,
             "example": "Henryk"
           },
           "surname": {
             "type": "string",
-            "description": "Customer's surname",
+            "description": "Customer's surname.",
             "nullable": true,
             "example": "Agrowicz"
           },
           "emailAddress": {
             "type": "string",
-            "description": "Customer's email address",
+            "description": "The customer's email address.",
             "nullable": true,
             "example": "karol.workmail@mymail.com"
           },
           "telephone": {
             "type": "string",
-            "description": "Customer's telephone number",
+            "description": "The customer's telephone number.",
             "nullable": true,
             "example": "01234555666"
           },
@@ -2600,7 +2604,7 @@
           },
           "ownershipPercentage": {
             "type": "integer",
-            "description": "The Related Party ownership percentage",
+            "description": "The related party's ownership percentage, expressed as an integer.",
             "format": "int32",
             "nullable": true,
             "example": 100
@@ -2636,7 +2640,8 @@
           "id": {
             "type": "string",
             "description": "The unique identifier of the customer.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "institutionId": {
             "type": "string",
@@ -2693,7 +2698,8 @@
           "customerId": {
             "type": "string",
             "description": "The unique identifier of the Sole Trader customer.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "personalDetails": {
             "$ref": "#/components/schemas/PersonalDetailsPatchModel"
@@ -2794,7 +2800,7 @@
           },
           "taxIdNumber": {
             "type": "string",
-            "description": "The customer's tax ID number",
+            "description": "The customer's tax ID number.",
             "nullable": true,
             "example": "DR123467L"
           },

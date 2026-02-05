@@ -35,13 +35,27 @@ For more details on available account types, please reach out to your Client Dir
 
 #### Business information
 
-In addition to the sole trader's personal information, you can provide information about their business. This includes their `tradingName`, `annualRevenue`, and `businessClassification`.
+In addition to a sole trader's personal details, you can provide information about their business. This includes their `tradingName`, `annualRevenue`, and `businessClassification`.
 
 A sole trader can use their personal name as their `tradingName`, or instead pick a business name. Guidance on acceptable business names for sole traders can be found on the <ExternalLink href="https://www.gov.uk/become-sole-trader/choose-your-business-name">gov.uk</ExternalLink> website.
 
 The `annualRevenue` you provide for a sole traders should be based on their previous year's revenue. If this is their first year of operation, an estimated value is acceptable.
 
 You can specify the `businessClassification` details of a sole trader. Their `businessClassification.sectorCode` should always be `_8b_UnincorporatedBusinessesOtherThanLLPs`, while their `industryClassification` should be the option that most closely fits their business.
+
+#### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
+
+When you create a sole trader, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+* `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
+* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+
+If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/sole-traders/{customerId}**](#update-a-sole-trader) endpoint.
+
+#### Addresses
+
+When you create a sole trader, you'll also need to provide their current residential and/or trading address in the `addressHistory.currentAddresses` array. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
 
 <EndpointBlock
   type="post"
@@ -78,11 +92,11 @@ You can specify the `businessClassification` details of a sole trader. Their `bu
 
 ## Sole trader addresses
 
-When you create a sole trader, you'll need to provide their current address in the `addressHistory.currentAddress` object. You can optionally record their previous address history via the `addressHistory.previousAddresses` array.
+When you create a sole trader, you'll need to provide their current residential and/or trading address in the `addressHistory.currentAddresses` array. You can optionally record their previous address history via the `addressHistory.previousAddresses` array.
 
-You can update a sole trader's address using the [**POST /customers/v2/customers/{customerId}/addresses/current**](#update-a-sole-traders-current-addresses) endpoint. When you do this, the sole trader's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
+A sole trader can have more than one current address by having both a residential and trading address, but no more than one of each.
 
-**TODO: mention multiple addresses**
+You can update a sole trader's current residential or trading address using the [**POST /customers/v2/customers/{customerId}/addresses/current**](#update-a-sole-traders-current-addresses) endpoint. When you do this, the sole trader's current address of that type - either residential or trading address - will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
 
 It is not currently possible to delete a previous address.
 
@@ -136,8 +150,8 @@ When you create a sole trader, you must specify at least one tax residency for t
 US citizens are generally considered to be US tax residents regardless of where they live.
 
 To change a sole trader's tax residency from one country to another, follow the below steps:
-1. Add the new tax residency first. You can do this using the **PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}** endpoint.
-2. Delete the old tax residency. You can do this using the **DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}** endpoint.
+1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-sole-trader) endpoint.
+2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-sole-traders-tax-residency) endpoint.
 
 **Note:** If a customer has only one tax residency, you must add a new tax residency before you can delete the current one. If you attempt to delete a sole trader's only tax residency you will receive a 422 - Unprocessable Entity error.
 
@@ -164,6 +178,16 @@ To change a sole trader's tax residency from one country to another, follow the 
 />
 
 ## Customer relation endpoints
+
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-sole-trader-and-another-entity) endpoint allows you to link two parties by providing their `customerId`s and specifying the nature of the relation.
+
+**Note:** The arrangement of `customerId`s in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
+The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
+For example, when defining a UBO relationship, the customer referred to in the `relatedCustomerId` will become the Ultimate Beneficial Owner of the `customerId` specified in the path.
+
+To retrieve all existing relations to a customer, you can call the [**GET /customers/v2/customers/{customerId}/related-parties**](#get-all-relations-of-a-sole-trader-customer).
+
+To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-customers) using the `customerId` of each party.
 
 <EndpointBlock
   type="post"
