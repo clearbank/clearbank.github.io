@@ -1,0 +1,199 @@
+---
+title: "Sole traders"
+metaTitle: "Sole traders"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
+
+## Sole traders overview
+
+<Callout colour="green">
+<h2>Sole traders are coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+**Sole traders** are natural persons operating a business in their own name. You can manage your sole traders' data with ClearBank directly as an embedded banking partner. Creating a sole trader is necessary before you can create accounts for them.
+
+The data required to register a sole trader is a combination of fields associated with both [legal entities](./legal-entities-v2) (incorporated businesses) and [retail customers](../docs/embedded-banking/retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
+
+### Compatible account types
+
+Sole traders are eligible for certain account types, these include:
+* [Savings accounts](../docs/embedded-banking/savings-accounts)
+* [Hub accounts](../docs/embedded-banking/hub-accounts)
+* [Cash ISAs](../docs/embedded-banking/flexible-cash-isa)
+* Current Accounts
+
+For more details on available account types, please reach out to your Client Director.
+
+## Create, update and retrieve a sole trader
+
+#### Business information
+
+In addition to the sole trader's personal information, you can provide information about their business. This includes their `tradingName`, `annualRevenue`, and `businessClassification`.
+
+A sole trader can use their personal name as their `tradingName`, or instead pick a business name. Guidance on acceptable business names for sole traders can be found on the <ExternalLink href="https://www.gov.uk/become-sole-trader/choose-your-business-name">gov.uk</ExternalLink> website.
+
+The `annualRevenue` you provide for a sole traders should be based on their previous year's revenue. If this is their first year of operation, an estimated value is acceptable.
+
+You can specify the `businessClassification` details of a sole trader. Their `businessClassification.sectorCode` should always be `_8b_UnincorporatedBusinessesOtherThanLLPs`, while their `industryClassification` should be the option that most closely fits their business.
+
+<EndpointBlock
+  type="post"
+  title="Create a sole trader"
+  endpoints={[
+    {
+      path: "/customers/v2/sole-traders",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a sole trader"
+  endpoints={[
+    {
+      path: "/customers/v2/sole-traders/{customerId}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a sole trader"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+## Sole trader addresses
+
+When you create a sole trader, you'll need to provide their current address in the `addressHistory.currentAddress` object. You can optionally record their previous address history via the `addressHistory.previousAddresses` array.
+
+You can update a sole trader's address using the [**POST /customers/v2/customers/{customerId}/addresses/current**](#update-a-sole-traders-current-addresses) endpoint. When you do this, the sole trader's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
+
+**TODO: mention multiple addresses**
+
+It is not currently possible to delete a previous address.
+
+<EndpointBlock
+  type="post"
+  title="Update a sole trader's current addresses"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/addresses/current",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+## Sole trader ID document endpoints
+
+Similar to retail customers, you can optionally provide identity document information for sole traders. For example, you can provide a sole trader's passport number `idNumber` and date of expiry `idExpiryDate` in the `identityDocuments` array in the [**POST /customers/v2/sole-traders**](#create-a-sole-trader) endpoint.
+
+If you provide customer identity information, you must always include its `idCountryOfIssue`, `idType`, `idNumber`, and `idExpiryDate`. The combination of `idCountryOfIssue` and `idType` uniquely identifies a customer's identity documents in our APIs. You can therefore only provide one `idCountryOfIssue` and `idType` combination per sole trader.
+
+To update or delete an existing identity information, use the [**PUT /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#update-a-sole-traders-id-document) or [**DELETE /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#delete-a-sole-traders-id-document) endpoint accordingly.
+
+There is currently no facility to upload images of customer ID documents.
+
+<EndpointBlock
+  type="put"
+  title="Update a sole trader's ID document"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a sole trader's ID document"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+## Tax residency endpoints
+
+When you create a sole trader, you must specify at least one tax residency for them. A customer can have dual tax residency in certain situations, such as if they live in one country but earn income in another. You should specify all currently active tax residencies for a sole trader when you create them.
+
+US citizens are generally considered to be US tax residents regardless of where they live.
+
+To change a sole trader's tax residency from one country to another, follow the below steps:
+1. Add the new tax residency first. You can do this using the **PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}** endpoint.
+2. Delete the old tax residency. You can do this using the **DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}** endpoint.
+
+**Note:** If a customer has only one tax residency, you must add a new tax residency before you can delete the current one. If you attempt to delete a sole trader's only tax residency you will receive a 422 - Unprocessable Entity error.
+
+<EndpointBlock
+  type="put"
+  title="Add a tax residency to a sole trader"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a sole trader's tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+## Customer relation endpoints
+
+<EndpointBlock
+  type="post"
+  title="Relate a sole trader and another entity"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all relations of a sole trader customer"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a relation between two customers"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
