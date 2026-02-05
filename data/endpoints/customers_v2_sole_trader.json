@@ -1,13 +1,14 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "ClearBank Retail Customer V2 APIs",
+    "title": "ClearBank Financial Institutions API",
+    "description": "",
     "contact": {
       "name": "API Support",
       "url": "https://clear.bank",
       "email": "fiapisupport@clear.bank"
     },
-    "version": "2.0-customers-retail"
+    "version": "2.0-customers-sole-trader"
   },
   "paths": {
     "/customers/v2/customers/{customerId}": {
@@ -15,7 +16,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Retrieves a customer by their customer ID.",
+        "summary": "You can call this endpoint to retrieve a sole trader by their customer ID.",
         "operationId": "V2CustomerGet",
         "parameters": [
           {
@@ -57,7 +58,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer.",
+            "description": "The ID of the customer, given as a UUID.",
             "required": true,
             "schema": {
               "type": "string",
@@ -71,7 +72,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RetailCustomerGetResponse"
+                  "$ref": "#/components/schemas/SoleTraderCustomerGetResponse"
                 }
               }
             }
@@ -112,7 +113,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Retrieves the related party data of a customer by their customer ID.",
+        "summary": "You can call this endpoint to retrieve all related parties to a given customer by their customer ID.",
         "operationId": "V2RelatedPartiesGet",
         "parameters": [
           {
@@ -154,7 +155,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the original customer.",
+            "description": "The ID of the customer.",
             "required": true,
             "schema": {
               "type": "string",
@@ -215,7 +216,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Adds a new related party to an existing customer.",
+        "summary": "You can use this endpoint to relate one customer to another.",
         "operationId": "V2RelatedPartyPost",
         "parameters": [
           {
@@ -257,7 +258,7 @@
           }
         ],
         "requestBody": {
-          "description": "Information required to add related party to customer.",
+          "description": "Information required to add related party to customer",
           "content": {
             "application/json": {
               "schema": {
@@ -338,7 +339,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Updates a customer's current address while maintaining their previous addresses history.",
+        "summary": "You can use this endpoint to update a customer's current address. When you add a new current address, the previous address history is retained.",
         "operationId": "V2CustomersCurrentAddressPost",
         "parameters": [
           {
@@ -431,12 +432,12 @@
         }
       }
     },
-    "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}": {
+    "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}": {
       "delete": {
         "tags": [
           "Customer"
         ],
-        "summary": "Removes a related party link between two customers.",
+        "summary": "You can call this endpoint to removes a related party link between two customers.",
         "operationId": "V2RelatedPartyDelete",
         "parameters": [
           {
@@ -478,7 +479,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer.",
+            "description": "The ID of the customer",
             "required": true,
             "schema": {
               "type": "string",
@@ -493,15 +494,6 @@
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
-          },
-          {
-            "name": "relatedPartyType",
-            "in": "path",
-            "description": "The type of related party. Used to disambiguate where a party is related in more than one way.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/RelatedPartyType"
             }
           }
         ],
@@ -570,7 +562,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Adds or updates a customer's identity document. Returns 200 OK when updating an existing ID, or 201 Created when adding a new ID.",
+        "summary": "You can use this endpoint to add to or update a sole trader's identity documents. This endpoint returns 200 OK when you update an existing ID, or 201 Created when you add a new ID.",
         "operationId": "V2CustomerIdentityDocumentPut",
         "parameters": [
           {
@@ -613,7 +605,7 @@
           {
             "name": "idCountryOfIssue",
             "in": "path",
-            "description": "Country of issue.",
+            "description": "Country of issue, given as a 3-letter ISO 3166-1 country-code.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/CountryCode"
@@ -622,7 +614,7 @@
           {
             "name": "idType",
             "in": "path",
-            "description": "Type of identity document.",
+            "description": "The type of identity document. Possible values include: 'Passport', 'DrivingLicence', and 'NationalId'.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/IdType"
@@ -702,7 +694,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Removes a customer's identity document.",
+        "summary": "You can call this endpoint to removes a customer's existing identity document.",
         "operationId": "V2CustomerIdentityDocumentDelete",
         "parameters": [
           {
@@ -754,7 +746,7 @@
           {
             "name": "idCountryOfIssue",
             "in": "path",
-            "description": "Country of issue.",
+            "description": "The ID's country of issue, given as a 3-letter ISO 3166-1 country-code.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/CountryCode"
@@ -763,7 +755,7 @@
           {
             "name": "idType",
             "in": "path",
-            "description": "Type of identity document.",
+            "description": "Type of identity document. Possible values include: 'Passport', 'DrivingLicence', and 'NationalId'.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/IdType"
@@ -1052,13 +1044,13 @@
         }
       }
     },
-    "/customers/v2/retail": {
+    "/customers/v2/sole-traders": {
       "post": {
         "tags": [
-          "Retail"
+          "SoleTrader"
         ],
-        "summary": "Requests creation of retail customer. On a success, you will receive a customer ID which you can then use to create accounts for this customer.",
-        "operationId": "V2RetailPost",
+        "summary": "You can use this endpoint to create a new sole trader customer.",
+        "operationId": "V2SoleTraderPost",
         "parameters": [
           {
             "name": "Authorization",
@@ -1089,11 +1081,11 @@
           }
         ],
         "requestBody": {
-          "description": "Information required to create retail customer.",
+          "description": "Information required to create a sole trader",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRetailRequest"
+                "$ref": "#/components/schemas/CreateSoleTraderRequest"
               }
             }
           }
@@ -1124,26 +1116,6 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "422": {
             "description": "Unprocessable Content",
             "content": {
@@ -1165,13 +1137,13 @@
         }
       }
     },
-    "/customers/v2/retail/{customerId}": {
+    "/customers/v2/sole-traders/{customerId}": {
       "patch": {
         "tags": [
-          "Retail"
+          "SoleTrader"
         ],
-        "summary": "Requests update of retail customer.",
-        "operationId": "V2RetailPatch",
+        "summary": "You can use this endpoint to update certain details of an existing sole trader customer.",
+        "operationId": "V2SoleTraderPatch",
         "parameters": [
           {
             "name": "Authorization",
@@ -1201,6 +1173,15 @@
             }
           },
           {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "customerId",
             "in": "path",
             "description": "The ID of the customer.",
@@ -1212,11 +1193,11 @@
           }
         ],
         "requestBody": {
-          "description": "Information required to update a retail customer.",
+          "description": "Information required to update a retail customer",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRetailRequest"
+                "$ref": "#/components/schemas/UpdateSoleTraderRequest"
               }
             }
           }
@@ -1227,7 +1208,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RetailCustomerPatchResponse"
+                  "$ref": "#/components/schemas/SoleTraderPatchResponse"
                 }
               }
             }
@@ -1291,56 +1272,69 @@
             "type": "string",
             "description": "The building name or number at this address.",
             "nullable": true,
-            "example": "322"
+            "example": "9"
           },
           "streetName": {
             "type": "string",
             "description": "The customer's address' street name.",
             "nullable": true,
-            "example": "Long Road"
+            "example": "Short Road"
           },
           "county": {
             "type": "string",
             "description": "County of the customer's address.",
             "nullable": true,
-            "example": "Greenshire"
+            "example": "Blueshire"
           },
           "city": {
             "type": "string",
             "description": "City of the customer's address.",
             "nullable": true,
-            "example": "Cyan City"
+            "example": "Lilac City"
           },
           "postalCode": {
             "type": "string",
             "description": "Postal code of the customer's address.",
             "nullable": true,
-            "example": "PG15 8AB"
+            "example": "LB1 7CC"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
           },
           "validFrom": {
             "type": "string",
-            "description": "The date from which the customer started living at this address.",
+            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
           },
-          "validTo": {
-            "type": "string",
-            "description": "The date at which the customer stopped living at this address.",
-            "format": "date",
-            "nullable": true
-          },
           "isCurrentAddress": {
             "type": "boolean",
             "description": "Indicates if this is the customer's current address.",
+            "nullable": true,
+            "example": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Address history details"
+      },
+      "AddressHistoryGetResponse": {
+        "type": "object",
+        "properties": {
+          "currentAddress": {
+            "$ref": "#/components/schemas/AddressGetResponse"
+          },
+          "previousAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreviousAddressGetResponse"
+            },
+            "description": "Previous Addresses",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "The details of the customer's address history."
+        "description": "Addresses associated with the customer"
       },
       "PreviousAddressGetResponse": {
         "type": "object",
@@ -1383,14 +1377,14 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "The date from which the customer started living at this address.",
+            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2021-02-18"
           },
           "validTo": {
             "type": "string",
-            "description": "The date at which the customer stopped living at this address.",
+            "description": "The date at which the customer stopped living at this address, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
@@ -1403,33 +1397,110 @@
           }
         },
         "additionalProperties": false,
-        "description": "The details of the customer's address history."
+        "description": "The details of the customer's previous address history."
       },
-      "AddressHistoryGetResponse": {
+      "AddressHistoryMultipleCurrentAddressesGetResponse": {
         "type": "object",
         "properties": {
-          "currentAddress": {
-            "$ref": "#/components/schemas/AddressGetResponse"
+          "currentAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressGetResponse"
+            },
+            "description": "The current addresses of the customer. Contains at most 1 of each type.",
+            "nullable": true
           },
           "previousAddresses": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PreviousAddressGetResponse"
             },
-            "description": "Array of the customer's previous addresses.",
+            "description": "The previous addresses of the customer.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Addresses associated with the customer."
+        "description": "Addresses associated with a customer that has multiple current addresses."
       },
       "AddressType": {
         "enum": [
+          "TradingAddress",
           "ResidentialAddress"
         ],
         "type": "string",
-        "example": "ResidentialAddress",
         "description": "Represents the type of the address"
+      },
+      "BusinessClassificationGetResponse": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The business classification"
+      },
+      "BusinessClassificationPatchModel": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "type": "string",
+            "description": "Updated sector code (if changed) - this should always be '_8b_UnincorporatedBusinessesOtherThanLLPs'.",
+            "nullable": true,
+            "example": "_8b_UnincorporatedBusinessesOtherThanLLPs"
+          },
+          "industryClassification": {
+            "type": "string",
+            "description": "Updated industry classification (if changed).",
+            "nullable": true,
+            "example": "_6A_DevelopmentOfBuildings"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing SoleTrader business classification fields that were updated."
+      },
+      "BusinessDetailsGetResponse": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business.",
+            "nullable": true,
+            "example": "Build It Solutions"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business.",
+            "format": "double",
+            "nullable": true,
+            "example": 57000.00
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business Details"
+      },
+      "BusinessDetailsPatchModel": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "Updated trading name (if changed).",
+            "nullable": true,
+            "example": "Build It Enterprises"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "Updated annual revenue (if changed).",
+            "format": "double",
+            "nullable": true,
+            "example": 75000.00
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing SoleTrader business details that were updated."
       },
       "CountryCode": {
         "enum": [
@@ -1697,26 +1768,45 @@
         "type": "string",
         "description": "The customer's CRA rating. Determined by the outcomes of your due diligence checks."
       },
-      "CreateAddressHistoryRequest": {
+      "CreateBusinessClassificationRequest": {
         "required": [
-          "currentAddress"
+          "industryClassification",
+          "sectorCode"
         ],
         "type": "object",
         "properties": {
-          "currentAddress": {
-            "$ref": "#/components/schemas/CurrentAddressRequest"
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
           },
-          "previousAddresses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PreviousAddressRequest"
-            },
-            "description": "The customer's previous addresses.",
-            "nullable": true
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
           }
         },
         "additionalProperties": false,
-        "description": "The customer's address history."
+        "description": "Request to create a business classification."
+      },
+      "CreateBusinessDetailsRequest": {
+        "required": [
+          "annualRevenue",
+          "tradingName"
+        ],
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business.",
+            "nullable": true,
+            "example": "Build It Solutions"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business.",
+            "format": "double",
+            "example": 37000.00
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to create business details."
       },
       "CreateCustomerIdentityDocumentRequest": {
         "required": [
@@ -1736,92 +1826,19 @@
           "idNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "The ID number of the document.",
+            "description": "The ID number of the identity document.",
             "nullable": true,
-            "example": "855865736946"
+            "example": "178087840846"
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "The expiry date of the document.",
+            "description": "Expiry date of the document, formatted: yyyy-MM-dd.",
             "format": "date",
-            "example": "2028-05-18"
+            "example": "2030-05-21"
           }
         },
         "additionalProperties": false,
-        "description": "Create an identity document for a customer"
-      },
-      "CreateCustomerNameAndCountryDetailsRequest": {
-        "required": [
-          "countryOfResidence",
-          "firstName",
-          "surname"
-        ],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "minLength": 1,
-            "type": "string",
-            "description": "The customer's first name.",
-            "nullable": true,
-            "example": "Kirsty"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The customer's middle name.",
-            "nullable": true,
-            "example": "Jane"
-          },
-          "surname": {
-            "minLength": 1,
-            "type": "string",
-            "description": "The customer's surname.",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "countryOfResidence": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Name and country details for a customer."
-      },
-      "CreateCustomerNameAndDateOfBirthRequest": {
-        "required": [
-          "dateOfBirth",
-          "firstName",
-          "surname"
-        ],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "minLength": 1,
-            "type": "string",
-            "description": "The customer's first name.",
-            "nullable": true,
-            "example": "Kirsty"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The customer's middle name.",
-            "nullable": true,
-            "example": "Jane"
-          },
-          "surname": {
-            "minLength": 1,
-            "type": "string",
-            "description": "The customer's surname.",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The customer's date of birth.",
-            "format": "date",
-            "example": "1985-12-22"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Name and date of birth details for a customer."
+        "description": "Create an identity document for a customer."
       },
       "CreateKycAmlRequest": {
         "required": [
@@ -1834,7 +1851,7 @@
         "properties": {
           "sanctions": {
             "type": "boolean",
-            "description": "Indicates if the customer is under sanctions."
+            "description": "Indicates if the customer is currently under sanctions."
           },
           "pep": {
             "$ref": "#/components/schemas/PepType"
@@ -1848,6 +1865,32 @@
         },
         "additionalProperties": false,
         "description": "KYC/AML information for the customer."
+      },
+      "CreateMultipleAddressHistoryRequest": {
+        "required": [
+          "currentAddresses"
+        ],
+        "type": "object",
+        "properties": {
+          "currentAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrentAddressRequest"
+            },
+            "description": "The customer's current addresses",
+            "nullable": true
+          },
+          "previousAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreviousAddressRequest"
+            },
+            "description": "The customer's previous addresses.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The customer's address history where they have multiple current addresses. For example, a trading address and a residential address."
       },
       "CreatePersonalDetailsRequest": {
         "required": [
@@ -1863,47 +1906,47 @@
             "type": "string",
             "description": "The customer's first name.",
             "nullable": true,
-            "example": "Kirsty"
+            "example": "Karol"
           },
           "middleName": {
             "type": "string",
             "description": "The customer's middle name.",
             "nullable": true,
-            "example": "Jane"
+            "example": "Henryk"
           },
           "surname": {
             "minLength": 1,
             "type": "string",
             "description": "The customer's surname.",
             "nullable": true,
-            "example": "Friar"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The customer's date of birth.",
-            "format": "date",
-            "example": "1985-12-22"
+            "example": "Agrowicz"
           },
           "email": {
             "type": "string",
             "description": "The customer's email address.",
             "nullable": true,
-            "example": "kristy.fr@mymail.com"
+            "example": "krl@workaholicmail.com"
           },
           "telephone": {
             "type": "string",
             "description": "The customer's telephone number.",
             "nullable": true,
-            "example": "01234555666"
+            "example": "07123589778"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
           },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd.",
+            "format": "date",
+            "example": "1988-05-21"
+          },
           "nationalIdentificationNumber": {
             "type": "string",
-            "description": "The customer's national identification number, for example, their National Insurance (NI) number.",
+            "description": "The customer's national identification number, such as their National Insurance (NI) number.",
             "nullable": true,
-            "example": "PC223344D"
+            "example": "PC112233D"
           }
         },
         "additionalProperties": false,
@@ -1919,14 +1962,15 @@
           "relatedCustomerId": {
             "type": "string",
             "description": "The ID of the customer to be linked as a related party.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "32e67bbf-9276-4dd4-b51b-bb65a95d4224"
           },
           "relatedPartyType": {
             "$ref": "#/components/schemas/RelatedPartyType"
           },
           "ownershipPercentage": {
             "type": "integer",
-            "description": "The ownership percentage of the related party. Only allowed for UBO relationships.",
+            "description": "The ownership percentage of the related party. Optional: applies only to UBO relationship types.",
             "format": "int32",
             "nullable": true,
             "example": 100
@@ -1935,15 +1979,21 @@
         "additionalProperties": false,
         "description": "A request to link one customer to another as a related party."
       },
-      "CreateRetailRequest": {
+      "CreateSoleTraderRequest": {
         "required": [
           "addressHistory",
+          "businessClassification",
+          "businessDetails",
           "kycAml",
           "personalDetails",
-          "taxDetails"
+          "taxDetails",
+          "identityDocuments"
         ],
         "type": "object",
         "properties": {
+          "addressHistory": {
+            "$ref": "#/components/schemas/CreateMultipleAddressHistoryRequest"
+          },
           "personalDetails": {
             "$ref": "#/components/schemas/CreatePersonalDetailsRequest"
           },
@@ -1955,14 +2005,17 @@
             "description": "The customer's identity documents.",
             "nullable": true
           },
-          "addressHistory": {
-            "$ref": "#/components/schemas/CreateAddressHistoryRequest"
+          "businessDetails": {
+            "$ref": "#/components/schemas/CreateBusinessDetailsRequest"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/CreateBusinessClassificationRequest"
           },
           "kycAml": {
             "$ref": "#/components/schemas/CreateKycAmlRequest"
           },
           "taxDetails": {
-            "$ref": "#/components/schemas/CreateRetailTaxDetailsRequest"
+            "$ref": "#/components/schemas/CreateSoleTraderTaxDetailsRequest"
           },
           "specialStatuses": {
             "type": "array",
@@ -1970,14 +2023,13 @@
               "$ref": "#/components/schemas/SpecialStatusValue"
             },
             "description": "The customer's special statuses, if any. Possible values include: 'Vulnerability_Health_VisualImpairmentBraille', 'Vulnerability_Health_VisualImpairmentLargeText', 'Vulnerability_Health_AudioImpairment', 'Vulnerability_Health_Other', 'Vulnerability_LifeEvents', 'Vulnerability_Resilience', and 'Vulnerability_Capability'",
-            "example": "Vulnerability_LifeEvents",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Request body for creating a retail customer."
+        "description": "Request body for creating a sole trader type customer."
       },
-      "CreateRetailTaxDetailsRequest": {
+      "CreateSoleTraderTaxDetailsRequest": {
         "required": [
           "usPerson",
           "validSelfCertification",
@@ -1997,12 +2049,18 @@
             "items": {
               "$ref": "#/components/schemas/CreateTaxResidencyRequest"
             },
-            "description": "Gets or sets the collection of tax residencies to be created as part of the request.",
+            "description": "A collection of the customer's tax residencies to be created as part of the request.",
             "nullable": true
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
           }
         },
         "additionalProperties": false,
-        "description": "Tax details for a retail customer."
+        "description": "Tax details for a sole trader customer."
       },
       "CreateTaxResidencyRequest": {
         "required": [
@@ -2018,7 +2076,7 @@
             "type": "string",
             "description": "Tax identification number.",
             "nullable": true,
-            "example": "PC335577B"
+            "example": "PC556498D"
           },
           "noTaxIdReason": {
             "$ref": "#/components/schemas/ReasonForNoTaxId"
@@ -2032,29 +2090,31 @@
         "properties": {
           "customerId": {
             "type": "string",
-            "description": "Unique identifier of the original customer.",
-            "format": "uuid"
+            "description": "Unique identifier for the linked customer",
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "relatedCustomerId": {
             "type": "string",
-            "description": "Unique identifier of the newly linked customer.",
-            "format": "uuid"
+            "description": "Unique identifier for the linked individual",
+            "format": "uuid",
+            "example": "32e67bbf-9276-4dd4-b51b-bb65a95d4224"
           }
         },
         "additionalProperties": false,
-        "description": "Response containing information about the created related party."
+        "description": "Response containing information about the created related party"
       },
       "CreatedResourceResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique identifier for the created retail customer. You should record this to be able to use it later.",
+            "description": "Unique identifier for the created resource. If creating a customer, you should retain this for future reference.",
             "format": "uuid"
           }
         },
         "additionalProperties": false,
-        "description": "Response containing information about the created resource."
+        "description": "Response containing information about the created resource"
       },
       "CurrentAddressRequest": {
         "required": [
@@ -2109,74 +2169,14 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid. Defaults to today if unspecified.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd. Defaults to today if unspecified.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-22"
+            "example": "2022-05-15"
           }
         },
         "additionalProperties": false,
         "description": "The customer's current address."
-      },
-      "CustomerNameAndCountryDetailsPatchModel": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "description": "Updated first name (if changed).",
-            "nullable": true,
-            "example": "Kristy"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "Updated middle name (if changed).",
-            "nullable": true,
-            "example": "Jade"
-          },
-          "surname": {
-            "type": "string",
-            "description": "Updated surname (if changed).",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "countryOfResidence": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Patch model containing only personal detail fields that were updated."
-      },
-      "CustomerNameAndDateOfBirthPatchModel": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "description": "Updated first name (if changed).",
-            "nullable": true,
-            "example": "Kristy"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "Updated middle name (if changed).",
-            "nullable": true,
-            "example": "Jade"
-          },
-          "surname": {
-            "type": "string",
-            "description": "Updated surname (if changed).",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "Updated date of birth (if changed).",
-            "format": "date",
-            "nullable": true,
-            "example": "1985-12-21"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Patch model containing only name and date of birth fields that were updated."
       },
       "CustomerStatus": {
         "enum": [
@@ -2184,7 +2184,7 @@
         ],
         "type": "string",
         "example": "Active",
-        "description": "Represents the status of a customer in the system. This will always be 'Active'."
+        "description": "Represents the status of a customer in the system."
       },
       "CustomerSubresourceCreatedResponse": {
         "type": "object",
@@ -2192,7 +2192,8 @@
           "customerId": {
             "type": "string",
             "description": "The ID of the customer under which the subresource was created.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           }
         },
         "additionalProperties": false,
@@ -2200,11 +2201,11 @@
       },
       "CustomerType": {
         "enum": [
-          "Retail"
+          "SoleTrader"
         ],
         "type": "string",
-        "example": "Retail",
-        "description": "The type of customer. This will always be 'Retail'."
+        "example": "SoleTrader",
+        "description": "The customer's type."
       },
       "IdType": {
         "enum": [
@@ -2213,7 +2214,7 @@
           "NationalId"
         ],
         "type": "string",
-        "description": "The type of ID document."
+        "description": "The type of ID document"
       },
       "IdentityDocumentsGetResponse": {
         "type": "object",
@@ -2222,13 +2223,14 @@
             "type": "string",
             "description": "The ID number of the identity document.",
             "nullable": true,
-            "example": "PC335577B"
+            "example": "1189345699"
           },
           "expiryDate": {
             "type": "string",
-            "description": "The expiry date of the identity document.",
+            "description": "The expiry date of the identity document, formatted: yyyy-MM-dd.",
             "format": "date",
-            "nullable": true
+            "nullable": true,
+            "example": "2028-12-15"
           },
           "countryOfIssue": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2240,13 +2242,79 @@
         "additionalProperties": false,
         "description": "Customer's Identity documents"
       },
+      "IndustryClassificationCode": {
+        "enum": [
+          "_1_AgricultureHuntingAndFishing",
+          "_2_Fishing",
+          "_3_MiningAndQuarrying",
+          "_4A_FoodBeveragesAndTobacco",
+          "_4B_TextilesWearingApparelAndLeather",
+          "_4C_PulpPaperAndPrinting",
+          "_4D_ChemicalsPharmaceuticalsRubberAndPlastics",
+          "_4E_OtherNonmetalicMineralProductsAndMetals",
+          "_4F_MachineryAndEquipmentIncludingTransportEquipment",
+          "_4G_ElectricalMedicalAndOpticalProductsAndEquipment",
+          "_4H_OtherManufacturing",
+          "_5A_ElectricityGasSteamAndAirConditioningSupply",
+          "_5B_WaterCollectionAndSewerage",
+          "_5C_WasteManagementRelatedServicesAndRemediationActivities",
+          "_6A_DevelopmentOfBuildings",
+          "_6B_ConstructionOfCommercialBuildings",
+          "_6C_ConstructionOfDomesticBuildings",
+          "_6D_CivilEngineering",
+          "_6E_OtherConstructionActivities",
+          "_7A_WholesaleAndRetailTradeAndRepairOfMotorVehiclesCycles",
+          "_7B_WholesaleTradeExcludingMotorVehiclesCycles",
+          "_7C_RetailTradeExcludingMotorVehiclesCycles",
+          "_8_AccommodationAndFoodServiceActivities",
+          "_9A_TransportAndStorage",
+          "_9B_InformationAndCommunication",
+          "_10A_BuyingSellingAndRentingOfOwnOrLeasedRealEstate",
+          "_10B_RealEstateAndRelatedActivitiesOnAFeeOrContractBasis",
+          "_10C_ProfessionalScientificAndTechnicalActivities",
+          "_10D_AdministrationAndSupportServices",
+          "_11_PublicAdministrationAndDefence",
+          "_12_Education",
+          "_13_HumanHealthAndSocialWork",
+          "_14A_PersonalAndCommunityServiceActivities",
+          "_14B_RecreationalCulturalAndSportingActivities",
+          "_15A_FinancialLeasingCorporations",
+          "_15B_NonbankGrantorsOfCreditExcludingCreditUnionsAndSPVsRelatedToSecuritisations",
+          "_15C_CreditUnions",
+          "_15D_FactoringCorporations",
+          "_15E_MortgageAndHousingCreditCorporations",
+          "_15F_InvestmentAndUnitTrustsOtherThanMoneyMarketMutualFunds",
+          "_15G_MoneyMarketMutualFunds",
+          "_15H_BankHoldingCompanies",
+          "_15I_ActivitiesOfventureAndDevelopmentCapitalCompanies",
+          "_15Ja_SecurityAndCommodityContractBrokerage",
+          "_15JB_SecurityDealingOnOwnAccount",
+          "_15L_SPVsRelatedToSecuritisation",
+          "_15M_OtherFinancialIntermediaries",
+          "_16A_InsuranceCompanies",
+          "_16B_PensionFunds",
+          "_17A_FundManagementActivities",
+          "_17BA_CentralClearingCounterparties",
+          "_17BBA_AdministrationOfFinancialMarkets",
+          "_17BBB_RiskAndDamageEvaluation",
+          "_17BBC_ActivitiesOfInsuranceAgentsAndBrokers",
+          "_17BBD_OtherActivitiesAuxiliaryToInsuranceAndPensionFunding",
+          "_17BBE_EmoneyIssuers",
+          "_17BBF_OtherAuxiliaryActivitiesNotCoveredElsewhere",
+          "_18_IndividualsAndIndividualTrusts"
+        ],
+        "type": "string",
+        "example": "_6C_ConstructionOfDomesticBuildings",
+        "description": "Industry Classification Code"
+      },
       "KycAmlGetResponse": {
         "type": "object",
         "properties": {
           "sanctions": {
             "type": "boolean",
             "description": "Indicates if the customer is under sanctions.",
-            "nullable": true
+            "nullable": true,
+            "example": false
           },
           "pep": {
             "$ref": "#/components/schemas/PepType"
@@ -2267,7 +2335,8 @@
           "sanctions": {
             "type": "boolean",
             "description": "Updated sanctions flag (if changed).",
-            "nullable": true
+            "nullable": true,
+            "example": false
           },
           "pep": {
             "$ref": "#/components/schemas/PepType"
@@ -2280,7 +2349,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Patch model containing KYC/AML fields that were updated.\r\nOnly properties that changed are present."
+        "description": "Patch model containing KYC/AML fields that were updated. Only properties that changed are present."
       },
       "PepType": {
         "enum": [
@@ -2296,31 +2365,31 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "Customer's first name",
+            "description": "Customer's first name.",
             "nullable": true,
-            "example": "Kirsty"
+            "example": "Karol"
           },
           "middleName": {
             "type": "string",
-            "description": "Customer's middle name",
+            "description": "Customer's middle name.",
             "nullable": true,
-            "example": "Jane"
+            "example": "Henryk"
           },
           "surname": {
             "type": "string",
-            "description": "Customer's surname",
+            "description": "Customer's surname.",
             "nullable": true,
-            "example": "Friar"
+            "example": "Agrowicz"
           },
           "emailAddress": {
             "type": "string",
-            "description": "Customer's email address",
+            "description": "The customer's email address.",
             "nullable": true,
-            "example": "kristy.fr@mymail.com"
+            "example": "karol.workmail@mymail.com"
           },
           "telephone": {
             "type": "string",
-            "description": "Customer's telephone number",
+            "description": "The customer's telephone number.",
             "nullable": true,
             "example": "01234555666"
           },
@@ -2329,14 +2398,14 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "Customer's Date of Birth",
+            "description": "Customer's date of birth, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
-            "example": "1985-12-22"
+            "example": "1988-05-22"
           },
           "nationalIdentificationNumber": {
             "type": "string",
-            "description": "Updated national identification number (if changed).",
+            "description": "Updated national identification number.",
             "nullable": true,
             "example": "PC112233D"
           }
@@ -2351,26 +2420,26 @@
             "type": "string",
             "description": "Updated first name (if changed).",
             "nullable": true,
-            "example": "Kristy"
+            "example": "Carol"
           },
           "middleName": {
             "type": "string",
             "description": "Updated middle name (if changed).",
             "nullable": true,
-            "example": "Jade"
+            "example": "Henrik"
           },
           "surname": {
             "type": "string",
             "description": "Updated surname (if changed).",
             "nullable": true,
-            "example": "Friar"
+            "example": "Agarowicz"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "Updated date of birth (if changed).",
+            "description": "Updated date of birth (if changed), formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
-            "example": "1985-12-23"
+            "example": "1988-05-21"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2379,22 +2448,23 @@
             "type": "string",
             "description": "Updated email address (if changed).",
             "nullable": true,
-            "example": "kirsty.fr@mymail.com"
+            "example": "c.agarowicz@workmailurl.com"
           },
           "telephone": {
             "type": "string",
             "description": "Updated telephone number (if changed).",
             "nullable": true,
-            "example": "01234555777"
+            "example": "07777222666"
           },
           "nationalIdentificationNumber": {
             "type": "string",
             "description": "Updated national identification number (if changed).",
-            "nullable": true
+            "nullable": true,
+            "example": "PC548823D"
           }
         },
         "additionalProperties": false,
-        "description": "Patch model containing personal detail fields that were updated.\r\nOnly properties that changed are present."
+        "description": "Patch model containing personal detail fields that were updated. Only properties that changed are present."
       },
       "PreviousAddressRequest": {
         "required": [
@@ -2414,28 +2484,28 @@
             "type": "string",
             "description": "The building name or number of this address.",
             "nullable": true,
-            "example": "322"
+            "example": "0"
           },
           "streetName": {
             "minLength": 1,
             "type": "string",
             "description": "The street name of this address.",
             "nullable": true,
-            "example": "Long Road"
+            "example": "Short Road"
           },
           "city": {
             "minLength": 1,
             "type": "string",
             "description": "City of this address.",
             "nullable": true,
-            "example": "Cyan City"
+            "example": "Blue City"
           },
           "county": {
             "minLength": 1,
             "type": "string",
             "description": "County of the customer's address.",
             "nullable": true,
-            "example": "Greenshire"
+            "example": "Redshire"
           },
           "postalCode": {
             "minLength": 1,
@@ -2449,14 +2519,14 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2016-06-22"
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
@@ -2495,6 +2565,7 @@
             "nullable": true
           }
         },
+        "additionalProperties": { },
         "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
       },
       "RcaType": {
@@ -2513,13 +2584,12 @@
           "NotRequired"
         ],
         "type": "string",
-        "description": "Supported reasons for not having a tax ID (required if no tax ID number provided)."
+        "description": "Supported reasons for not having a tax ID (required if no tax ID number provided)"
       },
       "RelatedPartyGetResponse": {
-        "description": "Response model for Related Party.",
         "type": "object",
         "properties": {
-          "id":{
+          "id": {
             "type": "string",
             "description": "The related party's unique ID.",
             "format": "uuid"
@@ -2534,7 +2604,9 @@
             "nullable": true,
             "example": 100
           }
-        } 
+        },
+        "additionalProperties": false,
+        "description": "Response model for Related Party"
       },
       "RelatedPartyType": {
         "enum": [
@@ -2544,31 +2616,38 @@
         ],
         "type": "string",
         "example": "UBO",
-        "description": "Related party types."
+        "description": "Related party types"
       },
-      "RetailCustomerGetResponse": {
+      "SectorCode": {
+        "enum": [
+          "_8b_UnincorporatedBusinessesOtherThanLLPs"
+        ],
+        "type": "string",
+        "example": "_8b_UnincorporatedBusinessesOtherThanLLPs",
+        "description": "Sector Code, should always be '_8b_UnincorporatedBusinessesOtherThanLLPs'"
+      },
+      "SoleTraderCustomerGetResponse": {
+        "required": [
+          "personalDetails"
+        ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "The unique identifier of the customer. You should keep note of this, as you'll need it to amend or access the customer later.",
+            "description": "The unique identifier of the customer.",
             "format": "uuid",
-            "example": "0e7ce040-b157-44a4-ba29-ed5e9b259cd3"
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "institutionId": {
             "type": "string",
             "description": "The unique identifier of the institution associated with this customer.",
-            "format": "uuid",
-            "example": "2500fbf8-787f-425d-b630-bde0d1c6ff58"
+            "format": "uuid"
           },
           "status": {
             "$ref": "#/components/schemas/CustomerStatus"
           },
           "type": {
             "$ref": "#/components/schemas/CustomerType"
-          },
-          "personalDetails": {
-            "$ref": "#/components/schemas/PersonalDetailsGetResponse"
           },
           "kycAml": {
             "$ref": "#/components/schemas/KycAmlGetResponse"
@@ -2584,28 +2663,38 @@
             "description": "The customer's special statuses, if any. Possible values include: 'Vulnerability_Health_VisualImpairmentBraille', 'Vulnerability_Health_VisualImpairmentLargeText', 'Vulnerability_Health_AudioImpairment', 'Vulnerability_Health_Other', 'Vulnerability_LifeEvents', 'Vulnerability_Resilience', and 'Vulnerability_Capability'",
             "nullable": true
           },
+          "businessDetails": {
+            "$ref": "#/components/schemas/BusinessDetailsGetResponse"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/PersonalDetailsGetResponse"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/BusinessClassificationGetResponse"
+          },
           "identityDocuments": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IdentityDocumentsGetResponse"
             },
-            "description": "Array of the customer's identity document details.",
+            "description": "Identity Documents of the customer",
             "nullable": true
           },
           "addresses": {
-            "$ref": "#/components/schemas/AddressHistoryGetResponse"
+            "$ref": "#/components/schemas/AddressHistoryMultipleCurrentAddressesGetResponse"
           }
         },
         "additionalProperties": false,
-        "description": "The Retail Customer type response body."
+        "description": "The Sole Trader Customer type response body"
       },
-      "RetailCustomerPatchResponse": {
+      "SoleTraderPatchResponse": {
         "type": "object",
         "properties": {
           "customerId": {
             "type": "string",
-            "description": "The unique identifier of the retail customer.",
-            "format": "uuid"
+            "description": "The unique identifier of the Sole Trader customer.",
+            "format": "uuid",
+            "example": "4751c860-5654-49d8-854d-43f16ab51406"
           },
           "personalDetails": {
             "$ref": "#/components/schemas/PersonalDetailsPatchModel"
@@ -2614,21 +2703,27 @@
             "$ref": "#/components/schemas/KycAmlPatchModel"
           },
           "taxDetails": {
-            "$ref": "#/components/schemas/RetailCustomerTaxDetailsPatchModel"
+            "$ref": "#/components/schemas/SoleTraderTaxDetailsPatchModel"
           },
           "specialStatuses": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SpecialStatusValue"
             },
-            "description": "The customer's special statuses, if any. Possible values include: 'Vulnerability_Health_VisualImpairmentBraille', 'Vulnerability_Health_VisualImpairmentLargeText', 'Vulnerability_Health_AudioImpairment', 'Vulnerability_Health_Other', 'Vulnerability_LifeEvents', 'Vulnerability_Resilience', and 'Vulnerability_Capability'",
+            "description": "Special statuses that changed (only present if amended).",
             "nullable": true
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/BusinessDetailsPatchModel"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/BusinessClassificationPatchModel"
           }
         },
         "additionalProperties": false,
-        "description": "Summary of the fields that have been updated for retail customer PATCH.\r\nContains only sections and properties that were changed."
+        "description": "Summary of the fields that have been updated for sole trader PATCH. Contains only sections and properties that were changed."
       },
-      "RetailCustomerTaxDetailsPatchModel": {
+      "SoleTraderTaxDetailsPatchModel": {
         "type": "object",
         "properties": {
           "validSelfCertification": {
@@ -2638,23 +2733,16 @@
           },
           "usPerson": {
             "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
           }
         },
         "additionalProperties": false,
-        "description": "Patch model containing retail customer tax detail fields that were updated."
-      },
-      "SpecialStatusType": {
-        "enum": [
-          "LegalAndReg",
-          "SpecialCircumstances",
-          "FraudAndSecurity",
-          "RegReporting",
-          "Vulnerability",
-          "Comms"
-        ],
-        "type": "string",
-        "example": "Vulnerability",
-        "description": "Represents the type of special status."
+        "description": "Patch model containing SoleTrader tax detail fields that were updated."
       },
       "SpecialStatusValue": {
         "enum": [
@@ -2678,7 +2766,7 @@
             "items": {
               "$ref": "#/components/schemas/TaxResidencyGetResponse"
             },
-            "description": "Collection of tax residencies of the customer.",
+            "description": "Collection of tax residencies of the customer",
             "nullable": true
           },
           "validSelfCertification": {
@@ -2688,6 +2776,12 @@
           },
           "usPerson": {
             "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
           }
         },
         "additionalProperties": false,
@@ -2701,7 +2795,7 @@
           },
           "taxIdNumber": {
             "type": "string",
-            "description": "The customer's tax id number",
+            "description": "The customer's tax ID number.",
             "nullable": true,
             "example": "DR123467L"
           },
@@ -2710,7 +2804,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Customer TaxResidency."
+        "description": "Customer TaxResidency"
       },
       "USPerson": {
         "enum": [
@@ -2741,6 +2835,39 @@
         },
         "additionalProperties": false,
         "description": "The customer's address history."
+      },
+      "UpdateBusinessClassificationRequest": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business Classification update request. Null values are ignored."
+      },
+      "UpdateBusinessDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business. Null value is ignored",
+            "nullable": true,
+            "example": "Jackson and Sons"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business. Null value is ignored",
+            "format": "double",
+            "nullable": true,
+            "example": 37000.00
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business Details update request. Null values are ignored."
       },
       "UpdateCurrentAddressRequest": {
         "type": "object",
@@ -2782,7 +2909,7 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the customer's new address is valid. Defaults to today if unspecified.",
+            "description": "Date from which the customer's new address is valid, formatted: yyyy-MM-dd. Defaults to today if unspecified.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
@@ -2790,66 +2917,6 @@
         },
         "additionalProperties": false,
         "description": "The customer's new current address."
-      },
-      "UpdateCustomerNameAndCountryDetailsRequest": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "description": "The customer's first name.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Kristy"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The customer's middle name.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Jade"
-          },
-          "surname": {
-            "type": "string",
-            "description": "The customer's surname.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "countryOfResidence": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Update request for a non-account-holder's personal details limited to name components and country of residence.\r\nNull values are ignored."
-      },
-      "UpdateCustomerNameAndDateOfBirthRequest": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "description": "The customer's first name.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Kristy"
-          },
-          "middleName": {
-            "type": "string",
-            "description": "The customer's middle name.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Jade"
-          },
-          "surname": {
-            "type": "string",
-            "description": "The customer's surname.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "Friar"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The customer's date of birth.\r\nNull value is ignored.",
-            "format": "date",
-            "nullable": true,
-            "example": "1985-12-22"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Name and date of birth details for a customer update request.\r\nNull values are ignored."
       },
       "UpdateIdentityDocumentRequest": {
         "required": [
@@ -2861,12 +2928,12 @@
           "idNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Identity document number.",
-            "example": "684622049233"
+            "description": "The identity document's number.",
+            "example": "684611049245"
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "Expiry date of the identity document.",
+            "description": "Expiry date of the identity document, formatted: yyyy-MM-dd.",
             "format": "date",
             "example": "2029-02-13"
           }
@@ -2879,7 +2946,7 @@
         "properties": {
           "sanctions": {
             "type": "boolean",
-            "description": "Indicates if the customer is under sanctions.\r\nNull value is ignored.",
+            "description": "Indicates if the customer is under sanctions. Null value is ignored.",
             "nullable": true
           },
           "pep": {
@@ -2893,79 +2960,79 @@
           }
         },
         "additionalProperties": false,
-        "description": "KYC AML update request.\r\nNull values are ignored."
+        "description": "KYC AML update request. Null values are ignored."
       },
       "UpdatePersonalDetailsRequest": {
         "type": "object",
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "The customer's first name.\r\nNull value is ignored.",
+            "description": "The customer's first name. Null value is ignored.",
             "nullable": true,
-            "example": "Kristy"
+            "example": "Carol"
           },
           "middleName": {
             "type": "string",
-            "description": "The customer's middle name.\r\nNull value is ignored.",
+            "description": "The customer's middle name. Null value is ignored.",
             "nullable": true,
-            "example": "Jade"
+            "example": "Henrik"
           },
           "surname": {
             "type": "string",
-            "description": "The customer's surname.\r\nNull value is ignored.",
+            "description": "The customer's surname. Null value is ignored.",
             "nullable": true,
-            "example": "Friar"
+            "example": "Agarowicz"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth.\r\nNull value is ignored.",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Null value is ignored.",
             "format": "date",
             "nullable": true,
-            "example": "1985-12-22"
+            "example": "1988-05-21"
           },
           "email": {
             "type": "string",
-            "description": "The customer's email address.\r\nNull value is ignored.",
+            "description": "The customer's email address. Null value is ignored.",
             "nullable": true,
-            "example": "kristy.fr@mymail.com"
+            "example": "c.agarowicz@workmailurl.com"
           },
           "telephone": {
             "type": "string",
-            "description": "The customer's telephone number.\r\nNull value is ignored.",
+            "description": "The customer's telephone number. Null value is ignored.",
             "nullable": true,
-            "example": "01234555666"
+            "example": "07777222666"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
           },
           "nationalIdentificationNumber": {
             "type": "string",
-            "description": "The customer's national identification number, such as their National Insurance (NI) number.\r\nNull value is ignored.",
+            "description": "The customer's national identification number, such as their National Insurance (NI) number. Null value is ignored.",
             "nullable": true,
-            "example": "PC223344D"
+            "example": "PC548823D"
           }
         },
         "additionalProperties": false,
-        "description": "Personal Details update request.\r\nNull values are ignored."
+        "description": "Personal Details update request. Null values are ignored."
       },
       "UpdatePreviousAddressRequest": {
         "type": "object",
         "properties": {
           "buildingNameNumber": {
             "type": "string",
-            "description": "Address line 1.",
+            "description": "Building name or number of the customer's previous address.",
             "nullable": true,
             "example": "322"
           },
           "streetName": {
             "type": "string",
-            "description": "Address line 2.",
+            "description": "Street name of the customer's previous address.",
             "nullable": true,
             "example": "Long Road"
           },
           "city": {
             "type": "string",
-            "description": "City of this address.",
+            "description": "City of the customer's previous address.",
             "nullable": true,
             "example": "Purpleton"
           },
@@ -2988,29 +3055,23 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2016-06-22"
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
-          },
-          "nationalIdentificationNumber": {
-            "type": "string",
-            "description": "The customer's National Identification Number.\r\nNull value is ignored.",
-            "nullable": true,
-            "example": "PC223344D"
           }
         },
         "additionalProperties": false,
         "description": "The customer's previous address."
       },
-      "UpdateRetailRequest": {
+      "UpdateSoleTraderRequest": {
         "type": "object",
         "properties": {
           "personalDetails": {
@@ -3019,22 +3080,28 @@
           "kycAml": {
             "$ref": "#/components/schemas/UpdateKycAmlRequest"
           },
-          "taxDetails": {
-            "$ref": "#/components/schemas/UpdateRetailTaxDetailsRequest"
-          },
           "specialStatuses": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SpecialStatusValue"
             },
-            "description": "The customer's special statuses, if any. Null values are ignored.  All existing special statuses will be replaced with the provided collection. Possible values include: 'Vulnerability_Health_VisualImpairmentBraille', 'Vulnerability_Health_VisualImpairmentLargeText', 'Vulnerability_Health_AudioImpairment', 'Vulnerability_Health_Other', 'Vulnerability_LifeEvents', 'Vulnerability_Resilience', and 'Vulnerability_Capability'",
+            "description": "Special Status update request. Null value is ignored. All existing special statuses will be replaced with the provided collection. An empty collection will clear all special statuses.",
             "nullable": true
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/UpdateBusinessDetailsRequest"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/UpdateBusinessClassificationRequest"
+          },
+          "taxDetails": {
+            "$ref": "#/components/schemas/UpdateSoleTraderTaxDetailsRequest"
           }
         },
         "additionalProperties": false,
-        "description": "Retail Customer update request.\r\nNull values are ignored."
+        "description": "Sole Trader update request. Null values are ignored."
       },
-      "UpdateRetailTaxDetailsRequest": {
+      "UpdateSoleTraderTaxDetailsRequest": {
         "type": "object",
         "properties": {
           "validSelfCertification": {
@@ -3044,10 +3111,16 @@
           },
           "usPerson": {
             "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
           }
         },
         "additionalProperties": false,
-        "description": "Tax details for a retail customer."
+        "description": "Tax details for a sole trader customer."
       },
       "UpdateTaxResidencyRequest": {
         "type": "object",
@@ -3057,7 +3130,7 @@
             "type": "string",
             "description": "Tax identification number.",
             "nullable": true,
-            "example": "PC335577B"
+            "example": "DR123467L"
           },
           "noTaxIdReason": {
             "$ref": "#/components/schemas/ReasonForNoTaxId"
