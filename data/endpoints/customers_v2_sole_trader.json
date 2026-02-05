@@ -339,7 +339,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "You can use this endpoint to update a customer's current address. When you add a new current address, the the previous address history is retained.",
+        "summary": "You can use this endpoint to update a customer's current address. When you add a new current address, the previous address history is retained.",
         "operationId": "V2CustomersCurrentAddressPost",
         "parameters": [
           {
@@ -605,7 +605,7 @@
           {
             "name": "idCountryOfIssue",
             "in": "path",
-            "description": "Country of issue.",
+            "description": "Country of issue, given as a 3-letter ISO 3166-1 country-code.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/CountryCode"
@@ -614,7 +614,7 @@
           {
             "name": "idType",
             "in": "path",
-            "description": "Type of identity document.",
+            "description": "The type of identity document. Possible values include: 'Passport', 'DrivingLicence', and 'NationalId'.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/IdType"
@@ -746,7 +746,7 @@
           {
             "name": "idCountryOfIssue",
             "in": "path",
-            "description": "Country of issue.",
+            "description": "The ID's country of issue, given as a 3-letter ISO 3166-1 country-code.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/CountryCode"
@@ -755,7 +755,7 @@
           {
             "name": "idType",
             "in": "path",
-            "description": "Type of identity document.",
+            "description": "Type of identity document. Possible values include: 'Passport', 'DrivingLicence', and 'NationalId'.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/IdType"
@@ -1826,7 +1826,7 @@
           "idNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "The ID Number of the document.",
+            "description": "The ID number of the identity document.",
             "nullable": true,
             "example": "178087840846"
           },
@@ -2109,7 +2109,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique identifier for the created resource",
+            "description": "Unique identifier for the created resource. If creating a customer, you should retain this for future reference.",
             "format": "uuid"
           }
         },
@@ -2180,16 +2180,10 @@
       },
       "CustomerStatus": {
         "enum": [
-          "InOnboarding",
-          "Active",
-          "InOffboarding",
-          "Offboarded",
-          "Suspended_KycNotMet",
-          "Suspended_FinCrime",
-          "Suspended_FirstPartyFraud",
-          "Suspended_ThirdPartyFraud"
+          "Active"
         ],
         "type": "string",
+        "example": "Active",
         "description": "Represents the status of a customer in the system."
       },
       "CustomerSubresourceCreatedResponse": {
@@ -2210,6 +2204,7 @@
           "SoleTrader"
         ],
         "type": "string",
+        "example": "SoleTrader",
         "description": "The customer's type."
       },
       "IdType": {
@@ -2933,7 +2928,7 @@
           "idNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Identity document number.",
+            "description": "The identity document's number.",
             "example": "684611049245"
           },
           "idExpiryDate": {
