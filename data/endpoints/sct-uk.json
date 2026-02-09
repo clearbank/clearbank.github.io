@@ -277,9 +277,54 @@
         },
         "additionalProperties": false
       },
-      "CashAccount": {
+      "CreditorAccount": {
         "type": "object",
         "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "iban": {
+            "type": "string",
+            "description": "The International Bank Account Number (IBAN) of the account as described in the 2007 edition of the ISO 13616 standard.",
+            "nullable": true,
+            "maxLength": 34,
+            "minLength": 14,
+            "example": "GB13CBAB1122331234567",
+            "pattern": "[A-Z]{2}[0-9]{2}[A-Z0-9]{10,30}"
+          },
+          "accountIdentification": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 34,
+            "minLength": 1,
+            "example": "CBGB11223312345678",
+            "description": "The alternative account identifier. You should specify the type of identifier in the 'accountIdentificationCode' field."
+          },
+          "accountIdentificationCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Code specifying the type of identifier used in the 'accountIdentification' field. Validated against the External Code Set from iso 20022. These include: 'AIIN', 'BBAN', 'CUID', and 'UPIC'.",
+            "nullable": true,
+            "example": "BBAN"
+          }
+        },
+        "description": "Use either the 'iban' or 'accountIdentification' field, do not provide both.",
+        "additionalProperties": false
+      },
+      "DebtorAccount": {
+        "type": "object",
+        "required": ["iban"],
+        "properties": {
+          "name":{
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
           "iban": {
             "type": "string",
             "description": "The International Bank Account Number (IBAN) of the account as described in the 2007 edition of the ISO 13616 standard.",
@@ -290,6 +335,7 @@
             "pattern": "[A-Z]{2}[0-9]{2}[A-Z0-9]{10,30}"
           }
         },
+        "description": "For outbound payments, the debtor account is always a ClearBank account. An IBAN must always be provided.",
         "additionalProperties": false
       },
       "CreditTransferTransaction": {
@@ -328,7 +374,7 @@
             ]
           },
           "creditorAccount": {
-            "$ref": "#/components/schemas/CashAccount"
+            "$ref": "#/components/schemas/CreditorAccount"
           },
           "remittanceInformation": {
             "$ref": "#/components/schemas/RemittanceInformation"
@@ -639,7 +685,7 @@
           },
           "debtorAccount": {
             "description": "The debtor's account details.",
-            "$ref": "#/components/schemas/CashAccount"
+            "$ref": "#/components/schemas/DebtorAccount"
           },
           "creditTransferTransactionInformation": {
             "maxItems": 100,
