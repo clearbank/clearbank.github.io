@@ -1,0 +1,313 @@
+---
+title: "Legal entities"
+metaTitle: "Legal entities"
+order: 5
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
+
+## Legal entities overview
+
+<Callout colour="green">
+<h2>Legal entities are coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+**Legal entities** are registered UK businesses. You can manage your legal entity customers' data with ClearBank directly as an embedded banking partner. Creating a legal entity is necessary before you can create a bank account for them.
+
+Our legal entity endpoints allow you to:
+* Store and retrieve key information about your business customers, such as their trading name, tax details, and business classification.
+* Register non-account holders. Non-account holders are key individuals associated with the company - such as directors, controlling persons, and Ultimate Beneficial Owners (UBOs).
+
+### Compatible account types
+
+Legal entities are eligible for certain account types, these include:
+* [Savings accounts](../docs/embedded-banking/savings-accounts)
+* [Hub accounts](../docs/embedded-banking/hub-accounts)
+* Current Accounts
+
+For more details on available account types, please reach out to your Client Director.
+
+## Create, retrieve and update legal entities
+
+When you create a legal entity, you include a variety of information about the company. This includes their KYC/AML data, `tradingName`, `annualRevenue`,  and `businessClassification`.
+
+The `annualRevenue` you provide for a legal entities should be based on their previous year's revenue. If this is their first year of operation, an estimated value is acceptable.
+
+You can specify the `businessClassification` details of a legal entity. Set their `businessClassification.sectorCode` and `industryClassification` according to the nature of their business.
+
+<EndpointBlock
+  type="post"
+  title="Create a legal entity"
+  endpoints={[
+    {
+      path: "/customers/v2/legal-entities",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a legal entity"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a legal entity"
+  endpoints={[
+    {
+      path: "/customers/v2/legal-entities/{customerId}",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+## Legal entity's addresses
+
+A legal entity can have both an active registered and trading address simultaneously, but no more than one of each. When you update a legal entity's address, their current address of the same type will automatically be changed to a previous address.
+
+When a current address is replaced using this endpoint, it will be given an `validTo` date that matches the new address' `validFrom` date.
+
+<EndpointBlock
+  type="post"
+  title="Update a legal entity's current address"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/addresses/current",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+## Legal entity's tax residencies
+
+When you create a legal entity, you must specify at least one tax residency for them. You should specify all currently active tax residencies for a legal entity when you create them.
+
+To change a legal entity's tax residency from one country to another, follow the below steps:
+1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-legal-entity) endpoint.
+2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-legal-entitys-tax-residency) endpoint.
+
+**Note:** If a legal entity has only one tax residency, you must add a new tax residency before you can delete the current one. If you attempt to delete a legal entity's only tax residency you will receive a 422 - Unprocessable Entity error.
+
+<EndpointBlock
+  type="put"
+  title="Add a tax residency to a legal entity"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a legal entity's tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+## Manage company directors
+
+You can use the below endpoints to manage the data of your legal entities' directors. These are persons officially responsible for running the company.
+
+<EndpointBlock
+  type="post"
+  title="Create a company director"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/directors",
+      version: "2.0-customers-company-director"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a company director"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-company-director"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a company director"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/directors/{customerId}",
+      version: "2.0-customers-company-director"
+    }
+  ]}
+/>
+
+## Manage Ultimate Beneficial Owners (UBOs)
+
+A UBO is a natural or non-natural person with at least 25% ownership - either directly or indirectly through ownership of a parent entity - of a company. You can use our UBO endpoints to create and manage the UBOs of your legal entity customers.
+
+<EndpointBlock
+  type="post"
+  title="Create a UBO"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/ubos",
+      version: "2.0-customers-ubo"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a UBO"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-ubo"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a UBO"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/ubos/{customerId}",
+      version: "2.0-customers-ubo"
+    }
+  ]}
+/>
+
+## Manage controlling persons
+
+A controlling person is an natural person who exercises control over the operation of a legal entity. You can use the below endpoints to manage the controlling person data of your legal entity customers.
+
+<EndpointBlock
+  type="post"
+  title="Create a controlling person"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/controlling-persons",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a controlling person"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a controlling person"
+  endpoints={[
+    {
+      path: "/customers/v2/non-account-holder/controlling-persons/{customerId}",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="post"
+  title="Update a controlling person's current address"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/addresses/current",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="put"
+  title="Update a controlling person's tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Remove a controlling person's current tax residency"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+      version: "2.0-customers-controlling-person"
+    }
+  ]}
+/>
+
+## Customer relation endpoints
+
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-legal-entity-and-another-entity) endpoint allows you to link two parties by providing their `customerId`s and specifying the nature of the relation.
+
+**Note:** The arrangement of `customerId`s in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
+The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
+For example, when defining a UBO relationship, the customer referred to in the `relatedCustomerId` will become the Ultimate Beneficial Owner of the `customerId` specified in the path.
+
+To retrieve all existing relations to a customer, you can call the [**GET /customers/v2/customers/{customerId}/related-parties**](#get-all-relations-of-a-legal-entity).
+
+To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-entities) using the `customerId` of each party.
+
+<EndpointBlock
+  type="post"
+  title="Relate a legal entity and another entity"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all relations of a legal entity"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a relation between two entities"
+  endpoints={[
+    {
+      path: "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}",
+      version: "2.0-customers-legal-entity"
+    }
+  ]}
+/>
+

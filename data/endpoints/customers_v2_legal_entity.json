@@ -1,0 +1,2613 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "2.0-customers-legal-entity"
+  },
+  "paths": {
+    "/customers/v2/customers/{customerId}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to retrieve the details of a legal entity customer by their customer ID.",
+        "operationId": "V2CustomerGet",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer ID of the legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCustomerGetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/customers/{customerId}/related-parties": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to retrieve details of any related parties to a customer by their customer ID.",
+        "operationId": "V2RelatedPartiesGet",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The ID of the legal entity",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value":{
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RelatedPartyGetResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to add a relation between an existing party and a legal entity.",
+        "operationId": "V2RelatedPartyPost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The ID of the customer",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to add related party to customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRelatedPartyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedRelatedPartyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/customers/{customerId}/addresses/current": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to updates a legal entity's current address. The old address is retained as a previous address.",
+        "operationId": "V2CustomersCurrentAddressPost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer ID of the legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to update the customer's address",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrentAddressRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerSubresourceCreatedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to removes a related party link between two customers.",
+        "operationId": "V2RelatedPartyDelete",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The ID of the original customer.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "relatedCustomerId",
+            "in": "path",
+            "description": "The ID of the related customer to unlink. This is the customer that holds the relation type. For example, 'UBO'.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can use this endpoint to add or update a legal entity's tax residency entry for the specified country.",
+        "operationId": "V2CustomerTaxResidencyPut",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer ID of this legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "countryOfTaxResidence",
+            "in": "path",
+            "description": "Country of tax residence, given as an ISO 3166-1 three letter country-code.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CountryCode"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Tax residency details (TIN or reason for no TIN).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaxResidencyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerSubresourceCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can use this endpoint to remove a legal entity's tax residency entry for the specified country.",
+        "operationId": "V2CustomerTaxResidencyDelete",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer ID of this legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "countryOfTaxResidence",
+            "in": "path",
+            "description": "Country of tax residence to remove, given as an ISO 3166-1 three letter country-code.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CountryCode"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/legal-entities": {
+      "post": {
+        "tags": [
+          "LegalEntity"
+        ],
+        "summary": "You can call this endpoint to request the creation of a new legal entity customer.",
+        "operationId": "V2LegalEntityPost",
+        "parameters": [
+            {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to create legal entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLegalEntityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/legal-entities/{customerId}": {
+      "patch": {
+        "tags": [
+          "LegalEntity"
+        ],
+        "summary": "You can call this endpoint to update the details of a legal entity customer. To update a legal entity's current registered or trading address, refer to the dedicated address endpoint.",
+        "operationId": "V2LegalEntityPatch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The customer ID of the legal entity.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information required to update a legal entity customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLegalEntityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCustomerPatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AEOIClassification": {
+        "enum": [
+          "ActiveNonFinancialEntity",
+          "PassiveNonFinancialEntity",
+          "FinancialInstitutionPMIE",
+          "FinancialInstitutionTypeOtherThanPMIE"
+        ],
+        "type": "string",
+        "description": "Automatic Exchange of Information classification"
+      },
+      "AddressGetResponse": {
+        "type": "object",
+        "properties": {
+          "addressType": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "buildingNameNumber": {
+            "type": "string",
+            "description": "The building name/number at this address.",
+            "nullable": true,
+            "example": "77A"
+          },
+          "streetName": {
+            "type": "string",
+            "description": "Street name at this address.",
+            "nullable": true,
+            "example": "Short Road"
+          },
+          "city": {
+            "type": "string",
+            "description": "The city name at this address.",
+            "nullable": true,
+            "example": "Lincoln"
+          },
+          "county": {
+            "type": "string",
+            "description": "The county name at this address.",
+            "nullable": true,
+            "example": "Lincolnshire"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "The postal code of this address.",
+            "nullable": true,
+            "example": "LN14HH"
+          },
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The date from which this address was current, formatted yyyy-MM-dd.",
+            "format": "date",
+            "nullable": true,
+            "example": "2022-05-15"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "If this address if a previous address, the date at which this address expired. Formatted yyyy-MM-dd.",
+            "format": "date",
+            "nullable": true,
+            "example": "2023-02-18"
+          },
+          "isCurrentAddress": {
+            "type": "boolean",
+            "description": "Indicates if this address is the current address.",
+            "nullable": true,
+            "example": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Address history details"
+      },
+      "AddressHistoryMultipleCurrentAddressesGetResponse": {
+        "type": "object",
+        "properties": {
+          "currentAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressGetResponse"
+            },
+            "description": "The legal entity's current trading and registered address.",
+            "nullable": true
+          },
+          "previousAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressGetResponse"
+            },
+            "description": "The legal entity's previous addresses.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Addresses associated with the customer with multiple current addresses"
+      },
+      "AddressType": {
+        "enum": [
+          "TradingAddress",
+          "RegisteredAddress"
+        ],
+        "type": "string",
+        "description": "Represents the type of the address."
+      },
+      "BusinessClassificationGetResponse": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          },
+          "aeoiClassification": {
+            "$ref": "#/components/schemas/AEOIClassification"
+          },
+          "sicCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BusinessSicCode"
+            },
+            "description": "The Standard Industrial Classification (SIC) codes associated with the business.",
+            "nullable": true,
+            "example": "07100"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The business classification"
+      },
+      "BusinessClassificationPatchModel": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "type": "string",
+            "description": "Updated sector code (if changed).",
+            "nullable": true
+          },
+          "industryClassification": {
+            "type": "string",
+            "description": "Updated industry classification (if changed).",
+            "nullable": true,
+            "example": "_3_MiningAndQuarrying"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing SoleTrader business classification fields that were updated."
+      },
+      "BusinessDetailsGetResponse": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business.",
+            "nullable": true,
+            "example": "Redball and Co"
+          },
+          "registeredName": {
+            "type": "string",
+            "description": "The registered name of the business.",
+            "nullable": true,
+            "example": "Redball and Co Ltd"
+          },
+          "registrationNumber": {
+            "type": "string",
+            "description": "The registration number of the business.",
+            "nullable": true,
+            "example": "56349180"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business.",
+            "format": "double",
+            "nullable": true,
+            "example": 45000000
+          }
+        },
+        "additionalProperties": false,
+        "description": "Object containing the business details of this legal entity."
+      },
+      "BusinessDetailsPatchModel": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "Updated trading name (if changed).",
+            "nullable": true
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "Updated annual revenue (if changed).",
+            "format": "double",
+            "nullable": true,
+            "example": 50000.00
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing SoleTrader business details that were updated."
+      },
+      "BusinessSicCode": {
+        "type": "object",
+        "properties": {
+          "sicCode": {
+            "type": "string",
+            "description": "SIC Code",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business SIC Code"
+      },
+      "CountryCode": {
+        "enum": [
+          "AFG",
+          "ALB",
+          "ATA",
+          "DZA",
+          "ASM",
+          "AND",
+          "AGO",
+          "ATG",
+          "AZE",
+          "ARG",
+          "AUS",
+          "AUT",
+          "BHS",
+          "BHR",
+          "BGD",
+          "ARM",
+          "BRB",
+          "BEL",
+          "BMU",
+          "BTN",
+          "BOL",
+          "BIH",
+          "BWA",
+          "BVT",
+          "BRA",
+          "BLZ",
+          "IOT",
+          "SLB",
+          "VGB",
+          "BRN",
+          "BGR",
+          "MMR",
+          "BDI",
+          "BLR",
+          "KHM",
+          "CMR",
+          "CAN",
+          "CPV",
+          "CYM",
+          "CAF",
+          "LKA",
+          "TCD",
+          "CHL",
+          "CHN",
+          "TWN",
+          "CXR",
+          "CCK",
+          "COL",
+          "COM",
+          "MYT",
+          "COG",
+          "COD",
+          "COK",
+          "CRI",
+          "HRV",
+          "CUB",
+          "CYP",
+          "CZE",
+          "BEN",
+          "DNK",
+          "DMA",
+          "DOM",
+          "ECU",
+          "SLV",
+          "GNQ",
+          "ETH",
+          "ERI",
+          "EST",
+          "FRO",
+          "FLK",
+          "SGS",
+          "FJI",
+          "FIN",
+          "ALA",
+          "FRA",
+          "GUF",
+          "PYF",
+          "ATF",
+          "DJI",
+          "GAB",
+          "GEO",
+          "GMB",
+          "PSE",
+          "DEU",
+          "GHA",
+          "GIB",
+          "KIR",
+          "GRC",
+          "GRL",
+          "GRD",
+          "GLP",
+          "GUM",
+          "GTM",
+          "GIN",
+          "GUY",
+          "HTI",
+          "HMD",
+          "VAT",
+          "HND",
+          "HKG",
+          "HUN",
+          "ISL",
+          "IND",
+          "IDN",
+          "IRN",
+          "IRQ",
+          "IRL",
+          "ISR",
+          "ITA",
+          "CIV",
+          "JAM",
+          "JPN",
+          "KAZ",
+          "JOR",
+          "KEN",
+          "PRK",
+          "KOR",
+          "KWT",
+          "KGZ",
+          "LAO",
+          "LBN",
+          "LSO",
+          "LVA",
+          "LBR",
+          "LBY",
+          "LIE",
+          "LTU",
+          "LUX",
+          "MAC",
+          "MDG",
+          "MWI",
+          "MYS",
+          "MDV",
+          "MLI",
+          "MLT",
+          "MTQ",
+          "MRT",
+          "MUS",
+          "MEX",
+          "MCO",
+          "MNG",
+          "MDA",
+          "MNE",
+          "MSR",
+          "MAR",
+          "MOZ",
+          "OMN",
+          "NAM",
+          "NRU",
+          "NPL",
+          "NLD",
+          "CUW",
+          "ABW",
+          "SXM",
+          "BES",
+          "NCL",
+          "VUT",
+          "NZL",
+          "NIC",
+          "NER",
+          "NGA",
+          "NIU",
+          "NFK",
+          "NOR",
+          "MNP",
+          "UMI",
+          "FSM",
+          "MHL",
+          "PLW",
+          "PAK",
+          "PAN",
+          "PNG",
+          "PRY",
+          "PER",
+          "PHL",
+          "PCN",
+          "POL",
+          "PRT",
+          "GNB",
+          "TLS",
+          "PRI",
+          "QAT",
+          "REU",
+          "ROU",
+          "RUS",
+          "RWA",
+          "BLM",
+          "SHN",
+          "KNA",
+          "AIA",
+          "LCA",
+          "MAF",
+          "SPM",
+          "VCT",
+          "SMR",
+          "STP",
+          "SAU",
+          "SEN",
+          "SRB",
+          "SYC",
+          "SLE",
+          "SGP",
+          "SVK",
+          "VNM",
+          "SVN",
+          "SOM",
+          "ZAF",
+          "ZWE",
+          "ESP",
+          "SSD",
+          "SDN",
+          "ESH",
+          "SUR",
+          "SJM",
+          "SWZ",
+          "SWE",
+          "CHE",
+          "SYR",
+          "TJK",
+          "THA",
+          "TGO",
+          "TKL",
+          "TON",
+          "TTO",
+          "ARE",
+          "TUN",
+          "TUR",
+          "TKM",
+          "TCA",
+          "TUV",
+          "UGA",
+          "UKR",
+          "MKD",
+          "EGY",
+          "GBR",
+          "GGY",
+          "JEY",
+          "IMN",
+          "TZA",
+          "USA",
+          "VIR",
+          "BFA",
+          "URY",
+          "UZB",
+          "VEN",
+          "WLF",
+          "WSM",
+          "YEM",
+          "ZMB"
+        ],
+        "type": "string",
+        "example": "GBR",
+        "description": "3-letter country code, as defined in ISO 3166-1."
+      },
+      "CraRating": {
+        "enum": [
+          "LowRisk",
+          "MediumRisk",
+          "HighRisk",
+          "VeryHighRisk"
+        ],
+        "type": "string",
+        "description": "CRA Rating"
+      },
+      "CreateKycAmlRequest": {
+        "required": [
+          "craRating",
+          "pep",
+          "rca",
+          "sanctions"
+        ],
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Indicates if the customer is under sanctions."
+          },
+          "pep": {
+            "$ref": "#/components/schemas/PepType"
+          },
+          "rca": {
+            "$ref": "#/components/schemas/RcaType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          }
+        },
+        "additionalProperties": false,
+        "description": "KYC/AML information for the customer."
+      },
+      "CreateLegalEntityBusinessClassificationRequest": {
+        "required": [
+          "aeoiClassification",
+          "industryClassification",
+          "sectorCode",
+          "sicCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          },
+          "aeoiClassification": {
+            "$ref": "#/components/schemas/AEOIClassification"
+          },
+          "sicCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The Standard Industrial Classification (SIC) codes associated with the business.",
+            "nullable": true,
+            "example": "07100"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for legal entity business classification details."
+      },
+      "CreateLegalEntityBusinessDetailRequest": {
+        "required": [
+          "annualRevenue",
+          "registeredName",
+          "registrationNumber",
+          "countryOfRegistration",
+          "tradingName"
+        ],
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business.",
+            "nullable": true,
+            "example": "Redball and Co"
+          },
+          "registeredName": {
+            "type": "string",
+            "description": "The registered name of the business.",
+            "nullable": true,
+            "example": "Redball and Co Ltd"
+          },
+          "registrationNumber": {
+            "type": "string",
+            "description": "The registration number of the business.",
+            "nullable": true,
+            "example": "56349180"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business.",
+            "format": "double",
+            "example": 45000000
+          },
+          "email": {
+            "type": "string",
+            "description": "The contact email address of the business.",
+            "nullable": true,
+            "example": "mybusiness@businessmail.com"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "The contact telephone number of the business.",
+            "nullable": true,
+            "example": "07123123456"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for business details when creating a legal entity customer."
+      },
+      "CreateLegalEntityRequest": {
+        "required": [
+          "addressHistory",
+          "businessClassification",
+          "businessDetails",
+          "kycAml",
+          "taxDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "businessDetails": {
+            "$ref": "#/components/schemas/CreateLegalEntityBusinessDetailRequest"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/CreateLegalEntityBusinessClassificationRequest"
+          },
+          "addressHistory": {
+            "$ref": "#/components/schemas/CreateMultipleAddressHistoryRequest"
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/CreateKycAmlRequest"
+          },
+          "taxDetails": {
+            "$ref": "#/components/schemas/CreateLegalEntityTaxDetailsRequest"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for creating a legal entity customer."
+      },
+      "CreateLegalEntityTaxDetailsRequest": {
+        "required": [
+          "nameOfSelfCertificationSignee",
+          "positionOfSelfCertificationSignee",
+          "usPerson",
+          "validSelfCertification",
+          "taxResidencies"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "description": "Indicates if self-certification is valid.",
+            "example": true
+          },
+          "usPerson": {
+            "$ref": "#/components/schemas/USPerson"
+          },
+          "taxResidencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateTaxResidencyRequest"
+            },
+            "description": "Gets or sets the collection of tax residencies to be created as part of the request.",
+            "nullable": true
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
+          },
+          "nameOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Name of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Lara Green"
+          },
+          "positionOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Position or title of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Chief Financial Officer"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Tax details for a legal entity customer."
+      },
+      "CreateMultipleAddressHistoryRequest": {
+        "required": [
+          "currentAddresses"
+        ],
+        "type": "object",
+        "properties": {
+          "currentAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrentAddressRequest"
+            },
+            "description": "The customer's current addresses",
+            "nullable": true
+          },
+          "previousAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreviousAddressRequest"
+            },
+            "description": "The customer's previous addresses.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The customer's address history for multiple current addresses"
+      },
+      "CreateRelatedPartyRequest": {
+        "required": [
+          "relatedCustomerId",
+          "relatedPartyType"
+        ],
+        "type": "object",
+        "properties": {
+          "relatedCustomerId": {
+            "type": "string",
+            "description": "The ID of the customer to be linked to the customer in the path as a related party.",
+            "format": "uuid",
+            "example": "c4bac97f-a6d3-5d53-97e6-26fda428f79e"
+          },
+          "relatedPartyType": {
+            "$ref": "#/components/schemas/RelatedPartyType"
+          },
+          "ownershipPercentage": {
+            "type": "integer",
+            "description": "The ownership percentage of the related party.  Optional: applies only to certain related party types.",
+            "format": "int32",
+            "nullable": true,
+            "example": 100
+          }
+        },
+        "additionalProperties": false,
+        "description": "A request to link one customer to another as a related party."
+      },
+      "CreateTaxResidencyRequest": {
+        "required": [
+          "countryOfTaxResidence"
+        ],
+        "type": "object",
+        "properties": {
+          "countryOfTaxResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "taxIdNumber": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Tax identification number.",
+            "nullable": true,
+            "example": "253863005464"
+          },
+          "noTaxIdReason": {
+            "$ref": "#/components/schemas/ReasonForNoTaxId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to create a information about a customer's tax residency, including country of tax residence and tax identification details."
+      },
+      "CreatedRelatedPartyResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "Unique identifier for the linked customer",
+            "format": "uuid",
+            "example": "4639bbcf-07e0-5163-ae4a-f2808f5497ea"
+          },
+          "relatedCustomerId": {
+            "type": "string",
+            "description": "Unique identifier for the linked individual",
+            "format": "uuid",
+            "example": "c4bac97f-a6d3-5d53-97e6-26fda428f79e"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response containing information about the created related party"
+      },
+      "CreatedResourceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique ID of the created legal entity.",
+            "format": "uuid",
+            "example": "4639bbcf-07e0-5163-ae4a-f2808f5497ea"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response containing the ID of the created legal entity."
+      },
+      "CurrentAddressRequest": {
+        "required": [
+          "addressType",
+          "buildingNameNumber",
+          "city",
+          "country",
+          "postalCode"
+        ],
+        "type": "object",
+        "properties": {
+          "addressType": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "buildingNameNumber": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The building name or number of this address.",
+            "nullable": true,
+            "example": "77A"
+          },
+          "streetName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The street name of this address.",
+            "nullable": true,
+            "example": "Short Road"
+          },
+          "city": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the city at this address.",
+            "nullable": true,
+            "example": "Lincoln"
+          },
+          "county": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the county at this address.",
+            "nullable": true,
+            "example": "Lincolnshire"
+          },
+          "postalCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The post code of this address.",
+            "nullable": true,
+            "example": "LN14HH"
+          },
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "The date from which this address is valid. Defaults to today's date if unspecified.",
+            "format": "date",
+            "nullable": true,
+            "example": "2022-08-24"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The legal entity's current address."
+      },
+      "CustomerStatus": {
+        "enum": [
+          "Active"
+        ],
+        "type": "string",
+        "example": "Active",
+        "description": "Represents the status of a customer in the system. This will always be 'Active'."
+      },
+      "CustomerSubresourceCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The ID of the customer under which the new address or tax residency entry was created.",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the response returned when a subresource is created for a customer."
+      },
+      "CustomerType": {
+        "enum": [
+          "LegalEntity",
+          "Director",
+          "UboNatural",
+          "UboNonNatural",
+          "ControllingPerson"
+        ],
+        "type": "string",
+        "description": "The type of customer."
+      },
+      "IndustryClassificationCode": {
+        "enum": [
+          "_1_AgricultureHuntingAndFishing",
+          "_2_Fishing",
+          "_3_MiningAndQuarrying",
+          "_4A_FoodBeveragesAndTobacco",
+          "_4B_TextilesWearingApparelAndLeather",
+          "_4C_PulpPaperAndPrinting",
+          "_4D_ChemicalsPharmaceuticalsRubberAndPlastics",
+          "_4E_OtherNonmetalicMineralProductsAndMetals",
+          "_4F_MachineryAndEquipmentIncludingTransportEquipment",
+          "_4G_ElectricalMedicalAndOpticalProductsAndEquipment",
+          "_4H_OtherManufacturing",
+          "_5A_ElectricityGasSteamAndAirConditioningSupply",
+          "_5B_WaterCollectionAndSewerage",
+          "_5C_WasteManagementRelatedServicesAndRemediationActivities",
+          "_6A_DevelopmentOfBuildings",
+          "_6B_ConstructionOfCommercialBuildings",
+          "_6C_ConstructionOfDomesticBuildings",
+          "_6D_CivilEngineering",
+          "_6E_OtherConstructionActivities",
+          "_7A_WholesaleAndRetailTradeAndRepairOfMotorVehiclesCycles",
+          "_7B_WholesaleTradeExcludingMotorVehiclesCycles",
+          "_7C_RetailTradeExcludingMotorVehiclesCycles",
+          "_8_AccommodationAndFoodServiceActivities",
+          "_9A_TransportAndStorage",
+          "_9B_InformationAndCommunication",
+          "_10A_BuyingSellingAndRentingOfOwnOrLeasedRealEstate",
+          "_10B_RealEstateAndRelatedActivitiesOnAFeeOrContractBasis",
+          "_10C_ProfessionalScientificAndTechnicalActivities",
+          "_10D_AdministrationAndSupportServices",
+          "_11_PublicAdministrationAndDefence",
+          "_12_Education",
+          "_13_HumanHealthAndSocialWork",
+          "_14A_PersonalAndCommunityServiceActivities",
+          "_14B_RecreationalCulturalAndSportingActivities",
+          "_15A_FinancialLeasingCorporations",
+          "_15B_NonbankGrantorsOfCreditExcludingCreditUnionsAndSPVsRelatedToSecuritisations",
+          "_15C_CreditUnions",
+          "_15D_FactoringCorporations",
+          "_15E_MortgageAndHousingCreditCorporations",
+          "_15F_InvestmentAndUnitTrustsOtherThanMoneyMarketMutualFunds",
+          "_15G_MoneyMarketMutualFunds",
+          "_15H_BankHoldingCompanies",
+          "_15I_ActivitiesOfventureAndDevelopmentCapitalCompanies",
+          "_15Ja_SecurityAndCommodityContractBrokerage",
+          "_15JB_SecurityDealingOnOwnAccount",
+          "_15L_SPVsRelatedToSecuritisation",
+          "_15M_OtherFinancialIntermediaries",
+          "_16A_InsuranceCompanies",
+          "_16B_PensionFunds",
+          "_17A_FundManagementActivities",
+          "_17BA_CentralClearingCounterparties",
+          "_17BBA_AdministrationOfFinancialMarkets",
+          "_17BBB_RiskAndDamageEvaluation",
+          "_17BBC_ActivitiesOfInsuranceAgentsAndBrokers",
+          "_17BBD_OtherActivitiesAuxiliaryToInsuranceAndPensionFunding",
+          "_17BBE_EmoneyIssuers",
+          "_17BBF_OtherAuxiliaryActivitiesNotCoveredElsewhere",
+          "_18_IndividualsAndIndividualTrusts"
+        ],
+        "type": "string",
+        "example": "_3_MiningAndQuarrying",
+        "description": "Industry Classification Code"
+      },
+      "KycAmlGetResponse": {
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Indicates if the customer is under sanctions.",
+            "nullable": true,
+            "example": false
+          },
+          "pep": {
+            "$ref": "#/components/schemas/PepType"
+          },
+          "rca": {
+            "$ref": "#/components/schemas/RcaType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          }
+        },
+        "additionalProperties": false,
+        "description": "KYC/AML information of the customer."
+      },
+      "KycAmlPatchModel": {
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Updated sanctions flag (if changed).",
+            "nullable": true,
+            "example": false
+          },
+          "pep": {
+            "$ref": "#/components/schemas/PepType"
+          },
+          "rca": {
+            "$ref": "#/components/schemas/RcaType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing KYC/AML fields that were updated. Only properties that changed are present."
+      },
+      "LegalEntityBusinessDetailsPatchModel": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "Updated trading name (if changed).",
+            "nullable": true,
+            "example": "Bluebox and Co"
+          },
+          "registeredName": {
+            "type": "string",
+            "description": "Updated registered name (if changed).",
+            "nullable": true,
+            "example": "Bluebox and Co Ltd"
+          },
+          "registrationNumber": {
+            "type": "string",
+            "description": "Updated registration number (if changed).",
+            "nullable": true,
+            "example": "75620653"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "Updated annual revenue (if changed).",
+            "format": "double",
+            "nullable": true,
+            "example": 50000.00
+          },
+          "email": {
+            "type": "string",
+            "description": "Updated email (if changed).",
+            "nullable": true,
+            "example": "mymail@yourbusiness.net"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Updated telephone (if changed).",
+            "nullable": true,
+            "example": "01111444777"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Object containing the legal entity's business details fields that were updated."
+      },
+      "LegalEntityCustomerBusinessClassificationPatchModel": {
+        "type": "object",
+        "properties": {
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          },
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "aeoiClassification": {
+            "$ref": "#/components/schemas/AEOIClassification"
+          },
+          "sicCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Updated SIC (Standard Industrial Classification) codes (if changed).",
+            "nullable": true,
+            "example": "07100"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing legal entity business classification fields that were updated."
+      },
+      "LegalEntityCustomerGetResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the customer. You should keep note of this, as you'll need it to amend or access the customer later.",
+            "format": "uuid",
+            "example": "4639bbcf-07e0-5163-ae4a-f2808f5497ea"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "The unique identifier of the institution associated with this customer.",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CustomerStatus"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CustomerType"
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/KycAmlGetResponse"
+          },
+          "taxDetails": {
+            "$ref": "#/components/schemas/TaxDetailsGetResponse"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/BusinessDetailsGetResponse"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/BusinessClassificationGetResponse"
+          },
+          "addresses": {
+            "$ref": "#/components/schemas/AddressHistoryMultipleCurrentAddressesGetResponse"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Legal Entity Customer type response body"
+      },
+      "LegalEntityCustomerPatchResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The unique identifier of the legal entity customer.",
+            "format": "uuid"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/LegalEntityBusinessDetailsPatchModel"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/LegalEntityCustomerBusinessClassificationPatchModel"
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/KycAmlPatchModel"
+          },
+          "taxDetails": {
+            "$ref": "#/components/schemas/LegalEntityCustomerTaxDetailsPatchModel"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Summary of the fields that have been updated for legal entity PATCH. Contains only sections and properties that were changed."
+      },
+      "LegalEntityCustomerTaxDetailsPatchModel": {
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "description": "Updated self-certification validity (if changed).",
+            "nullable": true,
+            "example": true
+          },
+          "usPerson": {
+            "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "Updated VAT registration number (if changed).",
+            "nullable": true,
+            "example": "GB123456789"
+          },
+          "nameOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Updated name of the self-certification signee (if changed).",
+            "nullable": true,
+            "example": "Lara Green"
+          },
+          "positionOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Updated position of the self-certification signee (if changed).",
+            "nullable": true,
+            "example": "Chief Financial Officer"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch model containing legal entity tax detail fields that were updated."
+      },
+      "PepType": {
+        "enum": [
+          "No",
+          "Yes_Domestic",
+          "Yes_International"
+        ],
+        "type": "string",
+        "description": "Indicates if the customer is a Politically Exposed Person."
+      },
+      "PreviousAddressRequest": {
+        "required": [
+          "addressType",
+          "buildingNameNumber",
+          "city",
+          "country",
+          "postalCode"
+        ],
+        "type": "object",
+        "properties": {
+          "addressType": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "buildingNameNumber": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The building name or number at this address.",
+            "nullable": true,
+            "example": "The Office"
+          },
+          "streetName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The street name at this address.",
+            "nullable": true,
+            "example": "First Way"
+          },
+          "city": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The city name at this address.",
+            "nullable": true,
+            "example": "Peterborough"
+          },
+          "county": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The county name at this address.",
+            "nullable": true,
+            "example": "Cambridgeshire"
+          },
+          "postalCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The postcode of this address.",
+            "nullable": true,
+            "example": "PE5 1FR"
+          },
+          "country": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Date from which the address is valid.",
+            "format": "date",
+            "nullable": true,
+            "example": "2020-08-24"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Date until which the address was valid.",
+            "format": "date",
+            "nullable": true,
+            "example": "2022-08-24"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The customer's previous address."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      },
+      "RcaType": {
+        "enum": [
+          "No",
+          "Yes_Domestic",
+          "Yes_International"
+        ],
+        "type": "string",
+        "description": "Indicates if the customer is a relative or close associate."
+      },
+      "ReasonForNoTaxId": {
+        "enum": [
+          "CountryDoesNotIssue",
+          "UnableToObtain",
+          "NotRequired"
+        ],
+        "type": "string",
+        "description": "Supported reasons for not having a tax ID. Only required if no tax ID number is provided."
+      },
+      "RelatedPartyGetResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The Related Party customer Id",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RelatedPartyType"
+          },
+          "ownershipPercentage": {
+            "type": "integer",
+            "description": "The copmany ownership percentage this related party has. Only provided for UBOs.",
+            "format": "int32",
+            "nullable": true,
+            "example": 100
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for Related Party"
+      },
+      "RelatedPartyType": {
+        "enum": [
+          "Director",
+          "UBO",
+          "ControllingPerson"
+        ],
+        "type": "string",
+        "example": "UBO",
+        "description": "Possible related party types."
+      },
+      "SectorCode": {
+        "enum": [
+          "_1_BankOfEngland_CentralBank",
+          "_2a_UKBanks",
+          "_2b_UKBuildingSocieties",
+          "_2c_MFIsOtherThanBanksAndBuildingSocieties",
+          "_3_FinancialCorporationsOtherThanMFIs",
+          "_4_CentralGovernment",
+          "_5_LocalAuthorities",
+          "_6_PublicCorporations",
+          "_7_NonFinancialCorporationsOtherThanPublicCorporations",
+          "_8a_IndividualsAndIndividualTrusts",
+          "_8b_UnincorporatedBusinessesOtherThanLLPs",
+          "_9_NonProfitInstitutionsServingHouseholds",
+          "_10_NonResidents"
+        ],
+        "type": "string",
+        "description": "The sector code this business operates within."
+      },
+      "TaxDetailsGetResponse": {
+        "type": "object",
+        "properties": {
+          "taxResidencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxResidencyGetResponse"
+            },
+            "description": "Collection of tax residencies of the legal entity.",
+            "nullable": true
+          },
+          "validSelfCertification": {
+            "type": "boolean",
+            "description": "Indicates if self-certification is valid.",
+            "nullable": true,
+            "example": true
+          },
+          "usPerson": {
+            "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
+          },
+          "nameOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Name of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Lara Green"
+          },
+          "positionOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Position or title of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Chief Financial Officer"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The tax details of this legal entity."
+      },
+      "TaxResidencyGetResponse": {
+        "type": "object",
+        "properties": {
+          "countryOfTaxResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "taxIdNumber": {
+            "type": "string",
+            "description": "The tax ID number for this tax residency.",
+            "nullable": true,
+            "example": "253863005464"
+          },
+          "noTaxIdReason": {
+            "$ref": "#/components/schemas/ReasonForNoTaxId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The customer's tax residency."
+      },
+      "USPerson": {
+        "enum": [
+          "NotAUSPerson",
+          "SpecifiedUSPerson",
+          "USPersonOtherThanASpecifiedUSPerson"
+        ],
+        "type": "string",
+        "description": "Specifies the classification of a legal entity as a U.S. person for regulatory or reporting purposes."
+      },
+      "UpdateBusinessClassificationRequest": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business Classification update request. Null values are ignored."
+      },
+      "UpdateKycAmlRequest": {
+        "type": "object",
+        "properties": {
+          "sanctions": {
+            "type": "boolean",
+            "description": "Indicates if the customer is under sanctions. Null value is ignored.",
+            "nullable": true,
+            "example": false
+          },
+          "pep": {
+            "$ref": "#/components/schemas/PepType"
+          },
+          "rca": {
+            "$ref": "#/components/schemas/RcaType"
+          },
+          "craRating": {
+            "$ref": "#/components/schemas/CraRating"
+          }
+        },
+        "additionalProperties": false,
+        "description": "KYC AML update request. Null values are ignored."
+      },
+      "UpdateLegalEntityBusinessClassificationRequest": {
+        "type": "object",
+        "properties": {
+          "sectorCode": {
+            "$ref": "#/components/schemas/SectorCode"
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode"
+          },
+          "aeoiClassification": {
+            "$ref": "#/components/schemas/AEOIClassification"
+          },
+          "sicCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The Standard Industrial Classification (SIC) codes associated with the business. Null value is ignored",
+            "nullable": true,
+            "example": "07100"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body specific for Legal Entity business classification details."
+      },
+      "UpdateLegalEntityBusinessDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "type": "string",
+            "description": "The trading name of the business. Null value is ignored",
+            "nullable": true,
+            "example": "Bluebox and Co"
+          },
+          "registeredName": {
+            "type": "string",
+            "description": "The registered name of the business. Null value is ignored",
+            "nullable": true,
+            "example": "Bluebox and Co Ltd"
+          },
+          "registrationNumber": {
+            "type": "string",
+            "description": "The registration number of the business. Null value is ignored",
+            "nullable": true,
+            "example": "75620653"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "annualRevenue": {
+            "type": "number",
+            "description": "The annual revenue of the business. Null value is ignored.",
+            "format": "double",
+            "nullable": true,
+            "example": 50000.00
+          },
+          "email": {
+            "type": "string",
+            "description": "The contact email address of the business. Null value is ignored.",
+            "nullable": true,
+            "example": "mymail@yourbusiness.net"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "The contact telephone number of the business. Null value is ignored.",
+            "nullable": true,
+            "example": "01111444777"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Object containing the business details of this legal entity."
+      },
+      "UpdateLegalEntityRequest": {
+        "type": "object",
+        "properties": {
+          "businessDetails": {
+            "$ref": "#/components/schemas/UpdateLegalEntityBusinessDetailsRequest"
+          },
+          "businessClassification": {
+            "$ref": "#/components/schemas/UpdateLegalEntityBusinessClassificationRequest"
+          },
+          "kycAml": {
+            "$ref": "#/components/schemas/UpdateKycAmlRequest"
+          },
+          "taxDetails": {
+            "$ref": "#/components/schemas/UpdateLegalEntityTaxDetailsRequest"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Legal Entity Customer update request. Null values are ignored."
+      },
+      "UpdateLegalEntityTaxDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "description": "Indicates if self-certification is valid.",
+            "nullable": true,
+            "example": true
+          },
+          "usPerson": {
+            "$ref": "#/components/schemas/USPerson"
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "description": "VAT registration number of the business.",
+            "nullable": true,
+            "example": "GB123456789"
+          },
+          "nameOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Name of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Lara Green"
+          },
+          "positionOfSelfCertificationSignee": {
+            "type": "string",
+            "description": "Position or title of the individual who signed the self-certification.",
+            "nullable": true,
+            "example": "Chief Financial Officer"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Tax details for a legal entity customer."
+      },
+      "UpdateTaxResidencyRequest": {
+        "type": "object",
+        "properties": {
+          "taxIdNumber": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The updated tax identification number for this tax residency.",
+            "nullable": true,
+            "example": "253579115462"
+          },
+          "noTaxIdReason": {
+            "$ref": "#/components/schemas/ReasonForNoTaxId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The customer's tax residency update request."
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}
