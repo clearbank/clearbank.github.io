@@ -432,7 +432,7 @@
         }
       }
     },
-    "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}": {
+    "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}": {
       "delete": {
         "tags": [
           "Customer"
@@ -494,6 +494,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "relatedPartyType",
+            "in": "path",
+            "description": "The type of related party. Used to disambiguate where a party is related in more than one way.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RelatedPartyType"
             }
           }
         ],
@@ -693,6 +702,42 @@
         "summary": "You can use this endpoint to remove a legal entity's tax residency entry for the specified country.",
         "operationId": "V2CustomerTaxResidencyDelete",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "customerId",
             "in": "path",
@@ -1169,6 +1214,18 @@
             "format": "double",
             "nullable": true,
             "example": 45000000
+          },
+          "email": {
+            "type": "string",
+            "description": "The contact email address of the business.",
+            "nullable": true,
+            "example": "mybusiness@businessmail.com"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "The contact telephone number of the business.",
+            "nullable": true,
+            "example": "07123123456"
           }
         },
         "additionalProperties": false,
