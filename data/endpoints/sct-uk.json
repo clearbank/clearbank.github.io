@@ -536,6 +536,33 @@
         },
         "additionalProperties": false
       },
+      "PaymentIdentifiers": {
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "type": "string",
+            "description": "Unique identification as assigned by an instructing party for an instructed party.",
+            "nullable": true
+          },
+          "endToEndIdentification": {
+            "type": "string",
+            "description": "Unique identification assigned by the you, the initiating party, to identify the transaction.",
+            "nullable": true
+          },
+          "uetr": {
+            "type": "string",
+            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "description": "ClearBank's system-generated identifier for this payment.",
+            "format": "uuid",
+            "example": "0c8b6bdd-d39f-5003-9310-286dbe234945"
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentInstruction": {
         "required": [
           "creditTransferTransactionInformation",
@@ -629,6 +656,15 @@
             "description": "Unique identifier for this payment message.",
             "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
             "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "paymentIdentification": {
+            "type": "array",
+            "maxItems": 300,
+            "minItems": 1,
+            "description": "A collection of payment IDs that map each payment submitted in the request to ClearBank's system-generated PaymentIds.",
+            "items":{
+              "$ref": "#/components/schemas/PaymentIdentification"
+            }
           }
         },
         "additionalProperties": false

@@ -1,16 +1,16 @@
 ---
-title: "SCT UK Outbound Payment Completed webhook"
+title: "Cross-Border Outbound Payment Completed webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms that an outbound SCT UK payment has been accepted by the SEPA Credit Transfer scheme and should settle. It includes information about the payment at the time of completion.
+This webhook confirms that an outbound cross-border payment has been accepted by the SEPA Credit Transfer scheme and should settle. It includes information about the payment at the time of completion.
 
 #### Request body
 
 ```json
 {
-    "Type":"Payments.Mccy.OutboundPaymentCompleted",
+    "Type": "Payments.CrossBorder.OutboundPaymentCompleted",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -20,6 +20,7 @@ This webhook confirms that an outbound SCT UK payment has been accepted by the S
 #### Payload
 | Element                            | Description                                                                                                                                                                                                                                                                                |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PaymentId` | **Required**<br />A unique identifier assigned by ClearBank that uniquely identifies the payment instruction.<br/>Type: `string`<br /> Format: `uuid` |
 | `TransactionId`                    | **Required**<br /> A unique identifier assigned by ClearBank referencing the debit transaction that relates to this outbound payment. <br /> Type: `string`<br /> Format: `UUID`<br />                                                                              |
 | `MessageIdentification`            | **Required**<br /> A reference assigned by the you to uniquely identify the original message. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length `35` <br />                                                                                            |
 | `PaymentInformationIdentification` | **Required**<br /> A unique identifier assigned by the original sending party to distinguish the original payment information group. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                            |
@@ -33,9 +34,10 @@ This webhook confirms that an outbound SCT UK payment has been accepted by the S
 
 ```json
 {
-    "Type": "Payments.Mccy.OutboundPaymentCompleted",
+    "Type": "Payments.CrossBorder.OutboundPaymentCompleted",
     "Version": 1,
     "Payload": {
+        "PaymentId": "8ea63ded-79f8-5517-950b-37afc483c2e3",
         "TransactionId":"fb7d026f-cbf6-4412-b498-47fb5a94e1ad",
         "MessageIdentification":"MSGID-1234-OCT25-MYREF",
         "PaymentInformationIdentification":"PYMID-1234-OCT25-MYREF",

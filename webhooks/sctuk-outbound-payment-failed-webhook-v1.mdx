@@ -1,16 +1,16 @@
 ---
-title: "SCT UK Outbound Payment Failed webhook"
+title: "Cross-Border Outbound Payment Failed webhook"
 version: 1
 webhook: true
 ---
 
-This webhook notifies that an outbound SCT UK payment has failed. It includes information about the current state of the payment, and the reason for failure.
+This webhook notifies that an outbound cross-border payment has failed. It includes information about the current state of the payment, and the reason for failure.
 
 #### Request body
 
 ```json
 {
-    "Type":"Payments.Mccy.OutboundPaymentFailed",
+    "Type": "Payments.CrossBorder.OutboundPaymentFailed",
     "Version": 1,
     "Payload": {...},
     "Nonce":
@@ -20,6 +20,7 @@ This webhook notifies that an outbound SCT UK payment has failed. It includes in
 #### Payload
 | Element                            | Description                                                                                                                                                                                                                                                                                |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PaymentId` | **Required**<br />A unique identifier assigned by ClearBank that uniquely identifies the payment instruction.<br/>Type: `string`<br /> Format: `uuid` |
 | `TransactionId`                    | **Required**<br /> A unique identifier assigned by ClearBank to reference the debit transaction that relates to this outbound payment. <br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `UUID`<br />                                                                              |
 | `MessageIdentification`            | **Required**<br /> A reference assigned by the original instructing party to uniquely identify the original message. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length `35` <br />                                                                       |
 | `PaymentInformationIdentification` | **Required**<br /> A unique identifier assigned by the original sending party to distinguish the original payment information group. <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                            |
@@ -28,15 +29,16 @@ This webhook notifies that an outbound SCT UK payment has failed. It includes in
 | `UETR`                             | **Required**<br /> A universally unique transaction reference (UETR) used to track the payment end-to-end across the payment chain. <br /> Type: `string`<br /> Format: `UUID`<br /> |
 | `InstructedAmount`                 | **Required**<br /> The monetary amount that was instructed to be transferred in the payment. <br /> Type: `number` <br /> Format: `decimal`<br />                                                                                                                                          |
 | `InstructedCurrency`               | **Required**<br /> The three-letter ISO currency code representing the currency of the instructed payment amount. <br /> Type: `string` <br /> Min. Length: `3` <br /> Max. Length: `3` <br /> Pattern: `^[A-Z]{3}$`                                                                       |
-| `AdditionalInformation` | *Optional* <br/> A list of details regarding the failure, such as error codes or failure reason descriptions. <br/> Type: `array`, `null` <br/> Max. Items: `10` <br/> Item Type: `string` <br/> Item Max. Length: `140` |
+| `StatusReasonInformation` | *Optional* <br/> A nested array of error reasons regarding the payment failure, such as error codes or failure reason descriptions. <br/> Type: `array`, `null` <br/> Max. Items: `10` <br/> `AdditionalInformation` **Required** <br/> A list of supplementary details regarding this payment's failure. <br/> Max. Items: `10` <br/> Item Type: `array` of `strings` <br/> Item Max. Length: `140` |
 
 #### Example Outbound Payment Failed webhook request body
 
 ```json
 {
-    "Type": "Payments.Mccy.OutboundPaymentFailed",
+    "Type": "Payments.CrossBorder.OutboundPaymentFailed",
     "Version": 1,
     "Payload": {
+        "PaymentId": "8ea63ded-79f8-5517-950b-37afc483c2e3",
         "TransactionId":"fb7d026f-cbf6-4412-b498-47fb5a94e1ad",
         "MessageIdentification":"MSGID-1234-DEC25-MYREF",
         "PaymentInformationIdentification":"PYMID-1234-DEC25-MYREF",
@@ -45,8 +47,13 @@ This webhook notifies that an outbound SCT UK payment has failed. It includes in
         "UETR":"0a36aa76-e27c-4591-b0d3-27088fa5a70b",
         "InstructedAmount":"147.30",
         "InstructedCurrency":"EUR",
-        "AdditionalInformation": [
-            "UETR already in use"
+        "StatusReasonInformation": [
+            {
+                "AdditionalInformation": ["UETR already in use"]
+            },
+            {
+                "AdditionalInformation": ["Invalid sort-code"]
+            }
         ]
     },
     "Nonce": 961306540
