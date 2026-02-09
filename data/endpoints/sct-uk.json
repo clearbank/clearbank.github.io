@@ -419,9 +419,6 @@
         "additionalProperties": false
       },
       "InboundSimulation_RemittanceInformation": {
-        "required": [
-          "unstructured"
-        ],
         "type": "object",
         "properties": {
           "unstructured": {
@@ -434,10 +431,41 @@
               "type": "string",
               "example": "myRemittanceInformation-111-ABC"
             },
-            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form."
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.",
+            "nullable": true
+          },
+          "structured": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items":{
+              "$ref": "#/components/schemas/InboundSimulation_CreditorReferenceInformation"
+            }
           }
         },
         "additionalProperties": false
+      },
+      "InboundSimulation_CreditorReferenceInformation": {
+        "required": ["reference"],
+        "type": "object",
+        "properties": {
+          "reference":{
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "The creditor's reference."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_StructuredRemittanceInformation": {
+        "required": ["creditorReferenceInformation"],
+        "type": "object",
+        "properties": {
+          "creditorReferenceInformation": {
+            "$ref": "#/components/schemas/InboundSimulation_CreditorReferenceInformation"
+          }
+        }
       },
       "OrganisationIdentification": {
         "type": "object",
@@ -540,19 +568,28 @@
         "type": "object",
         "properties": {
           "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
             "type": "string",
-            "description": "Unique identification as assigned by an instructing party for an instructed party.",
-            "nullable": true
+            "example": "i5gdyVa8qnoOBGveXEuNHo9lvAqdPyAd4tK",
+            "description": "A unique identifier assigned by you to unambiguously identify this instruction.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
           },
           "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
             "type": "string",
-            "description": "Unique identification assigned by the you, the initiating party, to identify the transaction.",
-            "nullable": true
+            "example": "GcP5LyftYyLPNa4OQ5bZThRTlSZPCR7GbR2",
+            "description": "A unique identifier as assigned by you to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
           },
           "uetr": {
+            "minLength": 1,
+            "maxLength": 36,
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
             "type": "string",
-            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
-            "nullable": true
+            "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
+            "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
           },
           "paymentId": {
             "type": "string",
@@ -650,8 +687,6 @@
         "type": "object",
         "properties": {
           "messageIdentification": {
-            "maxLength": 35,
-            "minLength": 1,
             "type": "string",
             "description": "Unique identifier for this payment message.",
             "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
@@ -663,7 +698,7 @@
             "minItems": 1,
             "description": "A collection of payment IDs that map each payment submitted in the request to ClearBank's system-generated PaymentIds.",
             "items":{
-              "$ref": "#/components/schemas/PaymentIdentification"
+              "$ref": "#/components/schemas/PaymentIdentifiers"
             }
           }
         },
