@@ -12,11 +12,6 @@ import ExternalLink from "src/components/external-link";
 
 ## SEPA Credit Transfer UK
 
-<Callout colour="green">
-  <h2>SEPA Credit Transfer UK (SCT UK) is coming soon</h2>
-  <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
-</Callout>
-
 Our SEPA Credit Transfer UK (SCT UK) service lets you exchange euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
 
 <Callout colour="blue">
@@ -48,7 +43,7 @@ Each payment request contains a nested structure of debtor accounts and their as
 
 ![Diagram showing the PaymentInformation array, containing 3 debtors](/assets/images/sct-uk-bulk-payments-diagram.svg "")
 
-When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either an [SCT UK Outbound Payment Failed](#sct-uk-outbound-payment-failed-webhook), or an [SCT UK Outbound Payment Completed](#sct-uk-outbound-payment-completed-webhook) and an [SCT UK Customer Accounts Transaction Completed](#sct-uk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
+When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either a [Cross-Border Outbound Payment Failed](#cross-border-outbound-payment-failed-webhook), or a [Cross-Border Outbound Payment Completed](#cross-border-outbound-payment-completed-webhook) and a [Customer Accounts Transaction Completed](#sct-uk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
 
 ## Outbound payments
 
@@ -150,8 +145,6 @@ Take care to update the `RequestedExecutionDate` field to today's date, and to u
 <WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
 
 ## Inbound payments
-
-
 
 <WebhookPlaceholder render='sctuk-inbound-payment-completed-v1' />
 <WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
