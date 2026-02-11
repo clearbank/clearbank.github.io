@@ -158,7 +158,7 @@
         "properties": {
           "iban": {
             "type": "string",
-            "description": "Ultimate creditor’s International Bank Account Number.",
+            "description": "Ultimate creditor's International Bank Account Number.",
             "example": "GB14BARC20031838591122"
           },
           "name": {
@@ -172,7 +172,7 @@
             "maxLength": 70,
             "minLength": 0,
             "type": "string",
-            "description": "Ultimate creditor’s address.",
+            "description": "Ultimate creditor's address.",
             "nullable": true,
             "example": "1 High St Northleach Gloucestershire"
           }
@@ -190,8 +190,8 @@
         "properties": {
           "identifier": {
             "type": "string",
-            "description": "Ultimate debtor’s unique identifier value. This can only be an IBAN or BIC.",
-            "example": "IR14BARC20031838591122"
+            "description": "Ultimate debtor's unique identifier value. This can only be an IBAN or BIC.",
+            "example": "IE29AIBK99082942345625"
           },
           "name": {
             "maxLength": 140,
@@ -204,8 +204,8 @@
             "maxLength": 70,
             "minLength": 1,
             "type": "string",
-            "description": "Ultimate debtor’s address.",
-            "example": "2 Main St London"
+            "description": "Ultimate debtor's address.",
+            "example": "2 Main St Dublin"
           }
         },
         "additionalProperties": false,
@@ -222,13 +222,17 @@
           "instructedCurrency": {
             "type": "string",
             "description": "Currency of the instructed payment. This is the three-letter ISO currency code.",
+            "enum": ["EUR", "USD", "CAD", "CHF", "CZK", "DKK", "HUF", "NOK", "PLN", "RON", "SEK"],
             "example": "EUR"
           },
           "instructedAmount": {
             "type": "number",
             "description": "Instructed payment amount.",
             "format": "double",
-            "example": 1000
+            "example": 2345.67,
+            "minimum": 0.01,
+            "multipleOf": 0.01,
+            "maximum": 999999999.99
           },
           "reference": {
             "maxLength": 140,
@@ -236,13 +240,13 @@
             "type": "string",
             "description": "Reference provided by the ultimate debtor for the payment.",
             "nullable": true,
-            "example": "12345678"
+            "example": "Human readable example text"
           },
           "endToEndId": {
             "maxLength": 15,
             "minLength": 0,
             "type": "string",
-            "description": "Unique identifier supplied by you in your API request to simulate the sending bank’s reference.",
+            "description": "Unique identifier supplied by you in your API request to simulate the sending bank's reference.",
             "nullable": true,
             "example": "87654321"
           },
@@ -262,57 +266,69 @@
           "transactionId": {
             "type": "string",
             "description": "Unique identifier defined by ClearBank for each payment.",
-            "format": "uuid"
+            "format": "uuid",
+            "example": "c8f18c69-927a-5233-ab5a-14a8d60e754e"
           },
           "instructedCurrency": {
             "type": "string",
             "description": "Currency of the instructed payment. This is the three-letter ISO currency code.",
-            "nullable": true
+            "nullable": true,
+            "enum": ["EUR", "USD", "CAD", "CHF", "CZK", "DKK", "HUF", "NOK", "PLN", "RON", "SEK"],
+            "example": "EUR"
           },
           "instructedAmount": {
             "type": "number",
             "description": "Instructed payment amount.",
-            "format": "double"
+            "format": "double",
+            "example": 2345.67
           },
           "reference": {
             "type": "string",
             "description": "Reference provided by the ultimate debtor for the payment.",
-            "nullable": true
+            "nullable": true,
+            "example": "Human readable example text"
           },
           "endToEndId": {
             "type": "string",
-            "description": "Unique identifier supplied by you in your API request to simulate the sending bank’s reference.",
-            "nullable": true
+            "description": "Unique identifier supplied by you in your API request to simulate the sending bank's reference.",
+            "nullable": true,
+            "example": "87654321"
           },
           "ultimateCreditorIBAN": {
             "type": "string",
-            "description": "Ultimate creditor’s International Bank Account Number.",
-            "nullable": true
+            "description": "Ultimate creditor's International Bank Account Number.",
+            "nullable": true,
+            "example": "GB14BARC20031838591122"
           },
           "ultimateCreditorName": {
             "type": "string",
             "description": "Ultimate Creditor Name.",
-            "nullable": true
+            "nullable": true,
+            "example": "Rob Robinson"
           },
           "ultimateDebtorIdentifier": {
             "type": "string",
-            "description": "Ultimate debtor’s unique identifier value. This can only be an IBAN or BIC.",
-            "nullable": true
+            "description": "Ultimate debtor's unique identifier value. This can only be an IBAN or BIC.",
+            "nullable": true,
+            "example": "IE29AIBK99082942345625"
           },
           "ultimateDebtorName": {
             "type": "string",
             "description": "Ultimate Debtor Name.",
-            "nullable": true
+            "nullable": true,
+            "example": "Joe Bloggs"
           },
           "timestampCreated": {
             "type": "string",
-            "description": "Date and time transaction was created. Time in UTC.",
-            "format": "date-time"
+            "description": "Date and time in UTC that the transaction was created.",
+            "format": "date-time",
+            "example": "2025-02-19T11:32:10.934Z"
           },
           "bankRefSearchable": {
             "type": "string",
-            "description": "A bank reference Id generated by ClearBank to simulate bankRefSearchable.",
-            "nullable": true
+            "description": "A bank reference ID generated by ClearBank.",
+            "nullable": true,
+            "example": "Reference generated by ClearBank"
           }
         },
         "additionalProperties": false,
@@ -323,24 +339,29 @@
         "properties": {
           "type": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced, it provides a human-readable documentation for the problem type. When not present, default value is assumed to be \"about:blank\"."
           },
           "title": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type. "
           },
           "status": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
           },
           "detail": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
           },
           "instance": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available"
           }
         },
         "additionalProperties": {}

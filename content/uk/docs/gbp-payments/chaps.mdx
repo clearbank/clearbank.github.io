@@ -25,6 +25,37 @@ However, you can only send or return CHAPS payments between 08:00 – 17:00 Mond
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
+### Hybrid address
+
+From 24 November 2025, some inbound CHAPS payments may include a new address format called hybrid address. A hybrid address is an address format that includes both structured fields (such as town name and country) and unstructured address lines.
+
+The structured and unstructured address formats will also continue to be used alongside the hybrid address format. These formats appear in the `Iso20022XmlDocument` field in the [Transaction Settled webhook](#transaction-settled-webhook).
+
+Hybrid address is being introduced as part of the Bank of England’s CHAPS updates to harmonise payment standards across jurisdictions in line with the Cross Border Payment Reporting Plus (CBPR+) requirements.
+
+Each format has different requirements:
+- Hybrid address formats contain up to two `<AdrLine>` XML tags of up to 70 characters each, alongside mandatory `<TwnNm>` and `<Ctry>` address tags
+> Information received in the `<AdrLine>` XML tags should be distinct from what is received in the structured address elements. If a payment message contains duplicate information across structured and unstructured fields, we expect it will be rejected by the Bank of England.
+- Unstructured address formats contain up to three `<AdrLine>` XML tags of up to 35 characters each
+
+You can extract all address information from `<AdrLine>` XML tags, regardless of whether you receive a hybrid or unstructured address.
+
+<Callout colour="blue">
+In November 2026, the Bank of England will fully retire unstructured address formats.
+</Callout>
+
+Ensure your systems can process hybrid address formats for inbound payments. No changes are required for outbound payments as they already use structured address.
+
+Here is an example hybrid address:
+```
+<Nm>Jane Doe</Nm>
+<PstlAdr>
+  <TwnNm>Chicago</TwnNm>
+  <Ctry>US</Ctry>
+  <AdrLine>222 Merchandise Plaza 20th Floor Suite 2024, IL 60654</AdrLine>
+</PstlAdr>
+```
+
 ### Version 5 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
@@ -157,6 +188,13 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
 
 ## CHAPS simulation endpoints
 
+<Callout colour="blue"><h2>Deprecation notice</h2><p>The following endpoints were deprecated on <strong>8 December 2025</strong>:<br />
+- <strong>POST /inbound-payment-simulation/chaps/v1/customer-payments</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v1/return-payments</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v1/institution-payments</strong><br /></p>
+
+<p>These endpoints will remain available for use until <strong>8 June 2026</strong>. We recommend switching to version 2 of these endpoints. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+
 These endpoints can be used to simulate payments. You can also use them for automated testing.
 
 To support upcoming Bank of England changes effective 24 November 2025, we recommend using version 2 of the simulator endpoints for inbound CHAPS payments. Version 2 introduces support for both structured and hybrid address formats.
@@ -168,7 +206,7 @@ To support upcoming Bank of England changes effective 24 November 2025, we recom
 Please update your test integration to ensure continued compatibility with the hybrid address format.
 
 - Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v2/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
-- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v2/return-payments](#simulate-a-return-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v2/return-payments](#simulate-a-returned-chaps-payment) endpoint, or return an existing payment more easily using a simplified request through the [POST /v2/inbound-payment-simulation/return-payment-simplified](../gbp-payments/chaps#simulate-a-chaps-return-payment-using-a-simplified-request) endpoint.
 - Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v2/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
 
 The ClearBank Payment Simulator should no longer be used for CHAPS payments.
@@ -311,6 +349,20 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     {
         path: "/inbound-payment-simulation/chaps/v1/return-payments",
         version: "1.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+<EndpointBlock
+    type="post"
+    title="Simulate a CHAPS return payment using a simplified request"
+    endpoints={[
+    {
+        path: "/v2/inbound-payment-simulation/return-payment-simplified",
+        version: "2.0-ChapsSim",
         webhooks: [
         'transaction-settled-webhook-v6',
         ]

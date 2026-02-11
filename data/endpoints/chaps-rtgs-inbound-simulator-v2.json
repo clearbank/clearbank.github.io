@@ -16,7 +16,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API token, retrieved from the web portal.",
+            "description": "Your API token, retrieved from the ClearBank portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -34,7 +34,7 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -121,7 +121,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API token, retrieved from the web portal.",
+            "description": "Your API token, retrieved from the ClearBank portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -139,7 +139,7 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -226,7 +226,7 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "Your API token, retrieved from the web portal.",
+            "description": "Your API token, retrieved from the ClearBank portal.",
             "required": true,
             "schema": {
               "type": "string"
@@ -244,7 +244,7 @@
           {
             "name": "X-Request-Id",
             "in": "header",
-            "description": "A unique identifier for the request.",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
               "type": "string"
@@ -319,6 +319,111 @@
           }
         }
       }
+    },
+    "/v2/inbound-payment-simulation/return-payment-simplified": {
+      "post": {
+        "tags": [
+          "InboundSimulationV2"
+        ],
+        "description": "This endpoint exists to support your testing and development in our simulation environment. It does not apply to production. You can use it to send a simplified simulated returned CHAPS payment. Note that if this request is not successful because the payment details are incorrect, you will not receive a webhook.<br/><br/>If used repeatedly on the same outbound payment, this endpoint will continue to advise 200 responses for each request. You will not receive an error response. In the production environment, the expectation is that you will only receive a single pacs.004 return message for each outbound payment made.",
+        "operationId": "CreateInboundReturnPaymentSimplified-v2",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentSimplifiedDtoV2"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentSimplifiedDtoV2"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentSimplifiedDtoV2"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboundReturnPaymentSimplifiedDtoV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplifiedPaymentCreatedResponseDtoV2"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplifiedPaymentCreatedResponseDtoV2"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplifiedPaymentCreatedResponseDtoV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -348,6 +453,8 @@
         "properties": {
           "iban": {
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "example": "GB29NWBK60161331926819",
+            "maxLength": 34,
             "type": "string",
             "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions."
           }
@@ -379,7 +486,8 @@
           "identification": {
             "description": "Information to identify an account.",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "example": "601613319269"
           }
         },
         "additionalProperties": false
@@ -419,7 +527,7 @@
             "$ref": "#/components/schemas/InstructionAmountDtoV2"
           },
           "instructingAgentBic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": " The instructing agent's BIC. Must be exactly 8 or 11 characters long.",
             "type": "string",
             "maxLength": 11,
@@ -656,7 +764,7 @@
             "maxLength": 35
           },
           "instructingAgentBic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "Must be exactly 8 or 11 characters long.",
             "type": "string"
           },
@@ -676,7 +784,7 @@
             ]
           },
           "debtorBic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "Must be exactly 8 or 11 characters long.",
             "type": "string"
           },
@@ -685,7 +793,7 @@
             "$ref": "#/components/schemas/FinancialInstitutionIdentificationV2"
           },
           "creditorBic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "The creditor's Bank Identifier Code. Must be exactly 8 or 11 characters long.",
             "type": "string"
           },
@@ -1005,11 +1113,12 @@
             "description": "The original unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 35
+            "maxLength": 35,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$"
           },
           "originalReference": {
+            "minLength": 1,
             "maxLength": 35,
-            "minLength": 0,
             "type": "string",
             "description": "A reference, as assigned by the ultimate debtor to unambiguously refer to the payment transaction.",
             "nullable": true,
@@ -1025,7 +1134,9 @@
             "example": "Jane Smith"
           },
           "debtorBic": {
-            "minLength": 1,
+            "minLength": 8,
+            "maxLength": 11,
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "Valid BIC for the debtor account.",
             "type": "string",
             "example": "GB45Q2P1N0M"
@@ -1036,10 +1147,144 @@
             "example": "John Doe"
           },
           "creditorBic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "minLength": 8,
+            "maxLength": 11,
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "The creditor's Bank Identifier Code. Must be exactly 8 or 11 characters long.",
             "type": "string",
             "example": "GB29X7L5Q2R"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInboundReturnPaymentSimplifiedDtoV2": {
+        "required": [
+          "instructionIdentification",
+          "paymentId",
+          "returnReasonCode"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "This must be the paymentId used in the simulated outbound payment message. ClearBank identifier that uniquely identifies the new outbound/return payment instruction."
+          },
+          "returnReasonCode": {
+            "enum": [
+              "AM09",
+              "BE01",
+              "BE04",
+              "BE05",
+              "BE06",
+              "FOCR",
+              "MD06",
+              "MS02",
+              "CURR",
+              "AC04",
+              "AM02",
+              "AM03",
+              "AG01",
+              "RR04",
+              "AC01",
+              "AC02",
+              "AC03",
+              "AC06",
+              "AC07",
+              "AC13",
+              "AC14",
+              "AC15",
+              "AC16",
+              "AC17",
+              "AG02",
+              "AG07",
+              "AGNT",
+              "AM01",
+              "AM04",
+              "AM05",
+              "AM06",
+              "AM07",
+              "AM10",
+              "ARDT",
+              "BE07",
+              "BE08",
+              "BE10",
+              "BE11",
+              "BE16",
+              "BE17",
+              "CN01",
+              "CNOR",
+              "CNPC",
+              "CUST",
+              "DNOR",
+              "DS28",
+              "DT01",
+              "DT02",
+              "ED01",
+              "ED03",
+              "ED05",
+              "EMVL",
+              "ERIN",
+              "FF03",
+              "FF04",
+              "FF05",
+              "FF06",
+              "FF07",
+              "FR01",
+              "FRTR",
+              "G004",
+              "MD01",
+              "MD02",
+              "MD05",
+              "MD07",
+              "MS03",
+              "NOAS",
+              "NOCM",
+              "NOOR",
+              "PINL",
+              "RC01",
+              "RC07",
+              "RC08",
+              "RC11",
+              "RF01",
+              "RR01",
+              "RR02",
+              "RR03",
+              "RR05",
+              "RR06",
+              "RR07",
+              "RR08",
+              "RR09",
+              "RR11",
+              "RR12",
+              "RUTA",
+              "SL01",
+              "SL02",
+              "SL11",
+              "SL12",
+              "SL13",
+              "SL14",
+              "SP01",
+              "SP02",
+              "SVNR",
+              "TM01",
+              "TRAC",
+              "UPAY"
+            ],
+            "type": "string"
+          },
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction. This value will be used as the ReturnIdentification (<RtrId>) in the generated inbound pacs.004 return payment message. It can be used to locate the corresponding return payment within our system.",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "example": "Invoice 23456789"
+          },
+          "instructedAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Amount of money to be included in the simulated returned payment."
           }
         },
         "additionalProperties": false
@@ -1081,8 +1326,10 @@
         "properties": {
           "amount": {
             "type": "number",
-            "example": "100.00",
-            "description": "Amount of money in the transaction."
+            "example": "999999999.99",
+            "description": "Amount of money in the transaction. Maximum amount of 999,999,999.99 (one penny below a billion).",
+            "minLength": 1,
+            "maxLength": 12
           },
           "currency": {
             "type": "string",
@@ -1097,7 +1344,7 @@
         "type": "object",
         "properties": {
           "bic": {
-            "pattern": "^(\\w{8}|\\w{11})$",
+            "pattern": "^([A-Z0-9]{8}|[A-Z0-9]{11})$",
             "description": "Party's Business Identifier Code (BIC). Must be exactly 8 or 11 characters long.",
             "type": "string",
             "example": "GB45Q2P1N0M"
@@ -1144,18 +1391,22 @@
           "townName": {
             "description": "Name of a town, city or village.",
             "minLength": 1,
+            "maxLength": 35,
             "type": "string",
             "example": "London"
           },
           "country": {
             "description": "Country as a two-letter ISO country code.",
-            "minLength": 1,
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Z]{2}$",
             "type": "string",
             "example": "GB"
           },
           "postCode": {
             "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
             "minLength": 1,
+            "maxLength": 16,
             "type": "string",
             "example": "E1 8QS"
           },
@@ -1217,6 +1468,23 @@
         },
         "additionalProperties": false
       },
+      "SimplifiedPaymentCreatedResponseDtoV2": {
+        "required": [
+          "Uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "Uetr": {
+            "description": "Unique identification, as assigned by ClearBank, to unambiguously identify the return transaction.",
+            "type": "string",
+            "pattern": "[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+",
+            "example": "7373859494594985",
+            "minLength": 1,
+            "maxLength": 16
+          }
+        },
+        "additionalProperties": false
+      },
       "PrivateIdentifierV2": {
         "type": "object",
         "properties": {
@@ -1237,24 +1505,27 @@
         ],
         "properties": {
           "detail": {
-            "description": "A human-readable description of the problem unique to the instance of the problem.",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
             "type": "string"
           },
-          "errors": {},
+          "errors": {
+            "description": "Gets or sets the validation errors associated with this instance of problem details.",
+            "type": "object"
+          },
           "instance": {
-            "description": "A URI that uniquely identifies the problem being reported. ",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
             "type": "string"
           },
           "status": {
-            "description": "The HTTP response code returned by the API. ",
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
             "type": "string"
           },
           "title": {
-            "description": "A short, human-readable summary of the problem type.",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see [RFC7231], Section 3.4).",
             "type": "string"
           },
           "type": {
-            "description": "A URI that uniquely identifies the problem type being reported.",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
             "type": "string"
           }
         }

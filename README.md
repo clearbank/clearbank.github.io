@@ -1,7 +1,41 @@
 # To update the site
 
+## Create a GitHub personal access token (PAT)
+
+Under developer settings create a new PAT with read-only access to public repositories. Ensure you copy this once created as you can't view it again.
+
+![alt text](image.png)
+
+## Create .Env file
+
+Create a `.Env` file in the directory root and add your GitHub token
+
+```
+GITHUB_TOKEN=<token>
+```
 
 ## Running locally
+
+### Option 1 - Run in vs code dev container (Recommended)
+
+1) Open repository in vscode.
+2) Open `postCreate.sh` and ensure that it has Unix line endings (LF)
+
+![alt text](image-5.png)
+
+3) Open the Command Palette (Ctrl+Shift+P) and type `Dev Containers: Reopen in Container`
+
+![alt text](image-1.png)
+
+4) The dev container will be created and npm install will run. Once finished you should see output like below.
+
+![alt text](image-2.png)
+
+5) Open a new terminal and run `npm run start`. You should see output like below and be able to access the site on `https://localhost:8000`
+
+![alt text](image-3.png)
+
+### Option 2
 
 ```bash
 npm install

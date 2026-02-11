@@ -20,6 +20,7 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [PATCH /v1/Accounts/{accountId}](../gbp-accounts/manage-accounts#amend-an-account-real) | Amend the properties of an existing account |
 | [GET /v1/accounts/{accountId}/closure](../embedded-banking/flexible-cash-isa#check-cash-isa-closure-status) | Get savings account or flexible cash ISA closure status |
 | [POST /v1/accounts/{accountId}/closure](../embedded-banking/flexible-cash-isa#close-a-cash-isa) | Close a savings account or flexible cash ISA |
+| [GET /accounts/sterling/v1/accounts/{accountId}/end-of-day-balance](.../gbp-accounts/manage-accounts#get-the-end-of-day-balance-for-an-account-real) | Get the end-of-day balance for a real account |
 | [GET /v2/Accounts/{accountId}/Mandates](../gbp-payments/bacs-direct-debit-instructions#get-all-ddis-real-account) | Get all of the Direct Debit Instructions associated with the account |
 | [POST /v1/Accounts/{accountId}/Mandates](../gbp-payments/bacs-direct-debit-instructions#create-a-ddi-real-account) | Request creation of a Direct Debit Instruction |
 | [DELETE /v1/Accounts/{accountId}/Mandates/{mandateId}](../gbp-payments/bacs-direct-debit-instructions#cancel-a-ddi-real-account) | Request cancellation for a Direct Debit Instruction |
@@ -47,10 +48,22 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions](../gbp-accounts/transaction-data#get-all-payments-virtual-account) | Get a summary of all of the transactions from the specified virtual account |
 | [GET /v2/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/{transactionId}](../gbp-accounts/transaction-data#get-a-payment-virtual-account) | Get the details of a specific transaction from the specified virtual account |
 | [POST /v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](../gbp-payments/bacs#return-bacs-payment-virtual-account) | Create a return of one or more Direct Debit or Direct Credit transactions for the virtual account |
+| [POST /accounts/sterling/v1/hub-accounts](../embedded-banking/hub-accounts/#create-a-hub-account)|Creat a hub account
 | [GET /v1/Accounts/Virtual](../gbp-accounts/manage-accounts#get-accounts-virtual) | Get a list of all the virtual accounts belonging to an institution |
 | [PUT /v1/Cop/opt/accounts/{accountId}](../gbp-payments/confirmation-of-payee#opt-out-from-the-cop-service-real-account) | Update an account to either opt out or opt back into our Confirmation of Payee (CoP) service |
 | [PUT /v1/Cop/opt/accounts/{accountId}/virtual/{virtualAccountId}](../gbp-payments/confirmation-of-payee#opt-out-from-the-cop-service-virtual-account) | Update a virtual account to either opt out or opt back into  our Confirmation of Payee (CoP) service |
-| [POST /v1/customers/retail](../embedded-banking/retail-customers#create-a-retail-customer) | Create a new retail customer |
+| [POST /customers/v2/retail](../embedded-banking/retail-customers#create-a-retail-customer) | Create a retail customer. |
+| [PATCH /customers/v2/retail/{customerId}](../embedded-banking/retail-customers#update-a-retail-customer) | Update an existing retail customer. |
+| [GET /customers/v2/customers/{customerId}](../embedded-banking/retail-customers#retrieve-a-retail-customer) | Retrieve an existing customer. |
+| [POST /customers/v2/customers/{customerId}/related-parties](../embedded-banking/retail-customers#relate-a-retail-customer-and-another-customer) | Relate one customer with another. |
+| [GET /customers/v2/customers/{customerId}/related-parties](../embedded-banking/retail-customers#get-all-relations-of-a-retail-customer) | Retrieve all current relations to a customer. |
+| [DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}](../embedded-banking/retail-customers#delete-a-relation-between-two-customers) | Delete a customer relation. |
+| [POST /customers/v2/customers/{customerId}/addresses/current](../embedded-banking/retail-customers#update-a-retail-customers-address) | Update a customer's current address. |
+| [PUT /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}](../embedded-banking/retail-customers#update-a-retail-customers-id-document) | Add or update a customer's ID documents. |
+| [DELETE /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}](../embedded-banking/retail-customers#delete-a-retail-customers-id-document) | Delete a customer's ID document. |
+| [POST PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/retail-customers#update-a-retail-customers-tax-residency) | Add or update a customer's country of tax residency. |
+| [DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/retail-customers#delete-a-customers-tax-residency) | Delete a customer's country of tax residency. |
+| [POST /v1/customers/retail](../embedded-banking/retail-customers#create-a-retail-customer-v-1) | Create a new retail customer |
 | [PATCH /v1/customers/retail/{customerId}](../embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) | Update the details of an existing retail customer |
 | [PUT /v1/customers/retail/{customerId}/currentaddress](../embedded-banking/retail-customers#update-an-existing-retail-customers-address) | Update the address of an existing retail customer |
 | [POST /v1/customercheck/retail](../embedded-banking/know-your-customer#kyc-check-and-create-a-new-customer) | Conduct a retail customer KYC check then create a new retail customer if successful |
@@ -60,6 +73,7 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [POST /inbound-payment-simulation/chaps/v2/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
 | [POST /inbound-payment-simulation/chaps/v2/institution-payments](../gbp-payments/chaps#simulate-a-chaps-bank-to-bank-payment)| Simulate an inbound CHAPS bank-to-bank payment for testing in the sim environment|
 | [POST /inbound-payment-simulation/chaps/v2/return-payments](../gbp-payments/chaps#simulate-a-returned-chaps-payment)| Simulate a returned CHAPS payment for testing in the sim environment|
+| [POST /v2/inbound-payment-simulation/return-payment-simplified](../gbp-payments/chaps#simulate-a-chaps-return-payment-using-a-simplified-request)| Simulate a CHAPS return payment using a simplified request|
 | [GET /interest/v1/accounts/{accountId}/configurations](../embedded-banking/interest-configuration#get-an-accounts-interest-configurations) | Get past, current, and future interest configuration IDs for an interest-bearing account |
 | [POST /interest/v1/accounts/{accountId}/configurations](../embedded-banking/interest-configuration#update-interest-configuration) | Update the interest configuration ID of an interest-bearing account |
 | [DELETE /interest/v1/accounts/{accountId}/future-configurations](../embedded-banking/interest-configuration#delete-future-dated-interest-configurations) | Delete all future-dated interest configurations for an interest-bearing account |
@@ -73,7 +87,6 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v1/isas/{accountId}](../embedded-banking/flexible-cash-isa#get-cash-isa-details) | Get cash ISA details |
 | [POST /v1/isas/{accountId}/cancellation](../embedded-banking/flexible-cash-isa#cancel-a-cash-isa) | Cancel a cash ISA |
 | [POST /v1/isas/{accountId}/declaration](../embedded-banking/flexible-cash-isa#set-a-new-isa-declaration) | Declare a customer's eligibility for a cash ISA  |
-| [PATCH /v1/isas/{accountId}/discontinue](../embedded-banking/flexible-cash-isa#discontinue-a-cash-isa) | Inform ClearBank that the cash ISA account holder has deceased |
 | [POST /v1/isas/{accountId}/transfer-in](../embedded-banking/flexible-cash-isa#transfer-a-cash-isa-in-manually) | Transfer in a Cash ISA manually |
 | [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](../embedded-banking/flexible-cash-isa#reject-a-transfer-in) | Reject an existing cash ISA transfer in request |
 | [GET /v1/isas/{accountId}/transfer-in/{transferInId}](../embedded-banking/flexible-cash-isa#get-information-on-a-transfer-in) | Get information on a cash ISA transfer in |
