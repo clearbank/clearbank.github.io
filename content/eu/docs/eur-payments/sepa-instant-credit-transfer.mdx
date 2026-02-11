@@ -105,6 +105,87 @@ Outbound payments may be cancelled due to **internal validation failure** (the p
 <WebhookPlaceholder render='sepa-instant-outbound-payment-delayed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
+**Example Customer Accounts Transaction Completed webhook request body for inbound SCT Inst payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "EndToEndIdentification":"12345678",
+      "CreatedDateTime":"2025-02-10T12:52:43.7433333Z",
+      "CompletedDateTime":"2025-02-10T12:52:43.7666667Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"GB68INST20182441739477",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":263934935
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 263934935
+}
+```
+
+**Example Customer Accounts Transaction Completed webhook request body for outbound SCT Inst payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"8fa1ceea-e592-480c-26fa-1fd040c89df1",
+      "EndToEndIdentification":"0947eaf6-2b51-496b-afba-969a0a72f38",
+      "CreatedDateTime":"2025-02-10T15:54:09.97Z",
+      "CompletedDateTime":"2025-02-10T15:54:14.29Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Debit",
+      "Amount":100.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"testing instant",
+      "DebtorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"DE25370502991000122343",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1778087803
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 1778087803
+}
+```
 ### Testable IBANs
 
 When you call our endpoints in simulation, any IBANs you provide are validated. To support your testing, the below tables list valid and invalid IBANs for your use:

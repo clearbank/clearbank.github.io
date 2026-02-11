@@ -32,7 +32,7 @@ Retail customers are compatible with several account types:
 * [Flexible cash ISAs](./flexible-cash-isa) - For earning tax-free interest on saved deposits.
 * [Hub accounts](./hub-accounts) - For specific innovative use cases.
 
-## Create and update retail customers
+## Create, update and retrieve a retail customer
 
 #### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
 
@@ -83,7 +83,7 @@ When you create a retail customer, you'll also need to provide their current add
 
 ## Retail customer addresses
 
-You can update a customer's address using the [**POST /customers/v2/customers/{customerId}/addresses/current**](#update-a-retail-customers-address) endpoint. When you do this, the customer's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
+You can update a customer's address using the [**POST /customers/v2/customers/{customerId}/current-addresses**](#update-a-retail-customers-address) endpoint. When you do this, the customer's last address will be automatically moved to the `previousAddresses` array, and will have a `validTo` date set to the new address' `validFrom` date. If you do not specify a `validFrom` date for the new address, it will default to today's date.
 
 It is not currently possible to delete a previous address.
 
@@ -92,7 +92,7 @@ It is not currently possible to delete a previous address.
   title="Update a retail customer's address"
   endpoints={[
     {
-      path: "/customers/v2/customers/{customerId}/addresses/current",
+      path: "/customers/v2/customers/{customerId}/current-addresses",
       version: "2.0-customers-retail"
     }
   ]}
@@ -168,9 +168,9 @@ To change a customer's tax residency from one country to another, follow the bel
 
 ## Customer relation endpoints
 
-The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-retail-customer-and-another-customer) endpoint allows you to link two parties by providing their `customerId`s and specifying the nature of the relation.
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-retail-customer-and-another-customer) endpoint allows you to link two parties by providing their `customerId` and specifying the nature of the relation.
 
-**Note:** The arrangement of `customerId`s in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
+**Note:** The arrangement of `customerId` in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
 The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
 For example, when defining a UBO relationship, the customer referred to in the `relatedCustomerId` will become the Ultimate Beneficial Owner of the `customerId` specified in the path.
 

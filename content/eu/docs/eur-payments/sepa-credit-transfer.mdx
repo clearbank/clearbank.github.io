@@ -105,6 +105,88 @@ When you call our endpoints in simulation, any IBANs you provide are validated. 
 
 <br />
 
+**Example Customer Accounts Transaction Completed webhook request body for inbound SCT payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"ce57422c-1276-4820-b97b-e7108f9c59cd",
+      "EndToEndIdentification":"Inbound12345677",
+      "CreatedDateTime":"2025-02-10T12:54:58.0766667Z",
+      "CompletedDateTime":"2025-02-10T12:54:58.0966667Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Funding",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL51XBLT6087402426",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":740685879
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 740685879
+}
+```
+
+**Example Customer Accounts Transaction Completed webhook request body for outbound SCT payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"2a259909-e2b5-4bb5-ba91-5e40070ce901",
+      "EndToEndIdentification":"4751967232218871296240",
+      "CreatedDateTime":"2024-07-29T09:56:59.58Z",
+      "CompletedDateTime":"2024-07-29T10:00:23.82Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Debit",
+      "Amount":224.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"deposit",
+      "DebtorAccount":{
+         "AccountId":"c182ac1e-3f15-4b58-b9c3-22719a6b6461",
+         "Iban":"NL74CLRB0113702695",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"NL32INGB0000092273",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":437327901
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 437327901
+}
+```
+
 ## Receive an SCT payment
 <WebhookPlaceholder render='sepa-ct-inbound-payment-completed-v1' />
 
