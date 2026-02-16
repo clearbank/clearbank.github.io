@@ -76,7 +76,8 @@
             "maxLength": 140,
             "minLength": 1,
             "type": "string",
-            "description": "The legal name of this party."
+            "example": "Lime Banking",
+            "description": "The legal name of this agent."
           },
           "postalAddress": {
             "$ref": "#/components/schemas/BasicAddress"
@@ -357,7 +358,7 @@
           "purpose": {
             "type": "string",
             "example": "",
-            "description": "The underlying reason for the payment transaction, as published in an external purpose code list.",
+            "description": "The underlying reason for the payment transaction, as published in an external purpose code list (ExternalPurpose1Code).",
             "nullable": true
           },
           "remittanceInformationUnstructured": {
@@ -428,6 +429,7 @@
             "minLength": 1,
             "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ ]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+])",
             "type": "string",
+            "example": "12344321",
             "description": "Unambiguous identification for the given organisation using the specified identification scheme."
           },
           "schemeName": {
@@ -438,11 +440,12 @@
             "minLength": 1,
             "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ ]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+])",
             "type": "string",
+            "example": "Companies House",
             "description": "The name of the entity that assigns the identification."
           }
         },
         "additionalProperties": false,
-        "description": "Unambiguous Identification for the given scheme."
+        "description": "Unambiguous identification using the given scheme."
       },
       "PartyInformation": {
         "required": [
@@ -456,6 +459,7 @@
             "minLength": 1,
             "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,138}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
             "type": "string",
+            "example": "Martina Hicks",
             "description": "Name of the party"
           },
           "postalAddress": {
@@ -466,6 +470,7 @@
             "minLength": 2,
             "pattern": "[A-Z]{2,2}",
             "type": "string",
+            "example": "NL",
             "description": "The party's country of residence, given as an ISO 3166 two-letter country code.",
             "nullable": true
           },
@@ -477,7 +482,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The name and, optionally, the legal entity identifier of the account."
+        "description": "Details of the party. You should provide 'organisationIdentification' or 'privateIdentification' for the party, but not both."
       },
       "PostalAddress": {
         "required": [
@@ -589,13 +594,16 @@
             "maxLength": 4,
             "minLength": 1,
             "type": "string",
-            "description": "The identification scheme's code."
+            "example": "TXID",
+            "pattern": "[A-Z]{4,4}",
+            "description": "The identification scheme's four character identification code, as set out in the external code set for External Organisation Identification."
           },
           "proprietary": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "The proprietary scheme's name."
+            "example": "Internal identification scheme name",
+            "description": "The proprietary identification scheme's name."
           }
         },
         "additionalProperties": false,
