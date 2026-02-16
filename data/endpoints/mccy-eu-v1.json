@@ -1,0 +1,606 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MCCY EU",
+    "version": "1.0"
+  },
+  "paths": {
+    "/payments/cross-border/v1/payments": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiatePaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "501": {
+            "description": "Not Implemented"
+          }
+        }
+      }
+    },
+    "/payments/cross-border/v1/payments/accept": {
+      "post": {
+        "tags": [
+          "ClearBank.Mccy.EU.Orchestrator.Api"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecutePaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "501": {
+            "description": "Not Implemented"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Agent": {
+        "required": [
+          "bicfi",
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "The legal name of this party."
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/BasicAddress"
+          },
+          "bicfi": {
+            "maxLength": 11,
+            "minLength": 11,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
+            "type": "string",
+            "description": "This financial institution's Bank Identifier Code (BIC)."
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "example": "1234ABCLILUYNFL66E11",
+            "description": "The Legal Entity Identifier (LEI) of this party.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The financial institution involved with the payment."
+      },
+      "BasicAddress": {
+        "required": [
+          "country",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
+            "type": "string",
+            "example": "Brussels",
+            "description": "Name of a built-up area, with defined boundaries, and a local government."
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "example": "BE",
+            "description": "The country this address is in, given as an ISO 3166 2-digit country code."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The postal address of the agent."
+      },
+      "CreditorAgent": {
+        "required": [
+          "bicfi"
+        ],
+        "type": "object",
+        "properties": {
+          "bicfi": {
+            "maxLength": 11,
+            "minLength": 11,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
+            "type": "string",
+            "example": "ABCDFR0B123",
+            "description": "This financial institution's Business Identifier Code (BIC)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the creditor agent as a financial institution."
+      },
+      "CurrencyAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Indicates the amount of currency used in the given transaction.",
+            "format": "double",
+            "minimum": 0,
+            "multipleOf": 0.01,
+            "exclusiveMinimum": true,
+            "example": 30572.50
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "example": "EUR",
+            "description": "The currency's three-letter ISO 4217 currency code."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A number of monetary units specified in a currency where the unit of currency is explicit and compliant with ISO 4217."
+      },
+      "DateAndPlaceOfBirth": {
+        "required": [
+          "birthDate",
+          "cityOfBirth",
+          "countryOfBirth"
+        ],
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "minLength": 10,
+            "maxLength": 10,
+            "pattern": "\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])",
+            "type": "string",
+            "description": "This party's date of birth, formatted yyyy-MM-dd."
+          },
+          "cityOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
+            "type": "string",
+            "example": "Leon",
+            "description": "This party's city of birth."
+          },
+          "countryOfBirth": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "example": "FR",
+            "description": "This party's country of birth, given as a two-letter ISO 3166 country code."
+          },
+          "provinceOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
+            "type": "string",
+            "example": "Landes",
+            "description": "This party's province of birth.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Party's date and place of birth."
+      },
+      "ExecutePaymentRequest": {
+        "required": [
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "type": "string",
+            "description": "A universally unique identifier to provide an end-to-end reference for this payment transaction.",
+            "format": "uuid",
+            "example": "013f6468-dd30-54b6-9003-11cf68b1b989"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IbanAccount": {
+        "required": [
+          "currency",
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "pattern": "[A-Z]{3,3}",
+            "example": "EUR",
+            "description": "The of this account, given as a three-letter ISO-4217 currency code."
+          },
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "example": "NL11ABCD1234123400",
+            "description": "This account's International Bank Account Number (IBAN)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the creditor or debtor account in a given transaction."
+      },
+      "IbanOrOtherAccount": {
+        "required": [
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "pattern": "[A-Z]{3,3}",
+            "example": "EUR",
+            "description": "The currency of this account, given as a three-letter ISO 4217 currency code."
+          },
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "example": "NL11ABCD1234123400",
+            "description": "This account's International Bank Account Number (IBAN). Either the 'nonIban' or 'iban' field should be provided, not both.",
+            "nullable": true
+          },
+          "nonIban": {
+            "type": "string",
+            "example": "ABCD1234123400",
+            "description": "This account's non-IBAN account identifier. Either the 'nonIban' or 'iban' field should be provided, not both.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the creditor or debtor's account in a given transaction, which may be an IBAN or other account identifier."
+      },
+      "InitiatePaymentRequest": {
+        "required": [
+          "creditor",
+          "creditorAccount",
+          "creditorAgent",
+          "debtor",
+          "debtorAccount",
+          "endToEndIdentification",
+          "instructionIdentification",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "type": "string",
+            "description": "A universally unique identifier to provide an end-to-end reference of a payment transaction.",
+            "format": "uuid",
+            "example": "013f6468-dd30-54b6-9003-11cf68b1b989"
+          },
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z/\\-?:().,'\\+](|[0-9a-zA-Z/\\-?:().,'\\+]|[0-9a-zA-Z/\\-?:().,'\\+ ]{1,33}[0-9a-zA-Z/\\-?:().,'\\+])",
+            "type": "string",
+            "example": "bXuC9HimDlI0X3Ygmk525Cxb8dYzUddpj4T",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain."
+          },
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z/\\-?:().,'\\+](|[0-9a-zA-Z/\\-?:().,'\\+]|[0-9a-zA-Z/\\-?:().,'\\+ ]{1,33}[0-9a-zA-Z/\\-?:().,'\\+])",
+            "type": "string",
+            "example": "my-instruction-ident 111ABC-321",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction."
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyInformation"
+          },
+          "debtorAccount": {
+            "$ref": "#/components/schemas/IbanAccount"
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/PartyInformation"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/IbanOrOtherAccount"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/CreditorAgent"
+          },
+          "interbankSettlementAmount": {
+            "$ref": "#/components/schemas/CurrencyAmount"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/CurrencyAmount"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/PartyInformation"
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/PartyInformation"
+          },
+          "purpose": {
+            "type": "string",
+            "example": "",
+            "description": "The underlying reason for the payment transaction, as published in an external purpose code list.",
+            "nullable": true
+          },
+          "remittanceInformationUnstructured": {
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z/\\-?:().,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\]\\\\](|[0-9a-zA-Z/\\-?:().,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\]\\\\]|[0-9a-zA-Z/\\-?:().,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\]\\\\]{1,138}[0-9a-zA-Z/\\-?:().,'\\+!#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\]\\\\])",
+            "type": "string",
+            "example": "My example unstructured remittance information 33-UK-ABC",
+            "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, for example, commercial invoices in an accounts' receivable system in an unstructured form.",
+            "nullable": true
+          },
+          "previousInstructingAgents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreviousInstructingAgent"
+            },
+            "description": "An array of agents who were previously involved with this payment.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Institution Payment Request (pacs.008)"
+      },
+      "OrganisationIdentification": {
+        "type": "object",
+        "properties": {
+          "anyBic": {
+            "maxLength": 11,
+            "minLength": 11,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}[A-Z0-9]{3,3}",
+            "type": "string",
+            "example": "CLRBGB10321",
+            "description": "A BIC assigned by SWIFT to a non financial institution.",
+            "nullable": true
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "example": "D7R3AROG1XRMZ3LXI712",
+            "description": "The Legal Entity Identifier of this party.",
+            "nullable": true
+          },
+          "other": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Other"
+            },
+            "description": "An array of other identifiers for this organisation.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the organisation."
+      },
+      "Other": {
+        "required": [
+          "id",
+          "issuer",
+          "schemeName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ ]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+])",
+            "type": "string",
+            "description": "Unambiguous identification for the given organisation using the specified identification scheme."
+          },
+          "schemeName": {
+            "$ref": "#/components/schemas/SchemeName"
+          },
+          "issuer": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ ]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+])",
+            "type": "string",
+            "description": "The name of the entity that assigns the identification."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unambiguous Identification for the given scheme."
+      },
+      "PartyInformation": {
+        "required": [
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,138}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
+            "type": "string",
+            "description": "Name of the party"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "countryOfResidence": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "The party's country of residence, given as an ISO 3166 two-letter country code.",
+            "nullable": true
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PrivateIdentification"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The name and, optionally, the legal entity identifier of the account."
+      },
+      "PostalAddress": {
+        "required": [
+          "country",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]](|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]|[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+ !#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]]{1,33}[0-9a-zA-Z\\/\\\\-\\\\?:\\\\(\\\\)\\\\.,'\\\\+!#$%&\\\\*=^_`\\\\{\\\\|\\\\}~\\\";<>@\\\\[\\\\\\\\\\\\]])",
+            "type": "string",
+            "example": "Amsterdam",
+            "description": "Name of a built-up area, with defined boundaries, and a local government."
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "example": "NL",
+            "description": "The country this address is in, given as an ISO 3166 two-letter country code."
+          },
+          "streetName": {
+            "type": "string",
+            "description": "Street name of this address.",
+            "example": "Da Costakade",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "description": "The postcode of this address.",
+            "example": "1053 XG",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The postal address of this party."
+      },
+      "PreviousInstructingAgent": {
+        "required": [
+          "agent",
+          "order"
+        ],
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "integer",
+            "description": "The order of this previous instructing agent in the payment chain. TODO: is 1 most recent, or first?",
+            "format": "int32",
+            "example": 1
+          },
+          "agent": {
+            "$ref": "#/components/schemas/Agent"
+          },
+          "previousInstructingAgentAccount": {
+            "$ref": "#/components/schemas/PreviousInstructingAgentAccount"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Agents who were previously involved with the payment."
+      },
+      "PreviousInstructingAgentAccount": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "example": "GB43PDIZURTAN33",
+            "description": "International Bank Account Number (IBAN)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The account information for a previous instructing agent."
+      },
+      "PrivateIdentification": {
+        "type": "object",
+        "properties": {
+          "dateAndPlaceOfBirth": {
+            "$ref": "#/components/schemas/DateAndPlaceOfBirth"
+          },
+          "other": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Other"
+            },
+            "description": "Other private identifications.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The party's private or personal information."
+      },
+      "SchemeName": {
+        "required": [
+          "code",
+          "proprietary"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "The identification scheme's code."
+          },
+          "proprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "The proprietary scheme's name."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Scheme type."
+      }
+    }
+  }
+}
