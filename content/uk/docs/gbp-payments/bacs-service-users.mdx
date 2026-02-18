@@ -1,0 +1,150 @@
+---
+title: "Bacs Service Users"
+metaTitle: "Bacs Service Users"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
+import WebhookPlaceholder from 'src/components/webhook-placeholder'
+import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
+
+## Bacs Service Users
+
+As a Bacs **Service User** (also known as Originator) of Direct Debits, your responsibility is to construct and submit the payment instruction and Direct Debit Instruction.
+
+This includes identifying the source and destination accounts, specifying the collection amount, and assigning a transaction reference. You also manage the customer authorisation process (known as a Direct Debit Instruction).
+
+ClearBank does not offer Bacs origination capabilities. To become a Service User, you must integrate with a Bacs origination bureau.
+
+## Bacs inbound DDI payments
+The following webhooks relate to the origination of Direct Debit payments as they appear in your account as the Service User:
+- [Bacs Debit Contra Received webhook](#bacs-debit-contra-received-webhook) - Indicates funds received as a result of a Direct Debit file being processed. This is the bulk settlement.
+- [Bacs Unpaid Direct Debit Received webhook](#bacs-unpaid-direct-debit-received-webhook) - Indicates that a Direct Debit could not be paid.
+- [Bacs Direct Debit Indemnity Claim Received Event webhook](#bacs-direct-debit-indemnity-claim-received-event-webhook) - Indicates receipt of a Direct Debit indemnity claim.
+<WebhookPlaceholder render='bacs-debit-contra-received-webhook-v3' />
+<WebhookPlaceholder render='bacs-unpaid-direct-debit-received-webhook-v3' />
+<WebhookPlaceholder render='bacs-direct-debit-indemnity-claim-received-event-webhook-v3' />
+
+## Bacs DDI codes reference
+
+The following tables give additional detail on the meanings of the various codes used in managing Bacs DDIs.
+
+* [AUDDIS codes](#auddis-codes)
+* [ADDACS Direct Debit Instruction amendment reason codes](#addacs-direct-debit-instruction-amendment-reason-codes)
+* [Bank returned AUDDIS (rejection) codes](#bank-returned-auddis-rejection-codes)
+
+### AUDDIS codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0N</td><td>New Instruction</td>
+</tr>
+<tr>
+<td>0C</td><td>Cancel Instruction</td>
+</tr>
+<tr>
+<td>0S</td><td>Substitute Instruction (Migrate the Instruction from paper to AUDDIS)</td>
+</tr>
+</tbody>
+</table>
+
+### ADDACS Direct Debit Instruction amendment reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td>Instruction transferred to another account at a different branch of the paying bank</td>
+<td>The payer has moved to a new house and wishes to transfer their account to a local branch. <br/>The paying bank has
+closed a branch and set up a new customer account at another sort code.</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Instruction transferred to another account at the same branch of the paying bank</td>
+<td>The payer has got married and wants to transfer a DDI from their own account to a joint account. <br/>The paying bank
+has allocated a new account to the customer.</td>
+</tr>
+</tbody>
+</table>
+
+### ADDACS Direct Debit Instruction cancellation reason codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td><td>Institution cancelled - refer to payer</td><td>Paying bank has cancelled the Direct Debit Instruction.  Service user cannot collect via Direct Debit on this account. If Direct Debit is to continue the service user must obtain a new DDI for a new account. </td>
+</tr>
+<tr>
+<td>1</td><td>Instruction cancelled by payer</td><td>Payer has instructed the paying bank to cancel the Direct Debit Instruction.</td>
+</tr>
+<tr>
+<td>2</td><td>Payer deceased</td><td> </td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Payer has closed their account for an unknown reason.</td>
+</tr>
+</tbody>
+</table>
+
+### Bank returned AUDDIS (rejection) codes
+
+<table>
+<thead>
+<tr><th>Code</th><th>Reason</th><th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td><td>Instruction cancelled by payer</td><td>Payer has instructed paying bank to cancel DDI.</td>
+</tr>
+<tr>
+<td>2</td><td>Payer deceased.</td><td> </td>
+</tr>
+<tr>
+<td>3</td><td>Account transferred</td><td>Account transferred to another bank or building society.</td>
+</tr>
+<tr>
+<td>5</td><td>No account</td><td>Account number is not recognised at the paying bank.</td>
+</tr>
+<tr>
+<td>6</td><td>No Instruction</td><td>Instruction does not exist on paying bank’s database (only applies to receipt of a 0C).</td>
+</tr>
+<tr>
+<td>B</td><td>Account closed</td><td>Payer has closed their account for an unknown reason.</td>
+</tr>
+<tr>
+<td>C</td><td>Account transferred to a different branch of the bank/building society</td><td>New account details supplied to the service user by paying bank.</td>
+</tr>
+<tr>
+<td>F</td><td>Invalid account type</td><td>Paying bank does not allow Direct Debits on this type of account.</td>
+</tr>
+<tr>
+<td>G</td><td>Bank will not accept Direct Debits on account</td><td>Paying bank does not allow Direct Debits on this account.</td>
+</tr>
+<tr>
+<td>H</td><td>Instruction has expired</td><td>Occurs when a service user attempts to convert a DDI which is shown as expired on the paying bank’s database.</td>
+</tr>
+<tr>
+<td>I</td><td>Payer Reference is not unique</td><td>Paying bank has matched the DDI to an existing DDI with a similar reference that has more or fewer characters.</td>
+</tr>
+<tr>
+<td>K</td><td>Instruction cancelled by paying bank</td><td>Paying bank has cancelled the DDI. Service user cannot collect via Direct Debit on this account. If Direct Debit is to continue the service user must obtain a new DDI for a new account.</td>
+</tr>
+</tbody>
+</table>
