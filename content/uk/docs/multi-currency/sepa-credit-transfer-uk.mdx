@@ -12,17 +12,13 @@ import ExternalLink from "src/components/external-link";
 
 ## SEPA Credit Transfer UK
 
-Our SEPA Credit Transfer UK (SCT UK) service lets you exchange euro payments with any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
-
-<Callout colour="blue">
-  You can only send euros inside the SEPA zone with SCT UK. To send euros outside of the SEPA zone, please refer to our <a href="/uk/docs/multi-currency/multi-currency-payments">multi-currency payments</a> service.
-</Callout>
+Our SEPA Credit Transfer UK (SCT UK) service lets you receive euro payments from any SEPA participant bank via the SEPA Credit Transfer (SCT) scheme. To get started with SCT UK, you'll need a euro account under a ClearBank UK BIC. This will be set up for you as part of your onboarding process.
 
 If you're interested in using this new service, please contact your Client Director.
 
 ### Availability and hours
 
-SCT UK is available to use Monday to Friday from 07:00 to 14:30 UK time. Outbound payment requests made outside of these hours, on weekends, or during TARGET2 scheme holidays will be automatically rejected with a 422 Unprocessable Request error.
+SCT UK is available Monday to Friday from 07:00 to 14:30 UK time, and is subject to TARGET2 scheme holidays.
 
 The TARGET2 scheme holidays applicable to SCT UK are listed below:
 
@@ -35,116 +31,16 @@ The TARGET2 scheme holidays applicable to SCT UK are listed below:
 
 Exact dates can be found on <ExternalLink href="https://www.ecb.europa.eu/ecb/contacts/working-hours/html/index.en.html">the ECB's website</ExternalLink>.
 
-### Bulk payments
-
-SCT UK supports bulk payments, which can be useful for making many simultaneous payments - such as payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
-
-Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
-
-![Diagram showing the PaymentInformation array, containing 3 debtors](/assets/images/sct-uk-bulk-payments-diagram.svg "")
-
-When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either a [Cross-Border Outbound Payment Failed](#cross-border-outbound-payment-failed-webhook), or a [Cross-Border Outbound Payment Completed](#cross-border-outbound-payment-completed-webhook) and a [Customer Accounts Transaction Completed](#sct-uk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
-
-## Outbound payments
-
-<EndpointBlock
-  type="post"
-  title="Send euro payments"
-  endpoints={[
-    {
-      path: "/payments/cross-border/v2/payments",
-      version: "2.0-SCT-UK",
-      webhooks: [
-        'sctuk-outbound-payment-completed-webhook-v1',
-        'sctuk-outbound-payment-failed-webhook-v1',
-        'sctuk-customer-accounts-transaction-completed-v1'
-      ]
-    }
-  ]}
-/>
-
-### Example outbound payment request
-
-You can use the below example request payload to test the **POST /payments/cross-border/v2/payments** endpoint.  
-Take care to update the `RequestedExecutionDate` field to today's date, and to use a different `UETR` if using this example more than once.
-
-```json
-{
-  "messageIdentification": "MSGID-25OCT23-TEST03",
-  "paymentInformation": [
-    {
-      "paymentInformationIdentification": "PYMTID-25OCT23-DEBT-03",
-      "requestedExecutionDate": "2025-10-23",
-      "debtor": {
-        "name": "John Smith",
-        "postalAddress": {
-          "streetName": "High Street",
-          "buildingNumber": "100",
-          "postCode": "DN40 2AB",
-          "townName": "Immingham",
-          "countrySubdivision": "Lincolnshire",
-          "country": "GB"
-        },
-        "organisationIdentification": {
-          "anyBic": "PAEEGB22"
-        }
-      },
-      "debtorAccount": {
-        "iban": "GB96CLRB04056700273872"
-      },
-      "creditTransferTransactionInformation": [
-        {
-          "paymentIdentification": {
-            "instructionIdentification": "INSTID-25OCT23-03A",
-            "endToEndIdentification": "E2E-25OCT23-03A",
-            "uetr": "107367a1-99c3-411e-abd1-fcbbb74a8b01"
-          },
-          "paymentTypeInformation": {
-            "serviceLevelCode": "SEPA"
-          },
-          "instructedAmount": {
-            "amount": 1.03,
-            "currency": "EUR"
-          },
-          "creditorAgent": {
-            "bicfi": "BCOEESM0"
-          },
-          "creditor": {
-            "name": "Maria Garcia",
-            "postalAddress": {
-              "streetName": "Calle de Alcala",
-              "buildingNumber": "45",
-              "postCode": "28014",
-              "townName": "Madrid",
-              "countrySubdivision": "Community of Madrid",
-              "country": "ES"
-            },
-            "privateIdentification": {
-              "birthDate": "1987-11-10",
-              "cityOfBirth": "Madrid",
-              "countryOfBirth": "ES"
-            }
-          },
-          "creditorAccount": {
-            "iban": "ES9121000418450200051332"
-          },
-          "remittanceInformation": {
-            "unstructured": [
-              "RemittanceInformation Unstructured 2025OCT23C"
-            ]
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-<WebhookPlaceholder render='sctuk-outbound-payment-completed-webhook-v1' />
-<WebhookPlaceholder render='sctuk-outbound-payment-failed-webhook-v1' />
-<WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
-
 ## Inbound payments
+
+When you receive an SCT payment, you'll be notified via webhook. To receive webhooks, you'll need to [subscribe to them first](../api/getting-started#set-up-and-test-webhook-listener-urls) using the ClearBank Portal.
+
+Our SCT UK service has two dedicated inbound payment webhooks:
+
+* `Payments.CrossBorder.InboundPaymentCompleted` - **Cross-border Inbound Payment Completed webhook** - This webhook contains the full ISO 20022 payment details of any inbound SCT payments.
+* `CustomerAccounts.TransactionCompleted` - **Customer Account Transaction Completed webhook** - This webhook contains the minimum information necessary to reconcile a payment.
+
+> **Note:** if you are subscribed to our inbound Multi-Currency Payments service webhooks, `Payments.Mccy.TransactionCreated` and `Payments.Mccy.TransactionSettled`, these will also notify you of any inbound SCT payments. All of these webhooks' `TransactionId` field will have the same UUID whenever they refer to the same payment, so you can use this field in any idempotency logic to prevent double counting of inbound SCT payments.
 
 <WebhookPlaceholder render='sctuk-inbound-payment-completed-v1' />
 <WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
@@ -159,7 +55,8 @@ Take care to update the `RequestedExecutionDate` field to today's date, and to u
       path: "/payments/cross-border/v2/inbound/payments",
       version: "2.0-SCT-UK",
       webhooks: [
-        'sctuk-inbound-payment-completed-v1'
+        'sctuk-inbound-payment-completed-v1',
+        'sctuk-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
