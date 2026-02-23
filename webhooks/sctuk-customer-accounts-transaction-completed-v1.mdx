@@ -1,10 +1,10 @@
 ---
-title: "SCT UK Customer Accounts Transaction Completed webhook"
+title: "Customer Accounts Transaction Completed webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms an inbound or outbound cross-border SCT transaction has completed for an account. A transaction represents a ledger update for an account, and includes the minimum data necessary to support balance reconciliation. You will also receive this webhook when interest is paid into an account.
+This webhook confirms an inbound or outbound transaction has completed for an account. A transaction represents a ledger update for an account, and includes the minimum data necessary to support balance reconciliation. You will also receive this webhook when interest is paid into an account.
 
 #### Request body
 
@@ -26,7 +26,7 @@ This webhook confirms an inbound or outbound cross-border SCT transaction has co
 | `CompletedDateTime`         |**Required**<br />The date time on which the amount of money ceases to be available or becomes available to the account in ClearBank's system.<br/>Type: `string`|
 | `ClearingChannel`         |_Optional_<br />The clearing channel to be used to process the transaction.<br/>Type: `string`|
 | `DebitCreditCode`         |**Required**<br />Movement of transaction.<br/>Type: `string`|
-| `Amount`         |**Required**<br />Amount of money to be moved between the debtor and creditor.<br/>Type: `string`|
+| `Amount`         |**Required**<br />Amount of money to be moved between the debtor and creditor.<br/>Type: `number`<br/>Format: `decimal`|
 | `Currency`         |**Required**<br />Unit of currency is explicit and compliant with ISO 4217.<br/>Type: `string`|
 | `RemittanceInformation`         |_Optional_<br />Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system. Provided as unstructured data, or as a flattened version of the structured data.<br/>Type: `string`|
 | `CreditorAccount`         |**Required**<br />Unambiguous identification of the account of the debtor to which a debit entry is posted.<br/>Type: `object`<br/><br/>&nbsp;&nbsp;`AccountId` - _Optional_<br/>&nbsp;&nbsp;Represents the account ID used within ClearBank's systems.<br/>&nbsp;&nbsp;Type: `string`<br/><br/>&nbsp;&nbsp;`IBAN` - _Optional_<br/>&nbsp;&nbsp;The IBAN for the account.<br/>&nbsp;&nbsp;Type: `string`<br/>&nbsp;&nbsp;Max. Length: `34`<br/><br/>&nbsp;&nbsp;`BBAN` - _Optional_<br/>&nbsp;&nbsp;The BBAN for the account.<br/>&nbsp;&nbsp;Type: `string`<br/>&nbsp;&nbsp;Max. Length: `30`<br/><br/>&nbsp;&nbsp;`Descriptor` - _Optional_<br/>&nbsp;&nbsp;Represents an arbitrary account descriptor.<br/>&nbsp;&nbsp;Type: `string`|
@@ -45,7 +45,7 @@ This webhook confirms an inbound or outbound cross-border SCT transaction has co
       "CompletedDateTime": "2025-10-12T09:54:58.07Z",
       "ClearingChannel": "SEPA",
       "DebitCreditCode": "CRDT",
-      "Amount": 500.0,
+      "Amount": 500.55,
       "Currency": "EUR",
       "RemittanceInformation": "Funding",
       "DebtorAccount":{
@@ -57,7 +57,7 @@ This webhook confirms an inbound or outbound cross-border SCT transaction has co
       "CreditorAccount":{
          "AccountId": "39217d50-9a43-4e69-9714-cbafeabb4c4f",
          "Iban": "NL25CLRB0062215509",
-         "Bban": null,
+         "Bban": "CLRB0062215509",
          "Descriptor": null
       }
    },
