@@ -170,6 +170,33 @@ If the payment fails, you will receive the [T2 Customer Credit Transfer Outbound
 }
 ```
 
+### T2 outbound failure error codes
+
+The following error codes may appear in the `Errors` field of the T2 failure webhooks listed below, helping you understand why a T2 payment was unsuccessful:
+
+- [T2 Customer Credit Transfer Outbound Failed webhook](#t-2-customer-credit-transfer-outbound-failed-webhook)
+- [T2 Financial Institution Credit Transfer Outbound Failed webhook](#t-2-financial-institution-credit-transfer-outbound-failed-webhook)
+- [T2 Payment Return Outbound Failed webhook](#t-2-payment-return-outbound-failed-webhook)
+
+| Error code | Description |
+|------------|-------------|
+| AC01       | Incorrect account number (IBAN or BIC not found on CB platform) |
+| AC04       | Closed account |
+| AC06       | Account is suspended |
+| AGNT       | Creditor Agent BIC not found |
+| AM03       | IBAN doesn’t support Euro |
+| AM04       | Insufficient Funds |
+| BE01       | IBAN or BIC not linked to institution ID |
+| BE06       | FI Agent Client BIC not linked to IBAN |
+| CB01       | Unknown Error |
+| CB02       | Return request amount exceeds original amount |
+| CB03       | Original payment must be settled |
+| CB04       | Partial returns not supported |
+| CNOR       | Creditor Bank not registered/routable via T2 |
+| RC05       | Source BIC not found on CB Platform |
+| RC11       | Intermediary Agent BIC not found |
+
+
 ## Returning a T2 payment
 
 To return a T2 payment, use the [/payments/t2-rtgs/v1/payment-returns](#return-a-t2-payment) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook) when the return successfully goes through.
