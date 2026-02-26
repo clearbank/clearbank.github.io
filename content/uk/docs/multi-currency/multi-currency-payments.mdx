@@ -106,10 +106,14 @@ If you would prefer not to have the rescheduled payment processed, you can cance
 
 ## Inbound payments
 
-When you receive an inbound payment, you'll be notified with either:
-* A [Multi-currency Transaction Settled webhook](#multi-currency-transaction-settled-webhook) for a standard MCCY payment.
-* A [Cross-Border Inbound Payment Completed webhook](#cross-border-inbound-payment-completed-webhook) for any payment received via SEPA CT UK.
+When you receive an inbound payment, you'll be notified with:
+* A [Multi-currency Transaction Created webhook](#multi-currency-transaction-created-webhook) for all MCCY payments, including EUR via SCT. 
+* A [Multi-currency Transaction Settled webhook](#multi-currency-transaction-settled-webhook) for all MCCY payments, including EUR via SCT.
+* A [Cross-Border Inbound Payment Completed webhook](#cross-border-inbound-payment-completed-webhook) for EUR payments received via SCT only.
 
+If you receive a EUR payment via SCT, you'll be notified via all three webhooks. To support your idempotency logic, you can compare the `TransactionId` field present in each webhook: this will always have the same value when referring to the same payment.
+
+<WebhookPlaceholder render='mccy-create-trx-webhook-v1' />
 <WebhookPlaceholder render='mccy-settle-trx-webhook-v1' />
 <WebhookPlaceholder render='sctuk-inbound-payment-completed-v1' />
 
