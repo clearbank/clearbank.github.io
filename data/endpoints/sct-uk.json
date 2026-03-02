@@ -1,0 +1,812 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SCT UK",
+    "description": "SEPA Credit Transfer UK",
+    "version": "2.0-SCT-UK"
+  },
+  "paths": {
+    "/payments/cross-border/v2/inbound/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "This endpoint is available in the simulation environment only. You can call this endpoint to simulate an inbound SCT payment. After submitting a valid request, you'll receive a Payments.Mccy.InboundPaymentCompleted webhook and a CustomerAccounts.TransactionCompleted webhook. If you are also subscribed to our Multi-currency Payments webhooks, Payments.Mccy.TransactionCreated and Payments.Mccy.TransactionSettled, you will also receive these.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundSimulation_SimulateInboundPaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AmountType": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "description": "Details the currency and amount to be sent for this payment.",
+        "properties": {
+          "amount": {
+            "description": "The monetary amount to be sent.",
+            "multipleOf": 0.01,
+            "maximum": 999999999.99,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "format": "double",
+            "example": 9503.52
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "The ISO 4217 currency code of this transaction. This should always be \"EUR\".",
+            "example": "EUR"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BranchAndFinancialInstitutionIdentification": {
+        "type": "object",
+        "properties": {
+          "bicfi": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Business Identifier Code (BIC) allocated to a financial institution as described in ISO 9362.",
+            "nullable": true,
+            "example": "AB12GBCD34AAA"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreditorAccount": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the account, as assigned by the account-servicing institution, to support identification of the account."
+          },
+          "iban": {
+            "type": "string",
+            "description": "The International Bank Account Number (IBAN) of the account as described in the 2007 edition of the ISO 13616 standard.",
+            "nullable": true,
+            "maxLength": 34,
+            "minLength": 14,
+            "example": "GB13CBAB1122331234567",
+            "pattern": "[A-Z]{2}[0-9]{2}[A-Z0-9]{10,30}"
+          },
+          "accountIdentification": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 34,
+            "minLength": 1,
+            "example": "CBGB11223312345678",
+            "description": "The alternative account identifier. You should specify the type of identifier in the 'accountIdentificationCode' field."
+          },
+          "accountIdentificationCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Code specifying the type of identifier used in the 'accountIdentification' field. Validated against the External Code Set from iso 20022. These include: 'AIIN', 'BBAN', 'CUID', and 'UPIC'.",
+            "nullable": true,
+            "example": "BBAN"
+          }
+        },
+        "description": "Use either the 'iban' or 'accountIdentification' field, do not provide both.",
+        "additionalProperties": false
+      },
+      "DebtorAccount": {
+        "type": "object",
+        "required": ["iban"],
+        "properties": {
+          "name":{
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true,
+            "example": "Pintos FX account",
+            "description": "Name of the account, as assigned by the account-servicing institution, to support identification of the account."
+          },
+          "iban": {
+            "type": "string",
+            "description": "The International Bank Account Number (IBAN) of the account as described in the 2007 edition of the ISO 13616 standard.",
+            "nullable": true,
+            "maxLength": 34,
+            "minLength": 14,
+            "example": "GB13CBAB1122331234567",
+            "pattern": "[A-Z]{2}[0-9]{2}[A-Z0-9]{10,30}"
+          }
+        },
+        "description": "For outbound payments, the debtor account is always a ClearBank account. An IBAN must always be provided.",
+        "additionalProperties": false
+      },
+      "CreditTransferTransaction": {
+        "required": [
+          "creditor",
+          "creditorAccount",
+          "creditorAgent",
+          "instructedAmount",
+          "paymentIdentification",
+          "paymentTypeInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentIdentification": {
+            "$ref": "#/components/schemas/PaymentIdentification"
+          },
+          "paymentTypeInformation": {
+            "$ref": "#/components/schemas/PaymentTypeInformation"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditor": {
+            "type": "object",
+            "description": "The creditor's organisation or private details.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/organisationPartyIdentification"
+              },
+              {
+                "$ref": "#/components/schemas/privatePartyIdentification"
+              }
+            ]
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/CreditorAccount"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/RemittanceInformation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_SimulateInboundPaymentRequest": {
+        "required": [
+          "creditorAccount",
+          "interbankSettlementAmount",
+          "paymentIdentification",
+          "remittanceInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "interbankSettlementAmount": {
+            "$ref": "#/components/schemas/InboundSimulation_CurrencyAndAmount"
+          },
+          "paymentIdentification": {
+            "$ref": "#/components/schemas/InboundSimulation_PaymentIdentification"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/InboundSimulation_CashAccount"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/InboundSimulation_RemittanceInformation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_CashAccount": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "minLength": 1,
+            "type": "string",
+            "example": "GB13CBAB2233441234567",
+            "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_CurrencyAndAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "multipleOf": 0.01,
+            "maximum": 999999999.99,
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "description": "Amount of money moved between the instructing agent and the instructed agent.",
+            "format": "double",
+            "example": 1234.56
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "example": "EUR",
+            "type": "string",
+            "description": "The currency code, conforming to the ISO 4217 standard.\r\nMust be a three-letter uppercase code representing a valid currency. Only \"EUR\" is allowed."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_PaymentIdentification": {
+        "required": [
+          "endToEndIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "example": "E2E1234567890",
+            "type": "string",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_RemittanceInformation": {
+        "type": "object",
+        "properties": {
+          "unstructured": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "maxLength": 140,
+              "minLength": 1,
+              "type": "string",
+              "example": "myRemittanceInformation-111-ABC"
+            },
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.",
+            "nullable": true
+          },
+          "structured": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items":{
+              "$ref": "#/components/schemas/InboundSimulation_CreditorReferenceInformation"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_CreditorReferenceInformation": {
+        "type": "object",
+        "properties": {
+          "reference":{
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "MY-structured-REM-INFO",
+            "description": "The creditor's structured reference."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InboundSimulation_StructuredRemittanceInformation": {
+        "required": ["creditorReferenceInformation"],
+        "type": "object",
+        "properties": {
+          "creditorReferenceInformation": {
+            "$ref": "#/components/schemas/InboundSimulation_CreditorReferenceInformation"
+          }
+        }
+      },
+      "OrganisationIdentification": {
+        "type": "object",
+        "description": "Contains identification information for this organisation.",
+        "properties": {
+          "anyBIC": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Business Identifier Code (BIC) allocated to an organisation as described in ISO 9362.",
+            "nullable": true,
+            "example": "AB12GB1A123"
+          }
+        },
+        "additionalProperties": false
+      },
+      "organisationPartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "example": "Pinto Corporation",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "privatePartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "example": "Elias Pinto",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+            "description": "The name of this person or organisation."
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PersonIdentification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentIdentification": {
+        "required": [
+          "endToEndIdentification",
+          "instructionIdentification",
+          "uetr"
+        ],
+        "type": "object",
+        "description": "Contains identifiers relating to this payment.",
+        "properties": {
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "i5gdyVa8qnoOBGveXEuNHo9lvAqdPyAd4tK",
+            "description": "A unique identifier assigned by you to unambiguously identify this instruction.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "GcP5LyftYyLPNa4OQ5bZThRTlSZPCR7GbR2",
+            "description": "A unique identifier as assigned by you to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "uetr": {
+            "minLength": 1,
+            "maxLength": 36,
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+            "type": "string",
+            "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
+            "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentIdentifiers": {
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "i5gdyVa8qnoOBGveXEuNHo9lvAqdPyAd4tK",
+            "description": "A unique identifier assigned by you to unambiguously identify this instruction.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "GcP5LyftYyLPNa4OQ5bZThRTlSZPCR7GbR2",
+            "description": "A unique identifier as assigned by you to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "uetr": {
+            "minLength": 1,
+            "maxLength": 36,
+            "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
+            "type": "string",
+            "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
+            "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
+          },
+          "paymentId": {
+            "type": "string",
+            "description": "ClearBank's system-generated identifier for this payment.",
+            "format": "uuid",
+            "example": "0c8b6bdd-d39f-5003-9310-286dbe234945"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInstruction": {
+        "required": [
+          "creditTransferTransactionInformation",
+          "debtor",
+          "debtorAccount",
+          "paymentInformationIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentInformationIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier to unambiguously identify this payment group - there is one identifier per debtor account.",
+            "example": "rJawA91MHPLoMU89AG0HpobF1Vo7zOzcQVG",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "requestedExecutionDate": {
+            "type": "string",
+            "description": "Must always be today's date, formatted as YYYY-MM-DD.",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "format": "date",
+            "nullable": true,
+            "example": "2025-11-13"
+          },
+          "debtor": {
+            "type": "object",
+            "description": "The debtor's organisation or private details.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/organisationPartyIdentification"
+              },
+              {
+                "$ref": "#/components/schemas/privatePartyIdentification"
+              }
+            ]
+          },
+          "debtorAccount": {
+            "description": "The debtor's account details.",
+            "$ref": "#/components/schemas/DebtorAccount"
+          },
+          "creditTransferTransactionInformation": {
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array",
+            "description": "May contain up to 100 entries, one for each payment and creditor account.",
+            "items": {
+              "$ref": "#/components/schemas/CreditTransferTransaction"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentRequest": {
+        "required": [
+          "messageIdentification",
+          "paymentInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "messageIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier for this payment message.",
+            "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "paymentInformation": {
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "description": "May contain up to 3 entries, one for each debtor.",
+            "items": {
+              "$ref": "#/components/schemas/PaymentInstruction"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentResponse": {
+        "required": [
+          "messageIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "messageIdentification": {
+            "type": "string",
+            "description": "Unique identifier for this payment message.",
+            "example": "MYUNIQUE-IDENTIFIER-123ABC-XXXX",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "paymentIdentification": {
+            "type": "array",
+            "maxItems": 300,
+            "minItems": 1,
+            "description": "A collection of payment IDs that map each payment submitted in the request to ClearBank's system-generated PaymentIds.",
+            "items":{
+              "$ref": "#/components/schemas/PaymentIdentifiers"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentTypeInformation": {
+        "type": "object",
+        "properties": {
+          "serviceLevelCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "enum": [
+              "SEPA"
+            ],
+            "type": "string",
+            "description": "Set to \"SEPA\".",
+            "nullable": true,
+            "example": "SEPA"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonIdentification": {
+        "required": [
+          "birthDate",
+          "cityOfBirth",
+          "countryOfBirth"
+        ],
+        "type": "object",
+        "description": "Contains identification information for this person.",
+        "properties": {
+          "birthDate": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The person's date of birth, formatted as YYYY-MM-DD, per the ISO 8601 standard.",
+            "format": "date",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "example": "1985-10-27"
+          },
+          "cityOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "Bournemouth",
+            "description": "The person's city of birth.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "countryOfBirth": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "The person's country of birth, given as a ISO 3166-1 Alpha-2 country code.",
+            "example": "GB"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PostalAddress": {
+        "required": [
+          "country",
+          "postCode",
+          "townName"
+        ],
+        "type": "object",
+        "description": "Contains a full postal address for this person or organisation.",
+        "properties": {
+          "streetName": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true,
+            "example": "Long Road",
+            "description": "The name of the street at this address.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,70}$"
+          },
+          "buildingNumber": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true,
+            "example": "72",
+            "description": "The building number at this address.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,16}$"
+          },
+          "postCode": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "example": "CA3 9TD",
+            "description": "The post code of this address.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,16}$"
+          },
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "example": "Carlisle",
+            "description": "The town name of this address.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "countrySubDivision": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true,
+            "example": "Cumberland",
+            "description": "The county or other region within a country of this address.",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,35}$"
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "The country of this address, as an ISO 3166-1 Alpha-2 country code.",
+            "example": "GB"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4)."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RemittanceInformation": {
+        "type": "object",
+        "description": "Information about this payment to support reconciliation, such as an invoice identifier.",
+        "required": [
+          "unstructured"
+        ],
+        "properties": {
+          "unstructured": {
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+            "maxItems": 3,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A maximum of 1 item can be supplied.",
+            "nullable": true,
+            "example": "Invoice no': ABC-71124-12"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
