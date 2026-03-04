@@ -19,7 +19,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiatePaymentResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -156,7 +163,7 @@
             "type": "number",
             "description": "Indicates the amount of a given currency to be used.",
             "format": "double",
-            "example": "30572.55"
+            "example": 30572.55
           },
           "currency": {
             "maxLength": 3,
@@ -383,6 +390,60 @@
         "additionalProperties": false,
         "description": "Institution Payment Request (pacs.008)"
       },
+      "InitiatePaymentResponse": {
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The universally unique identifier you provided when requesting this payment transaction.",
+            "example": "013f6468-dd30-54b6-9003-11cf68b1b989"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "format": "double",
+            "example": 0.87,
+            "description": "The exchange rate of this payment for the requested currency pair (Origin:Target)."
+          },
+          "instructedCurrency": {
+            "type": "string",
+            "nullable": true,
+            "description": "The currency this payment will use from your account, given as a three letter ISO 4217 currency code.",
+            "example": "EUR"
+          },
+          "instructedAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The amount of the origin currency that will be paid from your account for this transaction, including fees.",
+            "example": 30572.55
+          },
+          "interbankSettlementCurrency": {
+            "type": "string",
+            "nullable": true,
+            "description": "The target currency that the recipient will receive, given as a three letter ISO 4217 currency code.",
+            "example": "GBP"
+          },
+          "interbankSettlementAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "The amount of the target currency that the recipient will receive after fees.",
+            "example": 26598.11
+          },
+          "paymentValueDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-01-10T06:04:00",
+            "description": "The date-time this payment request was valued at."
+          },
+          "expiryDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-01-10T06:05:30",
+            "description": "The date-time this open payment request will expire if it is not accepted first."
+          }
+        },
+        "additionalProperties": false
+      },
       "OrganisationIdentification": {
         "type": "object",
         "properties": {
@@ -471,7 +532,7 @@
             "minLength": 2,
             "pattern": "[A-Z]{2,2}",
             "type": "string",
-            "description": "The party's country of residence, given as an two letter ISO 3166 country code.",
+            "description": "The party's country of residence, given as a two letter ISO 3166 country code.",
             "nullable": true,
             "example": "NL"
           },
@@ -483,7 +544,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The name and, optionally, the legal entity identifier of the account.Details of the party. You should provide 'organisationIdentification' or 'privateIdentification' for the party, but not both."
+        "description": "The name and, optionally, the legal entity identifier of the account. Details of the party. You should provide 'organisationIdentification' or 'privateIdentification' for the party, but not both."
       },
       "PostalAddress": {
         "required": [
