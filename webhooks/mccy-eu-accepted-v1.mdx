@@ -1,0 +1,91 @@
+---
+title: "CBEU Cross-border Outbound Payment Accepted webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that an outbound multi-currency EU payment has been accepted.
+
+#### Request body
+
+```json
+{
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentAccepted",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                 | Description                                                                                                                                                                                                               |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `TransactionId`         | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                               |
+| `EndToEndId`            | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
+| `InstructionId`         | *Optional*<br />DESCRIPTION <br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `15`<br />                         |
+| `Uetr`             | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Format: `GUID`<br />                                                                         |
+| `PaymentId`             | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `143`<br />                                                                  |
+| `InstructedCcy`  | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                             |
+| `InstructedAmount`  | *Optional*<br /> DESCRIPTION <br />  It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                              |
+| `ExchangeRate`    | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                               |
+| `InterbankSettlementCcy`    | *Optional*<br /> DESCRIPTION <br /> It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                                 |                                               
+| `InterbankSettlementAmount`      | *Optional*<br /> DESCRIPTION <br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                          |
+| `PaymentValueDate`    | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />                       |
+
+#### Example CBEU Cross-border Outbound Payment Accepted webhook request body
+
+```json
+{
+    "TransactionId":"fd7f3082-72d4-46b3-8e0e-1f66e4a91e13",
+    "BatchId":"ab55f54a-26c3-4333-93cd-f917bb51ecad",
+    "EndToEndId":"08c2c49c9e094df59f342a27cb64395c",
+    "SchemeEndToEndId":"4026da87bb0f4a5",
+    "AccountId":"50daac8a-72c3-4ae5-a6e3-e71b6187dbef",
+    "Reference":"My payment reference 12345",
+    "UltimateCreditorName":"John Baker",
+    "UltimateCreditorAccountIdentifiers":[
+        {
+            "Kind":"AccountId",
+            "Identifier":"fd75710b-4c0a-406d-a962-ef5c98836d3f"
+        }
+    ],
+    "UltimateDebtorName":"Clark Kent",
+    "UltimateDebtorAccountIdentifiers":[
+        {
+            "Kind":"IBAN",
+            "Identifier":"GB33BUKB20201555555555"
+        }
+    ],
+    "InstructedAmount":100.55,
+    "InstructedCurrency":"EUR",
+    "SchemePaymentMethod":"Partner 1",
+    "TimestampCreated":"2021-05-22T00:00:00",
+    "Identifiers":[
+        {
+            "Scope":"MCCYOutboundPayments",
+            "Name":"SchemeEndToEndId",
+            "Identifier":"4026da87bb0f4a5"
+        }
+    ],
+    "AdditionalProperties":[
+        {
+            "Key":"DebtorName",
+            "Value":"Acme Studios"
+        },
+        {
+            "Key":"DebtorCountry",
+            "Value":"GB"
+        }
+    ]
+},
+
+"Nonce":748352091
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748352091
+}
+```
