@@ -152,7 +152,7 @@
         "additionalProperties": false,
         "description": "Information about the creditor agent."
       },
-      "CurrencyAmount": {
+      "InterbankSettlementAmount": {
         "required": [
           "amount",
           "currency"
@@ -161,7 +161,7 @@
         "properties": {
           "amount": {
             "type": "number",
-            "description": "Indicates the amount of a given currency to be used.",
+            "description": "The amount of a given currency that should settle in the creditor's account after transaction fees.",
             "format": "double",
             "example": 30572.55
           },
@@ -169,12 +169,36 @@
             "maxLength": 3,
             "minLength": 3,
             "type": "string",
-            "description": "The currency, given as a three letter ISO 4217 currency code.",
+            "description": "The target currency, given as a three letter ISO 4217 currency code.",
             "example": "GBP"
           }
         },
         "additionalProperties": false,
-        "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217."
+        "description": "The amount of target currency the creditor should receive. You can provide either an 'interbankSettlementAmount' or an 'instructedAmount', not both."
+      },
+      "InstructedAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount of a given currency you'll pay using, including transaction fees.",
+            "format": "double",
+            "example": 35140.86
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "The origin currency, given as a three letter ISO 4217 currency code.",
+            "example": "EUR"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The amount you'll pay out from your account, including transaction fees. You can provide either an 'interbankSettlementAmount' or an 'instructedAmount', not both."
       },
       "DateAndPlaceOfBirth": {
         "required": [
@@ -352,10 +376,10 @@
             "$ref": "#/components/schemas/CreditorAgent"
           },
           "interbankSettlementAmount": {
-            "$ref": "#/components/schemas/CurrencyAmount"
+            "$ref": "#/components/schemas/InterbankSettlementAmount"
           },
           "instructedAmount": {
-            "$ref": "#/components/schemas/CurrencyAmount"
+            "$ref": "#/components/schemas/InstructedAmount"
           },
           "ultimateCreditor": {
             "$ref": "#/components/schemas/PartyInformation"
@@ -415,7 +439,7 @@
             "type": "number",
             "format": "double",
             "description": "The amount of the origin currency that will be paid from your account for this transaction, including fees.",
-            "example": 30572.55
+            "example": 35140.86
           },
           "interbankSettlementCurrency": {
             "type": "string",
@@ -426,8 +450,8 @@
           "interbankSettlementAmount": {
             "type": "number",
             "format": "double",
-            "description": "The amount of the target currency that the recipient will receive after fees.",
-            "example": 26598.11
+            "description": "The amount of the target currency that the creditor will receive after fees.",
+            "example": 30572.55
           },
           "paymentValueDate": {
             "type": "string",
