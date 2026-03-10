@@ -12,7 +12,74 @@ import Callout from "src/components/callout";
 
 ## Multi-currency EU
 
-### Endpoints
+Our Multi-currency Payments EU (MCCY EU) service lets you make multi-currency cross-border payments directly from a EUR account. When you send an MCCY EU payment, your EUR is converted into the target currency automatically. This simplifies multi-currency payments by allowing you to make payments in a wide range of currencies using a straightforward interface.
+
+To get started with MCCY EU, you'll need a ClearBank EU euro account. This will be set up for you as part of your onboarding process.
+
+If you're interested in using this service, please reach out to your Client Director.
+
+## Availability and hours
+
+### Payment properties
+
+* All MCCY EU payments settle same day.
+* MCCY EU payments have a minimum payment amount of 50 EUR.
+* This is a cross-border service: you can send MCCY payments worldwide.
+
+### Available currencies
+
+MCCY EU support several target currencies, these include:
+
+* Canadian Dollar (CAD)
+* Swiss Franc (CHF)
+* Czech Koruna (CZK)
+* Danish Krone (DKK)
+* Pound Sterling (GBP)
+* Hungarian Forint (HUF)
+* Norwegian Krone (NOK)
+* Polish Złoty (PLN)
+* Romanian Leu (RON)
+* Swedish Krona (SEK)
+* United States Dollar (USD)
+
+### Hours and holidays
+
+Please note that each currency's availability is subject to different national holidays and respective cutoff times. In general, you can make MCCY payments Monday to Friday, 9:30am to 3:30pm Central European Time (CET).
+
+## Payment process
+
+### Request a payment
+
+Payment requests should be submitted to our **POST /payments/cross-border/v1/payments** endpoint. We'll respond to a valid request synchronously with a **200 - OK** response, with a payload confirming details of the requested payment. The payment is only proposed at this stage; we will not proceed with sending the payment until you accept it.
+
+### Accept a payment
+
+To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v1/payments/accept** endpoint using the UETR of your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
+
+### Abandon a payment
+
+If you do not want to proceed with a requested payment, no action is required. Requested payments will expire after **60 seconds** (when the `expiryDateTime` has passed). You won't be notified when a payment request expires; if you try to accept a requested payment after the `expiryDateTime` has passed, you'll receive a **400 - Bad Request** error.
+
+### Ensure settlement amount
+
+You can 'fix' either side of the currency pair in an MCCY EU payment.
+
+* To fix the amount of EUR you'll pay, use the instructedAmount object to declare a payment amount in EUR, including fees. The amount the creditor will receive will be confirmed in the **200 - OK** response body, under the property interbankSettlementAmount.
+* To fix the amount of target currency - for example, GBP - use the interbankSettlementAmount object to declare the settlement amount in GBP after transaction fees. The amount of EUR you'll pay will be confirmed in the **200 - OK** response body, under the property instructedAmount.
+
+### Receive payment updates
+
+We'll update you about payments' statuses via webhook. MCCY EU has three such webhooks:
+
+* [CBEU Cross-border Outbound Payment Accepted webhook](#cbeu-cross-border-outbound-payment-accepted-webhook)
+* [CBEU Cross-border Outbound Payment Completed webhook](#cbeu-cross-border-outbound-payment-completed-webhook)
+* [CBEU Cross-border Outbound Payment Failed webhook](#cbeu-cross-border-outbound-payment-failed-webhook)
+
+### Message flow diagram
+
+![Message flow diagram showing the endpoint calls and webhooks involved in making an MCCY EU payment. An outbound payment request is made, ClearBank responds with 200 - OK. Within 60 seconds, the requester accepts the proposed payment using the accept an MCCY EU payment endpoint. ClearBank responds with 202 - Accepted. Clearbank then follows up with 1-2 webhooks depending on the outcome of the payment: outbound payment accepted, outbound payment completed, outbound payment failed.](/assets/images/mccy-eu-payment.svg)
+
+## Endpoints
 
 <EndpointBlock
   type="post"
@@ -43,7 +110,7 @@ import Callout from "src/components/callout";
   ]}
 />
 
-### Webhooks
+## Webhooks
 
 <WebhookPlaceholder render='mccy-eu-accepted-v1' />
 <WebhookPlaceholder render='mccy-eu-completed-v1' />
