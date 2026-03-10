@@ -1,0 +1,57 @@
+---
+title: "CBEU Cross-border Outbound Payment Failed webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies that an outbound Multi-currency EU payment has failed. The reasons for this failure are provided where possible.
+
+#### Request body
+
+```json
+{
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentFailed",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element         | Description                                                                                                                                                                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EndToEndId`    | *Optional* <br /> End-to-end reference used to identify the payment consistently across all systems and parties involved in processing. <br /> Type: `string`<br /> Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br /> |
+| `InstructionId` | *Optional* <br /> Identifier assigned to a specific instruction request used to correlate client input with downstream processing. <br /> Type: `string`<br />  Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br />     |
+| `Uetr`          | *Optional* <br /> Universally Unique End-to-End Transaction Reference (UUID v4) used to track the payment across the correspondent banking network. <br /> Type: `string`<br /> Format: `guid` <br /> Pattern: `^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`                                                            |
+| `PaymentId`     | *Optional* <br /> Internal identifier representing a payment instruction within the platform. <br /> Type: `string` <br /> Pattern: `^[a-zA-Z0-9_-]{0,50}$`                                                                                                                                                                                       |
+| `Errors`        | *Optional* <br /> An array of errors associated with this payment's failure. <br /> Type: `array` <br /> Item type: `object` <br /> Item properties: <br /> &nbsp;&nbsp; `reason` - *optional* <br /> &nbsp;&nbsp; The reason for the error. <br /> &nbsp;&nbsp; Type: `string` <br /> <br /> &nbsp;&nbsp; `AdditionalInformation` - *optional* <br /> &nbsp;&nbsp; Additional information about this error. <br /> &nbsp;&nbsp; Type: `string` |
+
+#### Example CBEU Cross-border Outbound Payment Failed webhook request body
+
+```json
+{
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentFailed",
+    "Version": 1,
+    "Payload": {
+        "EndToEndId": "bXuC9HimDlI0X3Ygmk525Cxb8dYzUddpj4T",
+        "InstructionId": "my-instruction-ident 111ABC-321",
+        "Uetr": "013f6468-dd30-54b6-9003-11cf68b1b989",
+        "PaymentId": "4026da87bb0f4a5",
+        "Errors": [
+            {
+                "Reason": "Insufficient funds",
+                "AdditionalInformation": "The debtor account has insufficient funds for this transaction."
+            }
+        ]
+    },
+    "Nonce": 748222091
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748222091
+}
+```

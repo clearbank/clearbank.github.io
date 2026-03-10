@@ -18,74 +18,47 @@ This webhook confirms that an outbound multi-currency EU payment has been accept
 ```
 
 #### Payload
-| Element                 | Description                                                                                                                                                                                                               |
-|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `TransactionId`         | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Format: `GUID`<br />                                                               |
-| `EndToEndId`            | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `35`<br />                                                                    |
-| `InstructionId`         | *Optional*<br />DESCRIPTION <br /> Type: `string`<br /> Min. Length: `0`<br /> Max. Length: `15`<br />                         |
-| `Uetr`             | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Format: `GUID`<br />                                                                         |
-| `PaymentId`             | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `143`<br />                                                                  |
-| `InstructedCcy`  | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                             |
-| `InstructedAmount`  | *Optional*<br /> DESCRIPTION <br />  It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                              |
-| `ExchangeRate`    | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br />  Min. Length: `1`<br /> Max. Length: `143`<br />                                                                                               |
-| `InterbankSettlementCcy`    | *Optional*<br /> DESCRIPTION <br /> It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `10`<br /><br /> `Identifier`<br /> Unique account identifier value that corresponds to the specified account identifier kind.<br /> Type: `string`<br /> Min. Length: `1`<br /> Max. Length: `36`<br />                                                                                                 |                                               
-| `InterbankSettlementAmount`      | *Optional*<br /> DESCRIPTION <br /> Type: `number`<br /> Format: `decimal`<br />                                                                                                                          |
-| `PaymentValueDate`    | *Optional*<br /> DESCRIPTION <br /> Type: `string`<br /> Min. Length: `3`<br /> Max. Length: `3`<br /> Pattern: `^[A-z]{3}$`<br />                       |
+| Element                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`             | *Optional* <br /> Internal unique identifier for the transaction within the platform. <br /> Type: `string`<br /> Format: `guide` <br /> Pattern: `^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`                                                                                                                                                                                                                                                                                                                                                                                               |
+| `EndToEndId`                | *Optional* <br /> End-to-end reference used to identify the payment consistently across all systems and parties involved in processing. <br /> Type: `string`<br /> Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br />                                                                                                                                                                                                                                                                       |
+| `InstructionId`             | *Optional* <br /> Identifier assigned to a specific instruction request used to correlate client input with downstream processing. <br /> Type: `string`<br />  Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br />                                                                                                                                                                                                                                                                           |
+| `Uetr`                      | *Optional* <br /> Universally Unique End-to-End Transaction Reference (UUID v4) used to track the payment across the correspondent banking network. <br /> Type: `string`<br /> Format: `guid` <br /> Pattern: `^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`                                                                                                                                                                                                                                                                                                                                  |
+| `PaymentId`                 | *Optional* <br /> Internal identifier representing a payment instruction within the platform. <br /> Type: `string` <br /> Pattern: `^[a-zA-Z0-9_-]{0,50}$`                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `InstructedCcy`             | *Optional* <br /> The currency in which the instructed amount is expressed given as a three-letter ISO 4217 currency code. <br /> Type: `string` <br /> Min. Length: `3` <br /> Max. Length: `3` <br /> Pattern: `^[A-Z]{3,3}$`                                                                                                                                                                                                                                                                                                                                                                                         |
+| `InstructedAmount`          | *Optional* <br /> The payment amount expressed in the instructed currency. This represents the amount associated with the instruction side of the transaction. This amount can be either client-specified or system-derived from the settlement amount using the agreed exchange rate and applicable pricing rules. <br />  It is an array of objects with `Kind` and an `Identifier`.<br /> Type: `array`<br /><br /> `Kind`<br /> The kind of account identifier which is provided. This can be either IBAN, BBAN, AccountId or Descriptor (another kind of identifier).<br /> Type: `number`<br /> Format: `decimal` |
+| `ExchangeRate`              | *Optional* <br /> The exchange rate applied to convert between the instructed amount and the settlement amount for the transaction. <br /> Type: `number` <br />  Format: `decimal`                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `InterbankSettlementCcy`    | *Optional* <br /> The currency in which settlement occurs between financial institutions given as a three-letter ISO 4217 currency code. <br /> Type: `string` <br /> Min. Length: `3` <br /> Max. Length: `3` <br /> Pattern: `^[A-Z]{3,3}$`                                                                                                                                                                                                                                                                                                                                                                           |
+| `InterbankSettlementAmount` | *Optional* <br /> The amount settled between financial institutions as part of payment execution. This represents the settlement side of the transaction and may be either fixed or derived. <br /> Type: `number` <br /> Format: `decimal` <br />                                                                                                                                                                                                                                                                                                                                                                      |
+| `PaymentValueDate`          | *Optional* <br /> The value date on which the payment is settled between financial institutions. <br /> Type: `string` <br /> Format: `date-time`                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 #### Example CBEU Cross-border Outbound Payment Accepted webhook request body
 
 ```json
 {
-    "TransactionId":"fd7f3082-72d4-46b3-8e0e-1f66e4a91e13",
-    "BatchId":"ab55f54a-26c3-4333-93cd-f917bb51ecad",
-    "EndToEndId":"08c2c49c9e094df59f342a27cb64395c",
-    "SchemeEndToEndId":"4026da87bb0f4a5",
-    "AccountId":"50daac8a-72c3-4ae5-a6e3-e71b6187dbef",
-    "Reference":"My payment reference 12345",
-    "UltimateCreditorName":"John Baker",
-    "UltimateCreditorAccountIdentifiers":[
-        {
-            "Kind":"AccountId",
-            "Identifier":"fd75710b-4c0a-406d-a962-ef5c98836d3f"
-        }
-    ],
-    "UltimateDebtorName":"Clark Kent",
-    "UltimateDebtorAccountIdentifiers":[
-        {
-            "Kind":"IBAN",
-            "Identifier":"GB33BUKB20201555555555"
-        }
-    ],
-    "InstructedAmount":100.55,
-    "InstructedCurrency":"EUR",
-    "SchemePaymentMethod":"Partner 1",
-    "TimestampCreated":"2021-05-22T00:00:00",
-    "Identifiers":[
-        {
-            "Scope":"MCCYOutboundPayments",
-            "Name":"SchemeEndToEndId",
-            "Identifier":"4026da87bb0f4a5"
-        }
-    ],
-    "AdditionalProperties":[
-        {
-            "Key":"DebtorName",
-            "Value":"Acme Studios"
-        },
-        {
-            "Key":"DebtorCountry",
-            "Value":"GB"
-        }
-    ]
-},
-
-"Nonce":748352091
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentAccepted",
+    "Version": 1,
+    "Payload": {
+        "TransactionId": "fd7f3082-72d4-46b3-8e0e-1f66e4a91e13",
+        "EndToEndId": "bXuC9HimDlI0X3Ygmk525Cxb8dYzUddpj4T",
+        "InstructionId": "my-instruction-ident 111ABC-321",
+        "Uetr": "013f6468-dd30-54b6-9003-11cf68b1b989",
+        "PaymentId": "b-tTxxkFMBEHUmzdmODk_YJMhROl7jzUV4G52eCEaS1P",
+        "InstructedCcy": "EUR",
+        "InstructedAmount": 35140.86,
+        "ExchangeRate": 0.87,
+        "InterbankSettlementCcy": "GBP",
+        "InterbankSettlementAmount": 30572.55,
+        "PaymentValueDate": "2025-01-10T06:04:00"
+    },
+    "Nonce": 748352591
+}
 ```
 
 #### Example webhook response
 
 ```json
 {
-    "Nonce": 748352091
+    "Nonce": 748352591
 }
 ```
