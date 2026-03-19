@@ -4,9 +4,14 @@ version: 1
 webhook: true
 ---
 
-This webhook notifies that additional information is required before a decision can be made on this application. The `RequiredActions` array of objects specifies which information is required from the customer, and includes an upload URL for you to share with the customer.
+This webhook notifies that additional customer information - specifically proof of ID and proof of address - is required before their application can be processed. It includes a `RequiredActions` array which lists the type of information required and document upload URLs for you to share with the customer.
 
-**Note**: You will only receive this webhook if the original request has the optional field `idvEmailsEnabled` set to `false`.
+You may receive this webhook once or twice, depending on what the customer uploads. If the customer uploads a form of ID that doesn't include their address, such as their passport, you'll receive this webhook again:
+
+* If a customer uploads their passport, you'll receive another `AdditionalInfoRequired` webhook requesting separate proof of address.
+* If a customer uploads their driving license, this will fulfil the requirement for both proof of ID and proof of address.
+
+**Note**: You'll only receive this webhook if the original request has the optional field `idvEmailsEnabled` set to `false`.
 
 #### Request body
 
@@ -47,6 +52,7 @@ This webhook notifies that additional information is required before a decision 
 ```
 
 #### Example webhook response
+
 ```json
 {
     "Nonce": 332172156
