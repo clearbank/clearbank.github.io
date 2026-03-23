@@ -5,7 +5,7 @@
     "version": "1.0know-your-customer"
   },
   "paths": {
-    "/v1/customercheck/retail": {
+    "/customer-due-diligence/v1/retail/onboard": {
       "post": {
         "description": "Use this endpoint to conduct KYC checks for a new retail customer. If the checks pass, the provided details are then used to create a new retail customer.",
         "parameters": [
@@ -141,11 +141,11 @@
           },
           "postalCode": {
             "maxLength": 10,
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9 ]+$",
+            "minLength": 2,
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$",
             "type": "string",
             "example": "YO31 7UH",
-            "description": "The postal code of the customer's address."
+            "description": "The postal code of the customer's address. This must be formatted as a UK postcode, including the appropriate use of whitespace."
           },
           "countryCode": {
             "$ref": "#/components/schemas/CountryCode",
