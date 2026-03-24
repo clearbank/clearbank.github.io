@@ -78,19 +78,38 @@ Hub Accounts may be interest bearing. This will have been agreed between your in
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
-## Funding a Hub Account
+## Associated and nominated accounts
 
-A Hub Account can be funded and defunded via a nominated account that you assign, or via certain designated accounts.  
-Nominated accounts do not have to be provided by ClearBank: they can be from another external provider. However, the nominated account must be owned by the same account holder as the Hub Account.
+A Hub Account can be funded and defunded via a nominated account you assign, or via certain associated accounts.  
+
+**Nominated accounts**  
+Nominated accounts do not have to be provided by ClearBank: they can be from another external provider. However, the account holder for both accounts must be the same.
 To set or replace the nominated account for a Hub Account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
 You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments). To receive updates about transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
 
+**Associated accounts**  
+You may link several bank accounts - 'associated accounts' - with a Hub Account. The function of these associated accounts will be specific to your institution, and will serve a defined use case.
+
+The following functionality will vary depending on your use case and agreement with ClearBank:
+
+* The number of associated accounts a Hub Account can have.
+* Whether an associated account can pay funds into a Hub Account.
+* Whether an associated account can receive funds from a Hub Account.
+
+An example business case is provided below:
+
+> You want to facilitate joint purchases, but the involved parties don't necessarily trust each other. You need to ensure all funds are available on neutral ground before proceeding with the purchase.  
+> To do this, you could use a Hub Account and two associated accounts to securely hold funds from two the parties, each paying in from their associated account (configured to be pay-in only, maximum 2 associated accounts). The paid in funds remain securely in the Hub Account - held by you / another trusted third party - until everyone is ready to proceed with the purchase.
+
+**Interest payments**  
 If your Hub Accounts are configured to accrue interest, you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
 
 <Callout colour="blue">
   If a Hub Account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
 </Callout>
+
+## Manage nominated accounts
 
 <EndpointBlock
   type="put"
@@ -115,6 +134,52 @@ If your Hub Accounts are configured to accrue interest, you can subscribe to the
 />
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
+
+## Manage associated accounts
+
+<EndpointBlock
+  type="post"
+  title="Add an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve associated and nominated accounts"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Remove an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
 
 ## Retrieve and update Hub Account information
 
