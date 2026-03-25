@@ -18,12 +18,12 @@ import WebhookSummary from 'src/components/webhook-summary';
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Hub Accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for Hub Accounts typically involve making payments to and from a defined set of accounts.
+Hub Accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for Hub Accounts typically involve making payments to and from a defined set of associated accounts.
 
 To ensure regulatory compliance, Hub Accounts may be subject to one or more of the following constraints:
 
 * Payments may only be made for specific purposes.
-* Payments may only be made to and from designated bank accounts.
+* Payments may only be made to and from certain designated bank accounts.
 * Payment frequency may be restricted.
 
 Exact details will be agreed with your institution directly.
@@ -58,6 +58,13 @@ A sort code will have been assigned to you as part of your onboarding process.
 **Product identity**  
 The `productId` you should use will be provided to you as part of onboarding. This ID determines how your Hub Account behaves.
 
+**Interest payments**  (optional)  
+If your Hub Accounts are configured to accrue interest; you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
+
+<Callout colour="blue">
+  If a Hub Account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
+</Callout>
+
 **Interest configuration** (optional)  
 Hub Accounts may be interest bearing. This will have been agreed between your institution and ClearBank. If your Hub Accounts are interest bearing, you can set up their [interest configuration profile](./interest-configuration). Once created, the profile's `interestConfigurationId` may be reused across subsequent Hub Accounts to refer to the same configuration profile.
 
@@ -75,39 +82,45 @@ Hub Accounts may be interest bearing. This will have been agreed between your in
   ]}
 />
 
-
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
-## Associated and nominated accounts
+## Link associated and nominated accounts
 
-A Hub Account can be funded and defunded via a nominated account you assign, or via certain associated accounts.  
+Other bank accounts can be linked to a Hub Account as an **associated account** or a **nominated account**. Funds can only transferred between a Hub Account and its associated or nominated accounts.
 
-**Nominated accounts**  
-Nominated accounts do not have to be provided by ClearBank: they can be from another external provider. However, the account holder for both accounts must be the same.
-To set or replace the nominated account for a Hub Account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+**Nominated account**  
+A nominated account is a single account designated for funding and defunding a Hub Account.
 
-You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments). To receive updates about transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
+* Nominated accounts do not need to be ClearBank provided: they can be from another external provider.
+* The account holder for the nominated account and the Hub Account must be the same.
+
+To set or replace the nominated account for a Hub Account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint, or the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account).
+
+You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments); to receive updates about transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
+
+<br />
 
 **Associated accounts**  
-You may link several bank accounts - 'associated accounts' - with a Hub Account. The function of these associated accounts will be specific to your institution, and will serve a defined use case.
+Associated accounts are one or several accounts defined to fulfil a specific role in relation to a Hub Account. The function of an associated account will vary depending on your specific use case:
 
-The following functionality will vary depending on your use case and agreement with ClearBank:
+* An associated account does not need to be ClearBank provided: they can be from another external provider.
+* No more than 'X' associated accounts may be linked to a Hub Account - where 'X' depends on your arrangement with ClearBank.
+* Hub Account funding to and from an associated account may or may not be allowed - depending on your arrangement with ClearBank.
 
-* The number of associated accounts a Hub Account can have.
-* Whether an associated account can pay funds into a Hub Account.
-* Whether an associated account can receive funds from a Hub Account.
+Associated accounts can be added to a Hub Account using the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) endpoint.
 
-An example business case is provided below:
+<br />
 
-> You want to facilitate joint purchases, but the involved parties don't necessarily trust each other. You need to ensure all funds are available on neutral ground before proceeding with the purchase.  
-> To do this, you could use a Hub Account and two associated accounts to securely hold funds from two the parties, each paying in from their associated account (configured to be pay-in only, maximum 2 associated accounts). The paid in funds remain securely in the Hub Account - held by you / another trusted third party - until everyone is ready to proceed with the purchase.
+**Example business case**  
+You'd like to provide a service allowing two parties - who don't necessarily trust each other - to make joint purchases to a single vendor.  
+To support this, you can temporarily hold each buyer's funds in a Hub Account until both parties have paid in and are ready to proceed.
 
-**Interest payments**  
-If your Hub Accounts are configured to accrue interest, you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
+First you create a Hub Account with a maximum of 3 associated accounts:
 
-<Callout colour="blue">
-  If a Hub Account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
-</Callout>
+* Each of the two buyers chosen bank account is linked as an associated account, configured to pay-in only.
+* The vendor's chosen bank account is added as the third associated account, configured to pay-out only.
+
+Funds paid in by the buyers remain securely in the Hub Account under your / another trusted third party's control. Once all funds have been paid and the parties are ready to proceed, the Hub Account's funds can be paid into the vendor's account.
 
 ## Manage nominated accounts
 
