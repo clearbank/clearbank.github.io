@@ -4,7 +4,7 @@ import Logo from 'src/components/logo'
 
 import * as Styles from './footer.styles'
 
-import * as Types from 'src/components/header-menu/header-meny.types'
+import * as Types from 'src/components/header-menu/header-menu.types'
 
 const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => (
   <Styles.Container role='contentinfo'>

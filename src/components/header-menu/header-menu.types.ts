@@ -8,6 +8,10 @@ export interface IMenuItem {
   }
 }
 
+export interface INestedMenu {
+  nestedMenuItems: IMenuItem[]
+}
+
 export interface IMenu {
   menuItem: {
     title: string
@@ -24,4 +28,12 @@ export interface IHeaderMenuProps {
 export interface IHeaderSubMenuProps {
   item: IMenu
   isActive?: boolean
+}
+
+export interface IHeaderNestedMenuProps {
+  item: INestedMenu
+}
+
+export interface IHeaderMenuItemProps {
+  item: IMenuItem
 }

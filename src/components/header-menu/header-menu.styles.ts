@@ -51,7 +51,7 @@ export const Title = styled.h2<{ isActive?: boolean }>`
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
 `
 
-const rotateMenu = keyframes`
+const expandMenu = keyframes`
   from {
     transform: scaleY(0);
   }
@@ -73,8 +73,27 @@ export const List = styled.ul`
 
   ${Container}:hover & {
     display: block;
-    animation: ${rotateMenu} 200ms ${easings.easeIn};
+    animation: ${expandMenu} 200ms ${easings.easeIn};
     transform-origin: top center;
+  }
+`
+
+export const NestedList = styled.ul`
+  overflow: hidden;
+  display: none;
+  z-index: 1;
+  width: 100%;
+  padding: 15px;
+  color: ${colors.brandDark};
+  position: absolute;
+  background: ${colors.brandGrayLight};
+  border-radius: 0px 0px 10px 10px;
+  list-style: none;
+
+  ${Container}:hover & {
+    display: block;
+    animation: ${expandMenu} 200ms ${easings.easeIn};
+    transform-origin: top right;
   }
 `
 
