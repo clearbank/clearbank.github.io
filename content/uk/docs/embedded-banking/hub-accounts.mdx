@@ -84,7 +84,7 @@ Hub Accounts may be interest bearing. This will have been agreed between your in
 
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
-## Link associated and nominated accounts
+## Associated and nominated accounts
 
 Other bank accounts can be linked to a Hub Account as an **associated account** or a **nominated account**. Funds can only transferred between a Hub Account and its associated or nominated accounts.
 
@@ -93,8 +93,9 @@ A nominated account is a single account designated for funding and defunding a H
 
 * Nominated accounts do not need to be ClearBank provided: they can be from another external provider.
 * The account holder for the nominated account and the Hub Account must be the same.
+* When a Hub Account is closed, any unpaid interest is redirected to its nominated account.
 
-To set or replace the nominated account for a Hub Account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint, or the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account).
+To set or replace the nominated account for a Hub Account, you can use the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) (preferred), or the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
 You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments); to receive updates about transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
 
@@ -107,7 +108,9 @@ Associated accounts are one or several accounts defined to fulfil a specific rol
 * No more than 'X' associated accounts may be linked to a Hub Account - where 'X' depends on your arrangement with ClearBank.
 * Hub Account funding to and from an associated account may or may not be allowed - depending on your arrangement with ClearBank.
 
-Associated accounts can be added to a Hub Account using the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) endpoint.
+Associated accounts can be added to a Hub Account using the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) endpoint; removed using the [DELETE /v1/accounts/{accountId}/related-accounts/{iban}](#remove-an-associated-or-nominated-account) endpoint; and retrieved using the [GET /v1/accounts/{accountId}/related-accounts](#retrieve-associated-and-nominated-accounts) endpoint.
+
+If you need to update the account holder of an associated account, you can use the [PATCH /v1/accounts/{accountId}/related-accounts/{iban}](#amend-an-associated-or-nominated-account) endpoint.
 
 <br />
 
@@ -122,33 +125,7 @@ First you create a Hub Account with a maximum of 3 associated accounts:
 
 Funds paid in by the buyers remain securely in the Hub Account under your / another trusted third party's control. Once all funds have been paid and the parties are ready to proceed, the Hub Account's funds can be paid into the vendor's account.
 
-## Manage nominated accounts
-
-<EndpointBlock
-  type="put"
-  title="Set a nominated account"
-  endpoints={[
-    {
-      path: "/v1/accounts/{accountId}/nominated-account",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-<EndpointBlock
-  type="get"
-  title="Get a nominated account"
-  endpoints={[
-    {
-      path: "/v1/accounts/{accountId}/nominated-account",
-      version: "1.0.Sterling",
-    }
-  ]}
-/>
-
-<WebhookPlaceholder render='interest-paid-webhook-v1' />
-
-## Manage associated accounts
+## Manage associated or nominated accounts
 
 <EndpointBlock
   type="post"
@@ -193,6 +170,32 @@ Funds paid in by the buyers remain securely in the Hub Account under your / anot
     }
   ]}
 />
+
+## Manage nominated accounts
+
+<EndpointBlock
+  type="put"
+  title="Set a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/nominated-account",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='interest-paid-webhook-v1' />
 
 ## Retrieve and update Hub Account information
 
