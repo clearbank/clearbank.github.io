@@ -105,3 +105,11 @@ export const ListItem = styled(LinkBase)`
     color: ${colors.wedgewoodapprox};
   }
 `
+export const LeafListItem = styled.div`
+  padding: 15px;
+  color: ${colors.brandDark};
+
+  &:hover {
+    color: ${colors.wedgewoodapprox};
+  }
+`

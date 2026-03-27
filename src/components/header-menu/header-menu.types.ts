@@ -34,6 +34,10 @@ export interface IHeaderSubMenuProps {
   isActive?: boolean
 }
 
+export interface IHeaderLeafMenuProps {
+  items: ILeafMenuItem[]
+}
+
 export interface IHeaderMenuItemProps {
   item: IMenuItem
 }
