@@ -78,7 +78,7 @@ export const List = styled.ul`
   }
 `
 
-export const NestedList = styled.ul`
+export const LeafList = styled.ul`
   overflow: hidden;
   display: none;
   z-index: 1;

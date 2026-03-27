@@ -1,15 +1,19 @@
-export interface IMenuItem {
-  node: {
-    fields: {
-      title: string
-      slug: string
-      id: string
-    }
+export interface ILeafMenuItem {
+  fields: {
+    title: string
+    slug: string
+    id: string
   }
 }
 
-export interface INestedMenu {
-  nestedMenuItems: IMenuItem[]
+export interface IMenuItem {
+  fields: {
+    title: string
+    slug: string
+    id: string
+  }
+  
+  leafMenuItems: ILeafMenuItem[]
 }
 
 export interface IMenu {
@@ -28,10 +32,6 @@ export interface IHeaderMenuProps {
 export interface IHeaderSubMenuProps {
   item: IMenu
   isActive?: boolean
-}
-
-export interface IHeaderNestedMenuProps {
-  item: INestedMenu
 }
 
 export interface IHeaderMenuItemProps {

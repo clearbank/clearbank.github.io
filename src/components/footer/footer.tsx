@@ -17,11 +17,11 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
             </Styles.Title>
             <Styles.List>
               {item.subMenuItems.map(subMenuItem => (
-                <Styles.ListItem key={subMenuItem.node.fields.slug}>
+                <Styles.ListItem key={subMenuItem.fields.slug}>
                   <Styles.SubTitle
-                    href={subMenuItem.node.fields.slug}
+                    href={subMenuItem.fields.slug}
                   >
-                    {subMenuItem.node.fields.title}
+                    {subMenuItem.fields.title}
                   </Styles.SubTitle>
                 </Styles.ListItem>
               ))}
