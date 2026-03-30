@@ -8,12 +8,7 @@ const HeaderMenuListItem: React.FC<Types.IHeaderMenuItemProps> = ({ item }) => {
     if (item.leafMenuItems.length > 0) 
     {
       return (
-        <li key={item.fields.id}>
-          <Styles.LeafListItem>
-            {item.fields.title}
-          </Styles.LeafListItem>
-          <HeaderLeafMenu items={item.leafMenuItems}/>
-        </li>
+        <HeaderLeafMenu id={item.fields.id} title={item.fields.title} items={item.leafMenuItems}/>
       )
     }
     else {

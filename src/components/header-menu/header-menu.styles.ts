@@ -78,34 +78,7 @@ export const List = styled.ul`
   }
 `
 
-export const LeafList = styled.ul`
-  overflow: hidden;
-  display: none;
-  z-index: 1;
-  width: 100%;
-  padding: 15px;
-  color: ${colors.brandDark};
-  position: absolute;
-  background: ${colors.brandGrayLight};
-  border-radius: 0px 0px 10px 10px;
-  list-style: none;
-
-  ${Container}:hover & {
-    display: block;
-    animation: ${expandMenu} 200ms ${easings.easeIn};
-    transform-origin: top right;
-  }
-`
-
 export const ListItem = styled(LinkBase)`
-  padding: 15px;
-  color: ${colors.brandDark};
-
-  &:hover {
-    color: ${colors.wedgewoodapprox};
-  }
-`
-export const LeafListItem = styled.div`
   padding: 15px;
   color: ${colors.brandDark};
 
