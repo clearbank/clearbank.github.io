@@ -10256,12 +10256,12 @@
           "bban": {
             "type": "string",
             "description": "The BBAN identifier.",
-            "example": null
+            "example": "CBUK40231512245674"
           },
           "scan": {
             "type": "string",
-            "description": "The SCAN identifier.",
-            "example": null
+            "description": "The SCAN (Sort Code and Account Number) identifier.",
+            "example": "40231512245674"
           }
         },
         "description": "The identifiers for a related account."
@@ -10344,6 +10344,7 @@
           },
           "identifierKind": {
             "minLength": 1,
+            "maxLength": 4,
             "type": "string",
             "description": "The type of identifier being used. Possible values are: 'IBAN', 'BBAN' or 'SCAN'.",
             "example": "IBAN"
@@ -10353,7 +10354,8 @@
             "minLength": 0,
             "type": "string",
             "description": "The name of the account owner. If creating a nominated account, this should be the same as Hub Account's.",
-            "example": "John Smith"
+            "example": "John Smith",
+            "pattern": "^[0-9a-zA-Z/-?:().,’'+ !#%&\\*=^_`\\{\\|\\}~\"\";<>@\\[\\\\]]+"
           }
         },
         "description": "Request model for creating a related account."
