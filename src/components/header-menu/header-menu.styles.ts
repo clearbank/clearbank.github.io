@@ -61,7 +61,7 @@ const expandMenu = keyframes`
 `;
 
 export const List = styled.ul`
-  overflow: hidden;
+  overflow: visible;
   display: none;
   z-index: 1;
   width: 100%;

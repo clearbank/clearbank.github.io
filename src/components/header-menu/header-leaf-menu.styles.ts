@@ -23,6 +23,7 @@ export const LinkBase = styled(Link)`
 `
 
 export const LeafContainer = styled.div`
+  position: relative;
   min-width: 120px;
 `
 
@@ -42,7 +43,9 @@ export const LeafList = styled.ul`
   width: 100%;
   padding: 15px;
   color: ${colors.brandDark};
-  position: relative;
+  position: absolute;
+  top: 0px;
+  left: 0px;
   background: ${colors.brandGrayLight};
   border-radius: 0px 0px 10px 10px;
   list-style: none;
