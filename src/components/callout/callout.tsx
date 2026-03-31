@@ -5,12 +5,20 @@ import * as Styles from './callout.styles'
 
 const presetConfig: Record<
   Types.CalloutPreset,
-  { colour: Types.ColorOptions; fallbackText: string; defaultDocsLabel: string }
+  {
+    colour: Types.ColorOptions
+    fallbackText: React.ReactNode
+    defaultDocsLabel: string
+  }
 > = {
   deprecation: {
     colour: 'red',
-    fallbackText:
-      'Deprecation Notice - legacy version of the API. New Customers please use the External Gateway docs',
+    fallbackText: (
+      <>
+        <strong>Deprecation notice:</strong>
+        {' The documentation on this page describes a legacy version of the API. New customers should refer to the External Gateway docs.'}
+      </>
+    ),
     defaultDocsLabel: 'External Gateway docs'
   }
 }
@@ -36,7 +44,8 @@ const Callout: React.FunctionComponent<Types.CalloutProps> = ({
 
     return (
       <>
-        {'Deprecation Notice - legacy version of the API. New Customers please use the '}
+        <strong>Deprecation notice:</strong>
+        {' The documentation on this page describes a legacy version of the API. New customers should refer to the '}
         <a href={deprecationDocsHref}>{docsLabel}</a>
         {'.'}
       </>

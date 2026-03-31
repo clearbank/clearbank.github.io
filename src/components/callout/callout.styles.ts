@@ -12,7 +12,7 @@ const colours = {
     border: colors.brandSecondaryDarker
   },
   red: {
-    background: colors.brandGray,
+    background: colors.brandGrayLight,
     border: colors.brandRedDark
   }
 }
