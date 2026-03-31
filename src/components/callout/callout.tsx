@@ -10,7 +10,7 @@ const presetConfig: Record<
   deprecation: {
     colour: 'red',
     fallbackText:
-      'Deprecation notice - Legacy version of External API. New customers please use the External Gateway docs.',
+      'Deprecation Notice - legacy version of the API. New Customers please use the External Gateway docs',
     defaultDocsLabel: 'External Gateway docs'
   }
 }
@@ -36,7 +36,7 @@ const Callout: React.FunctionComponent<Types.CalloutProps> = ({
 
     return (
       <>
-        {'Deprecation notice - Legacy version of External API. New customers please use the '}
+        {'Deprecation Notice - legacy version of the API. New Customers please use the '}
         <a href={deprecationDocsHref}>{docsLabel}</a>
         {'.'}
       </>
