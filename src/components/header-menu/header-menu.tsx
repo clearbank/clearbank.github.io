@@ -14,7 +14,6 @@ const isMenuActive = (item: Types.IMenu) => {
 }
 
 const HeaderMenu: React.FC<Types.IHeaderMenuProps> = ({ items }) => {
-
   return (
     <Styles.MenuContainer>
       {items.map(item => <HeaderSubMenu key={item.menuItem.title} item={item} isActive={isMenuActive(item)} />)}

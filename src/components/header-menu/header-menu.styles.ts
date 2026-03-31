@@ -60,7 +60,7 @@ const expandMenu = keyframes`
   }
 `;
 
-export const List = styled.ul`
+export const List = styled.ul<{ borderState?: string }>`
   overflow: visible;
   display: none;
   z-index: 1;
@@ -68,7 +68,19 @@ export const List = styled.ul`
   margin-top: 15px;
   position: absolute;
   background: ${colors.brandGrayLight};
-  border-radius: 0px 0px 10px 10px;
+  border-radius: ${(props) => {
+    if (props.borderState === 'leaf-bottom-right') 
+    {
+      return '0px 0px 0px 10px';
+    }
+    else if (props.borderState === 'leaf-bottom-left') 
+    {
+      return '0px 0px 10px 0px';
+    }
+    else {
+      return '0px 0px 10px 10px';
+    }
+  }};
   list-style: none;
 
   ${Container}:hover & {

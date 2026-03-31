@@ -41,11 +41,10 @@ export const LeafList = styled.ul`
   display: none;
   z-index: 1;
   width: 100%;
-  padding: 15px;
   color: ${colors.brandDark};
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0%;
+  left: 100%;
   background: ${colors.brandGrayLight};
   border-radius: 0px 0px 10px 10px;
   list-style: none;
