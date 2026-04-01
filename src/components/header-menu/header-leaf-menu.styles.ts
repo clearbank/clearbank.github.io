@@ -48,7 +48,7 @@ export const LeafList = styled.ul<{ left?: boolean }>`
   display: block;
   visibility: hidden;
   z-index: 1;
-  width: 100%;
+  width: 75%;
   color: ${colors.brandDark};
   position: absolute;
   top: 0%;
