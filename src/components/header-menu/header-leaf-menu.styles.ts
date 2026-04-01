@@ -24,7 +24,6 @@ export const LinkBase = styled(Link)`
 
 export const LeafContainer = styled.div`
   position: relative;
-  min-width: 120px;
 `
 
 export const LeafListItem = styled.div`
@@ -36,21 +35,23 @@ export const LeafListItem = styled.div`
   }
 `
 
-export const LeafList = styled.ul`
+export const LeafList = styled.ul<{ left?: boolean }>`
+  min-width: 120px;
   overflow: hidden;
-  display: none;
+  display: block;
+  visibility: hidden;
   z-index: 1;
   width: 100%;
   color: ${colors.brandDark};
   position: absolute;
   top: 0%;
-  left: 100%;
+  left: ${(props) => (props.left) ? "-100%" : "100%" };
   background: ${colors.brandGrayLight};
   border-radius: 0px 0px 10px 10px;
   list-style: none;
 
   ${LeafContainer}:hover & {
-    display: block;
+    visibility: visible;
     animation: ${expandMenu} 200ms ${easings.easeIn};
     transform-origin: top right;
   }

@@ -62,29 +62,27 @@ const expandMenu = keyframes`
 
 export const List = styled.ul<{ borderState?: string }>`
   overflow: visible;
-  display: none;
+  visibility: hidden;
+  display: block;
   z-index: 1;
   width: 100%;
   margin-top: 15px;
   position: absolute;
   background: ${colors.brandGrayLight};
   border-radius: ${(props) => {
-    if (props.borderState === 'leaf-bottom-right') 
-    {
-      return '0px 0px 0px 10px';
-    }
-    else if (props.borderState === 'leaf-bottom-left') 
-    {
-      return '0px 0px 10px 0px';
-    }
-    else {
-      return '0px 0px 10px 10px';
+    switch (props.borderState) {
+      case 'leaf-bottom-right':
+        return '0px 0px 0px 10px';
+      case 'leaf-bottom-left':
+        return '0px 0px 10px 0px';
+      default:
+        return '0px 0px 10px 10px';
     }
   }};
   list-style: none;
 
   ${Container}:hover & {
-    display: block;
+    visibility: visible;
     animation: ${expandMenu} 200ms ${easings.easeIn};
     transform-origin: top center;
   }

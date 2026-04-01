@@ -4,11 +4,35 @@ import * as Styles from './header-leaf-menu.styles'
 import * as Types from'./header-menu.types'
 
 const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items, onHover, isLast }) => {
-  // TODO: Put min width on leaf list, if the root X + root width + min width > screen size put it right
+    const itemRef = useRef(null);
+    const menuRef = useRef(null);
+
+    const [left, setLeft] = useState(false);
   
+    useEffect(() => {
+      // On initial render
+      setTimeout(() => {
+        updateLeft();
+      }, 0);
+  
+      const updateLeft = () => {
+        const item = itemRef.current.getBoundingClientRect();
+        const menu = menuRef.current.getBoundingClientRect();
+
+        const rightEdge = item.x + item.width + menu.width;
+
+        setLeft(rightEdge > (window.innerWidth || document.documentElement.clientWidth));
+      };
+      
+      // Listen for resize event to re-up the state
+      window.addEventListener("resize", updateLeft);
+      // remove the event listener before the component gets unmounted
+      return () => window.removeEventListener("resize", updateLeft);
+    }, []);
+    
   const handleMouseEnter = () => {
     if (isLast) {
-      onHover('leaf-bottom-right');
+      (left) ? onHover('leaf-bottom-left') : onHover('leaf-bottom-right');
     }
   };
 
@@ -22,11 +46,12 @@ const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items
     <li key={id}>
       <Styles.LeafContainer
         onMouseEnter={handleMouseEnter} 
-        onMouseLeave={handleMouseLeave}>
+        onMouseLeave={handleMouseLeave}
+        ref={itemRef}>
         <Styles.LeafListItem>
           {title}
         </Styles.LeafListItem>
-        <Styles.LeafList>
+        <Styles.LeafList left={left} ref={menuRef}>
           {items?.map(item => (
             <li key={item.fields.id}>
               <Styles.LeafListSubItem to={item.fields.slug}>
