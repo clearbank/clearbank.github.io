@@ -33,6 +33,13 @@ export const LeafListItem = styled.div`
   &:hover {
     color: ${colors.wedgewoodapprox};
   }
+  
+  &:after {
+    float: right;
+    margin-left: 10px;
+    vertical-align: middle;
+    content: url(/assets/images/leaf-menu-icon.png);
+  }
 `
 
 export const LeafList = styled.ul<{ left?: boolean }>`
@@ -47,9 +54,9 @@ export const LeafList = styled.ul<{ left?: boolean }>`
   top: 0%;
   left: ${(props) => (props.left) ? "-100%" : "100%" };
   background: ${colors.brandGrayLight};
-  border-radius: 0px 0px 10px 10px;
+  border-radius: ${(props) => (props.left) ? "10px 0px 10px 10px" : "0px 10px 10px 10px" };
   list-style: none;
-
+  
   ${LeafContainer}:hover & {
     visibility: visible;
     animation: ${expandMenu} 200ms ${easings.easeIn};
