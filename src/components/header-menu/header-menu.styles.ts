@@ -23,7 +23,7 @@ export const MenuContainer = styled.div`
 export const Container = styled.div`
   padding: 25px 0px;
   position: relative;
-  min-width: 120px;
+  min-width: 140px;
 
   &:hover {
     color: ${colors.wedgewoodapprox};
