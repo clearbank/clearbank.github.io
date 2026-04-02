@@ -7,6 +7,7 @@ export interface IFooterMenuItemProps {
 }
 
 export interface IFooterLeafMenuProps {
+  id: string
   title: string
   items: ILeafMenuItem[]
 }

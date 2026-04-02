@@ -10,6 +10,7 @@ const FooterMenuItem: React.FC<Types.IFooterMenuItemProps> = ({ item }) => {
   {
     return (
       <FooterLeafMenu 
+        id={item.fields.id}
         title={item.fields.title} 
         items={item.leafMenuItems} />
     )

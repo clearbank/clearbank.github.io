@@ -27,7 +27,7 @@ const expandMenu = keyframes`
   }
 `;
 
-export const LeafContainer = styled.div`
+export const LeafContainer = styled.li`
   margin-bottom: 20px;
 `
 
@@ -58,8 +58,9 @@ export const LeafTitle = styled.div`
   font-size: 18px;
 
   &:after {
+    padding-top: 2px;
+    height: 17px;
     margin-left: auto;
-    vertical-align: middle;
     content: url(/assets/images/leaf-menu-icon.png);
   }
 

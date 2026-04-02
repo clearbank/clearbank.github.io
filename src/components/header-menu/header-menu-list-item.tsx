@@ -8,13 +8,12 @@ const HeaderMenuListItem: React.FC<Types.IHeaderMenuItemProps> = ({ item, onHove
   if (item.leafMenuItems.length > 0) 
   {
     return (
-      <li key={item.fields.id}>
-        <HeaderLeafMenu
-          title={item.fields.title} 
-          items={item.leafMenuItems}
-          onHover={onHover}
-          isLast={isLast} />
-      </li>
+      <HeaderLeafMenu
+        id={item.fields.id}
+        title={item.fields.title} 
+        items={item.leafMenuItems}
+        onHover={onHover}
+        isLast={isLast} />
     )
   }
   else {

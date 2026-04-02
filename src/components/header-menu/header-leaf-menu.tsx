@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import * as Styles from './header-leaf-menu.styles'
 import * as Types from'./header-menu.types'
 
-const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ title, items, onHover, isLast }) => {
+const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items, onHover, isLast }) => {
     const itemRef = useRef(null);
     const menuRef = useRef(null);
 
@@ -45,6 +45,7 @@ const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ title, items, on
 
   return (
     <Styles.LeafContainer
+      key={id}
       onMouseEnter={handleMouseEnter} 
       onMouseLeave={handleMouseLeave}
       ref={itemRef}>

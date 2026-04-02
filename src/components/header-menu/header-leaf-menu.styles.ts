@@ -22,7 +22,7 @@ export const LinkBase = styled(Link)`
   text-decoration: none;
 `
 
-export const LeafContainer = styled.div`
+export const LeafContainer = styled.li`
   position: relative;
 `
 
@@ -37,6 +37,8 @@ export const LeafListItem = styled.div`
   
   &:after {
     margin-left: auto;
+    padding-top: 2px;
+    height: 17px;
     content: url(/assets/images/leaf-menu-icon.png);
   }
 `
