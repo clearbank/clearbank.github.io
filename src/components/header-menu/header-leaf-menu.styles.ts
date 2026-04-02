@@ -44,7 +44,7 @@ export const LeafListItem = styled.div`
 `
 
 export const LeafList = styled.ul<{ left?: boolean }>`
-  min-width: 120px;
+  min-width: 140px;
   overflow: hidden;
   display: block;
   visibility: hidden;
