@@ -59,6 +59,7 @@ export const LeafTitle = styled.div`
 
   &:after {
     padding-top: 2px;
+    height: 17px;
     margin-left: auto;
     content: url(/assets/images/footer-leaf-menu-icon.png);
   }
@@ -70,6 +71,7 @@ export const LeafTitle = styled.div`
   color: ${colors.brandDark};
 `
 
+export const LeafList = styled.ul`
   display: none;
   margin: 20px 0px 0px 2px;
   list-style: none;
