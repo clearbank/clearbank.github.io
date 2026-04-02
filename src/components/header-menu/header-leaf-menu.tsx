@@ -52,7 +52,10 @@ const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items
       <Styles.LeafListItem>
         {title}
       </Styles.LeafListItem>
-      <Styles.LeafList left={left} ref={menuRef}>
+      <Styles.LeafList 
+        left={left} 
+        single={items.length == 1} 
+        ref={menuRef}>
         {items?.map(item => (
           <li key={item.fields.id}>
             <Styles.LeafListSubItem to={item.fields.slug}>

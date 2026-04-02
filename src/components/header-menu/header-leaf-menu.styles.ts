@@ -41,19 +41,27 @@ export const LeafListItem = styled.div`
   }
 `
 
-export const LeafList = styled.ul<{ left?: boolean }>`
+export const LeafList = styled.ul<{ left?: boolean, single?: boolean }>`
   min-width: 140px;
   overflow: hidden;
-  display: block;
   visibility: hidden;
   z-index: 1;
-  width: 75%;
+  width: 100%;
   color: ${colors.brandDark};
   position: absolute;
   top: 0%;
   left: ${(props) => (props.left) ? "-100%" : "100%" };
   background: ${colors.brandGrayLight};
-  border-radius: ${(props) => (props.left) ? "10px 0px 10px 10px" : "0px 10px 10px 10px" };
+  border-radius: ${(props) => {
+    if (props.left && props.single)
+      return "10px 0px 0px 10px";
+    else if (!props.left && props.single)
+      return "0px 10px 10px 0px";
+    else if (props.left && !props.single)
+      return "10px 0px 10px 10px";
+    else
+      return "0px 10px 10px 10px"
+  }};
   list-style: none;
   
   ${LeafContainer}:hover & {
