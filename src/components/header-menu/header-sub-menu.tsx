@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import * as Styles from './header-menu.styles'
 import * as Types from'./header-menu.types'

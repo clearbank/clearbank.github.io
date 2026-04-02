@@ -27,6 +27,7 @@ export const LeafContainer = styled.div`
 `
 
 export const LeafListItem = styled.div`
+  display: flex;
   padding: 15px;
   color: ${colors.brandDark};
 
@@ -35,9 +36,7 @@ export const LeafListItem = styled.div`
   }
   
   &:after {
-    float: right;
-    margin-left: 10px;
-    vertical-align: middle;
+    margin-left: auto;
     content: url(/assets/images/leaf-menu-icon.png);
   }
 `

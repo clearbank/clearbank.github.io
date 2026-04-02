@@ -35,7 +35,6 @@ export interface IHeaderSubMenuProps {
 }
 
 export interface IHeaderLeafMenuProps {
-  id: string
   title: string
   items: ILeafMenuItem[]
   onHover: (state: string) => void

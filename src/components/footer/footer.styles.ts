@@ -1,7 +1,6 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+import { colors, easings } from 'src/components/theme'
 import { Box } from 'rebass'
-
-import { colors } from 'src/components/theme'
 
 export const Container = styled(Box).attrs(() => ({ mt: '140px' }))``
 
@@ -17,6 +16,19 @@ export const MenuContainer = styled.div`
 
 export const ColumnContainer = styled.div`
   max-width: 200px;
+`
+
+const expandMenu = keyframes`
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+`;
+
+export const LeafContainer = styled.div`
+  margin-bottom: 20px;
 `
 
 export const Title = styled.h2`
@@ -37,8 +49,43 @@ export const SubTitle = styled.a`
   color: ${colors.brandDark}
 `
 
+export const LeafTitle = styled.div`
+  display: flex;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: default;
+  font-weight: 400;
+  font-size: 18px;
+
+  &:after {
+    margin-left: auto;
+    vertical-align: middle;
+    content: url(/assets/images/leaf-menu-icon.png);
+  }
+
+  &:hover {
+    color: ${colors.wedgewoodapprox};
+  }
+
+  color: ${colors.brandDark};
+`
+
+export const LeafList = styled.ul`
+  display: none;
+  margin: 20px 0px 0px 2px;
+  list-style: none;
+  padding-left: 10px;
+  border-left: 3px solid #747474;
+
+  ${LeafContainer}:hover & {
+    display: block;
+    animation: ${expandMenu} 200ms ${easings.easeIn};
+    transform-origin: top center;
+  }
+`
+
 export const List = styled.ul`
-  margin-top: 40px;
+  margin-top: 30px;
   list-style: none;
   padding: 0;
 `

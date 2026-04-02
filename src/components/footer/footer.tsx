@@ -3,8 +3,9 @@ import React from 'react'
 import Logo from 'src/components/logo'
 
 import * as Styles from './footer.styles'
-
 import * as Types from 'src/components/header-menu/header-menu.types'
+
+import FooterMenuItem from './footer-menu-item'
 
 const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => (
   <Styles.Container role='contentinfo'>
@@ -17,13 +18,7 @@ const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => 
             </Styles.Title>
             <Styles.List>
               {item.subMenuItems.map(subMenuItem => (
-                <Styles.ListItem key={subMenuItem.fields.slug}>
-                  <Styles.SubTitle
-                    href={subMenuItem.fields.slug}
-                  >
-                    {subMenuItem.fields.title}
-                  </Styles.SubTitle>
-                </Styles.ListItem>
+                <FooterMenuItem item={subMenuItem} />
               ))}
             </Styles.List>
           </Styles.ColumnContainer>

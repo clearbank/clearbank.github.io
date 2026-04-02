@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import * as Styles from './header-leaf-menu.styles'
 import * as Types from'./header-menu.types'
 
-const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items, onHover, isLast }) => {
+const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ title, items, onHover, isLast }) => {
     const itemRef = useRef(null);
     const menuRef = useRef(null);
 
@@ -15,6 +15,7 @@ const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items
         updateLeft();
       }, 0);
   
+      // Future performance improvement, this could get called quickly. Run this through a debounce or throttle function.
       const updateLeft = () => {
         const item = itemRef.current.getBoundingClientRect();
         const menu = menuRef.current.getBoundingClientRect();
@@ -43,25 +44,23 @@ const HeaderLeafMenu: React.FC<Types.IHeaderLeafMenuProps> = ({ id, title, items
   };
 
   return (
-    <li key={id}>
-      <Styles.LeafContainer
-        onMouseEnter={handleMouseEnter} 
-        onMouseLeave={handleMouseLeave}
-        ref={itemRef}>
-        <Styles.LeafListItem>
-          {title}
-        </Styles.LeafListItem>
-        <Styles.LeafList left={left} ref={menuRef}>
-          {items?.map(item => (
-            <li key={item.fields.id}>
-              <Styles.LeafListSubItem to={item.fields.slug}>
-                {item.fields.title}
-              </Styles.LeafListSubItem>
-            </li>
-          ))}
-        </Styles.LeafList>
-      </Styles.LeafContainer>
-    </li>
+    <Styles.LeafContainer
+      onMouseEnter={handleMouseEnter} 
+      onMouseLeave={handleMouseLeave}
+      ref={itemRef}>
+      <Styles.LeafListItem>
+        {title}
+      </Styles.LeafListItem>
+      <Styles.LeafList left={left} ref={menuRef}>
+        {items?.map(item => (
+          <li key={item.fields.id}>
+            <Styles.LeafListSubItem to={item.fields.slug}>
+              {item.fields.title}
+            </Styles.LeafListSubItem>
+          </li>
+        ))}
+      </Styles.LeafList>
+    </Styles.LeafContainer>
   )
 }
 
