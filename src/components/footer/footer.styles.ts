@@ -59,7 +59,6 @@ export const LeafTitle = styled.div`
 
   &:after {
     padding-top: 2px;
-    height: 17px;
     margin-left: auto;
     content: url(/assets/images/footer-leaf-menu-icon.png);
   }
