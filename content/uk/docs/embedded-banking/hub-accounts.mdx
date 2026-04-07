@@ -97,7 +97,7 @@ A nominated account is a single account designated for funding and defunding a H
 
 To set or replace the nominated account for a Hub Account, you can use the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) (preferred), or the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
 
-You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments); to receive updates about transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
+You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments) or [CHAPS](../gbp-payments/chaps); to receive updates about FPS transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
 
 <br />
 
@@ -105,7 +105,7 @@ You can make payments from a Hub Account to its nominated account via [Faster Pa
 Associated accounts are one or several accounts defined to fulfil a specific role in relation to a Hub Account. The function of an associated account will vary depending on your specific use case:
 
 * An associated account does not need to be ClearBank provided: they can be from another external provider.
-* No more than 'X' associated accounts may be linked to a Hub Account - where 'X' depends on your arrangement with ClearBank (up to a maximum of 5).
+* No more than 'X' associated accounts may be linked to a Hub Account - where 'X' depends on your arrangement with ClearBank.
 * Hub Account funding to and from an associated account may or may not be allowed. This depends on your arrangement with ClearBank.
 
 Associated accounts can be added to a Hub Account using the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) endpoint; removed using the [DELETE /v1/accounts/{accountId}/related-accounts/{iban}](#remove-an-associated-or-nominated-account) endpoint; and retrieved using the [GET /v1/accounts/{accountId}/related-accounts](#retrieve-associated-and-nominated-accounts) endpoint.
@@ -114,16 +114,10 @@ If you need to update the account holder of an associated account, you can use t
 
 <br />
 
-**Example business case**  
-You'd like to provide a service allowing two parties - who don't necessarily trust each other - to make joint purchases to a single vendor.  
-To support this, you can temporarily hold each buyer's funds in a Hub Account until both parties have paid in and are ready to proceed.
+**Example use case**  
+Hub Accounts could be used to temporarily hold funds between a customer and a vendor.
 
-In this scenario, you could create a Hub Account with three associated accounts:
-
-* Each of the two buyers' chosen bank account is linked as an associated account, configured to pay-in only.
-* The vendor's chosen bank account is added as the third associated account, configured to pay-out only.
-
-Funds paid in by the buyers remain securely in the Hub Account under your / another trusted third party's control. Once all funds have been paid and the parties are ready to proceed, the Hub Account's funds can be paid into the vendor's account.
+For example, a Hub Account can be funded from a customer's nominated external account. Funds may then be held in the Hub Account for a defined period before being released to a third‑party vendor for the delivery of services.
 
 ## Manage associated or nominated accounts
 
