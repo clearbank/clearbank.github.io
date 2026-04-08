@@ -13,9 +13,9 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Savings accounts overview
 
-A savings account is an FSCS-protected bank account that can accrue interest on behalf of a retail or business customer. Savings accounts may be held individually or jointly, and you can configure their interest rate at will using our endpoints.
+A savings account is an FSCS-protected bank account that can accrue interest on behalf of a retail or business customer. Savings accounts may be held individually or jointly, and you can update their interest rate configuration at will.
 
-ClearBank calculates accruals based on pre-agreed interest configurations, and posts regular interest payments to your customers' savings accounts for you. To specify which interest configuration should apply to a given savings account, refer to [Interest configuration](./interest-configuration).
+ClearBank calculates interest accruals on savings account deposits based on pre-agreed interest configurations. These accruals are posted for you as regular interest payments to your customers' savings accounts. To learn more about interest configurations, refer to [Interest configuration](./interest-configuration).
 
 If you're interested in using savings accounts, please contact your Client Director.
 
@@ -25,26 +25,26 @@ If you're interested in using savings accounts, please contact your Client Direc
 
 ## Create a savings account
 
-Savings accounts have several interdependencies. Follow the below steps to ensure all of these are covered:
+Savings accounts have several interdependencies. When creating a savings account, follow the below steps to ensure you cover them all:
 
-1. Check you've already created the retail or business customer this new savings account will belong to. To create a retail customer, refer to the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Confirm which interest configuration ID should apply to the account (`interestConfigurationId`).
-  These IDs refer to a specific interest arrangement, and are provided to you directly by a ClearBank contact. Refer to [Interest configuration](./interest-configuration) for more details.
-3. Call the [POST /v2/savings](#create-a-savings-account) endpoint to create a savings account for the customer.
-4. Specify a nominated account for the savings account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-  **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
+1. Check you've created the **retail** or **business customer** this new savings account will belong to. To create a retail customer, refer to the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
+2. Confirm which **interest configuration** should apply to the account (`interestConfigurationId`).  
+  Interest configuration IDs refer to a specific interest accrual arrangement, and are provided to you directly by a ClearBank contact. Refer to [Interest configuration](./interest-configuration) for more details.  
+3. Create the **savings account** by calling the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint, using the customer(s) and the interest configuration's IDs.
+4. Specify a **nominated account** to fund or defund the savings account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.  
+  **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between savings and nominated accounts is your responsibility.
 
 ![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
 <Callout colour="blue">
-Always note down the X-Request-Id when creating an account. If you receive a 500 response, resubmitting the request with the same X-Request-Id will avoid creating a duplicate account.
+Always take note of the X-Request-Id when requesting creation of an account. In the event you receive a 500 response, you can resubmit your request using the same X-Request-Id to prevent accidental duplication of the account.
 </Callout>
 
-Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
+Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
 
 <EndpointBlock
   type="post"
-  title="Create a savings account"
+  title="Create a savings account endpoint"
   endpoints={[
         {
       path: "/v2/savings",
@@ -63,28 +63,13 @@ Once you have opened a savings account, you can deposit and withdraw payments us
   ]}
 />
 
-## Create a joint savings account
+<WebhookPlaceholder render='account-created-webhook-v1' />
 
-<Callout colour="blue">
-Both single and joint savings accounts can be created using the v2 endpoint.  For joint accounts, include multiple customer IDs in the <b>Customers</b> array.</Callout>
+### Creating joint savings accounts
 
-<EndpointBlock
-  type="post"
-  title="Create a savings account"
-  endpoints={[
-        {
-      path: "/v2/savings",
-      version: "2.0.Sterling",
-       webhooks: [
-        'account-created-webhook-v1'
-      ]
-    }
-  ]}
-/>
+Both single and joint savings accounts can be created using the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint. To make joint accounts using this endpoint, specify each customer's ID in the `customers` array.
 
-### Example request bodies for creating a savings account with multiple customers
-
-#### Example joint account with two customers
+#### Example payload: two customers
 
 ```json
 {
@@ -101,9 +86,9 @@ Both single and joint savings accounts can be created using the v2 endpoint.  Fo
 }
 ```
 
-#### Example joint account with four customers
+#### Example payload: four customers
 
-While joint accounts will typically have two customers, we can support any number of customers with a valid use case:
+While joint accounts will typically have two customers, we can support any number of customers where there is a valid use case.
 
 ```json
 {
@@ -122,13 +107,65 @@ While joint accounts will typically have two customers, we can support any numbe
 }
 ```
 
-<WebhookPlaceholder render='account-created-webhook-v1' />
-
 ## Manage nominated accounts
+
+ClearBank maintains two methods of managing nominated accounts. The first, newer method uses four `related-accounts` endpoints. These endpoints are also used to manage Hub Accounts:
+ 
+
+
+The second - older - method uses just `nominated-account` endpoints:
+* You can call the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account-legacy) to set and update a nominated account for a savings account
+* You can call the [GET /v1/accounts/{accountId}/nominated-account](#retrieve-a-nominated-account-legacy) to retrieve the details of the current nominated account.
+
+<EndpointBlock
+  type="post"
+  title="Add a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Remove a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+**Older, nominated account only endpoints:**
 
 <EndpointBlock
   type="put"
-  title="Set a nominated account"
+  title="Set a nominated account (legacy)"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -139,7 +176,7 @@ While joint accounts will typically have two customers, we can support any numbe
 
 <EndpointBlock
   type="get"
-  title="Get a nominated account"
+  title="Retrieve a nominated account (legacy)"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
