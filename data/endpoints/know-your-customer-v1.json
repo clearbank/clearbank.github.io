@@ -94,6 +94,98 @@
           }
         }
       }
+    },
+    "/customer-due-diligence/v1/legal-entity/onboard": {
+      "post": {
+        "tags": [
+          "CustomerCheck"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -150,6 +242,37 @@
           "countryCode": {
             "$ref": "#/components/schemas/CountryCode",
             "description": "The country of the customer's address, represented as an ISO 3166 Alpha-3 country-code."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountOpeningAuthorityData": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "name",
+          "nationality",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1975-05-22",
+            "description": "This person's date of birth, formatted yyyy-MM-dd."
+          },
+          "nationality": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
           }
         },
         "additionalProperties": false
@@ -357,6 +480,524 @@
           }
         },
         "additionalProperties": { }
+      },
+      "DirectorData": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "name",
+          "nationality"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "nationality": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityAddress": {
+        "required": [
+          "buildingNameNumber",
+          "city",
+          "countryCode",
+          "postalCode",
+          "streetName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNameNumber": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "255"
+          },
+          "streetName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "Long Road"
+          },
+          "city": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Manchester"
+          },
+          "county": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Greater Manchester"
+          },
+          "postalCode": {
+            "maxLength": 8,
+            "minLength": 2,
+            "type": "string",
+            "example": "M1 1AF"
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityAddressInfo": {
+        "required": [
+          "registeredAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "registeredAddress": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          },
+          "tradingAddress": {
+            "$ref": "#/components/schemas/OptionalBusinessAddress"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OptionalBusinessAddress": {
+        "type": "object",
+        "properties": {
+          "buildingNameNumber": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "255"
+          },
+          "streetName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Long Road"
+          },
+          "city": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Manchester"
+          },
+          "county": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Greater Manchester"
+          },
+          "postalCode": {
+            "maxLength": 8,
+            "minLength": 2,
+            "type": "string",
+            "nullable": true,
+            "example": "M1 1AF"
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityCheckRequest": {
+        "required": [
+          "businessData",
+          "controllerData",
+          "directorData",
+          "uboData"
+        ],
+        "type": "object",
+        "properties": {
+          "businessData": {
+            "$ref": "#/components/schemas/LegalEntityData"
+          },
+          "uboData": {
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UboData"
+            }
+          },
+          "controllerData": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ControllerData"
+            }
+          },
+          "directorData": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectorData"
+            }
+          },
+          "accountOpeningAuthorityData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountOpeningAuthorityData"
+            },
+            "nullable": true
+          },
+          "signatoryData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SignatoryData"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityCheckResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControllerData": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "email",
+          "name",
+          "nationalInsuranceNumber",
+          "nationality",
+          "tax",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "nationality": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "tax": {
+            "$ref": "#/components/schemas/ControllerTaxInfo"
+          },
+          "nationalInsuranceNumber": {
+            "maxLength": 10,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "example": "PD224466D"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControllerTaxInfo": {
+        "required": [
+          "validSelfCertification"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityData": {
+        "required": [
+          "address",
+          "annualRevenue",
+          "businessName",
+          "businessType",
+          "companyRegistrationNumber",
+          "countryOfOperations",
+          "incorporationDate",
+          "sicCode",
+          "sourceOfFunds",
+          "tax"
+        ],
+        "type": "object",
+        "properties": {
+          "businessType": {
+            "$ref": "#/components/schemas/LegalEntityType"
+          },
+          "businessName": {
+            "$ref": "#/components/schemas/LegalEntityName"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddressInfo"
+          },
+          "sicCode": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["07100"]
+          },
+          "incorporationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "companyRegistrationNumber": {
+            "maxLength": 10,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "example": "55TORXBS"
+          },
+          "annualRevenue": {
+            "maximum": 99999999999.99,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double",
+            "example": 1000000.12
+          },
+          "sourceOfFunds": {
+            "minLength": 1,
+            "type": "string",
+            "example": "???"
+          },
+          "countryOfOperations": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "tax": {
+            "$ref": "#/components/schemas/LegalEntityTaxInfo"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignatoryData": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "name",
+          "nationality",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "nationality": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityName": {
+        "required": [
+          "registeredName"
+        ],
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Your Company Ltd"
+          },
+          "tradingName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Your Company"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityPersonName": {
+        "required": [
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Miles"
+          },
+          "middleName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Middle"
+          },
+          "surname": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Gilligan"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityTaxInfo": {
+        "required": [
+          "nameOfSelfCertificationSignee",
+          "positionOfSelfCertificationSignee",
+          "taxResidency",
+          "validSelfCertification",
+          "vatRegistrationNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean"
+          },
+          "nameOfSelfCertificationSignee": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "John Smith"
+          },
+          "positionOfSelfCertificationSignee": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Financial Executive"
+          },
+          "vatRegistrationNumber": {
+            "maxLength": 15,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9 ]+$",
+            "type": "string",
+            "example": "GB123456789"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityType": {
+        "enum": [
+          "SoleTrader",
+          "GenPartnership",
+          "LtdPartnership",
+          "Ltd"
+        ],
+        "type": "string"
+      },
+      "UboData": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "email",
+          "name",
+          "nationality",
+          "ownershipPercentage",
+          "taxResidency",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/UboType"
+          },
+          "ownershipPercentage": {
+            "maximum": 100,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double",
+            "example": 100
+          },
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1985-05-22"
+          },
+          "nationality": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "example": "my.examplemail@domain.com"
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true,
+            "example": "01234567890"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddress"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UboType": {
+        "enum": [
+          "Natural",
+          "NonNatural"
+        ],
+        "type": "string",
+        "example": "Natural"
       }
     }
   }
