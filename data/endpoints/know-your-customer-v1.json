@@ -275,6 +275,7 @@
             "$ref": "#/components/schemas/CountryCode"
           }
         },
+        "description": "An individual authorised to create, close, or modify this business' account.",
         "additionalProperties": false
       },
       "CountryCode": {
@@ -655,7 +656,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ControllerData"
-            }
+            },
+            "description": "A person who exercises control over a business. Either by the appointment, or influence over the appointment of, the majority of the business' board of directors (or equivalent management body). Or, a person with responsibility for the day to day operation of the business."
           },
           "directorData": {
             "minItems": 1,
@@ -819,13 +821,13 @@
             "type": "number",
             "format": "double",
             "example": 1000000.12,
-            "description": "The annual revenue of the business."
+            "description": "The annual revenue of the business. If this business has not yet operated for an entire year, an estimate will suffice."
           },
           "sourceOfFunds": {
             "minLength": 1,
             "type": "string",
-            "description": "The source of this business' funds.",
-            "example": "???"
+            "description": "A freetext description of the source of this business' funds.",
+            "example": "Director's loan"
           },
           "countryOfOperations": {
             "$ref": "#/components/schemas/CountryCode"
@@ -865,6 +867,7 @@
             "$ref": "#/components/schemas/CountryCode"
           }
         },
+        "description": "A signatory is an individual authorised to instruct the movement of funds, assets, or approve account openings.",
         "additionalProperties": false
       },
       "LegalEntityName": {
@@ -971,12 +974,11 @@
       },
       "LegalEntityType": {
         "enum": [
-          "SoleTrader",
-          "GenPartnership",
-          "LtdPartnership",
           "Ltd"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "This will always be `Ltd`.",
+        "example": "Ltd"
       },
       "UboData": {
         "required": [
