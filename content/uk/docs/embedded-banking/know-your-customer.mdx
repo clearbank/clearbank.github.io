@@ -27,6 +27,8 @@ If you'd like access to this product, please speak to your Client Director.
   • Are not US nationals
 </Callout>
 
+### Message flow diagrams
+
 ![A message flow diagram demonstrating a successful KYC check. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs the checks, results a success, and creates a new retail customer. ClearBank then emits a Retail Customer Application Successful webhook to the client, which includes a customer ID and an application ID.](/assets/images/kyc/kyc-flow-success.svg)
 ![A message flow diagram demonstrating a KYC check that required additional information before succeeding or failing. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete this check, and emits one or two Retail Customer Additional Info Required webhooks containing the required actions of the client's customer. The retail customer uploads the information, which is received by ClearBank. KYC checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the check.](/assets/images/kyc/kyc-flow-pending.svg)
 ![A message flow diagram demonstrating a declined KYC check. The client requests a check using the POST /v1/customercheck/retail endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs the checks, which are declined. ClearBank then emits a Retail Customer Application Declined webhook to the client, which includes the original application ID.](/assets/images/kyc/kyc-flow-declined.svg)
@@ -47,15 +49,16 @@ If you'd like access to this product, please speak to your Client Director.
   ]}
 />
 
+## Webhooks
+
 <WebhookPlaceholder render='kyc-application-successful-v1' />
 <WebhookPlaceholder render='kyc-application-pending-v1' />
 <WebhookPlaceholder render='kyc-application-declined-v1' />
 
 ## Simulating KYC checks
 
-You can simulate successful, declined and KYC checks requiring more information in our simulation environment:  
-
-Call the [**POST /v1/customercheck/retail**](#kyc-check-and-create-a-new-retail-customer) endpoint, setting the customer's `surname` to:
+You can simulate successful, declined, and KYC checks requiring more information in our simulation environment.  
+To do this, call the [**POST /customer-due-diligence/v1/retail/onboard**](#kyc-check-and-create-a-new-retail-customer) endpoint while setting the customer's `surname` to:
 
 * `"pass"` to simulate a successful KYC check.
 * `"fail"` to simulate a declined KYC check.
