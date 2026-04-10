@@ -1,0 +1,1090 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "2.0-customers-ubo"
+  },
+  "paths": {
+    "/customers/v2/customers/{customerId}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "You can call this endpoint to retrieve a UBO by their customer ID.",
+        "operationId": "V2CustomerGet",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Time",
+            "in": "header",
+            "description": "The current UNIX timestamp in seconds. This value will be rejected if it is more than 60 seconds late.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The ID of the UBO",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UboNonNaturalCustomerGetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/non-account-holder/ubos": {
+      "post": {
+        "tags": [
+          "NonAccountHolder"
+        ],
+        "summary": "You can call this endpoint to add an Ultimate Beneficial Owner (UBO) as a related non-account-holder to an existing legal entity.",
+        "operationId": "V2NonAccountHolderUboPost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "UBO details and customer ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUboRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/v2/non-account-holder/ubos/{customerId}": {
+      "patch": {
+        "tags": [
+          "NonAccountHolder"
+        ],
+        "summary": "You can call this endpoint to update an existing Ultimate Beneficial Owner (UBO) of a legal entity.",
+        "operationId": "V2NonAccountHolderUboPatch",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The Id of the ubo customer.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUboRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UboPatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountryCode": {
+        "enum": [
+          "AFG",
+          "ALB",
+          "ATA",
+          "DZA",
+          "ASM",
+          "AND",
+          "AGO",
+          "ATG",
+          "AZE",
+          "ARG",
+          "AUS",
+          "AUT",
+          "BHS",
+          "BHR",
+          "BGD",
+          "ARM",
+          "BRB",
+          "BEL",
+          "BMU",
+          "BTN",
+          "BOL",
+          "BIH",
+          "BWA",
+          "BVT",
+          "BRA",
+          "BLZ",
+          "IOT",
+          "SLB",
+          "VGB",
+          "BRN",
+          "BGR",
+          "MMR",
+          "BDI",
+          "BLR",
+          "KHM",
+          "CMR",
+          "CAN",
+          "CPV",
+          "CYM",
+          "CAF",
+          "LKA",
+          "TCD",
+          "CHL",
+          "CHN",
+          "TWN",
+          "CXR",
+          "CCK",
+          "COL",
+          "COM",
+          "MYT",
+          "COG",
+          "COD",
+          "COK",
+          "CRI",
+          "HRV",
+          "CUB",
+          "CYP",
+          "CZE",
+          "BEN",
+          "DNK",
+          "DMA",
+          "DOM",
+          "ECU",
+          "SLV",
+          "GNQ",
+          "ETH",
+          "ERI",
+          "EST",
+          "FRO",
+          "FLK",
+          "SGS",
+          "FJI",
+          "FIN",
+          "ALA",
+          "FRA",
+          "GUF",
+          "PYF",
+          "ATF",
+          "DJI",
+          "GAB",
+          "GEO",
+          "GMB",
+          "PSE",
+          "DEU",
+          "GHA",
+          "GIB",
+          "KIR",
+          "GRC",
+          "GRL",
+          "GRD",
+          "GLP",
+          "GUM",
+          "GTM",
+          "GIN",
+          "GUY",
+          "HTI",
+          "HMD",
+          "VAT",
+          "HND",
+          "HKG",
+          "HUN",
+          "ISL",
+          "IND",
+          "IDN",
+          "IRN",
+          "IRQ",
+          "IRL",
+          "ISR",
+          "ITA",
+          "CIV",
+          "JAM",
+          "JPN",
+          "KAZ",
+          "JOR",
+          "KEN",
+          "PRK",
+          "KOR",
+          "KWT",
+          "KGZ",
+          "LAO",
+          "LBN",
+          "LSO",
+          "LVA",
+          "LBR",
+          "LBY",
+          "LIE",
+          "LTU",
+          "LUX",
+          "MAC",
+          "MDG",
+          "MWI",
+          "MYS",
+          "MDV",
+          "MLI",
+          "MLT",
+          "MTQ",
+          "MRT",
+          "MUS",
+          "MEX",
+          "MCO",
+          "MNG",
+          "MDA",
+          "MNE",
+          "MSR",
+          "MAR",
+          "MOZ",
+          "OMN",
+          "NAM",
+          "NRU",
+          "NPL",
+          "NLD",
+          "CUW",
+          "ABW",
+          "SXM",
+          "BES",
+          "NCL",
+          "VUT",
+          "NZL",
+          "NIC",
+          "NER",
+          "NGA",
+          "NIU",
+          "NFK",
+          "NOR",
+          "MNP",
+          "UMI",
+          "FSM",
+          "MHL",
+          "PLW",
+          "PAK",
+          "PAN",
+          "PNG",
+          "PRY",
+          "PER",
+          "PHL",
+          "PCN",
+          "POL",
+          "PRT",
+          "GNB",
+          "TLS",
+          "PRI",
+          "QAT",
+          "REU",
+          "ROU",
+          "RUS",
+          "RWA",
+          "BLM",
+          "SHN",
+          "KNA",
+          "AIA",
+          "LCA",
+          "MAF",
+          "SPM",
+          "VCT",
+          "SMR",
+          "STP",
+          "SAU",
+          "SEN",
+          "SRB",
+          "SYC",
+          "SLE",
+          "SGP",
+          "SVK",
+          "VNM",
+          "SVN",
+          "SOM",
+          "ZAF",
+          "ZWE",
+          "ESP",
+          "SSD",
+          "SDN",
+          "ESH",
+          "SUR",
+          "SJM",
+          "SWZ",
+          "SWE",
+          "CHE",
+          "SYR",
+          "TJK",
+          "THA",
+          "TGO",
+          "TKL",
+          "TON",
+          "TTO",
+          "ARE",
+          "TUN",
+          "TUR",
+          "TKM",
+          "TCA",
+          "TUV",
+          "UGA",
+          "UKR",
+          "MKD",
+          "EGY",
+          "GBR",
+          "GGY",
+          "JEY",
+          "IMN",
+          "TZA",
+          "USA",
+          "VIR",
+          "BFA",
+          "URY",
+          "UZB",
+          "VEN",
+          "WLF",
+          "WSM",
+          "YEM",
+          "ZMB"
+        ],
+        "type": "string",
+        "example": "GBR",
+        "description": "3-letter country codes as defined in ISO 3166-1"
+      },
+      "CreateUboNaturalDetailsRequest": {
+        "required": [
+          "countryOfResidence",
+          "dateOfBirth",
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The UBO's first name.",
+            "example": "Linn"
+          },
+          "middleName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The UBO's middle name.",
+            "nullable": true,
+            "example": "Hernan"
+          },
+          "surname": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The UBO's surname.",
+            "example": "Sanches"
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The UBO's date of birth, formatted yyyy-MM-dd.",
+            "format": "date",
+            "example": "1978-05-22"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Personal details for a natural person UBO. Must only be provided if the uboType is 'NaturalPerson'."
+      },
+      "CreateUboNonNaturalDetailsRequest": {
+        "required": [
+          "countryOfRegistration",
+          "registeredName"
+        ],
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The registered name of the company.",
+            "example": "Smitty and Co"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business details for a company UBO. Must only be provided if the uboType is 'NonNaturalPerson'."
+      },
+      "CreateUboRequest": {
+        "required": [
+          "customerId",
+          "uboType",
+          "ownershipPercentage"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The ID of the legal entity to link this new UBO to.",
+            "format": "uuid",
+            "example": "a52e831a-5203-579f-bd54-fc77842a4d51"
+          },
+          "ownershipPercentage": {
+            "type": "integer",
+            "description": "The ownership percentage the UBO has of the associated legal entity.",
+            "format": "int32",
+            "nullable": true,
+            "example": 100
+          },
+          "uboType": {
+            "$ref": "#/components/schemas/CreateUboTypeRequest"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/CreateUboNaturalDetailsRequest"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/CreateUboNonNaturalDetailsRequest"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for creating an Ultimate Beneficial Owner (UBO)."
+      },
+      "CreateUboTypeRequest": {
+        "enum": [
+          "NaturalPerson",
+          "NonNaturalPerson"
+        ],
+        "type": "string",
+        "description": "Used to specify whether you are creating a natural or non-natural UBO."
+      },
+      "CreatedResourceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique ID for the created UBO. You should retain this ID for future reference.",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response containing information about the created resource"
+      },
+      "CustomerStatus": {
+        "enum": [
+          "Active"
+        ],
+        "type": "string",
+        "example": "Active",
+        "description": "Represents the status of a customer."
+      },
+      "CustomerType": {
+        "enum": [
+          "UboNatural",
+          "UboNonNatural"
+        ],
+        "type": "string",
+        "example": "UboNatural",
+        "description": "The Customer Type"
+      },
+      "PersonalDetailsGetResponse": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "The UBO's first name",
+            "nullable": true,
+            "example": "Linn"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "The UBO's middle name",
+            "nullable": true,
+            "example": "Hernan"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The UBO's surname",
+            "nullable": true,
+            "example": "Sanches"
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The UBO's date of birth.",
+            "format": "date",
+            "nullable": true,
+            "example": "1978-05-22"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The UBO's personal details. Only provided if the UBO is a natural person."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      },
+      "USPerson": {
+        "enum": [
+          "NotAUSPerson",
+          "SpecifiedUSPerson",
+          "USPersonOtherThanASpecifiedUSPerson"
+        ],
+        "type": "string",
+        "description": "Specifies the classification of a person as a U.S. person for regulatory or reporting purposes."
+      },
+      "UboCompanyDetailsGetResponse": {
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "type": "string",
+            "description": "The registration name of the company.",
+            "nullable": true,
+            "example": "Smitty and Co"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The UBO' company details. Only provided if the UBO is non-natural."
+      },
+      "UboNaturalCustomerGetResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the customer.",
+            "format": "uuid"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "The unique identifier of the institution associated with this customer.",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CustomerStatus"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CustomerType"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/PersonalDetailsGetResponse"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The UBO Natural Customer type response body"
+      },
+      "UboNonNaturalCustomerGetResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/CustomerType"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the customer.",
+            "format": "uuid"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "The unique identifier of the institution associated with this customer.",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CustomerStatus"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/PersonalDetailsGetResponse"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/UboCompanyDetailsGetResponse"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The UBO Non-Natural Customer type response body"
+      },
+      "UboNaturalCustomerPatchResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The unique identifier of the UBO Natural customer.",
+            "format": "uuid"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/UboNaturalPatchModel"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/UboNonNaturalPatchModel"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response summarising which fields were changed by a UBO Natural PATCH.\r\nContains only sections and properties that were changed."
+      },
+      "UboNaturalPatchModel": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "Updated first name (if changed).",
+            "nullable": true,
+            "example": "Lynne"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Updated middle name (if changed).",
+            "nullable": true,
+            "example": "Hernandez"
+          },
+          "surname": {
+            "type": "string",
+            "description": "Updated surname (if changed).",
+            "nullable": true,
+            "example": "Sanchez"
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "Updated date of birth (if changed).",
+            "format": "date",
+            "nullable": true,
+            "example": "1978-05-21"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Will only be provided if the UBO you updated is a natural person."
+      },
+      "UboNonNaturalCustomerPatchResponse": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The unique identifier of the UBO customer.",
+            "format": "uuid"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/UboNonNaturalPatchModel"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response summarising which fields were changed by a Ubo PATCH."
+      },
+      "UboNonNaturalPatchModel": {
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "type": "string",
+            "description": "Updated registered name (if changed).",
+            "nullable": true,
+            "example": "Smitti and Co"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Contains business details that were updated. May only be provided if the UBO you are updating is non-natural."
+      },
+      "UboPatchResponse": {
+        "$ref": "#/components/schemas/UboNaturalCustomerPatchResponse",
+        "additionalProperties": false,
+        "description": "Base response summarizing which fields were changed by a UBO PATCH.\r\nThis is a polymorphic envelope for specific UBO patch responses."
+      },
+      "UpdateUboNaturalDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "The first name of the person.",
+            "nullable": true,
+            "example": "Lynne"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "The middle name of the person.",
+            "nullable": true,
+            "example": "Hernandez"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the person.",
+            "nullable": true,
+            "example": "Sanchez"
+          },
+          "countryOfResidence": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The date of birth of the person, formatted yyyy-MM-dd.",
+            "format": "date",
+            "nullable": true,
+            "example": "1978-05-21"
+          }
+        },
+        "additionalProperties": false,
+        "description": "May only be provided if the UBO you are updating is a natural person."
+      },
+      "UpdateUboNonNaturalDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "type": "string",
+            "description": "The registered name of the company.",
+            "nullable": true,
+            "example": "Smitti and Co"
+          },
+          "countryOfRegistration": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Business details for a non-natural UBO. Can only be provided if the UBO you are updating is non-natural."
+      },
+      "UpdateUboRequest": {
+        "required": [
+          "uboType"
+        ],
+        "type": "object",
+        "properties": {
+          "uboType": {
+            "$ref": "#/components/schemas/UpdateUboTypeRequest"
+          },
+          "personalDetails": {
+            "$ref": "#/components/schemas/UpdateUboNaturalDetailsRequest"
+          },
+          "businessDetails": {
+            "$ref": "#/components/schemas/UpdateUboNonNaturalDetailsRequest"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Patch request for Ubo non-account-holder."
+      },
+      "UpdateUboTypeRequest": {
+        "enum": [
+          "NaturalPerson",
+          "NonNaturalPerson"
+        ],
+        "type": "string",
+        "example": "NaturalPerson",
+        "description": "UBO type enumeration for UBO update."
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}

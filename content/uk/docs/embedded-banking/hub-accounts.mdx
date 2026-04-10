@@ -1,6 +1,6 @@
 ---
-title: "Hub accounts"
-metaTitle: "Hub accounts"
+title: "Hub Accounts"
+metaTitle: "Hub Accounts"
 order: 3
 showPageMenu: true
 ---
@@ -11,54 +11,66 @@ import Callout from "src/components/callout";
 import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary';
 
-## Hub accounts overview
+## Hub Accounts overview
 
 <Callout colour="green">
-<h2>Hub accounts are coming soon</h2>
+<h2>Hub Accounts are coming soon</h2>
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Hub accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for hub accounts typically involve making payments to and from a defined set of accounts.
+Hub Accounts are FSCS protected bank accounts held with ClearBank that enable innovative financial products. Use cases for Hub Accounts typically involve making payments to and from a defined set of associated accounts.
 
-To ensure regulatory compliance, hub accounts may be subject to one or more of the following constraints:
+To ensure regulatory compliance, Hub Accounts may be subject to one or more of the following constraints:
+
 * Payments may only be made for specific purposes.
-* Payments may only be made to and from designated bank accounts.
+* Payments may only be made to and from certain designated bank accounts.
 * Payment frequency may be restricted.
 
 Exact details will be agreed with your institution directly.
 
-Hub accounts are available by prior agreement with ClearBank; if you're interested in using these, please speak with your Client Director.
+Hub Accounts are available by prior agreement with ClearBank; if you're interested in using these, please speak with your Client Director.
 
-## Creating hub accounts
+<Callout colour="blue">
+  <strong>Note:</strong> Deposits held in Hub Accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+</Callout>
 
-Hub accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. Before creating a hub account, you'll need the following information:
+## Creating Hub Accounts
+
+Hub Accounts can be created using the [POST /accounts/sterling/v1/hub-accounts](#create-a-hub-account) endpoint. Before creating a Hub Account, you'll need the following information:
 
 * The account-holding customer's details.
 * Your sort code, provided to you by ClearBank.
 * A `productId`, also provided to you by ClearBank.
-* Optionally, if your hub accounts are interest bearing, an `interestConfigurationId`.
+* Optionally, if your Hub Accounts are interest bearing, an `interestConfigurationId`.
 
 **Account holding customer**  
-Each hub account must be held by a retail customer or business customer. The holder of a hub account is entitled to its funds. Refer to our [retail customers page](./retail-customers), or contact your Client Director for guidance on creating business customers.
+Each Hub Account must be held by a retail customer or business customer. The holder of a Hub Account is entitled to its funds. Refer to our [retail customers page](./retail-customers), or contact your Client Director for guidance on creating business customers.
 
-Once you've created a retail or business customer, take note of their `customerId` and legal name - you'll need these to associate the customer with their new hub account.
+Once you've created a retail or business customer, take note of their `customerId` and legal name - you'll need these to associate the customer with their new Hub Account.
 
 <Callout colour="blue">
-  Hub accounts may be created with more than one account holding customer. These are known as joint hub accounts. To create a joint hub account, you'll need each holding customer's identifier and legal name.
+  Hub Accounts may be created with more than one account holding customer. These are known as joint Hub Accounts. To create a joint Hub Account, you'll need each holding customer's identifier and legal name.
 </Callout>
 
 **Sort code**  
 A sort code will have been assigned to you as part of your onboarding process.
 
 **Product identity**  
-The `productId` you should use will be provided to you as part of onboarding. This ID determines how your hub account behaves.
+The `productId` you should use will be provided to you as part of onboarding. This ID determines how your Hub Account behaves.
+
+**Interest payments**  (optional)  
+If your Hub Accounts are configured to accrue interest, you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
+
+<Callout colour="blue">
+  If a Hub Account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
+</Callout>
 
 **Interest configuration** (optional)  
-Hub accounts may be interest bearing. This will have been agreed between your institution and ClearBank. If your hub accounts are interest bearing, you can set up their [interest configuration profile](./interest-configuration). Once created, the profile's `interestConfigurationId` may be reused across subsequent hub accounts to refer to the same configuration profile.
+Hub Accounts may be interest bearing. This will have been agreed between your institution and ClearBank. If your Hub Accounts are interest bearing, you can set up their [interest configuration profile](./interest-configuration). Once created, the profile's `interestConfigurationId` may be reused across subsequent Hub Accounts to refer to the same configuration profile.
 
 <EndpointBlock
   type="post"
-  title="Create a hub account"
+  title="Create a Hub Account"
   endpoints={[
     {
       path: "/accounts/sterling/v1/hub-accounts",
@@ -70,22 +82,90 @@ Hub accounts may be interest bearing. This will have been agreed between your in
   ]}
 />
 
-
 <WebhookPlaceholder render='account-created-webhook-v1' />
 
-## Funding a hub account
+## Associated and nominated accounts
 
-A hub account can be funded and defunded via a nominated account that you assign, or via certain designated accounts.  
-Nominated accounts do not have to be provided by ClearBank: they can be from another external provider. However, the nominated account must be owned by the same account holder as the hub account.
-To set or replace the nominated account for a hub account, you can use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+Other bank accounts can be linked to a Hub Account as an **associated account** or a **nominated account**. Funds can only transferred between a Hub Account and its associated or nominated accounts.
 
-You can make payments from a hub account to its nominated account via [Faster Payments](../gbp-payments/faster-payments). To receive updates about transactions for a hub account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
+**Nominated account**  
+A nominated account is a single account designated for funding and defunding a Hub Account.
 
-If your hub accounts are configured to accrue interest, you can subscribe to the [Interest Paid webhook](#interest-paid-webhook) to be notified when interest is paid into the account.
+* Nominated accounts do not need to be ClearBank provided: they can be from another external provider.
+* The account holder for the nominated account and the Hub Account must be the same.
+* When a Hub Account is closed, any unpaid interest is redirected to its nominated account.
 
-<Callout colour="blue">
-  If a hub account accrues any unpaid interest during closure, this will be transferred to its nominated account once account closure finishes.
-</Callout>
+To set or replace the nominated account for a Hub Account, you can use the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) (preferred), or the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+
+You can make payments from a Hub Account to its nominated account via [Faster Payments](../gbp-payments/faster-payments) or [CHAPS](../gbp-payments/chaps); to receive updates about FPS transactions for a Hub Account, you can subscribe to the [Transaction Settled webhook](../gbp-payments/faster-payments#transaction-settled-webhook).
+
+<br />
+
+**Associated accounts**  
+Associated accounts are one or several accounts defined to fulfil a specific role in relation to a Hub Account. The function of an associated account will vary depending on your specific use case:
+
+* An associated account does not need to be ClearBank provided: they can be from another external provider.
+* The number of associated accounts you may link to a Hub Account is limited, and will depend on your arrangement with ClearBank.
+* Hub Account funding to and from an associated account may or may not be allowed. This depends on your arrangement with ClearBank.
+
+Associated accounts can be added to a Hub Account using the [POST /v1/accounts/{accountId}/related-accounts](#add-an-associated-or-nominated-account) endpoint; removed using the [DELETE /v1/accounts/{accountId}/related-accounts/{iban}](#remove-an-associated-or-nominated-account) endpoint; and retrieved using the [GET /v1/accounts/{accountId}/related-accounts](#retrieve-associated-and-nominated-accounts) endpoint.
+
+If you need to update the account holder of an associated account, you can use the [PATCH /v1/accounts/{accountId}/related-accounts/{iban}](#amend-an-associated-or-nominated-account) endpoint.
+
+<br />
+
+**Example use case**  
+Hub Accounts could be used to temporarily hold funds between a customer and a vendor.
+
+For example, a Hub Account can be funded from a customer's nominated external account. Funds may then be held in the Hub Account for a defined period before being released to a third‑party vendor for the delivery of services.
+
+## Manage associated or nominated accounts
+
+<EndpointBlock
+  type="post"
+  title="Add an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve associated and nominated accounts"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Remove an associated or nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+## Manage nominated accounts
 
 <EndpointBlock
   type="put"
@@ -111,12 +191,12 @@ If your hub accounts are configured to accrue interest, you can subscribe to the
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
 
-## Retrieve and update hub account information
+## Retrieve and update Hub Account information
 
-You can retrieve information on all hub accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-hub-accounts) endpoint and filtering for hub accounts.  
-To retrieve information about a specific hub account, you can use the [GET /v3/Accounts/{accountId}](#get-information-for-a-hub-account) endpoint.
+You can retrieve information on all Hub Accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-hub-accounts) endpoint and filtering for Hub Accounts.  
+To retrieve information about a specific Hub Account, you can use the [GET /v3/Accounts/{accountId}](#get-information-for-a-hub-account) endpoint.
 
-To make any updates to an existing hub account, you can use the [PATCH /v1/accounts/{accountId}](#amend-a-hub-account-endpoint) endpoint.
+To make any updates to an existing Hub Account, you can use the [PATCH /v1/accounts/{accountId}](#amend-a-hub-account-endpoint) endpoint.
 
 <Callout colour="blue">
 These are the same endpoints used to retrieve and update information for real accounts and savings accounts.
@@ -124,7 +204,7 @@ These are the same endpoints used to retrieve and update information for real ac
 
 <EndpointBlock
   type="get"
-  title="Get all real accounts, including hub accounts"
+  title="Get all real accounts, including Hub Accounts"
   endpoints={[
     {
       path: "/v3/Accounts",
@@ -135,7 +215,7 @@ These are the same endpoints used to retrieve and update information for real ac
 
 <EndpointBlock
   type="get"
-  title="Get information for a hub account"
+  title="Get information for a Hub Account"
   endpoints={[
     {
       path: "/v3/Accounts/{accountId}",
@@ -144,11 +224,11 @@ These are the same endpoints used to retrieve and update information for real ac
   ]}
 />
 
-You can use the endpoint below to update the details of a hub account.
+You can use the endpoint below to update the details of a Hub Account.
 
 <EndpointBlock
   type="patch"
-  title="Amend a hub account"
+  title="Amend a Hub Account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
@@ -157,16 +237,16 @@ You can use the endpoint below to update the details of a hub account.
   ]}
 />
 
-## Hub account closure
+## Hub Account closure
 
-Before attempting to close a hub account, you should ensure you are subscribed to both the [Account Closure Completed](#account-closure-completed-webhook) and [Account Closure Failed](#account-closure-failed-webhook) webhooks.
+Before attempting to close a Hub Account, you should ensure you are subscribed to both the [Account Closure Completed](#account-closure-completed-webhook) and [Account Closure Failed](#account-closure-failed-webhook) webhooks.
 
-To close a hub account, follow these steps:
+To close a Hub Account, follow these steps:
 
 1. Withdraw all funds from the account.
 2. Use the [POST /v1/accounts/{id}/closure](#close-a-hub-account) endpoint to request closure.
-> **Note**: If the hub account is interest bearing, it must have a nominated account before it can be closed. If there is no interest to be paid, then you can close the account without defining a nominated account.
-3. OPTIONAL You can check the closure status of a hub account using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+> **Note**: If the Hub Account is interest bearing, it must have a nominated account before it can be closed. If there is no interest to be paid, then you can close the account without defining a nominated account.
+3. OPTIONAL You can check the closure status of a Hub Account using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
 4. You'll receive an [Account Closure Completed webhook](#account-closure-completed-webhook) once the account has closed.
 
 <Callout colour="blue">
@@ -179,7 +259,7 @@ If account closure fails and isn't resolved before the end of the month, then an
 
 <EndpointBlock
   type="post"
-  title="Close a hub account"
+  title="Close a Hub Account"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",

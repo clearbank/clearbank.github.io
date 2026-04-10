@@ -23,11 +23,16 @@ Note that the `DestinationAccountID` refers to the hub account, savings account,
 #### Payload
 | Element                   | Description  |
 |---------------------------|--------------|
-| `TransactionId`           | **Required**<br />Transaction identifier used to uniquely identify the  transaction. <br /> Type: `string` <br /> Format: `GUID` <br /> Min. Length: `1`<br /> |
+| `TransactionId`           | **Required**<br />Transaction identifier used to uniquely identify the transaction. <br /> Type: `string` <br /> Format: `GUID` <br /> Min. Length: `1` |
+| `EndToEndTransactionID`   | **Optional**<br />Unique internal identifier defined by ClearBank for each payment. <br /> Type: `null`, `string` <br /> Format: `GUID` <br /> Min. Length: `0`<br /> Max. Length: `35` |
 | `Amount`                  | **Required**<br />Amount of interest paid. <br /> Type: `number`<br />  Format: `decimal`<br />   |
+| `CurrencyCode`            | **Optional**<br />Three-letter ISO currency code for the currency of the interest payment. <br /> Type: `null`, `string` <br /> Min. Length: `3`<br /> Max. Length: `4` |
+| `DebitCreditCode`         | **Optional**<br />Indicates whether the transaction is a debit or credit. <br /> Type: `null`, `string` <br /> Options:`Credit`, `Debit` |
 | `Timestamp`               | **Required**<br />Date and time of the interest payment. Time in UTC. <br />Format: `date-time`<br />Min. Length: `1`|
 | `Reference`               | **Required**<br />Transaction reference of the interest payment.<br /> Max. Length: `140` |
 | `DestinationAccountId`    | **Required**<br />Destination account ID for the interest payment. For Embedded Banking Partners, this is the account your interest is paid into (not the account that accrued the interest). <br /> Type: `string` <br /> Format: `GUID` <br /> Min. Length: `1` |
+| `AccrualPeriod`   | **Optional**<br />Start and end date of the interest accrual period. This date is local to the region where the account is held. <br /> Type: `null`, `object` <br /> <br />  `Start` <br /> Start date of the accrual period. <br /> Type: `string` <br /> Format: `date` <br /> Min. Length: `1`<br /> <br /> `End` <br /> End date of the accrual period. <br /> Type: `string` <br /> Format: `date` <br /> Min. Length: `1`  |
+
 
 #### Example Interest Paid webhook request body
 
@@ -37,10 +42,17 @@ Note that the `DestinationAccountID` refers to the hub account, savings account,
     "Version": 1, 
     "Payload": { 
         "TransactionId": "13124f38-c5ea-4f99-a597-ab92b610629a", 
+        "EndToEndTransactionId": "13124f38c5ea4f99a597ab92b610629a",
         "Amount": 20.01, 
-        "Timestamp": "2024-02-02T11:41:07.334209Z", 
-        "Reference": "Interest payable for period 4th February 2024 to 10th February 2024", 
+        "CurrencyCode": "GBP", 
+        "DebitCreditCode": "Credit", 
+        "Timestamp": "2026-01-31T11:41:07.334209Z", 
+        "Reference": "Interest payable for period 31st December 2025 to 31st January 2026", 
         "DestinationAccountId": "a23e77aa-44c2-45fb-24a3-6c6d3f54b894" 
+        "AccrualPeriod": {
+            "Start": "2025-12-31",
+            "End": "2026-01-31"
+        }
     }, 
     "Nonce": 1289947472 
 } 

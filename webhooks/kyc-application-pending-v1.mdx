@@ -1,0 +1,60 @@
+---
+title: "Retail Customer Additional Info Required webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies that additional customer information - specifically proof of ID and proof of address - is required before their application can be processed. It includes a `RequiredActions` array which lists the type of information required and document upload URLs for you to share with the customer.
+
+You may receive this webhook once or twice, depending on what the customer uploads. If the customer uploads a form of ID that doesn't include their address, such as their passport, you'll receive this webhook again:
+
+* If a customer uploads their passport, you'll receive another `AdditionalInfoRequired` webhook requesting separate proof of address.
+* If a customer uploads their driving license, this will fulfil the requirement for both proof of ID and proof of address.
+
+**Note**: You'll only receive this webhook if the original request has the optional field `idvEmailsEnabled` set to `false`.
+
+#### Request body
+
+```json
+{
+    "Type": "RetailCustomer.AdditionalInfoRequired",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+
+| Element           | Description                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ApplicationId`   | **Required**<br /> The original `applicationId` value you received in the 202 response to this KYC request. <br/>Type: `string`<br/>Format: `uuid`<br/>Max. Length: `36`<br/>Min. Length: `36`<br /> Pattern: `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`                                                                                     |
+| `KycStatus`       | **Required**<br /> Will always read `Pending` for this webhook <br/>Type: `string`                                                                                                                                                                                                                                                                                                |
+| `RequiredActions` | **Required**<br /> Details the user actions necessary to complete this KYC check, and provides an associated URL. <br/>Type: `array` of `objects` <br/><br/> **Required**<br/>`action`<br/>Type: `string`<br/>Specifies the customer action required.<br/><br/> **Required** <br/> `url` <br/>A unique URL for you to share with the customer so they may complete the associated action. |
+
+
+#### Example Retail Customer Additional Info Required webhook request body
+
+```json
+{
+    "Type": "RetailCustomer.AdditionalInfoRequired",
+    "Version": 1,
+    "Payload": {
+        "ApplicationId": "aac7c700-1ea6-5664-8804-ceeb066d3cf5",
+        "KycStatus": "Pending",
+        "RequiredActions": [
+            {"action": "CustomerIdentificationDocumentUpload", "url": "https://kycchecker.com/?sessionId=123"},
+            {"action": "CustomerProofOfAddressDocumentUpload", "url": "https://kycchecker.com/?sessionId=456"}
+        ]
+    },
+    "Nonce": 332172156
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 332172156
+}
+```

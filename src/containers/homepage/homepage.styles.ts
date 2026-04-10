@@ -26,6 +26,12 @@ export const IntroductionContainer = styled.div`
   margin-right: 30px;
 `
 
+export const SectionSpacer = styled.div`
+  flex: 0 0 100%;
+  width: 100%;
+  height: 24px;
+`
+
 export const IntroductionContentWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
