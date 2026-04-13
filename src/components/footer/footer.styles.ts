@@ -16,7 +16,7 @@ export const MenuContainer = styled.div`
 
 export const ColumnContainer = styled.div`
   padding: 0px 13px;
-  max-width: 200px;
+  max-width: 226px;
 `
 
 const expandMenu = keyframes`
@@ -29,7 +29,7 @@ const expandMenu = keyframes`
 `;
 
 export const LeafContainer = styled.li<{ maxWidth?: number }>`
-  max-width:  ${(props) => props.maxWidth + "px" };
+  max-width:  ${(props) => (props.maxWidth - 26) + "px" };
   margin-bottom: 20px;
 `
 
