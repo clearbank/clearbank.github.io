@@ -15,6 +15,7 @@ export const MenuContainer = styled.div`
 `
 
 export const ColumnContainer = styled.div`
+  padding: 0px 13px;
   max-width: 200px;
 `
 
@@ -33,7 +34,6 @@ export const LeafContainer = styled.li<{ maxWidth?: number }>`
 `
 
 export const Title = styled.h2`
-  padding: 0px 13px;
   cursor: default;
   margin: 0;
   text-decoration: none;
