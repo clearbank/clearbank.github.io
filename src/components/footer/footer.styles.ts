@@ -27,7 +27,8 @@ const expandMenu = keyframes`
   }
 `;
 
-export const LeafContainer = styled.li`
+export const LeafContainer = styled.li<{ maxWidth?: number }>`
+  max-width:  ${(props) => props.maxWidth + "px" };
   margin-bottom: 20px;
 `
 
@@ -79,7 +80,7 @@ export const LeafList = styled.ul`
 
   ${LeafContainer}:hover & {
     display: block;
-    animation: ${expandMenu} 200ms ${easings.easeIn};
+    animation: ${expandMenu} 400ms ${easings.easeIn};
     transform-origin: top center;
   }
 `

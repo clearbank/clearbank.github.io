@@ -3,10 +3,10 @@ import React from 'react';
 import * as Styles from './footer.styles'
 import * as Types from './footer.types'
 
-const FooterLeafMenu: React.FC<Types.IFooterLeafMenuProps> = ({ id, title, items }) => {
+const FooterLeafMenu: React.FC<Types.IFooterLeafMenuProps> = ({ id, title, items, maxWidth}) => {
   
   return (
-    <Styles.LeafContainer key={id}>
+    <Styles.LeafContainer key={id} maxWidth={maxWidth}>
       <Styles.LeafTitle>
         {title}
       </Styles.LeafTitle>

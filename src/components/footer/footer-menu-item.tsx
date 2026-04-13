@@ -5,14 +5,15 @@ import * as Types from './footer.types'
 
 import FooterLeafMenu from './footer-leaf-menu'
 
-const FooterMenuItem: React.FC<Types.IFooterMenuItemProps> = ({ item }) => {
+const FooterMenuItem: React.FC<Types.IFooterMenuItemProps> = ({ item, maxWidth }) => {
   if (item.leafMenuItems.length > 0) 
   {
     return (
       <FooterLeafMenu 
         id={item.fields.id}
         title={item.fields.title} 
-        items={item.leafMenuItems} />
+        items={item.leafMenuItems}
+        maxWidth={maxWidth} />
     )
   }
   else {

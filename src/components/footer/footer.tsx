@@ -5,23 +5,14 @@ import Logo from 'src/components/logo'
 import * as Styles from './footer.styles'
 import * as Types from 'src/components/header-menu/header-menu.types'
 
-import FooterMenuItem from './footer-menu-item'
+import FooterMenu from './footer-menu'
 
 const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => (
   <Styles.Container role='contentinfo'>
     {!hideNavigation && (
       <Styles.MenuContainer>
         {items.map(item => (
-          <Styles.ColumnContainer key={item.menuItem.title}>
-            <Styles.Title>
-              {item.menuItem.title}
-            </Styles.Title>
-            <Styles.List>
-              {item.subMenuItems.map(subMenuItem => (
-                <FooterMenuItem item={subMenuItem} />
-              ))}
-            </Styles.List>
-          </Styles.ColumnContainer>
+          <FooterMenu menu={item} />
         ))}
       </Styles.MenuContainer> 
     )}
