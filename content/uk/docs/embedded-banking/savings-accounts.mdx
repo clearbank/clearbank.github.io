@@ -15,14 +15,48 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ClearBank supports singular and joint savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
 
+ClearBank supports the following savings account types:
+- **Single customer savings accounts** – held by one retail or business customer.
+- **Joint savings accounts** – held by two or more retail customers.
+- **Junior savings accounts (ages 16–17)** – held by a retail customer aged 16 or 17 and identified using a dedicated ProductId.
+- **Under-16 (U16) savings accounts** – held in the name of a parent or guardian; no child customer record is required.
+
 <Callout colour="blue">
   <strong>Note:</strong> Deposits held in savings accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
 You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configuration](./interest-configuration).
 
-<Callout colour="blue">
-Both single and joint savings accounts can be created using the v2 endpoint.  For joint accounts, include multiple customer IDs in the <b>Customers</b> array.</Callout>
+**Single savings accounts**
+
+To create a single savings account, create a retail customer, then include their customer ID in the `customers` array when calling `POST /v2/savings`.
+
+**Joint savings accounts**
+
+To create a joint savings account, include multiple customer IDs in the `customers` array when calling `POST /v2/savings`. All customers must be retail customers.
+
+**Junior savings accounts**
+
+Savings accounts for customers aged 16–17 are created using the standard `POST /v2/savings` endpoint. The `productId` provided in the request identifies the account as a Junior savings account.
+
+To create a product identification for this account type, please speak to your Client Director.
+
+**Under-16 (U16) savings accounts**
+
+Under-16 savings accounts are created using using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as a Junior savings account.
+
+No customer record or customer ID is required for the child.
+
+To create a product identification for this account type, please speak to your Client Director.
+
+#### Savings account creation summary
+
+| Account type | Endpoint | Customers provided | Identification method |
+|-------------|----------|--------------------|-----------------------|
+| Single savings account | POST /v2/savings | One retail customer ID | None |
+| Joint savings account | POST /v2/savings | Multiple retail customer IDs | Customers array |
+| 16–17 savings account | POST /v2/savings | One retail customer ID | Junior ProductId |
+| Under-16 savings account | POST /v2/savings | Parent/guardian retail customer only | U16 ProductId |
 
 **To create a savings account:**
 1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
