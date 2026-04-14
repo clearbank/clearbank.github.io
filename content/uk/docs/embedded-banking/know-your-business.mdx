@@ -15,7 +15,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ### Overview
 
-Our business customer KYB endpoint makes it easy to meet your due diligence requirements when onboarding companies. By sharing key company information, you can conduct know your business checks on limited companies and receive the results via webhook.
+Our Know Your Business (KYB) endpoint makes it easy to meet your due diligence requirements when onboarding new business customers. By sharing key company information, you can conduct know your business checks on limited companies and receive the results via webhook.
 
 For convenience, we'll also use the provided information to register the new business customer (legal entity) and its key people if the checks succeed.
 
@@ -28,7 +28,43 @@ If you'd like access to this product, please contact your Client Director.
   • Have UK tax residency.
 </Callout>
 
+### Usage
 
+#### Initial request
+
+Our business customer KYB endpoint consumes business details and details of key personnel - such as company directors. We use this information to perform KYB checks on the business, and KYC checks on each key person.
+
+When you request a check using our KYB endpoint, we'll validate your request and confirm with a **202 - Accepted** response containing the `applicationId` for this KYB application.
+
+<Callout colour="blue">
+  You should retain the `applicationId` from our <strong>202 - Accepted</strong> response to identify the application in subsequent KYB webhook events.
+</Callout>
+
+#### Providing additional information
+
+As our checks progress, we'll request additional information about the customer from you via the [KYB Application Pending]() webhook. This webhook contains an array of URLs (`RequiredActions[].url`) for you to share with the customer, who can provide this information using the website at the URL. For clarity, the type of additional information requested in each URL is specified in the `RequiredActions[].action` property.
+
+Additional information we may request includes:
+
+* Proof of ID and proof of address for key personnel, such as directors
+* Certain company documents
+
+<Callout colour="blue">
+  You may receive more than one KYB Additional Info Required webhook per application. For example, if a company director uploads a passport as proof of ID instead of a driving license, we'll issue another webhook requesting their proof of address.
+</Callout>
+
+#### Successful KYB check
+
+If the customer passes our KYB checks, we'll create the new business customer automatically using the provided application details. You'll receive a [KYB Application Successful]() webhook containing a `CustomerId` for your records.
+
+You can manage business customers by using their customer IDs in our dedicated legal entity endpoints.
+
+#### Declined KYB check
+
+If the customer does not pass our KYB checks, you'll receive a [KYB Application Declined]() webhook.  
+The business customer will not be created, and the application will be terminated.
+
+## Endpoint
 
 <EndpointBlock
   type="post"
@@ -48,6 +84,6 @@ If you'd like access to this product, please contact your Client Director.
 
 ## Webhooks
 
-<WebhookPlaceholder render='kyb-application-successful-v1' />
 <WebhookPlaceholder render='kyb-application-pending-v1' />
+<WebhookPlaceholder render='kyb-application-successful-v1' />
 <WebhookPlaceholder render='kyb-application-declined-v1' />
