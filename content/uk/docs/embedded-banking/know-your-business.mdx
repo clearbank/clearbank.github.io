@@ -15,7 +15,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ### Overview
 
-Our Know Your Business (KYB) endpoint makes it easy to meet your due diligence requirements when onboarding new business customers. By sharing key company information, you can conduct know your business checks on limited companies and receive the results via webhook.
+Our Know Your Business (KYB) endpoint makes it easy to meet your due diligence requirements when onboarding new business customers. By sharing key company information, you can conduct Know Your Business checks on limited companies and receive the results via webhook.
 
 For convenience, we'll also use the provided information to register the new business customer (legal entity) and its key people if the checks succeed.
 
@@ -32,7 +32,7 @@ If you'd like access to this product, please contact your Client Director.
 
 #### Initial request
 
-Our business customer KYB endpoint consumes business details and details of key personnel - such as company directors. We use this information to perform KYB checks on the business, and KYC checks on each key person.
+Our KYB endpoint consumes business information and details of key business personnel, such as company directors. We use this information to perform KYB checks on the business and KYC checks on each key person.
 
 When you request a check using our KYB endpoint, we'll validate your request and confirm with a **202 - Accepted** response containing the `applicationId` for this KYB application.
 
@@ -42,7 +42,7 @@ When you request a check using our KYB endpoint, we'll validate your request and
 
 #### Providing additional information
 
-As our checks progress, we'll request additional information about the customer from you via the [KYB Application Pending]() webhook. This webhook contains an array of URLs (`RequiredActions[].url`) for you to share with the customer, who can provide this information using the website at the URL. For clarity, the type of additional information requested in each URL is specified in the `RequiredActions[].action` property.
+As our checks progress, we'll request additional information about the customer from you via the [Legal Entity Additional Info Required](#legal-entity-customer-additional-info-required-webhook) webhook. This webhook contains an array of URLs (`RequiredActions[].url`) for you to share with the customer, who can then provide this information. For clarity, the type of additional information requested in each URL is specified in the `RequiredActions[].action` property.
 
 Additional information we may request includes:
 
@@ -50,19 +50,23 @@ Additional information we may request includes:
 * Certain company documents
 
 <Callout colour="blue">
-  You may receive more than one KYB Additional Info Required webhook per application. For example, if a company director uploads a passport as proof of ID instead of a driving license, we'll issue another webhook requesting their proof of address.
+  You may receive more than one Legal Entity Additional Info Required webhook per application. For example, if a company director uploads a passport as proof of ID instead of a driving license, we'll issue another webhook requesting their proof of address.
 </Callout>
 
 #### Successful KYB check
 
-If the customer passes our KYB checks, we'll create the new business customer automatically using the provided application details. You'll receive a [KYB Application Successful]() webhook containing a `CustomerId` for your records.
+If the customer passes our KYB checks, we'll create the new business customer automatically using the provided application details. You'll receive a [Legal Entity Application Successful](#legal-entity-application-successful-webhook) webhook containing a `CustomerId` for your records.
 
 You can manage business customers by using their customer IDs in our dedicated legal entity endpoints.
 
 #### Declined KYB check
 
-If the customer does not pass our KYB checks, you'll receive a [KYB Application Declined]() webhook.  
+If the customer does not pass our KYB checks, you'll receive a [Legal Entity Application Declined](#legal-entity-customer-application-declined-webhook) webhook.  
 The business customer will not be created, and the application will be terminated.
+
+#### Message flow diagram
+
+![A message flow diagram demonstrating a KYB requiring additional information before succeeding or failing. The client requests a check using the POST /customer-due-diligence/v1/legal-entity/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete this check, and a Legal Entity Additional Info Required webhook containing the information required from the customer and URLs to provide it. The business customer uploads the information, which is received by ClearBank. KYB checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the checks.](/assets/images/kyb/kyb-flow.svg)
 
 ## Endpoint
 
