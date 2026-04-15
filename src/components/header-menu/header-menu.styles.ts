@@ -23,7 +23,7 @@ export const MenuContainer = styled.div`
 export const Container = styled.div`
   padding: 25px 0px;
   position: relative;
-  min-width: 120px;
+  min-width: 140px;
 
   &:hover {
     color: ${colors.wedgewoodapprox};
@@ -51,7 +51,7 @@ export const Title = styled.h2<{ isActive?: boolean }>`
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
 `
 
-const rotateMenu = keyframes`
+const expandMenu = keyframes`
   from {
     transform: scaleY(0);
   }
@@ -60,20 +60,30 @@ const rotateMenu = keyframes`
   }
 `;
 
-export const List = styled.ul`
-  overflow: hidden;
-  display: none;
+export const List = styled.ul<{ borderState?: string }>`
+  overflow: visible;
+  visibility: hidden;
+  display: block;
   z-index: 1;
   width: 100%;
   margin-top: 15px;
   position: absolute;
   background: ${colors.brandGrayLight};
-  border-radius: 0px 0px 10px 10px;
+  border-radius: ${(props) => {
+    switch (props.borderState) {
+      case 'leaf-bottom-right':
+        return '0px 0px 0px 10px';
+      case 'leaf-bottom-left':
+        return '0px 0px 10px 0px';
+      default:
+        return '0px 0px 10px 10px';
+    }
+  }};
   list-style: none;
 
   ${Container}:hover & {
-    display: block;
-    animation: ${rotateMenu} 200ms ${easings.easeIn};
+    visibility: visible;
+    animation: ${expandMenu} 200ms ${easings.easeIn};
     transform-origin: top center;
   }
 `
