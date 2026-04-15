@@ -34,21 +34,21 @@ ClearBank supports the following savings account types:
 
 ### Savings account types
 
-**Single savings accounts**
+#### Single
 
 To create a single savings account, create a retail or business customer, then include their customer ID in the `customers` array when calling `POST /v2/savings`.
 
-**Joint savings accounts**
+#### Joint
 
 To create a joint savings account, include multiple customer IDs in the `customers` array when calling `POST /v2/savings`. All customers must be retail customers.
 
-**Junior savings accounts**
+#### Junior (16-17)
 
 Savings accounts for customers aged 16–17 are created using the standard `POST /v2/savings` endpoint. The `productId` provided in the request identifies the account as a Junior savings account.
 
 To create a product identification for this account type, please speak to your Client Director.
 
-**Under-16 (U16) savings accounts**
+#### Under-16 (U16)
 
 Under-16 savings accounts are created using using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as a Junior savings account.
 
@@ -56,7 +56,7 @@ No customer record or customer ID is required for the child.
 
 To create a product identification for this account type, please speak to your Client Director.
 
-#### Savings account types summary
+#### Summary table
 
 | Account type | Endpoint | Customers provided | Identification method |
 |-------------|----------|--------------------|-----------------------|
@@ -65,49 +65,30 @@ To create a product identification for this account type, please speak to your C
 | 16–17 savings account | POST /v2/savings | One retail customer ID | Junior ProductId |
 | Under-16 savings account | POST /v2/savings | Parent/guardian retail customer only | U16 ProductId |
 
-### Creating savings accounts
+## Create savings accounts
+
+### Guide
 
 Savings accounts have several interdependencies. When creating a savings account, follow the below steps to ensure you cover them all:
 
 1. Check you've created the **retail** or **business customer** this new savings account will belong to. To create a retail customer, refer to the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
 2. Confirm which **interest configuration** should apply to the account (`interestConfigurationId`).  
   Interest configuration IDs refer to a specific interest accrual arrangement, and are provided to you directly by a ClearBank contact. Refer to [Interest configuration](./interest-configuration) for more details.  
-3. Create the **savings account** by calling the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint, using the customer(s) and the interest configuration's IDs.
-4. Specify a **nominated account** to fund or defund the savings account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.  
+3. Create the **savings account** by calling the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint using the customer's ID and the interest configuration's ID.
+4. Specify a **nominated account** to fund or defund the savings account using the [POST /v1/accounts/{accountId}/related-accounts](#set-a-nominated-account) endpoint.  
   **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between savings and nominated accounts is your responsibility.
 
-![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
+Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
 
 <Callout colour="blue">
 Always take note of the X-Request-Id when requesting creation of an account. In the event you receive a 500 response, you can resubmit your request using the same X-Request-Id to prevent accidental duplication of the account.
 </Callout>
 
-Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
+#### Message flow diagram
 
-<EndpointBlock
-  type="post"
-  title="Create a savings account endpoint"
-  endpoints={[
-        {
-      path: "/v2/savings",
-      version: "2.0.Sterling",
-       webhooks: [
-        'account-created-webhook-v1'
-      ]
-    },
-    {
-      path: "/v1/savings",
-      version: "1.0.Sterling",
-       webhooks: [
-        'account-created-webhook-v1'
-      ]
-    }
-  ]}
-/>
+![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
-<WebhookPlaceholder render='account-created-webhook-v1' />
-
-### Creating joint savings accounts
+### Create joint savings accounts
 
 Both single and joint savings accounts can be created using the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint. To make joint accounts using this endpoint, specify each customer's ID in the `customers` array.
 
@@ -148,6 +129,29 @@ While joint accounts will typically have two customers, we can support any numbe
   "interestConfigurationId": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a"
 }
 ```
+
+<EndpointBlock
+  type="post"
+  title="Create a savings account endpoint"
+  endpoints={[
+        {
+      path: "/v2/savings",
+      version: "2.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    },
+    {
+      path: "/v1/savings",
+      version: "1.0.Sterling",
+       webhooks: [
+        'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
 
 ## Manage nominated accounts
 
