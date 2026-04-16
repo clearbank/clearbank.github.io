@@ -1,0 +1,114 @@
+---
+title: "SEPA Direct Debit"
+metaTitle: "SEPA Direct Debit"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
+
+## SEPA Direct Debit
+
+<Callout colour="green">
+<h2>SEPA Direct Debit is coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our EU simulation environment.</p>
+</Callout>
+
+
+SEPA Direct Debit (SDD) is a pan-European payment scheme that enables organisations to collect euro-denominated payments from a payer’s account, provided the payer has authorised the collection in advance. The scheme is defined and maintained by the <ExternalLink href="https://www.europeanpaymentscouncil.eu/what-we-do/sepa-direct-debit">European Payments Council (EPC)</ExternalLink> and is available across SEPA-participating countries.
+
+This page describes **SEPA Core Direct Debit only**, where ClearBank acts as the **debtor bank**. In this model, ClearBank receives direct debit instructions from the scheme and processes the resulting payment.
+
+SEPA Direct Debits are initiated by the payee (creditor) rather than the payer. This makes the scheme suitable for recurring payments, subscriptions, and variable-amount collections where a prior authorisation exists.
+
+---
+
+### SEPA Direct Debit mandates
+
+A SEPA Direct Debit mandate is the payer’s authorisation that allows a creditor to initiate one or more direct debit collections against the payer’s account. The mandate provides the legal basis for each collection submitted under the scheme.
+
+From an integration perspective, mandates are **referenced rather than transmitted** as part of the payment flow. ClearBank receives mandate information from the scheme but does **not** create, store, validate, or manage mandates.
+
+You are responsible for ensuring that:
+
+- A valid mandate exists for each collection.
+- Mandate details can be produced in the event of a dispute or scheme enquiry.
+- Mandates are managed in accordance with the EPC SEPA Core Direct Debit rulebook.
+
+<Callout colour="blue">  
+<strong>Note:</strong> ClearBank does not validate mandate existence or correctness when processing SEPA Direct Debit collections. Responsibility for mandate management remains with the creditor.
+</Callout>
+
+---
+
+### Pre-notification
+
+Under the SEPA Core Direct Debit scheme, creditors are required to notify debtors in advance of an upcoming direct debit collection. This is known as **pre-notification**.
+
+Pre-notification is a scheme obligation between the creditor and the debtor and typically includes the collection amount and date. The timing of the notification is defined by the EPC rulebook unless an alternative agreement is in place.
+
+ClearBank does not validate or enforce pre-notification requirements, and pre-notification is not represented in the API or event model.
+
+---
+
+### Payment cycles
+
+SEPA Core Direct Debit payments are processed using **batch-based clearing and settlement cycles**, rather than real-time processing. ClearBank receives inbound collection instructions from the scheme and applies the resulting debit to the debtor account.
+
+At a high level, a SEPA Core Direct Debit follows these stages:
+
+1. **Collection received**  
+   ClearBank receives an inbound direct debit instruction from the scheme.
+
+2. **Payment processing**  
+   The debit is applied to the debtor account in line with scheme processing rules.
+
+3. **Settlement**  
+   Funds are settled to the creditor via the scheme.
+
+4. **Post-settlement outcomes**  
+   Depending on scheme rules and reason codes, a collection may later be rejected, returned, or refunded.
+
+Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection.
+
+<Callout colour="blue">  
+<strong>Note:</strong> Scheme timelines are defined by the EPC SEPA Core Direct Debit rulebook and may change. You should not rely on fixed day counts when modelling payment states.
+</Callout>
+
+---
+
+## Simulating inbound SEPA Direct Debits
+
+> **Placeholder**  
+>  
+> _SEPA Direct Debit inbound simulation endpoint_
+
+---
+
+## Webhooks
+
+ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity and settlement outcomes. You should subscribe to these webhooks to keep your systems in sync with scheme events.
+
+### Incoming collection
+
+> **Placeholder**  
+>  
+> _SEPA Direct Debit Incoming Collection webhook_
+
+### Payment settled
+
+> **Placeholder**  
+>  
+> _SEPA Direct Debit Payment Settled webhook_
+
+---
+
+## Related content
+
+- /eu/docs/eur-payments/sepa-credit-transfer
+- /eu/docs/eur-payments/sepa-instant-credit-transfer
+
