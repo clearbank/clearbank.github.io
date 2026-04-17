@@ -75,9 +75,9 @@ You can specify the `businessClassification` details of a legal entity. Set thei
 
 ## Legal entity customer addresses
 
-A legal entity can have both an active registered and trading address simultaneously, but no more than one of each. When you update a legal entity's address, their current address of the same type will automatically be changed to a previous address.
+A legal entity customer can have both an active registered and trading address simultaneously. They cannot have more than one of each.
 
-When a current address is replaced using this endpoint, it will be given an `validTo` date that matches the new address' `validFrom` date.
+When a current address is replaced using this endpoint, the previous address will be given an `validTo` date that matches the `validFrom` date of the new address.
 
 <EndpointBlock
   type="post"
@@ -90,9 +90,9 @@ When a current address is replaced using this endpoint, it will be given an `val
   ]}
 />
 
-## Legal entity's tax residencies
+## Legal entity customer tax residencies
 
-When you create a legal entity, you must specify at least one tax residency for them. You should specify all currently active tax residencies for a legal entity when you create them.
+When you create a legal entity customer, you should specify all currently active tax residencies for the customer. A legal entity must have a minimum of one tax residency.
 
 To change a legal entity's tax residency from one country to another, follow the below steps:
 1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-legal-entity) endpoint.
@@ -102,7 +102,7 @@ To change a legal entity's tax residency from one country to another, follow the
 
 <EndpointBlock
   type="put"
-  title="Add a tax residency to a legal entity"
+  title="Add a tax residency to a legal entity customer"
   endpoints={[
     {
       path: "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
