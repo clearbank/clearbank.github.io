@@ -278,6 +278,20 @@ To retrieve all existing relations to a customer, you can call the [**GET /custo
 
 To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-entities) using the `customerId` of each party.
 
+Relationships between legal entity customers and other customer types must be of a valid type. For example, a legal entity may only be related to another legal entity via the `"UBO"` relationship type. In other words, you can only express
+
+Any request containing an invalid combination of customer type and relation type will be rejected. Valid combinations are shown in the below table. You can check a customer's type by retrieving them and inspecting their `type` property.
+
+| Customer Type | Related Customer Type | Allowed Related Party Types            |
+| ------------- | --------------------- | -------------------------------------- |
+| `LegalEntity` | `Retail`              | `Director`, `UBO`, `ControllingPerson` |
+| `LegalEntity` | `SoleTrader`          | `Director`, `UBO`, `ControllingPerson` |
+| `LegalEntity` | `LegalEntity`         | `UBO`                                  |
+| `LegalEntity` | `Director`            | `Director`                             |
+| `LegalEntity` | `UboNatural`          | `UBO`                                  |
+| `LegalEntity` | `UboNonNatural`       | `UBO`                                  |
+| `LegalEntity` | `ControllingPerson`   | `ControllingPerson`                    |
+
 <EndpointBlock
   type="post"
   title="Relate a legal entity and another entity"
