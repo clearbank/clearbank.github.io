@@ -95,7 +95,7 @@ When a current address is replaced using this endpoint, the previous address wil
 When you create a legal entity customer, you should specify all currently active tax residencies for the customer. A legal entity must have a minimum of one tax residency.
 
 To change a legal entity's tax residency from one country to another, follow the below steps:
-1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-legal-entity) endpoint.
+1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-legal-entity-customer) endpoint.
 2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-legal-entitys-tax-residency) endpoint.
 
 **Note:** If a legal entity has only one tax residency, you must add a new tax residency before you can delete the current one. If you attempt to delete a legal entity's only tax residency you will receive a 422 - Unprocessable Entity error.
@@ -268,7 +268,7 @@ A controlling person is an natural person who exercises control over the operati
 
 ## Customer relation endpoints
 
-The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-legal-entity-and-another-entity) endpoint allows you to link two parties by providing their `customerId` and specifying the nature of the relation.
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-legal-entity-and-another-customer) endpoint allows you to link two parties by providing their `customerId` and specifying the nature of the relation.
 
 **Note:** The arrangement of `customerId` in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
 The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
@@ -276,7 +276,7 @@ For example, when defining a UBO relationship, the customer referred to in the `
 
 To retrieve all existing relations to a customer, you can call the [**GET /customers/v2/customers/{customerId}/related-parties**](#get-all-relations-of-a-legal-entity).
 
-To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-entities) using the `customerId` of each party.
+To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-customers) using the `customerId` of each party.
 
 <EndpointBlock
   type="post"
