@@ -1,0 +1,76 @@
+---
+title: "Payment accounts"
+metaTitle: "Payment accounts"
+order: 6
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Payment accounts overview
+
+<Callout colour="green">
+<h3>Payment accounts are coming soon</h3>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+Payment accounts let your customers to set up direct debits, standing orders, and make day-to-day payments among other features.
+
+Payment accounts come in two subtypes: Transaction and Current. Transaction accounts have fewer features but are subject to lighter regulations - Payment Service Regulations (PSRs). Current accounts are more fully featured but must also comply with Payment _Account_ Regulations (PARs).
+
+Payment accounts are available to embedded banking partners by prior agreement with ClearBank. If you're interested in using this account type in your service, contact your Client Director.
+
+<Callout colour="blue">
+  <strong>Note:</strong> Deposits held in Payment accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+</Callout>
+
+
+## Current accounts
+
+Current accounts provide extensive payment functionality for customers. Out of the box, they support:
+
+* Receipt of payments from other account holders and third parties
+* Regular outbound payments via standing orders and direct debits
+* Anytime bank transfers
+* Open Banking
+* Joint account ownership
+* Account switching
+
+You can create a current account for a customer by calling our [**POST accounts/sterling/v1/payment-accounts**](#create-a-transaction-or-current-account) endpoint, and specifying `CurrentAccount` as the `accountSubType`.
+
+## Transaction accounts
+
+Transaction accounts facilitate limited payment transactions for retail customers, but they are subject to fewer regulations (PSRs and not PARs).  
+By default, transaction accounts support:
+
+* Receipt of payments from other account holders and third parties
+* Regular outbound payments via standing orders and direct debits
+* Open Banking
+* Joint account ownership
+
+In a limited capacity, transaction accounts _may_ support:
+
+* Anytime bank transfers
+
+ClearBank may grant these features to your transaction accounts by exception, potentially at the expense of other account features.
+
+You can create a transaction account for a customer by calling our [**POST accounts/sterling/v1/payment-accounts**](#create-a-transaction-or-current-account) endpoint, and specifying `TransactionAccount` as the `accountSubType`.
+
+## Endpoint
+
+<EndpointBlock
+  type="post"
+  title="Create a Transaction or Current account"
+  endpoints={[
+    {
+      path: "accounts/sterling/v1/payment-account",
+      version: "1.0.Sterling"
+    }
+  ]}
+/>
+
+
