@@ -3,30 +3,16 @@ import React from 'react'
 import Logo from 'src/components/logo'
 
 import * as Styles from './footer.styles'
+import * as Types from 'src/components/header-menu/header-menu.types'
 
-import * as Types from 'src/components/header-menu/header-meny.types'
+import FooterMenu from './footer-menu'
 
 const Footer: React.FC<Types.IHeaderMenuProps> = ({ items, hideNavigation }) => (
   <Styles.Container role='contentinfo'>
     {!hideNavigation && (
       <Styles.MenuContainer>
         {items.map(item => (
-          <Styles.ColumnContainer key={item.menuItem.title}>
-            <Styles.Title>
-              {item.menuItem.title}
-            </Styles.Title>
-            <Styles.List>
-              {item.subMenuItems.map(subMenuItem => (
-                <Styles.ListItem key={subMenuItem.node.fields.slug}>
-                  <Styles.SubTitle
-                    href={subMenuItem.node.fields.slug}
-                  >
-                    {subMenuItem.node.fields.title}
-                  </Styles.SubTitle>
-                </Styles.ListItem>
-              ))}
-            </Styles.List>
-          </Styles.ColumnContainer>
+          <FooterMenu menu={item} />
         ))}
       </Styles.MenuContainer> 
     )}
