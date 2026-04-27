@@ -18,12 +18,12 @@ import WebhookSummary from 'src/components/webhook-summary';
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Payment accounts are regular GBP accounts with more payment functionality than savings accounts. With a payment account, your customers can have direct debits and standing orders, and make day‑to‑day payments — among other features.
+Payment accounts are regular GBP accounts with more payment functionality than savings accounts. With a payment account, your customers can have direct debits and standing orders, and make day-to-day payments — among other features.
 
 Payment accounts come in two subtypes: **Current accounts** and **Transaction accounts**:
 
-* [Current accounts](#current-accounts) have many features but must comply with Payment Account Regulations (PARs) and Payment Service Regulations (PSRs).
-* [Transaction accounts](#transaction-accounts) have fewer features but are subject to lighter regulations (PSRs, but not PARs).
+* [Current accounts](#current-accounts) meet the definition of a Payment Account in both the Payment Account Regulations (PARs) and Payment Service Regulations (PSRs).
+* [Transaction accounts](#transaction-accounts) also meet the PSR definition of a Payment Account, but they are less feature rich than a Current Account. For example, Transaction accounts do not support cash withdrawals.
 
 Payment accounts are available to embedded banking partners by prior agreement with ClearBank. If you're interested in using this account type, please contact your Client Director.
 
@@ -35,29 +35,22 @@ Payment accounts are available to embedded banking partners by prior agreement w
 
 Current accounts provide extensive payment functionality for customers. They support:
 
-* Receipt of payments from other account holders and third parties
-* Regular outbound payments via standing orders and direct debits
-* Anytime bank transfers
-* Open Banking
-* Joint account ownership
+* Issuance of a debit card against the account
+* Withdrawal of cash from the account
+* Execution of payments to third parties
+* Receipt of payments from third parties
+* Open Banking integration
 * Account switching
 
 You can create a current account for a customer by calling our [**POST /accounts/sterling/v1/payment-accounts**](#create-a-transaction-or-current-account) endpoint, and specifying `"CurrentAccount"` as the `accountSubType`.
 
 ## Transaction accounts
 
-Transaction accounts facilitate limited payment transactions for retail customers, but they are subject to fewer regulations (PSRs and not PARs). By default, transaction accounts support:
+Transaction accounts facilitate limited payment transactions for retail customers and are subject to fewer regulations. They support:
 
-* Receipt of payments from other account holders and third parties
-* Regular outbound payments via standing orders and direct debits
-* Open Banking
-* Joint account ownership
-
-In limited configurations, transaction accounts _may_ support:
-
-* Anytime bank transfers
-
-On request, ClearBank may grant additional payment features for transaction accounts. Contact your Client Director for more details.
+* Execution of payments to third parties
+* Receipt of payments from third parties
+* Open Banking integration
 
 You can create a transaction account for a customer by calling our [**POST /accounts/sterling/v1/payment-accounts**](#create-a-payment-account) endpoint, and specifying `"TransactionAccount"` as the `accountSubType`.
 
