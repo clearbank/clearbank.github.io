@@ -18,7 +18,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Payment accounts are regular GBP accounts with more payment functionality than savings accounts. With a payment account, your customers can have direct debits and standing orders, and make day-to-day payments — among other features.
+Payment accounts are regular GBP accounts with more payment functionality than savings accounts. With a payment account, your customers can have direct debits and standing orders, and make day-to-day payments — among other features. They are suitable for Retail, Sole Trader, and business (Legal Entity) customers.
 
 Payment accounts come in two subtypes: **Current accounts** and **Transaction accounts**:
 
@@ -37,7 +37,7 @@ Current accounts provide extensive payment functionality for customers. They sup
 
 * Issuance of a debit card against the account
 * Withdrawal of cash from the account
-* Execution of payments to third parties
+* Execution of payments to third parties (refer to our [FPS documentation](../gbp-payments/faster-payments))
 * Receipt of payments from third parties
 * Open Banking integration
 * Account switching
@@ -46,7 +46,7 @@ You can create a current account for a customer by calling our [**POST /accounts
 
 ## Transaction accounts
 
-Transaction accounts facilitate limited payment transactions for retail customers and are subject to fewer regulations. They support:
+Transaction accounts facilitate limited payment transactions for customers and are subject to fewer regulations. They support:
 
 * Execution of payments to third parties
 * Receipt of payments from third parties
@@ -62,7 +62,14 @@ You can create a transaction account for a customer by calling our [**POST /acco
   endpoints={[
     {
       path: "/accounts/sterling/v1/payment-accounts",
-      version: "1.0.Sterling"
+      version: "1.0.Sterling",
+      webhooks: [
+      'account-created-webhook-v1'
+      ]
     }
   ]}
 />
+
+## Webhooks
+
+<WebhookPlaceholder render='account-created-webhook-v1' />
