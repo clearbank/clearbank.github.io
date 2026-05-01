@@ -703,15 +703,17 @@
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "The city of this address.",
             "nullable": true,
             "example": "Oldham"
           },
           "postalCode": {
             "type": "string",
-            "description": "The postcode of this address.",
+            "description": "The postcode of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127JQ"
+            "example": "OL12 7JQ",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -759,15 +761,17 @@
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "The city of this address.",
             "nullable": true,
             "example": "Oldham"
           },
           "postalCode": {
             "type": "string",
-            "description": "The postcode of this address.",
+            "description": "The postcode of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127HR"
+            "example": "OL12 7HR",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1331,15 +1335,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name/number at this address.",
+            "description": "The building name/number at this address. Must not contain postal code.",
             "nullable": true,
             "example": "67A"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The street name at this address.",
+            "description": "The street name at this address. Must not contain postal code.",
             "nullable": true,
             "example": "Teal Road"
           },
@@ -1353,16 +1361,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "The county at this address.",
+            "description": "The county at this address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Greater Manchester"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "The postcode at this address.",
+            "description": "The postcode at this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127JQ"
+            "example": "OL12 7JQ",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"

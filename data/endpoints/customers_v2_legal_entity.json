@@ -1067,6 +1067,7 @@
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "The city name at this address.",
             "nullable": true,
             "example": "Lincoln"
@@ -1079,9 +1080,10 @@
           },
           "postalCode": {
             "type": "string",
-            "description": "The postal code of this address.",
+            "description": "The postal code of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "LN14HH"
+            "example": "LN1 4HH",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1258,7 +1260,10 @@
           "sicCode": {
             "type": "string",
             "description": "SIC Code",
-            "nullable": true
+            "nullable": true,
+            "minLength": 5,
+            "maxLength": 5,
+            "pattern": "^[0-9]{5}$"
           }
         },
         "additionalProperties": false,
@@ -1577,7 +1582,10 @@
           "sicCodes": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 5,
+              "pattern": "^[0-9]{5}$"
             },
             "description": "The Standard Industrial Classification (SIC) codes associated with the business.",
             "nullable": true,
@@ -1844,15 +1852,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name or number of this address.",
+            "description": "The building name or number of this address. Must not contain postal code.",
             "nullable": true,
             "example": "77A"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The street name of this address.",
+            "description": "The street name of this address. Must not contain postal code.",
             "nullable": true,
             "example": "Short Road"
           },
@@ -1873,9 +1885,10 @@
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "The post code of this address.",
+            "description": "The post code of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "LN14HH"
+            "example": "LN1 4HH",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2096,7 +2109,10 @@
           "sicCodes": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 5,
+              "pattern": "^[0-9]{5}$"
             },
             "description": "Updated SIC (Standard Industrial Classification) codes (if changed).",
             "nullable": true,
@@ -2229,15 +2245,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name or number at this address.",
+            "description": "The building name or number at this address. Must not contain postal code.",
             "nullable": true,
             "example": "The Office"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The street name at this address.",
+            "description": "The street name at this address. Must not contain postal code.",
             "nullable": true,
             "example": "First Way"
           },
@@ -2258,9 +2278,10 @@
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "The postcode of this address.",
+            "description": "The postcode of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PE5 1FR"
+            "example": "PE5 1FR",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2505,7 +2526,10 @@
           "sicCodes": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 5,
+              "pattern": "^[0-9]{5}$"
             },
             "description": "The Standard Industrial Classification (SIC) codes associated with the business. Null value is ignored",
             "nullable": true,
