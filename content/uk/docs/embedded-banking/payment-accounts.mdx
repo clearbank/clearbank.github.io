@@ -1,0 +1,75 @@
+---
+title: "Payment accounts"
+metaTitle: "Payment accounts"
+order: 6
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Payment accounts overview
+
+<Callout colour="green">
+<h3>Payment accounts are coming soon</h3>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+Payment accounts are regular GBP accounts with more payment functionality than savings accounts. With a payment account, your customers can have direct debits and standing orders, and make day-to-day payments — among other features. They are suitable for Retail, Sole Trader, and business (Legal Entity) customers.
+
+Payment accounts come in two subtypes: **Current accounts** and **Transaction accounts**:
+
+* [Current accounts](#current-accounts) meet the definition of a Payment Account in both the Payment Account Regulations (PARs) and Payment Service Regulations (PSRs).
+* [Transaction accounts](#transaction-accounts) also meet the PSR definition of a Payment Account, but they are less feature rich than a Current Account. For example, Transaction accounts do not support cash withdrawals.
+
+Payment accounts are available to embedded banking partners by prior agreement with ClearBank. If you're interested in using this account type, please contact your Client Director.
+
+<Callout colour="blue">
+  <strong>Note:</strong> Deposits held in Payment accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+</Callout>
+
+## Current accounts
+
+Current accounts provide extensive payment functionality for customers. They support:
+
+* Issuance of a debit card against the account
+* Withdrawal of cash from the account
+* Execution of payments to third parties (refer to our [FPS documentation](../gbp-payments/faster-payments))
+* Receipt of payments from third parties
+* Open Banking integration
+* Account switching
+
+You can create a current account for a customer by calling our [**POST /accounts/sterling/v1/payment-accounts**](#create-a-transaction-or-current-account) endpoint, and specifying `"CurrentAccount"` as the `accountSubType`.
+
+## Transaction accounts
+
+Transaction accounts facilitate limited payment transactions for customers and are subject to fewer regulations. They support:
+
+* Execution of payments to third parties
+* Receipt of payments from third parties
+* Open Banking integration
+
+You can create a transaction account for a customer by calling our [**POST /accounts/sterling/v1/payment-accounts**](#create-a-payment-account) endpoint, and specifying `"TransactionAccount"` as the `accountSubType`.
+
+## Endpoint
+
+<EndpointBlock
+  type="post"
+  title="Create a Payment account"
+  endpoints={[
+    {
+      path: "/accounts/sterling/v1/payment-accounts",
+      version: "1.0.Sterling",
+      webhooks: [
+      'account-created-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<WebhookPlaceholder render='account-created-webhook-v1' />

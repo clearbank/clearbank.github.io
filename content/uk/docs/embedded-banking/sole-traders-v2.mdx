@@ -1,7 +1,7 @@
 ---
-title: "Sole traders"
+title: "Sole trader customers"
 metaTitle: "Sole traders"
-order: 4
+order: 2
 showPageMenu: true
 ---
 
@@ -13,21 +13,21 @@ import ExternalLink from 'src/components/external-link';
 ## Sole traders overview
 
 <Callout colour="green">
-<h2>Sole traders are coming soon</h2>
+<h2>Sole traders V2 is coming soon</h2>
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
 **Sole traders** are natural persons operating a business in their own name. You can manage your sole traders' data with ClearBank directly as an embedded banking partner. Creating a sole trader is necessary before you can create accounts for them.
 
-The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](../docs/embedded-banking/retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
+The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](./retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
 
 ### Compatible account types
 
 Sole traders are eligible for certain account types, these include:
-* [Savings accounts](../docs/embedded-banking/savings-accounts)
-* [Hub accounts](../docs/embedded-banking/hub-accounts)
-* [Cash ISAs](../docs/embedded-banking/flexible-cash-isa)
-* Current Accounts
+* [Savings accounts](./savings-accounts)
+* [Hub accounts](./hub-accounts)
+* [Cash ISAs](./flexible-cash-isa)
+* [Payment accounts](./payment-accounts) - Including Current accounts and Transaction accounts.
 
 For more details on available account types, please reach out to your Client Director.
 
@@ -179,7 +179,7 @@ To change a sole trader's tax residency from one country to another, follow the 
 
 ## Customer relation endpoints
 
-The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-sole-trader-and-another-entity) endpoint allows you to link two parties by providing their `customerId` and specifying the nature of the relation.
+The [**POST /customers/v2/customers/{customerId}/related-parties**](#relate-a-sole-trader-and-another-customer) endpoint allows you to link two parties by providing their `customerId` and specifying the nature of the relation.
 
 **Note:** The arrangement of `customerId` in the path parameter and the `relatedCustomerId` request field matters when creating a customer relation.  
 The `customerId` in the path refers to the primary customer, while the `relatedCustomerId` refers to the customer which will have the specified relation (`relatedPartyType`) toward the primary customer.  
@@ -191,7 +191,7 @@ To remove a relation between two parties, you can use the [**DELETE /customers/v
 
 <EndpointBlock
   type="post"
-  title="Relate a sole trader and another entity"
+  title="Relate a sole trader and another customer"
   endpoints={[
     {
       path: "/customers/v2/customers/{customerId}/related-parties",
