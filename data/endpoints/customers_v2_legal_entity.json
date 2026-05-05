@@ -216,7 +216,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "You can call this endpoint to add a relation between an existing party and a legal entity.",
+        "summary": "You can call this endpoint to add a relation between an existing party and a legal entity. Note that relationships must be unique: if you link the same two customers using the same relationship type as an existing relationship your request will be rejected.",
         "operationId": "V2RelatedPartyPost",
         "parameters": [
           {
@@ -1587,7 +1587,7 @@
               "maxLength": 5,
               "pattern": "^[0-9]{5}$"
             },
-            "description": "The Standard Industrial Classification (SIC) codes associated with the business. Must be a valid SIC code.",
+            "description": "The Standard Industrial Classification (SIC) codes associated with the business. Must be a valid SIC code of exactly 5 digits.",
             "nullable": true,
             "example": ["07100"]
           }
@@ -2295,7 +2295,7 @@
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid.",
+            "description": "Date until which the address was valid. Must be more recent than validFrom date.",
             "format": "date",
             "nullable": true,
             "example": "2022-08-24"
@@ -2368,7 +2368,7 @@
           },
           "ownershipPercentage": {
             "type": "integer",
-            "description": "The copmany ownership percentage this related party has. Only provided for UBOs.",
+            "description": "The company ownership percentage this related party has. Only provided for UBOs.",
             "format": "int32",
             "nullable": true,
             "example": 100
@@ -2531,7 +2531,7 @@
               "maxLength": 5,
               "pattern": "^[0-9]{5}$"
             },
-            "description": "The Standard Industrial Classification (SIC) codes associated with the business.  Must be a valid SIC code. Null value is ignored",
+            "description": "The Standard Industrial Classification (SIC) codes associated with the business.  Must be a valid SIC code of exactly 5 digits. Null value is ignored",
             "nullable": true,
             "example": ["07100"]
           }

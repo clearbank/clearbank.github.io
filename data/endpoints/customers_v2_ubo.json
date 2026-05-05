@@ -630,7 +630,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The UBO's date of birth, formatted yyyy-MM-dd.",
+            "description": "The UBO's date of birth, formatted yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "example": "1978-05-22"
           }
@@ -674,7 +674,9 @@
           },
           "ownershipPercentage": {
             "type": "integer",
-            "description": "The ownership percentage the UBO has of the associated legal entity.",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "The ownership percentage the UBO has of the associated legal entity. Total ownership percentage for a single legal entity cannot exceed 100.",
             "format": "int32",
             "nullable": true,
             "example": 100
@@ -992,7 +994,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the person, formatted yyyy-MM-dd.",
+            "description": "The date of birth of the person, formatted yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "nullable": true,
             "example": "1978-05-21"
