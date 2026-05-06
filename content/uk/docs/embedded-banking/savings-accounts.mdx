@@ -292,12 +292,15 @@ This is the same endpoint used to amend information for real GBP accounts.
 
 ## Close a savings account
 
-**To close a savings account:**
+### Steps to close an account
+
+There are several steps you should follow to close a savings account:
+
 1. Withdraw all funds from the account.
 2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
 3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
-> The process is asynchronous and can take longer if an interest calculation is pending. Unpaid accrued interest, if any, will be deposited into the nominated account. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
-4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
+  This process is asynchronous and can take longer if an interest calculation is pending. Unpaid accrued interest, if any, will be deposited into the nominated account. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
+4. (OPTIONAL) Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
 5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
 
 ![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
