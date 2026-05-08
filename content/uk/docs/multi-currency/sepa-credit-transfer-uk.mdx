@@ -37,19 +37,28 @@ Exact dates can be found on <ExternalLink href="https://www.ecb.europa.eu/ecb/co
 
 ### Bulk payments
 
-SCT UK supports bulk payments, which can be useful for making many simultaneous payments - such as payroll. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 100 different creditor accounts. It is therefore possible to request up to 300 payments at once.
+SCT UK supports bulk payments, which can be useful for making many simultaneous payments. Each outbound payment request can include up to three debtor accounts, each of which can pay up to 2 different creditor accounts. It is therefore possible to request up to 6 payments at once.
 
-Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 100 individual payments to creditor accounts.
+Each payment request contains a nested structure of debtor accounts and their associated payments and creditor details. The outer array, `PaymentInformation`, contains entries for each debtor account. Within each debtor entry, the `CreditTransferTransactionInformation` array lists up to 2 individual payments to creditor accounts.
 
 ![Diagram showing the PaymentInformation array, containing 3 debtors](/assets/images/sct-uk-bulk-payments-diagram.svg "")
 
 When you send several payments at once in bulk, each payment is processed individually. This means if one payment fails, the remainder of the batch will be unaffected. You'll receive either a [Cross-Border Outbound Payment Failed](#cross-border-outbound-payment-failed-webhook), or a [Cross-Border Outbound Payment Completed](#cross-border-outbound-payment-completed-webhook) and a [Customer Accounts Transaction Completed](#sct-uk-customer-accounts-transaction-completed-webhook) webhook for each payment in the batch, so you can keep track of their status.
 
+### Validation
+
+When requesting a SEPA CT payment from our [POST /payments/cross-border/v2/payments](linky) endpoint, certain validation requirements must be fulfilled:
+
+* Text fields cannot have leading or trailing whitespace
+* The creditor agent bank must be on the SCT Reachable Payment Service Provider (PSP) list*
+
+\* - For a current list of reachable PSPs, refer to the spreadsheet available at the blue URL at the bottom of the European Banking Authority's <ExternalLink href="https://www.ebaclearing.eu/services-sepa-payments/step2-sct/participants/">STEP2 SCT Participants page</ExternalLink>.
+
 ## Outbound payments
 
 <EndpointBlock
   type="post"
-  title="Send euro payments"
+  title="Send a SEPA CT payment"
   endpoints={[
     {
       path: "/payments/cross-border/v2/payments",
