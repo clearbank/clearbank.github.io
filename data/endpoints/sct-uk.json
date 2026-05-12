@@ -368,7 +368,7 @@
             "description": "The creditor's organisation or private details.",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/organisationPartyIdentification"
+                "$ref": "#/components/schemas/creditorPartyIdentification"
               },
               {
                 "$ref": "#/components/schemas/privatePartyIdentification"
@@ -530,7 +530,30 @@
         },
         "additionalProperties": false
       },
-      "organisationPartyIdentification": {
+      "debtorPartyIdentification": {
+        "required": [
+          "name",
+          "postalAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "example": "Pinto Corporation",
+            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          }
+        },
+        "additionalProperties": false
+      },
+      "creditorPartyIdentification": {
         "required": [
           "name"
         ],
@@ -677,7 +700,7 @@
             "description": "The debtor's organisation or private details.",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/organisationPartyIdentification"
+                "$ref": "#/components/schemas/debtorPartyIdentification"
               },
               {
                 "$ref": "#/components/schemas/privatePartyIdentification"
