@@ -12,8 +12,17 @@ import ExternalLink from 'src/components/external-link';
 
 ## CHAPS
 
+<Callout colour="blue"><h2>Deprecation notice</h2>
+<p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
+- <strong>POST /payments/chaps/v5/customer-payments</strong><br />
+- <strong>POST /payments/chaps/v5/return-payments</strong><br />
+- <strong>POST /payments/chaps/v5/institution-payments</strong><br /></p>
+
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints will be available in Q3 2026. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
-However, you can only send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+
+You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
 - CHAPS payments can be sent using the [POST payments/chaps/v5/customer-payments](#send-a-chaps-payment) endpoint.
 - Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
@@ -188,7 +197,16 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
 
 ## CHAPS simulation endpoints
 
-<Callout colour="blue"><h2>Deprecation notice</h2><p>The following endpoints were deprecated on <strong>8 December 2025</strong>:<br />
+<Callout colour="blue"><h2>Deprecation notice for sim</h2>
+<p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/customer-payments</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/return-payments</strong><br />
+- <strong>POST /v2/inbound-payment-simulation/return-payment-simplified</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/institution-payments</strong><br /></p>
+
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 3 of these endpoints will be available in Q3 2026. Please reach out to your Client Director with any questions.</p>
+
+<p>The following endpoints were deprecated on <strong>8 December 2025</strong>:<br />
 - <strong>POST /inbound-payment-simulation/chaps/v1/customer-payments</strong><br />
 - <strong>POST /inbound-payment-simulation/chaps/v1/return-payments</strong><br />
 - <strong>POST /inbound-payment-simulation/chaps/v1/institution-payments</strong><br /></p>
@@ -197,7 +215,7 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
 
 These endpoints can be used to simulate payments. You can also use them for automated testing.
 
-To support upcoming Bank of England changes effective 24 November 2025, we recommend using version 2 of the simulator endpoints for inbound CHAPS payments. Version 2 introduces support for both structured and hybrid address formats.
+To support upcoming Bank of England changes effective 13 November 2026, we will be issuing version 3 of the simulator endpoints for inbound CHAPS payments in late Q3. Version 3 removes support for unstructured address types, as well as other Bank of England mandated changes. This aligns with international SWIFT standards.
 
 <Callout colour="blue">
     Outbound CHAPS payments sent via ClearBank already use structured address formatting. No changes are required to your outbound integration.
