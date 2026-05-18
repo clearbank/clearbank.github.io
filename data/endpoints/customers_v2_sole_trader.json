@@ -216,7 +216,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "You can use this endpoint to relate one customer to another.",
+        "summary": "You can use this endpoint to relate one customer to another. Note that relationships must be unique: if a relationship already exists that links the same two customers with the same relationship type, your request will be rejected.",
         "operationId": "V2RelatedPartyPost",
         "parameters": [
           {
@@ -1291,21 +1291,23 @@
           },
           "county": {
             "type": "string",
-            "description": "County of the customer's address.",
+            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Blueshire"
           },
           "city": {
             "type": "string",
-            "description": "City of the customer's address.",
+            "minLength": 1,
+            "description": "City of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Lilac City"
           },
           "postalCode": {
             "type": "string",
-            "description": "Postal code of the customer's address.",
+            "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "LB1 7CC"
+            "example": "LB1 7CC",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1371,15 +1373,17 @@
           },
           "city": {
             "type": "string",
-            "description": "City of the customer's address.",
+            "minLength": 1,
+            "description": "City of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Lilac City"
           },
           "postalCode": {
             "type": "string",
-            "description": "Postal code of the customer's address.",
+            "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "LB1 7CC"
+            "example": "LB1 7CC",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1505,7 +1509,8 @@
             "description": "Updated annual revenue (if changed).",
             "format": "double",
             "nullable": true,
-            "example": 75000.00
+            "example": 75000.00,
+            "minimum": 0.01
           }
         },
         "additionalProperties": false,
@@ -1811,7 +1816,8 @@
             "type": "number",
             "description": "The annual revenue of the business.",
             "format": "double",
-            "example": 37000.00
+            "example": 37000.00,
+            "minimum": 0.01
           }
         },
         "additionalProperties": false,
@@ -1912,10 +1918,12 @@
         "properties": {
           "firstName": {
             "minLength": 1,
+            "maxLength": 255,
             "type": "string",
-            "description": "The customer's first name.",
+            "description": "The customer's first name. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
-            "example": "Karol"
+            "example": "Karol",
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}"
           },
           "middleName": {
             "type": "string",
@@ -1925,35 +1933,40 @@
           },
           "surname": {
             "minLength": 1,
+            "maxLength": 255,
             "type": "string",
-            "description": "The customer's surname.",
+            "description": "The customer's surname. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
-            "example": "Agrowicz"
+            "example": "Agrowicz",
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}"
           },
           "email": {
             "type": "string",
-            "description": "The customer's email address.",
+            "description": "The customer's email address. Must be RFC compliant.",
             "nullable": true,
             "example": "krl@workaholicmail.com"
           },
           "telephone": {
             "type": "string",
-            "description": "The customer's telephone number.",
+            "minLength": 3,
+            "maxLength": 20,
+            "description": "The customer's telephone number. Must start with '00' in place of a '+', and must include the full country code.",
             "nullable": true,
-            "example": "07123589778"
+            "example": "00447653589772",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth, formatted: yyyy-MM-dd.",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "example": "1988-05-21"
           },
           "nationalIdentificationNumber": {
             "type": "string",
-            "description": "The customer's national identification number, such as their National Insurance (NI) number.",
+            "description": "The customer's national identification number, such as their National Insurance (NI) number. You must provide either a nationalIdentificationNumber or at least one identityDocuments[].",
             "nullable": true,
             "example": "PC112233D"
           }
@@ -2011,7 +2024,7 @@
             "items": {
               "$ref": "#/components/schemas/CreateCustomerIdentityDocumentRequest"
             },
-            "description": "The customer's identity documents.",
+            "description": "The customer's identity documents. You must provide either a nationalIdentificationNumber or at least one identity document.",
             "nullable": true
           },
           "businessDetails": {
@@ -2083,7 +2096,7 @@
           "taxIdNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Tax identification number.",
+            "description": "Tax identification number. If not provided, you must specify a noTaxIdReason.",
             "nullable": true,
             "example": "PC556498D"
           },
@@ -2141,15 +2154,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name or number of this address.",
+            "description": "The building name or number of this address. Must not contain postal code.",
             "nullable": true,
             "example": "322"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "This address' street name.",
+            "description": "This address' street name. Must not contain postal code.",
             "nullable": true,
             "example": "Long Road"
           },
@@ -2163,16 +2180,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's address.",
+            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "Postal code of the customer's address.",
+            "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB"
+            "example": "PG15 8AB",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2375,9 +2393,12 @@
         "properties": {
           "firstName": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
             "description": "Customer's first name.",
             "nullable": true,
-            "example": "Karol"
+            "example": "Karol",
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}"
           },
           "middleName": {
             "type": "string",
@@ -2393,15 +2414,18 @@
           },
           "emailAddress": {
             "type": "string",
-            "description": "The customer's email address.",
+            "description": "The customer's email address. Must be RFC compliant.",
             "nullable": true,
             "example": "karol.workmail@mymail.com"
           },
           "telephone": {
             "type": "string",
-            "description": "The customer's telephone number.",
+            "minLength": 3,
+            "maxLength": 20,
+            "description": "The customer's telephone number. Must start with '00' in place of a '+', and must include the full country code.",
             "nullable": true,
-            "example": "01234555666"
+            "example": "00447653589772",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2428,9 +2452,12 @@
         "properties": {
           "firstName": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
             "description": "Updated first name (if changed).",
             "nullable": true,
-            "example": "Carol"
+            "example": "Carol",
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}"
           },
           "middleName": {
             "type": "string",
@@ -2456,15 +2483,18 @@
           },
           "email": {
             "type": "string",
-            "description": "Updated email address (if changed).",
+            "description": "Updated email address (if changed). Must be RFC compliant.",
             "nullable": true,
             "example": "c.agarowicz@workmailurl.com"
           },
           "telephone": {
             "type": "string",
-            "description": "Updated telephone number (if changed).",
+            "minLength": 3,
+            "maxLength": 20,
+            "description": "Updated telephone number (if changed). Must start with '00' in place of a '+', and must include the full country code.",
             "nullable": true,
-            "example": "07777222666"
+            "example": "00447653589772",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "nationalIdentificationNumber": {
             "type": "string",
@@ -2492,15 +2522,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name or number of this address.",
+            "description": "The building name or number of this address. Must not contain postal code.",
             "nullable": true,
             "example": "0"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The street name of this address.",
+            "description": "The street name of this address. Must not contain postal code.",
             "nullable": true,
             "example": "Short Road"
           },
@@ -2514,16 +2548,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's address.",
+            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Redshire"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "Postal code of the customer's address.",
+            "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB"
+            "example": "PG15 8AB",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2537,7 +2572,7 @@
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid, formatted: yyyy-MM-dd.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd. Must be more recent than validFrom date.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
@@ -2610,6 +2645,8 @@
           },
           "ownershipPercentage": {
             "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
             "description": "The related party's ownership percentage, expressed as an integer.",
             "format": "int32",
             "nullable": true,
@@ -2874,7 +2911,8 @@
             "description": "The annual revenue of the business. Null value is ignored",
             "format": "double",
             "nullable": true,
-            "example": 37000.00
+            "example": 37000.00,
+            "minimum": 0.01
           }
         },
         "additionalProperties": false,
@@ -2885,18 +2923,25 @@
         "properties": {
           "buildingNameNumber": {
             "type": "string",
-            "description": "Building name or number of the customer's new address.",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
+            "description": "Building name or number of the customer's new address. Must not contain postal code.",
             "nullable": true,
             "example": "322"
           },
           "streetName": {
             "type": "string",
-            "description": "Street name of the customer's new address.",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
+            "description": "Street name of the customer's new address. Must not contain postal code.",
             "nullable": true,
             "example": "Long Road"
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "City of the customer's new address.",
             "nullable": true,
             "example": "Cyan City"
@@ -2904,16 +2949,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's new address.",
+            "description": "County of the customer's new address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "Postal code of the customer's new address.",
+            "description": "Postal code of the customer's new address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB"
+            "example": "PG15 8AB",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2978,9 +3024,12 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "description": "The customer's first name. Null value is ignored.",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "The customer's first name. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive). Null value is ignored.",
             "nullable": true,
-            "example": "Carol"
+            "example": "Carol",
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}"
           },
           "middleName": {
             "type": "string",
@@ -2990,28 +3039,33 @@
           },
           "surname": {
             "type": "string",
-            "description": "The customer's surname. Null value is ignored.",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "The customer's surname. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive). Null value is ignored.",
             "nullable": true,
             "example": "Agarowicz"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Null value is ignored.",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Null value is ignored. Cannot precede 1850-01-01.",
             "format": "date",
             "nullable": true,
             "example": "1988-05-21"
           },
           "email": {
             "type": "string",
-            "description": "The customer's email address. Null value is ignored.",
+            "description": "The customer's email address. Must be RFC compliant. Null value is ignored.",
             "nullable": true,
             "example": "c.agarowicz@workmailurl.com"
           },
           "telephone": {
             "type": "string",
-            "description": "The customer's telephone number. Null value is ignored.",
+            "minLength": 3,
+            "maxLength": 20,
+            "description": "The customer's telephone number. Null value is ignored. Must start with '00' in place of a '+', and must include the full country code.",
             "nullable": true,
-            "example": "07777222666"
+            "example": "00447653589772",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
@@ -3031,18 +3085,25 @@
         "properties": {
           "buildingNameNumber": {
             "type": "string",
-            "description": "Building name or number of the customer's previous address.",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
+            "description": "Building name or number of the customer's previous address. Must not contain postal code.",
             "nullable": true,
             "example": "322"
           },
           "streetName": {
             "type": "string",
-            "description": "Street name of the customer's previous address.",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
+            "description": "Street name of the customer's previous address. Must not contain postal code.",
             "nullable": true,
             "example": "Long Road"
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "City of the customer's previous address.",
             "nullable": true,
             "example": "Purpleton"
@@ -3050,16 +3111,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's previous address.",
+            "description": "County of the customer's previous address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "Postal code of the customer's previous address.",
+            "description": "Postal code of the customer's previous address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB"
+            "example": "PG15 8AB",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -3073,7 +3135,7 @@
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid, formatted: yyyy-MM-dd.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd. Must be more recent than validFrom date.",
             "format": "date",
             "nullable": true,
             "example": "2022-05-15"
@@ -3139,7 +3201,7 @@
           "taxIdNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Tax identification number.",
+            "description": "Tax identification number. If not provided, you must specify a noTaxIdReason.",
             "nullable": true,
             "example": "DR123467L"
           },

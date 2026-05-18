@@ -100,20 +100,47 @@
     "schemas": {
       "Address": {
         "required": [
-          "buildingNameNumber",
           "countryCode",
           "postalCode",
           "streetName"
         ],
+        "anyOf": [
+          {
+            "required": [
+              "buildingName"
+            ]
+          },
+          {
+            "required": [
+              "buildingNumber"
+            ]
+          }
+        ],
         "type": "object",
         "properties": {
-          "buildingNameNumber": {
-            "maxLength": 40,
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+          "buildingName": {
+            "maxLength": 255,
+            "pattern": "^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ,.'()\\-]+$",
             "type": "string",
-            "example": "22(A)",
-            "description": "The name or number of the customer's home at their address."
+            "nullable": true,
+            "example": null,
+            "description": "The building's name at this address. You must provide either this and/or a buildingNumber."
+          },
+          "buildingNumber": {
+            "maxLength": 255,
+            "pattern": "^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ,.'()\\-]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "270",
+            "description": "The building's number at this address. You must provide either this and/or a buildingName."
+          },
+          "subBuilding": {
+            "maxLength": 255,
+            "pattern": "^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ,.'()\\-]+$",
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "Details of the sub-building at this address, such as an annexe, apartment, or flat."
           },
           "streetName": {
             "maxLength": 50,

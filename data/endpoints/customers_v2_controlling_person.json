@@ -58,7 +58,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the legal entity",
+            "description": "The ID of the controlling person",
             "required": true,
             "schema": {
               "type": "string",
@@ -146,7 +146,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the legal entity",
+            "description": "The ID of the controlling person",
             "required": true,
             "schema": {
               "type": "string",
@@ -244,7 +244,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer.",
+            "description": "The ID of the controlling person.",
             "required": true,
             "schema": {
               "type": "string",
@@ -381,7 +381,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The ID of the customer.",
+            "description": "The ID of the controlling person.",
             "required": true,
             "schema": {
               "type": "string",
@@ -599,7 +599,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The Id of the customer",
+            "description": "The Id of the controlling person",
             "required": true,
             "schema": {
               "type": "string",
@@ -703,15 +703,17 @@
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "The city of this address.",
             "nullable": true,
             "example": "Oldham"
           },
           "postalCode": {
             "type": "string",
-            "description": "The postcode of this address.",
+            "description": "The postcode of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127JQ"
+            "example": "OL12 7JQ",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -759,15 +761,17 @@
           },
           "city": {
             "type": "string",
+            "minLength": 1,
             "description": "The city of this address.",
             "nullable": true,
             "example": "Oldham"
           },
           "postalCode": {
             "type": "string",
-            "description": "The postcode of this address.",
+            "description": "The postcode of this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127HR"
+            "example": "OL12 7HR",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1248,8 +1252,10 @@
         "properties": {
           "firstName": {
             "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The controlling person's first name.",
+            "description": "The controlling person's first name. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Po"
           },
@@ -1261,14 +1267,16 @@
           },
           "surname": {
             "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The controlling person's surname.",
+            "description": "The controlling person's surname. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Lemington"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth, formatted yyyy-MM-dd.",
+            "description": "The customer's date of birth, formatted yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "example": "1977-04-24"
           }
@@ -1288,7 +1296,7 @@
           "taxIdNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "The customer's tax identification number in this tax residency.",
+            "description": "The customer's tax identification number in this tax residency. If not provided, you must specify a noTaxIdReason.",
             "nullable": true,
             "example": "DC775544D"
           },
@@ -1327,15 +1335,19 @@
           },
           "buildingNameNumber": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The building name/number at this address.",
+            "description": "The building name/number at this address. Must not contain postal code.",
             "nullable": true,
             "example": "67A"
           },
           "streetName": {
             "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[^!$%^_=+><?|;~@`]",
             "type": "string",
-            "description": "The street name at this address.",
+            "description": "The street name at this address. Must not contain postal code.",
             "nullable": true,
             "example": "Teal Road"
           },
@@ -1349,16 +1361,17 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "The county at this address.",
+            "description": "The county at this address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
             "example": "Greater Manchester"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
-            "description": "The postcode at this address.",
+            "description": "The postcode at this address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "OL127JQ"
+            "example": "OL12 7JQ",
+            "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
             "$ref": "#/components/schemas/CountryCode"
@@ -1378,8 +1391,11 @@
         "type": "object",
         "properties": {
           "firstName": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "Updated first name (if changed).",
+            "description": "Updated first name (if changed). Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Poh"
           },
@@ -1390,8 +1406,11 @@
             "example": "Irwin"
           },
           "surname": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "Updated surname (if changed).",
+            "description": "Updated surname (if changed). Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Stein"
           },
@@ -1437,6 +1456,9 @@
         "type": "object",
         "properties": {
           "firstName": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
             "description": "Customer's first name",
             "nullable": true,
@@ -1449,6 +1471,9 @@
             "example": "Irvine"
           },
           "surname": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
             "description": "Customer's surname",
             "nullable": true,
@@ -1595,8 +1620,11 @@
         "type": "object",
         "properties": {
           "firstName": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The customer's first name. Null value is ignored.",
+            "description": "The customer's first name. Null value is ignored. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Poh"
           },
@@ -1607,14 +1635,17 @@
             "example": "Irwin"
           },
           "surname": {
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The customer's surname. Null value is ignored.",
+            "description": "The customer's surname. Null value is ignored. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "nullable": true,
             "example": "Stein"
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth. Null value is ignored.",
+            "description": "The customer's date of birth. Null value is ignored. Cannot precede 1850-01-01.",
             "format": "date",
             "nullable": true,
             "example": "1977-04-24"
@@ -1629,7 +1660,7 @@
           "taxIdNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Tax identification number.",
+            "description": "Tax identification number. If not provided, you must specify a noTaxIdReason.",
             "nullable": true,
             "example": "AB632233A"
           },

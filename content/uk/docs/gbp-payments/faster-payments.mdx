@@ -10,25 +10,22 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import Callout from 'src/components/callout'
 import ExternalLink from 'src/components/external-link';
 
-## Faster Payments
+## Faster Payments overview
 
-When sending payments through our API, Faster Payments are initiated via the [POST /{vn}/Payments/FPS](#send-faster-payments) endpoint, and confirmation of settlement is provided to you via the [Transaction Settled webhook](#transaction-settled-webhook). You can send individual or bulk payments.
+The Faster Payment System (FPS) is the most frequently used and fastest payment rail in the UK. It is instant or near-instant, and operates all hours of all days. All ClearBank UK GBP accounts support inbound and outbound Faster Payments.
 
-ClearBank accounts support inbound and outbound Faster Payments. You can send and receive Faster Payments of up to £1,000,000. 
-Faster Payments are not subject to a cut-off time.
+You can initiate a Faster Payment using the [POST /v3/Payments/FPS](#send-faster-payments) endpoint, and receive confirmation of settlement from the [Transaction Settled webhook](#transaction-settled-webhook). You can send Faster Payments individually or in bulk with a single request.
 
-Sometimes you will need to return a faster payment, for example when: 
-- the beneficiary name does not match that of the account number, 
-- the account has been closed or transferred, 
-- the beneficiary has deceased. 
+Key aspects of FPS include:
 
-To return one single immediate payment, use the [POST /v3/payments/fps/return](#return-a-faster-payment) endpoint.
+* A payment limit of £1,000,000 on inbound and outbound payments.
+* No cut-off times or operational holidays: Faster Payments settle near instantly 24 hours a day, 365 days a year.
 
-Payments originating overseas need to be sent using a separate endpoint: [POST /v2/payments/fps/singlepayment](#send-a-faster-payment-originated-overseas).
+## Features and functionality
 
-#### Validation
+### Validation requirements
 
-Each Faster Payment is validated against these rules: 
+Every Faster Payment is validated against these rules:
 
 | Element     | Type   | Validation | Description  |
 |-------------|--------|------------|--------------|
@@ -55,7 +52,7 @@ The result of the screening can be found in the `SupplementaryData` object of th
 | Pass (no match)                      | `AbusiveMessageScreeningResult:Pass` |
 | Fail (match)                         | `AbusiveMessageScreeningResult:Fail`<br /> `AbusiveMessageScreeningIdentifiers:paymentInstruction.creditTransfer.remittanceInformation.structured.creditorReferenceInformation.reference` |
 
-#### APP Scam protection
+### APP Scam protection and internal transfers
 
 In line with legislation to prevent Authorised Push Payment (APP) scams, payments sent via the Faster Payments scheme may be in scope for APP scam reimbursement, allowing for the recovery of 50% of any consumer reimbursement (up to the claim limit) from the receiving Payment Service Provider (PSP). Further details are available on <ExternalLink href="https://www.wearepay.uk/appr-policy/">Pay.UK's website</ExternalLink>.
 
@@ -69,7 +66,7 @@ To ensure you have control over the payment method and, by extension, your level
 <Callout colour="blue"><p>Note that if the <strong>enforceSendToScheme</strong> field is included in your payload but left blank, the request will fail and a 400 Bad Request response will be received.</p>
 </Callout>
 
-#### Forward-dated and standing order payments
+### Forward-dated and standing order payments
 
 The `paymentTypeCode` field of the [POST /v3/payments/fps endpoint](#send-faster-payments) allows you to specify the type of payment using the following three-letter codes:
 
@@ -84,7 +81,7 @@ This is an optional field. If not provided, the payment type will default to `SI
 <p>You are responsible for ensuring you have an SOP mandate in place for any account that you send SOPs from.</p>
 </Callout>
 
-A bulk payment can contain a combination of SIPs, SOPs and FDPs. While SIPs and FDPs can be initiated at any time, **SOPs can only be sent Monday to Friday, excluding bank holidays, between 00:01 and 06:00am UK time**. 
+A bulk payment can contain a combination of SIPs, SOPs and FDPs. While SIPs and FDPs can be initiated at any time, **SOPs can only be sent Monday to Friday, excluding bank holidays, between 00:01 and 06:00am UK time**.
 
 If a single or bulk SOP is initiated outside of the supported days/times, the request will not be accepted and a `400 Bad Request` response will be returned:
 
@@ -96,6 +93,25 @@ If a bulk payment containing a combination of SIPs, SOPs and FDPs is initiated o
 
 While a `202 Accepted` response will be returned if the provided payment details are valid, the payment `Response` for the SOPs will show as `Rejected`. **You will not receive a Transaction Rejected Webhook for SOPs sent outside of supported days/times**.
 
+### Payment returns
+
+Our Faster Payments service supports payment returns up to 90 days after clearing. You may sometimes need to return a Faster Payment, for example if:
+
+- The beneficiary's name does not match that of the details of the account holder.
+- The beneficiary's account has been closed or transferred.
+- The beneficiary is deceased.
+
+To return a single Faster Payment, you can use the [POST /v3/payments/fps/return](#return-a-faster-payment) endpoint.
+
+ClearBank does not permit the return of Faster Payments over **90 calendar days old**. To return a payment older than this, you should do so by making a normal outbound payment. If you do attempt to return a Faster Payment that's older than 90 days, you'll receive a synchronous **'422 - Unprocessable Content'** error.
+
+Faster Payments are dated against UTC from their clearing timestamp, which is given in the [Transaction Settled](#transaction-settled-webhook) webhook's `TimestampCreated` field. Held transactions can still age, so a payment held for over 90 days - identifiable from the same field in the [Transaction Held webhook](#inbound-transaction-held-webhook) - will also be invalid for return.
+
+### Send Faster Payments Originating Overseas
+
+Faster Payments Originating Overseas (FPOOs) must be sent using our dedicated endpoint: [POST /v2/payments/fps/singlepayment](#send-a-faster-payment-originated-overseas).
+
+## Endpoints and webhooks
 
 <EndpointBlock
 type="post"
@@ -120,7 +136,6 @@ endpoints={[
 <WebhookPlaceholder render='transaction-rejected-v2' />
 <WebhookPlaceholder render='inbound-held-transaction-v1' />
 <WebhookPlaceholder render='outbound-held-transaction-v1' />
-
 
 <EndpointBlock
 type="post"

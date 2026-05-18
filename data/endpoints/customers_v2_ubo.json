@@ -259,7 +259,7 @@
           {
             "name": "customerId",
             "in": "path",
-            "description": "The Id of the ubo customer.",
+            "description": "The Id of the UBO.",
             "required": true,
             "schema": {
               "type": "string",
@@ -604,8 +604,10 @@
         "properties": {
           "firstName": {
             "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The UBO's first name.",
+            "description": "The UBO's first name. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "example": "Linn"
           },
           "middleName": {
@@ -617,8 +619,10 @@
           },
           "surname": {
             "minLength": 1,
+            "maxLength": 255,
+            "pattern": "[^0-9!$%^_=+><?|;~@£&()/\\\\[\\]{}:\",#`¬]{1,255}",
             "type": "string",
-            "description": "The UBO's surname.",
+            "description": "The UBO's surname. Must not include substrings: 'aka', 'known as', or 'unknown' (case insensitive).",
             "example": "Sanches"
           },
           "countryOfResidence": {
@@ -626,7 +630,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The UBO's date of birth, formatted yyyy-MM-dd.",
+            "description": "The UBO's date of birth, formatted yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "example": "1978-05-22"
           }
@@ -670,7 +674,9 @@
           },
           "ownershipPercentage": {
             "type": "integer",
-            "description": "The ownership percentage the UBO has of the associated legal entity.",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "The ownership percentage the UBO has of the associated legal entity. Total ownership percentage for a single legal entity cannot exceed 100.",
             "format": "int32",
             "nullable": true,
             "example": 100
@@ -889,7 +895,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Response summarising which fields were changed by a UBO Natural PATCH.\r\nContains only sections and properties that were changed."
+        "description": "Response summarising which fields were changed by a UBO Natural PATCH. Contains only sections and properties that were changed."
       },
       "UboNaturalPatchModel": {
         "type": "object",
@@ -960,7 +966,7 @@
       "UboPatchResponse": {
         "$ref": "#/components/schemas/UboNaturalCustomerPatchResponse",
         "additionalProperties": false,
-        "description": "Base response summarizing which fields were changed by a UBO PATCH.\r\nThis is a polymorphic envelope for specific UBO patch responses."
+        "description": "Base response summarizing which fields were changed by a UBO PATCH. This is a polymorphic envelope for specific UBO patch responses."
       },
       "UpdateUboNaturalDetailsRequest": {
         "type": "object",
@@ -988,7 +994,7 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The date of birth of the person, formatted yyyy-MM-dd.",
+            "description": "The date of birth of the person, formatted yyyy-MM-dd. Cannot precede 1850-01-01.",
             "format": "date",
             "nullable": true,
             "example": "1978-05-21"
