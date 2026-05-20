@@ -200,6 +200,11 @@ A UBO is a natural or non-natural person with ownership in a company - either di
 
 A controlling person is an natural person who exercises control over the operation of a legal entity. You can use the below endpoints to manage the controlling person data of your legal entity customers.
 
+<Callout colour="blue">
+  Controlling persons must have at least one tax residency.
+</Callout>
+
+
 <EndpointBlock
   type="post"
   title="Create a controlling person"
@@ -277,6 +282,20 @@ For example, when defining a UBO relationship, the customer referred to in the `
 To retrieve all existing relations to a customer, you can call the [**GET /customers/v2/customers/{customerId}/related-parties**](#get-all-relations-of-a-legal-entity).
 
 To remove a relation between two parties, you can use the [**DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}**](#delete-a-relation-between-two-customers) using the `customerId` of each party.
+
+Relationships between legal entity customers and other customer types must be of a valid type. For example, a legal entity may only be related to another legal entity via the `"UBO"` relationship type. Additionally, two customers may only be related via a given relationship type once: a given person could not be related to the same company twice as a director.
+
+Any request containing an invalid combination of customer type and relation type will be rejected. Valid combinations are shown in the below table: any combination not listed will be automatically rejected. You can check a customer's type by retrieving them and inspecting their `type` property.
+
+| Customer Type | Related Customer Type | Allowed Related Party Types            |
+| ------------- | --------------------- | -------------------------------------- |
+| `LegalEntity` | `Retail`              | `Director`, `UBO`, `ControllingPerson` |
+| `LegalEntity` | `SoleTrader`          | `Director`, `UBO`, `ControllingPerson` |
+| `LegalEntity` | `LegalEntity`         | `UBO`                                  |
+| `LegalEntity` | `Director`            | `Director`                             |
+| `LegalEntity` | `UboNatural`          | `UBO`                                  |
+| `LegalEntity` | `UboNonNatural`       | `UBO`                                  |
+| `LegalEntity` | `ControllingPerson`   | `ControllingPerson`                    |
 
 <EndpointBlock
   type="post"
