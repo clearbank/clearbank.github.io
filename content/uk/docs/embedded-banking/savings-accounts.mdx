@@ -88,7 +88,7 @@ Always take note of the X-Request-Id when requesting creation of an account. In 
 
 #### Message flow diagram
 
-![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
+![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the POST /v1/accounts/{accountId}/related-accounts to set up a nominated account. Once you receive a 201 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
 ### Create joint savings accounts
 
@@ -103,7 +103,9 @@ Both single and joint savings accounts can be created using the [POST /v2/saving
   "productId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
   "customers": [
     {
-      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f",
+      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f"
+    },
+    {
       "customerId": "abcdef12-3456-7890-1234-56789abcdef0"
     }
   ],
@@ -122,9 +124,15 @@ While joint accounts will typically have two customers, we can support any numbe
   "productId": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
   "customers": [
     {
-      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f",
-      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
-      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6",
+      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f"
+    },
+    {
+      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"
+    },
+    {
+      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6"
+    },
+    {
       "customerId": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
     }
   ],
