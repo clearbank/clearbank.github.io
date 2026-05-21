@@ -47,7 +47,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/submitDepositRequest"
+                "$ref": "#/components/schemas/submitDepositRequestSync"
               }
             }
           },
@@ -243,7 +243,68 @@
         },
         "description": "Cheque images."
       },
-      "deposit": {
+            "chequeImagesSync": {
+        "required": [
+          "frontImage",
+          "backImage",
+          "imageType"
+        ],
+        "type": "object",
+        "properties": {
+          "frontImage": {
+            "type": "string",
+            "description": "Base64 representation of the front image."
+          },
+          "backImage": {
+            "type": "string",
+            "description": "Base64 representation of the back image."
+          },
+          "imageType": {
+            "type": "string",
+            "maxLength": 4,
+            "minLength": 4,
+            "description": "Image format. Only 'TIFF' format is supported.",
+            "pattern": "^(TIFF)$",
+            "example": "TIFF"
+          }
+        },
+        "description": "Cheque images."
+      },
+      "depositSync": {
+        "required": [
+          "beneficiary",
+          "chequeAmount",
+          "currency",
+          "chequeImages"
+        ],
+        "type": "object",
+        "properties": {
+          "beneficiary": {
+            "$ref": "#/components/schemas/beneficiary"
+          },
+          "chequeAmount": {
+            "type": "number",
+            "description": "Cheque amount can have up to two decimal places.",
+            "format": "decimal",
+            "default": 0,
+            "pattern": "^\\d+(\\.\\d{1,2})?$",
+            "example": "39.32"
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
+            "pattern": "^GBP$",
+            "example": "GBP"
+          },
+          "chequeImages": {
+            "$ref": "#/components/schemas/chequeImagesSync"
+          }
+        },
+        "description": "Deposit details."
+      },
+            "deposit": {
         "required": [
           "beneficiary",
           "chequeAmount",
@@ -284,7 +345,7 @@
         },
         "description": "List of error messages."
       },
-      "submitDepositRequest": {
+      "submitDepositRequestSync": {
         "required": [
           "deposit",
           "messageId"
@@ -292,7 +353,28 @@
         "type": "object",
         "properties": {
           "deposit": {
-            "$ref": "#/components/schemas/deposit"
+            "$ref": "#/components/schemas/depositSync"
+          },
+          "messageId": {
+            "type": "string",
+            "maxLength": 35,
+            "minLength": 1,
+            "description": "The unique identifier for the message.",
+            "pattern": "^\\S{1,35}$",
+            "example": "a8F3kLm92Qx7Zp5vTn4RjW1hGd6YsBc9Uq0"
+          }
+        },
+        "description": "Submit cheque deposit request."
+      },
+            "submitDepositRequest": {
+        "required": [
+          "deposit",
+          "messageId"
+        ],
+        "type": "object",
+        "properties": {
+          "deposit": {
+            "$ref": "#/components/schemas/depositSync"
           },
           "messageId": {
             "type": "string",
