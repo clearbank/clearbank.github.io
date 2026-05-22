@@ -1199,12 +1199,14 @@
             "minLength": 1,
             "maxLength": 21,
             "type": "string",
-            "description": "Account details of new ISA. Must be in format of SCxxxxxxACxxxxxxxx or RNxxxxxx"
+            "description": "Account details of new ISA. Must be in format of SC######AC######## or RN######",
+            "pattern": "^((SC[0-9]{6}AC[0-9]{8,11})|(RN[A-Z0-9 &./-]{4,18}))$"
           },
           "currentYearSubscriptionAmount": {
             "type": "number",
             "description": "The amount of the ISA subscription that has been used this year.",
-            "format": "double"
+            "format": "double",
+            "example": 2000.00
           }
         },
         "description": "New ISA plan manager details"
@@ -1228,7 +1230,8 @@
           "amountFromCurrentYearSubscription": {
             "type": "number",
             "description": "Optional amount to transfer from current year",
-            "format": "double"
+            "format": "double",
+            "example": 2000.00
           }
         },
         "description": "ClearBank ISA subscription details block"
@@ -1249,23 +1252,23 @@
           "firstName": {
             "minLength": 1,
             "type": "string",
-            "description": "Customer first name"
+            "description": "The customer's first name"
           },
           "lastName": {
             "minLength": 1,
             "type": "string",
-            "description": "Customer last name"
+            "description": "The customer's last name"
           },
           "dateOfBirth": {
             "minLength": 1,
             "type": "string",
-            "description": "Customer date of birth. Must be in format YYYY-MM-DD"
+            "description": "The customer's date of birth. Must be in format YYYY-MM-DD"
           },
           "nationalInsuranceNumber": {
             "minLength": 1,
             "maxLength": 9,
             "type": "string",
-            "description": "Customer national insurance number"
+            "description": "The customer's national insurance number"
           },
           "customerAddressDetails": {
             "$ref": "#/components/schemas/TisaMit.CustomerAddressDetailsModel"
@@ -1274,7 +1277,7 @@
             "minLength": 1,
             "maxLength": 21,
             "type": "string",
-            "description": "Customer account details on ClearBank platform. Must be in format of SCxxxxxxACxxxxxxxx"
+            "description": "The customer's account details on ClearBank platform. Must be in format of SCxxxxxxACxxxxxxxx"
           },
           "newIsaManagerDetails": {
             "$ref": "#/components/schemas/TisaMit.NewIsaManagerDetailsModel"
@@ -1308,7 +1311,7 @@
           },
           "subscriptionDetails": {
             "extendedCurrentYearType": "INCLUDECURRENT",
-            "amountFromCurrentYearSubscription": 0.00
+            "amountFromCurrentYearSubscription": 2000.00
           }
         }]
       },
@@ -1379,7 +1382,7 @@
           "transferType": "TransferIn",
           "state": "PEND",
           "reason": "Pend",
-          "pendDate": "2024-12-31"
+          "pendDate": "2025-12-31"
         }]
       },
       "TisaMit.TisaMitResponse": {
