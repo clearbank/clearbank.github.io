@@ -124,6 +124,10 @@ https://github.com/APIDevTools/swagger-parser/blob/master/docs/swagger-parser.md
 
 Its important that those json files ('v1.json', 'v2.json', 'v3.json') are all **OpenAPI v3** format. Its the only way that the parser can parse them.
 
+### Schema checks
+
+For endpoint schema build and rendering gotchas (including required response media types), see [skills/endpoint-schema-checks.md](skills/endpoint-schema-checks.md).
+
 ## Test
 
 Tests can be run via npm scripts (`nprm run XXX`) andthe following commands:
