@@ -136,6 +136,58 @@ Because processing is not immediate, you should design your integration to be **
 ]
 ```
 
+## SEPA Direct Debit R-flows
+
+### Overview
+
+SEPA Direct Debit has three 'R-flows': Return, Refund, Reject, and Refuse. Each represents a different possible outcome in the SEPA Direct Debit payment flow. The only safe way to reconcile R-flows is using the canonical identifiers.
+
+### Return
+
+A SEPA Direct Debit return is a post-settlement recollection of a payment back to its debtor, and is only applicable a short time after settlement (5 business days).
+
+A return may be instigated when a debtor determines the debit cannot be honoured or is invalid per the payment scheme. For example: insufficient funds, a closed account, etc. The return message's data carries identifiers you can use to reconcile with the return with original debit.
+
+Returns may be requested and received up to 5 working days after the date of settlement.
+
+Returns have standard reason codes which can help you to resolve and communicate the reason for a return:
+
+#### Return reason code table
+
+| Reason Code | Description    |
+| ----------- | -------------- |
+| `MD01`      | NoMandate      |
+| `AC06`      | AccountBlocked |
+
+#### Simulate a SEPA DD Return
+
+To simulate a SEPA DD return, call our POST /payments/sepa-dd/v1/r-message-instructions endpoint with the appropriate reason code and reference to the original payment.
+
+### Refund
+
+TBC
+
+### Reject
+
+Pre-settlement, pre-debit rejection, missing data or invalid request. i.e. 'debtor says no'
+
+### Refuse
+
+TBC
+
+<EndpointBlock
+  type="post"
+  title="Simulate an R-flow for a SEPA Direct Debit payment"
+  endpoints={[
+    {
+      path: "/payments/sepa-dd/v1/r-message-instructions",
+      version: "1.0.SEPA-R-FLOW",
+      webhooks: [
+      ]
+    }
+  ]}
+/>
+
 ## Webhooks
 
 ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity and settlement outcomes. You should subscribe to these webhooks to keep your systems in sync with scheme events.
