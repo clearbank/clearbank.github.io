@@ -84,6 +84,9 @@ Because processing is not immediate, you should design your integration to be **
       path: "/payments/sepa-dd/v1/emulator/inbound-direct-debits",
       version: "1.0.SepaDD",
       webhooks: [
+        'sepa-dd-debit-payment-collection-pending-v1',
+        'sepa-dd-debit-payment-completed-v1',
+        'sctuk-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
@@ -150,7 +153,7 @@ A return may be instigated when a debtor determines the debit cannot be honoured
 
 Returns may be requested and received up to 5 working days after the date of settlement.
 
-Returns have standard reason codes which can help you to resolve and communicate the reason for a return:
+Returns have standard reason codes to help you resolve and communicate the underlying reason for a return:
 
 #### Return reason code table
 
@@ -167,19 +170,19 @@ Returns have standard reason codes which can help you to resolve and communicate
 
 #### Simulate a SEPA DD Return
 
-To simulate a SEPA DD return, call our POST /payments/sepa-dd/v1/r-message-instructions endpoint with the appropriate reason code and reference to the original payment.
+To simulate a SEPA DD return, call our [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint with an appropriate return reason code and reference to the original payment set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
 ### Refund
 
-Details TBC
+_Details TBC_
 
 ### Reject
 
-Details TBC
+_Details TBC_
 
 ### Refuse
 
-Details TBC
+_Details TBC_
 
 <EndpointBlock
   type="post"
