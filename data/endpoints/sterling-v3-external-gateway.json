@@ -1,0 +1,1565 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "ClearBank API endpoints for creating and managing accounts and transactions.",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "3.0.Sterling",
+    "x-external-api": "ExternalGateway"
+  },
+  "paths": {
+    "/v3/Accounts": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Gets all accounts associated with your institution.",
+        "description": "All accounts are returned except those which have been disabled or where the account is a virtual account.",
+        "operationId": "V3InstitutionsByInstitutionIdAccountsGet",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The page number to control returned results into manageable sets. Default if not supplied: 1.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The page size to control returned results into manageable sets. Default if not supplied: 50.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Creates an account with the specified name.",
+        "description": "Currently, this endpoint only supports the creation of current accounts.<br /><br /><strong>AccountName</strong> must not be null, and must only contain whitespace, letters, numbers and the following special characters: - ,.<br />Account names are automatically prefixed with an abbreviated account-type label, depending on the account type. <br /> For example, if an account were created with the following parameters:<br /><strong>AccountName</strong>: 'account one'<br /><strong>UsageType</strong>: 'Segregated Designated'<br />When inspected using the <strong>GET /v3/Accounts/{accountId}</strong> endpoint, the name would be returned as: `Des Seg Wsale account one`<br /><br /><strong>UsageType</strong> specifies an account's type. The account type you choose should depend on your agreement with ClearBank, your FCA permissions, and the purpose of the account.<br /><strong>An account's usage type is immutable. Take care to set the correct usage type when making a new account.</strong><br /><br />This endpoint uses the X-Request-Id as a duplicate check and to ensure the request is idempotent.",
+        "operationId": "V3InstitutionsByInstitutionIdAccountsPost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Content-Digest",
+            "in": "header",
+            "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+            "schema": {
+              "type": "string",
+              "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to create the account.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Binding.Accounts.CreateAccountRequest"
+              }
+            }
+          },
+          "x-bodyName": "request"
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v3/Accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Gets a detailed view of an account.",
+        "operationId": "V3InstitutionsByInstitutionIdAccountsByAccountIdGet",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "The unique identifier for the account. This can be retrieved from GET /v3/Accounts.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Binding.Accounts.CreateAccountRequest": {
+        "required": [
+          "accountName",
+          "owner",
+          "sortCode"
+        ],
+        "type": "object",
+        "properties": {
+          "accountName": {
+            "maxLength": 70,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\- ,.&]*$",
+            "type": "string",
+            "description": "The friendly name that should be associated with the account.",
+            "example": "Current Account"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Binding.Accounts.PartyIdentification"
+          },
+          "sortCode": {
+            "pattern": "^\\d{6}$",
+            "type": "string",
+            "description": "The sort code these accounts should be created under.",
+            "example": "010203"
+          },
+          "usageType": {
+            "enum": [
+              "YourFunds",
+              "SegregatedPooled",
+              "SegregatedDesignated",
+              "ClientMoneyPooled",
+              "ClientMoneyDesignated",
+              "SafeguardedPooled",
+              "SafeguardedDesignated",
+              "ClientSuspense"
+            ],
+            "type": "string",
+            "description": "The type of funds the account will hold. Default if not supplied: YourFunds.",
+            "example": "YourFunds"
+          }
+        },
+        "description": "Information that is used to create a Current Account."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Binding.Accounts.PartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "pattern": "^[^\\|_\\[\\]<>^`~\\\\$]*$",
+            "type": "string",
+            "description": "Name by which a party is known and which is usually used to identify that party.",
+            "example": "John Smith"
+          }
+        },
+        "description": "Set of elements used to identify a person or an organisation."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountResponse": {
+        "required": [
+          "account"
+        ],
+        "type": "object",
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.Account"
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "Represents a single account and associated hypermedia links."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.Account": {
+        "required": [
+          "id",
+          "name",
+          "type",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the account.",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "name": {
+            "type": "string",
+            "description": "The friendly name of the account.",
+            "example": "Sample Account Type Name"
+          },
+          "label": {
+            "type": "string",
+            "description": "The account holder label for the account.",
+            "example": "John Smith"
+          },
+          "type": {
+            "enum": [
+              "CACC"
+            ],
+            "type": "string",
+            "description": "Specifies the type of the account.",
+            "example": "CACC"
+          },
+          "currency": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "enum": [
+                "AED",
+                "AFN",
+                "ALL",
+                "AMD",
+                "ANG",
+                "AOA",
+                "ARS",
+                "AUD",
+                "AWG",
+                "AZN",
+                "BAM",
+                "BBD",
+                "BDT",
+                "BGN",
+                "BHD",
+                "BIF",
+                "BMD",
+                "BND",
+                "BOB",
+                "BOV",
+                "BRL",
+                "BSD",
+                "BTN",
+                "BWP",
+                "BYN",
+                "BZD",
+                "CAD",
+                "CDF",
+                "CHE",
+                "CHF",
+                "CHW",
+                "CLF",
+                "CLP",
+                "CNY",
+                "COP",
+                "COU",
+                "CRC",
+                "CUC",
+                "CUP",
+                "CVE",
+                "CZK",
+                "DJF",
+                "DKK",
+                "DOP",
+                "DZD",
+                "EGP",
+                "ERN",
+                "ETB",
+                "EUR",
+                "FJD",
+                "FKP",
+                "GBP",
+                "GEL",
+                "GHS",
+                "GIP",
+                "GMD",
+                "GNF",
+                "GTQ",
+                "GYD",
+                "HKD",
+                "HNL",
+                "HRK",
+                "HTG",
+                "HUF",
+                "IDR",
+                "ILS",
+                "INR",
+                "IQD",
+                "IRR",
+                "ISK",
+                "JMD",
+                "JOD",
+                "JPY",
+                "KES",
+                "KGS",
+                "KHR",
+                "KMF",
+                "KPW",
+                "KRW",
+                "KWD",
+                "KYD",
+                "KZT",
+                "LAK",
+                "LBP",
+                "LKR",
+                "LRD",
+                "LSL",
+                "LYD",
+                "MAD",
+                "MDL",
+                "MGA",
+                "MKD",
+                "MMK",
+                "MNT",
+                "MOP",
+                "MRU",
+                "MUR",
+                "MVR",
+                "MWK",
+                "MXN",
+                "MXV",
+                "MYR",
+                "MZN",
+                "NAD",
+                "NGN",
+                "NIO",
+                "NOK",
+                "NPR",
+                "NZD",
+                "OMR",
+                "PAB",
+                "PEN",
+                "PGK",
+                "PHP",
+                "PKR",
+                "PLN",
+                "PYG",
+                "QAR",
+                "RON",
+                "RSD",
+                "RUB",
+                "RWF",
+                "SAR",
+                "SBD",
+                "SCR",
+                "SDG",
+                "SEK",
+                "SGD",
+                "SHP",
+                "SLL",
+                "SOS",
+                "SRD",
+                "SSP",
+                "STN",
+                "SVC",
+                "SYP",
+                "SZL",
+                "THB",
+                "TJS",
+                "TMT",
+                "TND",
+                "TOP",
+                "TRY",
+                "TTD",
+                "TWD",
+                "TZS",
+                "UAH",
+                "UGX",
+                "USD",
+                "USN",
+                "UYI",
+                "UYU",
+                "UZS",
+                "VEF",
+                "VND",
+                "VUV",
+                "WST",
+                "XAF",
+                "XAG",
+                "XAU",
+                "XBA",
+                "XBB",
+                "XBC",
+                "XBD",
+                "XCD",
+                "XDR",
+                "XOF",
+                "XPD",
+                "XPF",
+                "XPT",
+                "XSU",
+                "XTS",
+                "XUA",
+                "XXX",
+                "YER",
+                "ZAR",
+                "ZMW",
+                "ZWL"
+              ],
+              "type": "string"
+            },
+            "description": "Currencies used for the account.",
+            "example": "GBP"
+          },
+          "balances": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.Balance"
+            },
+            "description": "Balances associated with the account."
+          },
+          "minimumBalance": {
+            "$ref": "#/components/schemas/MinimumBalance"
+          },
+          "productType": {
+            "enum": [
+              "None",
+              "AdultCashIsa",
+              "Saving",
+              "Operating",
+              "Segregated",
+              "JuniorSaving",
+              "Holding",
+              "Current"
+            ],
+            "type": "string",
+            "description": "The product type of the account.",
+            "example": "Segregated"
+          },
+          "accountSubType": {
+            "enum": [
+              "YourFunds",
+              "SegregatedPooled",
+              "SegregatedDesignated",
+              "ClientMoneyPooled",
+              "ClientMoneyDesignated",
+              "SafeguardedPooled",
+              "SafeguardedDesignated",
+              "InternalSuspense",
+              "MinimumMandatedBalance",
+              "ClientSuspense",
+              "SavingAccount",
+              "AdultCashIsa",
+              "JuniorSavingAccount",
+              "HoldingAccount",
+              "CurrentAccount"
+            ],
+            "type": "string",
+            "description": "The subtype of the account - if applicable, this reflects the UsageType used to create the account.",
+            "example": "SafeguardedPooled"
+          },
+          "legalOwnerType": {
+            "enum": [
+              "Personal",
+              "Business"
+            ],
+            "type": "string",
+            "description": "Nature of the funds held in the account. Valid options are Personal or Business.",
+            "example": "Personal"
+          },
+          "relationshipType": {
+            "enum": [
+              "Single",
+              "Joint"
+            ],
+            "type": "string",
+            "description": "Operating nature of the account. Valid options are Single and Joint. If the legalOwnerType is Business, then the relationshipType cannot be Joint.",
+            "example": "Single"
+          },
+          "status": {
+            "enum": [
+              "NotProvided",
+              "Enabled",
+              "Closed",
+              "Suspended",
+              "CBRestricted"
+            ],
+            "type": "string",
+            "description": "The status of the account.",
+            "example": "Enabled"
+          },
+          "statusReason": {
+            "enum": [
+              "AccountHolderBankrupt",
+              "AccountHolderDeceased",
+              "AccountSwitched",
+              "CompanyNoLongerTrading",
+              "DissatisfiedCustomer",
+              "DuplicateSoleTraderAccount",
+              "FinancialCrime",
+              "FraudConfirmed",
+              "FraudFirstParty",
+              "FraudThirdParty",
+              "InternallyDormant",
+              "KYCRequired",
+              "LegallyDisputed",
+              "PotentialSanctionedIndividual",
+              "SanctionedIndividual",
+              "SuspectMoneyLaundering",
+              "TransactionDispute",
+              "NotProvided",
+              "Other"
+            ],
+            "type": "string",
+            "description": "The reason for the status of the account.",
+            "example": "Other"
+          },
+          "timestampCreated": {
+            "type": "string",
+            "description": "The timestamp in UTC that the account was created.",
+            "format": "date-time",
+            "example": "2025-02-19T11:32:10.934Z"
+          },
+          "timestampModified": {
+            "type": "string",
+            "description": "The timestamp in UTC that the account was last modified .",
+            "format": "date-time",
+            "example": "2025-05-25T18:27:12.524Z"
+          },
+          "iban": {
+            "type": "string",
+            "description": "The IBAN identifier associated with the account.",
+            "example": "GB12CLBK01020312345678"
+          },
+          "bban": {
+            "type": "string",
+            "description": "The BBAN identifier associated with the account.",
+            "example": "CLBK01020312345678"
+          },
+          "upic": {
+            "type": "string",
+            "description": "The Universal Payment Identification Code (UPIC) associated with the account."
+          },
+          "cuid": {
+            "type": "string",
+            "description": "The CHIPS Universal Identifier associated with the account."
+          }
+        },
+        "description": "Represents a summary of a given account."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.HalLink": {
+        "required": [
+          "name",
+          "href"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Indicates the purpose of the link."
+          },
+          "href": {
+            "type": "string",
+            "description": "Link to related content."
+          },
+          "templated": {
+            "type": "boolean",
+            "description": "Indicates whether you need to populate any parameters (true) or can use the link as is (false).",
+            "example": true
+          }
+        },
+        "description": "A single hypermedia link."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.Balance": {
+        "required": [
+          "name",
+          "amount",
+          "currency",
+          "status",
+          "balanceLastUpdatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the account.",
+            "example": "Current Account"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount available to spend, excluding any earmarked funds (for example, pending payments that are in transit or held).",
+            "format": "double",
+            "example": 2310.55
+          },
+          "currency": {
+            "enum": [
+              "GBP"
+            ],
+            "type": "string",
+            "description": "Is set to 'GBP' as other currencies are not supported.",
+            "example": "GBP"
+          },
+          "status": {
+            "enum": [
+              "VALU"
+            ],
+            "type": "string",
+            "description": "The type of balance that is being reported, this will always be `VALU`.",
+            "example": "VALU"
+          },
+          "balanceLastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp in UTC specifying when the balance value was last changed.",
+            "example": "2025-04-19T10:02:00.964Z"
+          }
+        },
+        "description": "A summary of the balance of an account."
+      },
+      "MinimumBalance": {
+        "required": [
+          "name",
+          "amount",
+          "currency",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the account.",
+            "example": "Current Account"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The value of the minimum permitted balance for this account.",
+            "format": "double",
+            "example": -200
+          },
+          "currency": {
+            "enum": [
+              "GBP"
+            ],
+            "type": "string",
+            "description": "Is set to 'GBP' as other currencies are not supported.",
+            "example": "GBP"
+          },
+          "status": {
+            "enum": [
+              "VALU"
+            ],
+            "type": "string",
+            "description": "The type of balance that is being reported, this will always be `VALU`.",
+            "example": "VALU"
+          }
+        },
+        "description": "A summary of the balance of an account."
+      },
+      "ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.AccountsResponse": {
+        "required": [
+          "accounts"
+        ],
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.Accounts.Account"
+            },
+            "description": "A collection of accounts all belonging to the institution associated with the API token."
+          },
+          "halLinks": {
+            "uniqueItems": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClearBank.FI.API.Accounts.Versions.V3.Models.Response.HalLink"
+            },
+            "description": "Hypermedia links."
+          }
+        },
+        "description": "Represents one or more accounts and associated hypermedia links."
+      }
+    }
+  }
+}

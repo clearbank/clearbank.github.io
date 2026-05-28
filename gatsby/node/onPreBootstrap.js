@@ -11,20 +11,28 @@ module.exports = async () => {
   async function createEndpointFile () {
     const files = await getFiles('./data/endpoints/')
 
-    const jsonPromises = files.map(file =>
-      SwaggerParser.dereference(require(`../../data/endpoints/${file}`))
+    const documents = await Promise.all(
+      files.map(async file => {
+        const document = await SwaggerParser.dereference(require(`../../data/endpoints/${file}`))
+
+        return {
+          document,
+          externalApi: document.info['x-external-api'] || 'FIAPI',
+          apiVersion: document.info.version
+        }
+      })
     )
 
-    const resolvedJSONRefs = await Promise.all(jsonPromises)
+    const formatted = documents.reduce((acc, item) => {
+      const { externalApi, apiVersion, document } = item
 
-    const formatted = resolvedJSONRefs.reduce((prev, curr) => {
-      const total = { ...prev }
+      if (!acc[externalApi]) acc[externalApi] = {}
 
-      total[curr.info.version] = {
-        ...curr
+      acc[externalApi][apiVersion] = {
+        ...document
       }
 
-      return total
+      return acc
     }, {})
 
     writefile(

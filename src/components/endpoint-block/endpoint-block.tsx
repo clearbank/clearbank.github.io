@@ -54,11 +54,10 @@ const renderVersionDropdown = (
   >
     {endpoints.map(
       (endpoint: any, index: number): React.ReactNode => {
-        const { version } = endpoint
-        const versionFormatted = parseInt(version, 10)
-          .toString()
-          .padStart(3, '\u00A0')
-        const label = `API Version ${versionFormatted}`
+        const { externalApi, version } = endpoint
+        const versionFormatted = parseInt(version, 10).toString()
+        const externalApiFormatted = externalApi === 'ExternalGateway' ? "External Gateway" : "Legacy API"
+        const label = `API Version ${versionFormatted} ${externalApiFormatted}`
 
         return <SelectOption key={index} label={label} value={index} />
       }
@@ -103,6 +102,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
     path,
     codeblocks,
     version,
+    externalApi = 'FIAPI',
     webhooks
   } = currentEndpoint
 
@@ -112,7 +112,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
     parameters,
     requestBody,
     responses
-  } = APIFiles[version].paths[path][type]
+  } = APIFiles[externalApi][version].paths[path][type]
 
   const apiURL = (
     <>
@@ -127,7 +127,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   const relatedWebhooks = getRelatedWebhooks(webhooks)
 
   if (hasCustomContent) {
-    return children(APIFiles[version].paths[path][type])
+    return children(APIFiles[externalApi][version].paths[path][type])
   }
 
   return (
@@ -165,13 +165,13 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
           <EndpointBlockModel
             path={path}
             type={type}
-            apiData={APIFiles[version]}
+            apiData={APIFiles[externalApi][version]}
             codeblocks={getCodeBlocks('request', codeblocks, requestBody)}
           />
           <EndpointBlockRespsonse
             path={path}
             type={type}
-            apiData={APIFiles[version]}
+            apiData={APIFiles[externalApi][version]}
             codeblocks={getCodeBlocks('response', codeblocks, responses)}
           />
           <EndpointBlockWebhooks webhooks={relatedWebhooks} />
