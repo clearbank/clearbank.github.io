@@ -64,7 +64,7 @@ At a high level, a SEPA Core Direct Debit follows these stages:
    Funds are settled to the creditor via the scheme.
 
 4. **Post-settlement outcomes**  
-   Depending on scheme rules and reason codes, a collection may later be rejected, returned, or refunded.
+   Depending on scheme rules and reason codes, a collection may later be refused, returned, or refunded.
 
 Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection.
 
@@ -143,13 +143,17 @@ Because processing is not immediate, you should design your integration to be **
 
 ### Overview
 
-SEPA Direct Debit has four 'R-flows': Return, Refund, Reject, and Refuse. Each flow represents an outcome in the SEPA Direct Debit payment flow. The safest way to reconcile R-flows is by using canonical payment identifiers ().
+SEPA Direct Debit has three 'R-flows': Refuse, Return, and Refund. Each flow represents an outcome in the SEPA Direct Debit payment flow. The safest way to reconcile R-flows is by using canonical payment identifiers.
+
+### Refuse
+
+_Details TBC_
 
 ### Return
 
-A SEPA Direct Debit return is a post-settlement recollection of a payment back to its debtor, and is only applicable a short time after settlement (5 business days).
+A return is a request submitted by the client after a SEPA Direct Debit has settled, instructing the bank to return the payment to the debtor within the scheme’s permitted timeframe (up to 5 working days after settlement).
 
-A return may be instigated when a debtor determines the debit cannot be honoured or is invalid per the payment scheme. For example: insufficient funds, a closed account, etc. The return message's data carries identifiers you can use to reconcile with the return with original debit.
+A return can be submitted when a client determines that a settled SEPA Direct Debit should be returned to the debtor, for example due to insufficient funds or account restrictions. The client must specify a valid return reason code when submitting the request.
 
 Returns may be requested and received up to 5 working days after the date of settlement.
 
@@ -173,14 +177,6 @@ Returns have standard reason codes to help you resolve and communicate the under
 To simulate a SEPA DD return, call our [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint with an appropriate return reason code and reference to the original payment set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
 ### Refund
-
-_Details TBC_
-
-### Reject
-
-_Details TBC_
-
-### Refuse
 
 _Details TBC_
 
