@@ -50,7 +50,7 @@ ClearBank does not validate or enforce pre-notification requirements, and pre-no
 
 ### Payment cycles
 
-SEPA Core Direct Debit payments are processed using **batch-based clearing and settlement cycles**, rather than real-time processing. ClearBank receives inbound collection instructions from the scheme and applies the resulting debit to the debtor account.
+SEPA Core Direct Debit payments are processed using **batch-based clearing and settlement cycles**, rather than real-time processing. ClearBank receives debit collection instructions from the scheme and applies the resulting debit to the debtor account.
 
 At a high level, a SEPA Core Direct Debit follows these stages:
 
@@ -64,7 +64,7 @@ At a high level, a SEPA Core Direct Debit follows these stages:
    Funds are settled to the creditor via the scheme.
 
 4. **Post-settlement outcomes**  
-   Depending on scheme rules and reason codes, a collection may later be rejected, returned, or refunded.
+   Depending on scheme rules and reason codes, a collection may later be refused, returned, or refunded.
 
 Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection.
 
@@ -84,6 +84,9 @@ Because processing is not immediate, you should design your integration to be **
       path: "/payments/sepa-dd/v1/emulator/inbound-direct-debits",
       version: "1.0.SepaDD",
       webhooks: [
+        'sepa-dd-debit-payment-collection-pending-v1',
+        'sepa-dd-debit-payment-completed-v1',
+        'sctuk-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
@@ -136,12 +139,73 @@ Because processing is not immediate, you should design your integration to be **
 ]
 ```
 
+## SEPA Direct Debit R-flows
+
+### Overview
+
+SEPA Direct Debit has three 'R-flows': Refuse, Return, and Refund. Each R-flow represents an outcome in the payment lifecycle. The safest way to reconcile R-flows is by using canonical payment identifiers.
+
+### Refuse
+
+<Callout colour="blue">
+  Further details to be confirmed.
+</Callout>
+
+### Return
+
+A return is a request submitted by you after a SEPA Direct Debit has settled, instructing the bank to return the funds back to the debtor. This must be requested within the scheme’s permitted timeframe (up to 5 working days after settlement).
+
+A return can be submitted when you determine that a settled SEPA Direct Debit should be returned to the debtor, for example due to insufficient funds or account restrictions. You must specify a valid return reason code when submitting the request.
+
+Returns may be requested and received up to 5 working days after the date of settlement.
+
+Returns have standard reason codes to help you resolve and communicate the underlying reason for a return:
+
+#### Return reason code table
+
+| Reason Code | Description                         |
+| ----------- | ----------------------------------- |
+| `AC06`      | BlockedAccount                      |
+| `AM04`      | InsufficientFunds                   |
+| `BE05`      | UnrecognisedInitiatingParty         |
+| `MD01`      | NoMandate                           |
+| `MD07`      | EndCustomerDeceased                 |
+| `MS02`      | NotSpecifiedReasonCustomerGenerated |
+| `MS03`      | NotSpecifiedReasonAgentGenerated    |
+| `RR04`      | RegulatoryReason                    |
+
+#### Simulate a SEPA DD Return
+
+To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate return reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
+
+### Refund
+
+<Callout colour="blue">
+  Further details to be confirmed.
+</Callout>
+
+<EndpointBlock
+  type="post"
+  title="Simulate an R-flow for a SEPA Direct Debit payment"
+  endpoints={[
+    {
+      path: "/payments/sepa-dd/v1/r-message-instructions",
+      version: "1.0.SEPA-R-FLOW",
+      webhooks: [
+        'sepa-dd-debit-payment-return-completed-v1'
+      ]
+    }
+  ]}
+/>
+
 ## Webhooks
 
-ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity and settlement outcomes. You should subscribe to these webhooks to keep your systems in sync with scheme events.
+ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity, settlement outcomes, and R-flows. You should subscribe to these webhooks to keep your systems in sync with scheme events.
 
-<WebhookPlaceholder render='sepa-dd-incoming-collection-received-v1' />
+<WebhookPlaceholder render='sepa-dd-debit-payment-collection-pending-v1' />
 
-<WebhookPlaceholder render='sepa-dd-payment-settled-v1' />
+<WebhookPlaceholder render='sepa-dd-debit-payment-completed-v1' />
 
 <WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
