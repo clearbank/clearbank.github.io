@@ -12,17 +12,19 @@ import Callout from "src/components/callout";
 
 ## High value international payments
 
-You can send single or bulk high value payments overseas in currencies other than GBP. To be able to initiate high value international payments, we will need you to first [fund your SIM account](#fund-your-account-in-the-simulation-environment) while integrating with our API in the simulation environment. As part of our fund assessment control framework, you will not be able to initiate high value international payments without doing so.
+You can send individual or bulk high value payments overseas in currencies other than GBP. Before making high value international payments, you'll first need to [fund your simulation account](#fund-your-account-in-the-simulation-environment) in line with our fund assessment control framework.
 
-ClearBank accepts inbound and outbound euro payments via the T2 scheme only. Inbound payments which are processed via any other scheme apart from T2 will not be accepted by ClearBank. Non-EUR high value international payments are settled according to cut-off times specific to the currency in which the payment is made.
+ClearBank accepts inbound and outbound EUR payments via the payment schemes **T2** and **SEPA Credit Transfer (SCT)**. For more details about EUR payments processed via SCT, refer to [SEPA Credit Transfer UK](./sepa-credit-transfer-uk).
 
-For more information about the countries that you can send high value payments to, currencies supported by ClearBank and currency cut-off times, please speak to your Client Director.
+Non-EUR high value international payments are settled according to cut-off times specific to the currency in which the payment is made.
+
+For up to date information on the countries you can send high value multi-currency payments to and the available currencies ClearBank supports (and their respective cut-off times), please speak with your Client Director.
 
 ### Payment cut-off times and scheduling
+
 If a multi-currency payment request is received outside of the payment window for a given currency, you will normally receive a success response (202 - Accepted) including an **isScheduled** Boolean field. This will be set to **true**, indicating that the payment was received out-of-window and will be processed on the next available business day. If the field is set to **false**, the payment will be processed in the currently open payment window.
 
 When a payment is scheduled for processing on the next available business day, the time at which the payment will be processed will vary depending on the currency selected as follows:
-
 
 | Currency             | Currency Code | Window Open Time | Window Close Time | Scheduled Payment Time |
 | -------------------- | ------------- | ---------------- | ----------------- | ---------------------- |

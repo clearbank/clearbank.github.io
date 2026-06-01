@@ -9,11 +9,93 @@
     "/payments/cheques/v1/submit-deposit": {
       "post": {
         "tags": [
-          "Deposit a cheque"
+          "Deposit a cheque synchronously. This endpoint is available only to existing, onboarded customers."
         ],
-        "description": "Submit deposit.",
+        "description": "Submit cheque deposit synchronously. This endpoint is available only to existing, onboarded customers.",
         "operationId": "submitDeposit",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit cheque deposit request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/submitDepositRequestSync"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/submitDepositResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/problemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/problemDetails"
+                }
+              }
+            },
+            "x-ms-summary": "Forbidden"
+          }
+        }
+      }
+    },
+    "/payments/cheques/v1/submit-deposit-async": {
+      "post": {
+        "tags": [
+          "Submit deposit async"
+        ],
+        "summary": "Submit a cheque deposit.",
+        "operationId": "submitDepositAsync",
+       "parameters": [
           {
             "name": "Authorization",
             "in": "header",
@@ -51,36 +133,39 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-bodyName": "body"
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "202": {
+            "description": "Accepted",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/submitDepositResponse"
                 }
               }
-            }
+            },
+            "x-ms-summary": "Submit deposit async response"
           },
           "400": {
             "description": "Bad request",
             "content": {
               "application/json": {
-                  "schema": {
-                      "$ref": "#/components/schemas/problemDetails"
-                  }
+                "schema": {
+                  "$ref": "#/components/schemas/problemDetails"
+                }
               }
-          }
+            },
+            "x-ms-summary": "Bad request"
           },
           "403": {
             "description": "Forbidden",
             "content": {
               "application/json": {
-                  "schema": {
-                      "$ref": "#/components/schemas/problemDetails"
-                  }
+                "schema": {
+                  "$ref": "#/components/schemas/problemDetails"
+                }
               }
             },
             "x-ms-summary": "Forbidden"
@@ -101,17 +186,19 @@
         "properties": {
           "accountNumber": {
             "type": "string",
-            "description": "Beneficiary's account number.",
+            "maxLength": 8,
+            "minLength": 8,
+            "description": "Account number.",
             "pattern": "^\\d{8}&",
-            "example": "83746592"
+            "example": "64037394"
           },
           "sortCode": {
             "type": "string",
             "maxLength": 6,
             "minLength": 6,
-            "description": "Beneficiary's sort code.",
+            "description": "Sort code.",
             "pattern": "^\\d{6}&",
-            "example": "109238"
+            "example": "581948"
           },
           "names": {
             "type": "array",
@@ -121,16 +208,13 @@
               "type": "string",
               "maxLength": 140,
               "minLength": 1,
-              "pattern": "^.{1,140}$"
+              "pattern": "^.{1,140}$",
+              "example": ["Lisa Grace"]
             },
-            "description": "Names of the account holder(s) the cheque is to be paid into.  Up to two names can be provided.",
-            "example": [
-              "Emily Taylor",
-              "Daniel Taylor"
-            ]
+            "description": "Account holder names."
           }
         },
-        "description": "Information about the cheque's beneficiary."
+        "description": "Beneficiary details."
       },
       "chequeImages": {
         "required": [
@@ -142,26 +226,51 @@
         "properties": {
           "frontImage": {
             "type": "string",
-            "description": "Base64 representation of the front image of the cheque.",
-            "example": "iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAASUVORK5CYII="
+            "description": "Base64 representation of the front image."
           },
           "backImage": {
             "type": "string",
-            "description": "Base64 representation of the back image of the cheque.",
-            "example": "dGVzdGJhY2tpbWFnZUJhc2U2NAo="
+            "description": "Base64 representation of the back image."
           },
           "imageType": {
             "type": "string",
-            "enum": [
-              "tiff",
-              "jpeg"
-            ],
-            "description": "Image format. Only 'TIFF' and 'JPEG' formats are supported."
+            "maxLength": 4,
+            "minLength": 4,
+            "description": "Image format. Only 'TIFF' format is supported.",
+            "pattern": "^(TIFF)$",
+            "example": "TIFF"
           }
         },
-        "description": "Cheque image information."
+        "description": "Cheque images."
       },
-      "deposit": {
+            "chequeImagesSync": {
+        "required": [
+          "frontImage",
+          "backImage",
+          "imageType"
+        ],
+        "type": "object",
+        "properties": {
+          "frontImage": {
+            "type": "string",
+            "description": "Base64 representation of the front image."
+          },
+          "backImage": {
+            "type": "string",
+            "description": "Base64 representation of the back image."
+          },
+          "imageType": {
+            "type": "string",
+            "maxLength": 4,
+            "minLength": 4,
+            "description": "Image format. 'JPEG' and 'TIFF' formats are supported.",
+            "pattern": "^(JPEG|TIFF)$",
+            "example": "TIFF"
+          }
+        },
+        "description": "Cheque images."
+      },
+      "depositSync": {
         "required": [
           "beneficiary",
           "chequeAmount",
@@ -175,18 +284,52 @@
           },
           "chequeAmount": {
             "type": "number",
-            "description": "Cheque amount in pounds sterling, up to two decimal places.",
+            "description": "Cheque amount can have up to two decimal places.",
             "format": "decimal",
             "default": 0,
             "pattern": "^\\d+(\\.\\d{1,2})?$",
-            "example": 250.75
+            "example": 39.32
           },
           "currency": {
             "type": "string",
             "maxLength": 3,
             "minLength": 3,
             "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
-            "pattern" : "^GBP$",
+            "pattern": "^GBP$",
+            "example": "GBP"
+          },
+          "chequeImages": {
+            "$ref": "#/components/schemas/chequeImagesSync"
+          }
+        },
+        "description": "Deposit details."
+      },
+            "deposit": {
+        "required": [
+          "beneficiary",
+          "chequeAmount",
+          "currency",
+          "chequeImages"
+        ],
+        "type": "object",
+        "properties": {
+          "beneficiary": {
+            "$ref": "#/components/schemas/beneficiary"
+          },
+          "chequeAmount": {
+            "type": "number",
+            "description": "Cheque amount can have up to two decimal places.",
+            "format": "decimal",
+            "default": 0,
+            "pattern": "^\\d+(\\.\\d{1,2})?$",
+            "example": 39.32
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "description": "Three-letter ISO currency code. Only 'GBP' is currently supported.",
+            "pattern": "^GBP$",
             "example": "GBP"
           },
           "chequeImages": {
@@ -202,7 +345,28 @@
         },
         "description": "List of error messages."
       },
-      "submitDepositRequest": {
+      "submitDepositRequestSync": {
+        "required": [
+          "deposit",
+          "messageId"
+        ],
+        "type": "object",
+        "properties": {
+          "deposit": {
+            "$ref": "#/components/schemas/depositSync"
+          },
+          "messageId": {
+            "type": "string",
+            "maxLength": 35,
+            "minLength": 1,
+            "description": "The unique identifier for the message.",
+            "pattern": "^\\S{1,35}$",
+            "example": "a8F3kLm92Qx7Zp5vTn4RjW1hGd6YsBc9Uq0"
+          }
+        },
+        "description": "Submit cheque deposit request."
+      },
+            "submitDepositRequest": {
         "required": [
           "deposit",
           "messageId"
@@ -218,7 +382,7 @@
             "minLength": 1,
             "description": "The unique identifier for the message.",
             "pattern": "^\\S{1,35}$",
-            "example": "MSG20251015ABC123456789XYZ"
+            "example": "a8F3kLm92Qx7Zp5vTn4RjW1hGd6YsBc9Uq0"
           }
         },
         "description": "Submit cheque deposit request."

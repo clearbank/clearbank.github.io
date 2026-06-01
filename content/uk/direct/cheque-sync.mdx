@@ -1,7 +1,7 @@
 ---
-title: "Cheques"
-metaTitle: "Cheques"
-order: 6
+title: "Cheque synchronous deposits"
+metaTitle: "Cheque synchronous deposits"
+order: 1
 showPageMenu: true
 ---
 
@@ -10,22 +10,18 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from "src/components/callout";
 
-## Cheques
+## Cheque synchronous deposits
 
-ClearBank accounts can support cheque deposits. If you'd like access to this product, please speak to your relationship manager.
-
-<Callout colour="blue">This page is for new cheques customers. For cheques customers onboarded before 2026, refer to <a href="../../direct/cheque-sync">Cheque synchronous deposit</a>.
+<Callout colour="blue">This page is for existing cheque customers who are already integrated with this endpoint. For all other customers, refer to <a href="../docs/gbp-payments/cheques">Cheques</a>.
 </Callout>
 
-You can submit cheques using the [POST /payments/cheques/v1/submit-deposit-async](#submit-a-cheque) endpoint.
+As an existing cheques customer, you can submit cheques as image files using the [POST /v1/submit-deposit](#Submit-a-cheque-synchronously) endpoint.
 
-The message flow for cheques submitted via the synchronous endpoint is shown here.
+The message flow for cheques submitted via the endpoint is shown here.
 
-![alt text](/assets/images/cheque_endpoint_async.png "Message flow diagram explaining how to submit cheques via the endpoint. This is explained in the text below.")
+![alt text](/assets/images/cheque_endpoint_old.png "Message flow diagram explaining how to submit cheques via the synchronous endpoint. This is explained in the text below.")
 
-You can submit a cheque image in TIFF file format. ClearBank will return `202 Accepted` once the request is accepted.
-
-The successful or unsuccessful cheque submission is returned through the [Cheque Process Completed](#cheque-process-completed-webhook) webhook.
+You can submit a cheque image in TIFF file format.
 
 Cheques can be submitted any time and may take up to three working days to process. If the cheque passes processing, is submitted to the ICS scheme, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
 
@@ -57,24 +53,22 @@ Cheque images must be:
 
 <EndpointBlock
   type="post"
-  title="Submit a cheque"
+  title="Submit a cheque synchronously"
   endpoints={[
     {
-      path: "/payments/cheques/v1/submit-deposit-async",
+      path: "/payments/cheques/v1/submit-deposit",
       version: "1.0Cheques",
-      webhooks: [
-        'cheque-process-completed-webhook-v1',
+       webhooks: [
         'cheque-paid-webhook-v1',
         'cheque-scrutiny-webhook-v1',
         'cheque-not-paid-webhook-v1',
         'cheque-reconciled-webhook-v1',
         'transaction-settled-webhook-v6'
-      ]
+       ]
     }
   ]}
 />
 
-<WebhookPlaceholder render='cheque-process-completed-webhook-v1' />
 <WebhookPlaceholder render='cheque-paid-webhook-v1' />
 <WebhookPlaceholder render='cheque-scrutiny-webhook-v1' />
 <WebhookPlaceholder render='cheque-not-paid-webhook-v1' />
