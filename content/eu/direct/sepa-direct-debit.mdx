@@ -206,6 +206,47 @@ ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity
 
 <WebhookPlaceholder render='sepa-dd-debit-payment-completed-v1' />
 
-<WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+
+**Example Customer Accounts Transaction Completed webhook request body for SEPA Direct Debit**
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "57382c8b-795a-db02-3ea0-805876c6a73d",
+    "EndToEndIdentification": "964326986563985",
+    "CreatedDateTime": "2026-06-02T07:59:49.76Z",
+    "CompletedDateTime": "2026-06-02T08:00:02.65Z",
+    "ClearingChannel": "SEPA-DirectDebits",
+    "DebitCreditCode": "Debit",
+    "Amount": 150,
+    "Currency": "EUR",
+    "RemittanceInformation": "964326986563985",
+    "DebtorAccount": {
+      "AccountId": "5602a737-675f-4c85-bbc1-d5d4b4478e64",
+      "Iban": "NL25CLRB0066110345",
+      "Bban": null,
+      "Descriptor": null
+    },
+    "CreditorAccount": {
+      "AccountId": null,
+      "Iban": "DE89370400440532013000",
+      "Bban": null,
+      "Descriptor": null
+    }
+  },
+  "Nonce": 1695586203
+}
+```
+
+**Example Customer Accounts Transaction Completed response**
+
+```json
+{
+  "Nonce": 1695586203
+}
+```
 
 <WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
