@@ -180,9 +180,18 @@ To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-inst
 
 ### Refund
 
-<Callout colour="blue">
-  Further details to be confirmed.
-</Callout>
+A refund can occur when a settled SEPA Direct Debit is returned to the debtor’s account after settlement. This can happen for various reasons, such as a dispute raised by the debtor or a refund request initiated by the creditor.
+
+#### Refund reason code table
+
+| Reason Code | Description                |
+| ----------- | -------------------------- |
+| `MD01`      | NoMandate                  |
+| `MD06`      | RefundRequestByEndCustomer |
+
+#### Simulate a SEPA DD Refund
+
+To simulate a SEPA DD refund, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refund reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
 <EndpointBlock
   type="post"
@@ -250,3 +259,6 @@ ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity
 ```
 
 <WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-refund-completed-v1' />
+
