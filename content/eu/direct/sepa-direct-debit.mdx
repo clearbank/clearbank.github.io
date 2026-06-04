@@ -180,7 +180,12 @@ To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-inst
 
 ### Refund
 
-A refund is a post settlement R-flow where funds from a SEPA Direct Debit are returned to the debtor's account following request from the debtor. This can happen for various reasons, such as a dispute raised by the debtor or a withdrawal of consent.
+A refund is a **post-settlement R-flow** where funds from a SEPA Direct Debit are returned to the debtor’s account following a request from the debtor. It covers both authorised and unauthorised refund scenarios, depending on whether a valid mandate existed for the original debit.
+
+There are two refund types:
+
+- **Authorised refund (MD06)**: The original debit was valid and supported by a mandate, but the debtor has requested a reversal of the transaction (within 8 weeks of settlement).
+- **Unauthorised refund (MD01)**: The original debit was not supported by a valid mandate and should not have been processed. The debtor can request a refund for up to 13 months after settlement.
 
 #### Refund reason code table
 
@@ -193,7 +198,7 @@ A refund is a post settlement R-flow where funds from a SEPA Direct Debit are re
 
 To simulate a SEPA DD refund, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refund reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
-Use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate a refund due to no valid mandate exists (triggered between 8 weeks and 13 months after settlement).
+Use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate an unauthorised refund where no valid mandate exists, which can be requested from 8 weeks up to 13 months after settlement. These timeframes are only applicable in our EU production environment: you can simulate a refund of either type at any time in our EU simulation environment.
 
 <EndpointBlock
   type="post"
