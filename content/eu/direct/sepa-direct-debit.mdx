@@ -180,7 +180,7 @@ To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-inst
 
 ### Refund
 
-A refund can occur when a settled SEPA Direct Debit is returned to the debtor’s account after settlement. This can happen for various reasons, such as a dispute raised by the debtor or a refund request initiated by the creditor.
+A refund is a post settlement R-flow where funds from a SEPA Direct Debit are returned to the debtor's account following request from the debtor. This can happen for various reasons, such as a dispute raised by the debtor or a withdrawal of consent (end customer).
 
 #### Refund reason code table
 
@@ -193,7 +193,7 @@ A refund can occur when a settled SEPA Direct Debit is returned to the debtor’
 
 To simulate a SEPA DD refund, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refund reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
-Use reasonCode `MD06` to simulate a refund request initiated by the creditor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate a refund due to an illegitimate mandate (triggered between 8 weeks and 13 months after settlement).
+Use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate a refund due to no valid mandate exists (triggered between 8 weeks and 13 months after settlement).
 
 <EndpointBlock
   type="post"
