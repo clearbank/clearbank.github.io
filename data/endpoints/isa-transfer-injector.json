@@ -1,0 +1,1421 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "ClearBank Financial Institutions API",
+    "description": "ClearBank API endpoints for testing Automated ISA Transfer service in simulation environments.",
+    "contact": {
+      "name": "API Support",
+      "url": "https://clear.bank",
+      "email": "fiapisupport@clear.bank"
+    },
+    "version": "1.0.isaMIT"
+  },
+  "paths": {
+    "/v1/isas/automated-transfers/injector/{urn}/accept": {
+      "post": {
+        "tags": [
+          "TISA"
+        ],
+        "summary": "This endpoint is used to initiate an MIT Accept.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique reference number for the transfer.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to accept the transfer.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TisaMit.AcceptApiRequest"
+              }
+            }
+          },
+          "x-bodyName": "body"
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse" 
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/isas/automated-transfers/injector/transfer-out": {
+      "post": {
+        "tags": [
+          "TISA"
+        ],
+        "summary": "This endpoint is used to initiate an MIT Transfer Out.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to create the transfer out.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TisaMit.TransferOutApiRequest"
+              }
+            }
+          },
+          "x-bodyName": "body"
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/isas/automated-transfers/injector/{urn}/update-state": {
+      "post": {
+        "tags": [
+          "TISA"
+        ],
+        "summary": "This endpoint is used to initiate an MIT Update State.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique reference number for the transfer.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API Token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The information required to update the state.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TisaMit.UpdateStateApiRequest"
+              }
+            }
+          },
+          "x-bodyName": "body"
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TisaMit.TisaMitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A validation problem object",
+                  "required": [
+                    "errors"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "Human-readable validation errors specific to this occurrence of the problem."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "headers": {
+              "X-Correlation-Id": {
+                "description": "A unique identifier which should be referenced in any issue with any API call.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "title": "A problem details object",
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "A URI reference RFC3986 that identifies the problem type.",
+                      "format": "uri-reference"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see RFC7231, Section 3.4)"
+                    },
+                    "status": {
+                      "maximum": 599,
+                      "minimum": 100,
+                      "type": "integer",
+                      "description": "The HTTP status code (RFC7231, Section 6) generated by the origin server for this occurrence of the problem."
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A human-readable explanation specific to this occurrence of the problem."
+                    },
+                    "instance": {
+                      "type": "string",
+                      "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                      "format": "uri-reference"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TisaMit.AcceptApiRequest": {
+        "required": [
+          "currentYearSubscriptionAmount",
+          "totalTransferAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "totalTransferAmount": {
+            "type": "number",
+            "description": "Total amount to be transferred",
+            "format": "double"
+          },
+          "currentYearSubscriptionAmount": {
+            "type": "number",
+            "description": "Current year subscription details for the other ISA. Must be between 0.00 and 20000.00",
+            "format": "double"
+          }
+        },
+        "description": "Information that is used to create a TISA MIT request for Accept",
+        "examples": [{
+          "totalTransferAmount": 51300.67,
+          "currentYearSubscriptionAmount": 20000.00
+        }]
+      },
+      "TisaMit.CustomerAddressDetailsModel": {
+        "required": [
+          "addressLine1",
+          "postCode"
+        ],
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "minLength": 1,
+            "type": "string",
+            "description": "First line of address",
+            "example": "Apt 4B"
+          },
+          "addressLine2": {
+            "type": "string",
+            "description": "Second line of address",
+            "example": "123 Main Street"
+          },
+          "addressLine3": {
+            "type": "string",
+            "description": "Third line of address",
+            "example": "Anytown"
+          },
+          "addressLine4": {
+            "type": "string",
+            "description": "Fourth line of address",
+            "example": "Oxfordshire"
+          },
+          "postCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Postcode",
+            "example": "AB12 3CD"
+          }
+        },
+        "description": "Customer address details block"
+      },
+      "TisaMit.NewIsaManagerDetailsModel": {
+        "required": [
+          "currentYearSubscriptionAmount",
+          "newIsaAccountDetails",
+          "sun"
+        ],
+        "type": "object",
+        "properties": {
+          "sun": {
+            "minLength": 1,
+            "maxLength": 6,
+            "type": "string",
+            "description": "The Service User Number (SUN) of the new ISA plan manager",
+            "example": "999999"
+          },
+          "newIsaAccountDetails": {
+            "minLength": 1,
+            "maxLength": 21,
+            "type": "string",
+            "description": "Account details of new ISA. Must be in format of SC######AC######## or RN######",
+            "pattern": "^((SC[0-9]{6}AC[0-9]{8,11})|(RN[A-Z0-9 &./-]{4,18}))$",
+            "example": "SC123456AC12345678"
+          },
+          "currentYearSubscriptionAmount": {
+            "type": "number",
+            "description": "The amount of the ISA subscription that has been used this year.",
+            "format": "double",
+            "example": 2000.00
+          }
+        },
+        "description": "New ISA plan manager details"
+      },
+      "TisaMit.SubscriptionDetailsModel": {
+        "required": [
+          "amountFromCurrentYearSubscription",
+          "extendedCurrentYearType"
+        ],
+        "type": "object",
+        "properties": {
+          "extendedCurrentYearType": {
+            "enum": [
+              "INCLUDECURRENT",
+              "EXCLUDECURRENT",
+              "PARTIALCURRENT"
+            ],
+            "type": "string",
+            "description": "Details regarding including or excluding current year subscriptions",
+            "example": "INCLUDECURRENT"
+          },
+          "amountFromCurrentYearSubscription": {
+            "type": "number",
+            "description": "Optional amount to transfer from current year",
+            "format": "double",
+            "example": 2000.00
+          }
+        },
+        "description": "ClearBank ISA subscription details block"
+      },
+      "TisaMit.TransferOutApiRequest": {
+        "required": [
+          "customerAccountDetails",
+          "customerAddressDetails",
+          "dateOfBirth",
+          "firstName",
+          "lastName",
+          "nationalInsuranceNumber",
+          "newIsaManagerDetails",
+          "subscriptionDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The customer's first name"
+          },
+          "lastName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The customer's last name"
+          },
+          "dateOfBirth": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The customer's date of birth. Must be in format YYYY-MM-DD"
+          },
+          "nationalInsuranceNumber": {
+            "minLength": 1,
+            "maxLength": 9,
+            "type": "string",
+            "description": "The customer's national insurance number"
+          },
+          "customerAddressDetails": {
+            "$ref": "#/components/schemas/TisaMit.CustomerAddressDetailsModel"
+          },
+          "customerAccountDetails": {
+            "minLength": 1,
+            "maxLength": 21,
+            "type": "string",
+            "description": "The customer's account details on ClearBank platform. Must be in format of SCxxxxxxACxxxxxxxx"
+          },
+          "newIsaManagerDetails": {
+            "$ref": "#/components/schemas/TisaMit.NewIsaManagerDetailsModel"
+          },
+          "subscriptionDetails": {
+            "$ref": "#/components/schemas/TisaMit.SubscriptionDetailsModel"
+          },
+          "urn": {
+            "type": "string",
+            "description": "Optional URN used when resubmitting"
+          }
+        },
+        "description": "Information that is used to create a TISA MIT request for a Transfer Out",
+        "examples": [{
+          "firstName": "Jane",
+          "lastName": "Smith",
+          "dateOfBirth": "1980-12-31",
+          "nationalInsuranceNumber": "AB123456C",
+          "customerAddressDetails": {
+            "addressLine1": "123 Main St",
+            "addressLine2": "Village",
+            "addressLine3": "Town",
+            "addressLine4": "County",
+            "postCode": "ZZ99 9ZZ"
+          },
+          "customerAccountDetails": "SC010101AC00000001",
+          "newIsaManagerDetails": {
+            "sun": "999999",
+            "newIsaAccountDetails": "RN1234ABCD",
+            "currentYearSubscriptionAmount": 2000.00
+          },
+          "subscriptionDetails": {
+            "extendedCurrentYearType": "INCLUDECURRENT",
+            "amountFromCurrentYearSubscription": 2000.00
+          }
+        }]
+      },
+      "TisaMit.UpdateStateApiRequest": {
+        "required": [
+          "state",
+          "transferType"
+        ],
+        "type": "object",
+        "properties": {
+          "transferType": {
+            "enum": [
+              "TransferIn",
+              "TransferOut"
+            ],
+            "type": "string",
+            "description": "Transfer type"
+          },
+          "state": {
+            "enum": [
+              "ABANDON",
+              "COMPLETE",
+              "FAIL",
+              "PEND",
+              "READY",
+              "REFER",
+              "REJECT"
+            ],
+            "type": "string",
+            "description": "Requested new state"
+          },
+          "reason": {
+            "enum": [
+              "NotProvided",
+              "AbandonCustomerChangedMind",
+              "AbandonNoResponse",
+              "AbandonPendTooLong",
+              "AbandonTermsOfIsaBreached",
+              "FailAccountClosedOrBlocked",
+              "FailLatePayment",
+              "FailPaymentAmountIncorrect",
+              "RejectedAccountBalanceChanged",
+              "RejectedAccountClosed",
+              "RejectedAccountHolderDeceased",
+              "RejectedAccountNotFound",
+              "RejectedAccountStatusTransferError",
+              "RejectedCannotMakePaymentForDate",
+              "RejectedCustomerDeniedRequest",
+              "RejectedCurrentYearTransferLimit",
+              "RejectedFixedTermAccountTooLong",
+              "RejectedInsufficientFunds",
+              "RejectedMismatchInformation",
+              "RejectedNotCisaAccount",
+              "RejectedPaymentDateTooLate",
+              "Pend"
+            ],
+            "type": "string",
+            "description": "Optional reason for state change"
+          },
+          "pendDate": {
+            "type": "string",
+            "description": "Optional pending date. Must be in format YYYY-MM-DD if provided",
+            "format": "date"
+          }
+        },
+        "description": "Information that is used to create a TISA MIT request for Update State",
+        "examples": [{
+          "transferType": "TransferIn",
+          "state": "PEND",
+          "reason": "Pend",
+          "pendDate": "2025-12-31"
+        }]
+      },
+      "TisaMit.TisaMitResponse": {
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "description": "CorrelationId generated by the MIT. Used to track requests through ClearBank systems"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID of the scheme message generated by the MIT"
+          },
+          "urn": {
+            "type": "string",
+            "description": "Automated Transfer reference"
+          }
+        },
+        "description": "Information representing the Automated ISA Transfer In MIT response",
+        "examples": [{
+          "correlationId": "123e4567-e89b-12d3-a456-426614174000",
+          "messageId": "CC990099ABCD1235-990011A11350TA0001",
+          "urn": "CISA999999ABCD1234"
+        }]
+      }
+    }
+  }
+}
