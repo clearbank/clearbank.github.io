@@ -50,7 +50,7 @@ To create a product identification for this account type, please speak to your C
 
 #### Under-16 (U16)
 
-Under-16 savings accounts are created using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as a Junior savings account.
+Under-16 savings accounts are created using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as an Under-16 savings account.
 
 No customer record or customer ID is required for the child.
 
@@ -62,7 +62,7 @@ To create a product identification for this account type, please speak to your C
 
 | Account type             | Endpoint         | Customers provided                   | Identification method |
 | ------------------------ | ---------------- | ------------------------------------ | --------------------- |
-| Single savings account   | POST /v2/savings | One retail customer ID               | None                  |
+| Single savings account   | POST /v2/savings | One retail or business customer ID   | None                  |
 | Joint savings account    | POST /v2/savings | Multiple retail customer IDs         | Customers array       |
 | 16–17 savings account    | POST /v2/savings | One retail customer ID               | Junior ProductId      |
 | Under-16 savings account | POST /v2/savings | Parent/guardian retail customer only | U16 ProductId         |
@@ -77,7 +77,7 @@ Savings accounts have several interdependencies. When creating a savings account
 2. Confirm which **interest configuration** should apply to the account (`interestConfigurationId`).  
   Interest configuration IDs refer to a specific interest accrual arrangement, and are provided to you directly by a ClearBank contact. Refer to [Interest configuration](./interest-configuration) for more details.  
 3. Create the **savings account** by calling the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint using the customer's ID and the interest configuration's ID.
-4. Specify a **nominated account** to fund or defund the savings account using the [POST /v1/accounts/{accountId}/related-accounts](#set-a-nominated-account) endpoint.  
+4. Specify a **nominated account** to fund or defund the savings account using the [POST /v1/accounts/{accountId}/related-accounts](#add-a-nominated-account) endpoint.  
   **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between savings and nominated accounts is your responsibility.
 
 Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
@@ -253,7 +253,7 @@ When an interest payment is made to a savings account, you'll be notified via th
 
 To retrieve all your institution's savings accounts, call the [GET /v3/accounts](#get-all-real-accounts-including-savings-accounts) endpoint and filter the result for savings accounts.
 
-To retrieve a single savings account, call the [GET /v3/Accounts/{accountId}](#get-information-for-a-savings-account) endpoint.
+To retrieve a single savings account, call the [GET /v3/Accounts/{accountId}](#get-information-for-one-savings-account) endpoint.
 
 <Callout colour="blue">
 These are the same endpoints used to retrieve information on real GBP accounts.
@@ -313,7 +313,7 @@ There are several steps you should follow to close a savings account:
 4. (OPTIONAL) Check closure status using the [GET /v1/accounts/{accountId}/closure](#get-account-closure-status) endpoint.
 5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
 
-![To close an account, set the nominated account using the DELETE /v1/accounts/{accountId}/closure endpoint. Once you receive a 202 response, you may check the status of the closure using the GET /v1/accounts/{accountId}/closure endpoint.](/assets/images/savings-account-close.svg)
+![To close an account, submit the POST /v1/accounts/{accountId}/closure endpoint. Once you receive a 202 response, you may check the status of the closure using the GET /v1/accounts/{accountId}/closure endpoint.](/assets/images/savings-account-close.svg)
 
 <Callout colour="blue">
 Webhooks are not instant and may take up to the following day to arrive. Wait until you receive a webhook before reattempting account closure.
@@ -338,13 +338,13 @@ If account closure fails and hasn't been resolved by the end of the month, then 
 
 **To reset the nominated account and close the account:**
 1. OPTIONAL Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#retrieve-a-nominated-account) endpoint.
-2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
+2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account-legacy) endpoint.
 3. Use the [POST /v1/accounts/{accountId}/closure](#close-a-savings-account) endpoint.
 > The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
 4. OPTIONAL Check closure status using the [GET /v1/accounts/{accountId}/closure](#get-account-closure-status) endpoint.
 5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
 
-![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account.](/assets/images/savings-account-close-fail-nominated-account.svg)
+![To close a savings account, update the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the POST /v1/accounts/{accountId}/closure endpoint.](/assets/images/savings-account-close-fail-nominated-account.svg)
 
 <EndpointBlock
   type="post"
