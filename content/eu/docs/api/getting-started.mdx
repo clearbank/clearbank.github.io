@@ -23,10 +23,10 @@ This authentication profile includes your Digital Certificate and secure API tok
   Credentials must never be shared and may expire periodically, you are responsible for renewing them promptly. Any suspected compromise must be reported to ClearBank immediately, as exposure of credentials could allow unauthorised access to your ClearBank services.
 </Callout>
 
-| Environment | ClearBank Portal URL                     | What you need for access                                                                                                                                                                                                                                               |
-| ----------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Simulation  | <ExternalLink href="https://institution-sim.eu.clearbank.io/">https://institution-sim.eu.clearbank.io/</ExternalLink>   | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile                                                                                                                           |
-| Production  | <ExternalLink href="https://institution.eu.clearbank.io/">https://institution.eu.clearbank.io/</ExternalLink>       | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
+| Environment | ClearBank Portal URL                                                                                                  | What you need for access                                                                                                                                                                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Simulation  | <ExternalLink href="https://institution-sim.eu.clearbank.io/">https://institution-sim.eu.clearbank.io/</ExternalLink> | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile                                                                                                                           |
+| Production  | <ExternalLink href="https://institution.eu.clearbank.io/">https://institution.eu.clearbank.io/</ExternalLink>         | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
 
 
 ### Create your authentication profile
@@ -220,7 +220,7 @@ When you send a request, the response will include a HTTP status code to indicat
 | `423`       | **Locked** - The resource that is being accessed is locked.                                                                                                             |
 | `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting))                                                           |
 | `500`       | **Internal server error**                                                                                                                                               |
-| `503`       | **Server error** - Service unavailable (see [5XX status codes](#5-xx-status-codes)).                                                                                     |
+| `503`       | **Server error** - Service unavailable (see [5XX status codes](#5-xx-status-codes)).                                                                                    |
 
 #### 2XX status codes
 Responses with a `2XX` status code indicate the request was successfully received and verified. The status code will indicate if the request has been completed or is due to be completed shortly (asynchronously).
@@ -312,6 +312,7 @@ Each HAL hyperlink contains:
 | `templated` | `boolean` |          | Specified as `true` if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to `false` |
 
 #### Example HAL Links
+
 ```json
 {
     "accounts": [
@@ -413,15 +414,31 @@ Webhooks are asynchronous events and can be delivered in any order. We provide a
 
 #### Webhook structure
 
-| Element            | Type   | Description                                                                                                                                                             |
-| ------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DigitalSignature` | string | ClearBank's Digital Signature                                                                                                                                           |
-| `Type`             | string | The type of the event                                                                                                                                                   |
-| `Version`          | int    | The webhook version                                                                                                                                                     |
-| `Nonce`            | int    | Cryptographically secure number generated by ClearBank for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication |
-| `Payload`          | object | Object which contains information related to the webhook                                                                                                                |
+| Element              | Payload/Header | Type   | Description                                                                                                                                                             |
+| -------------------- | -------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `x-delivery-attempt` | Header         | string | Starting from 1 with the original webhook, increments with each retry attempt. Should not be used to assure idempotency.                                                |
+| `x-retry-reason`     | Header         | string | If this is a retry, the reason for the retry attempt.                                                                                                                   |
+| `DigitalSignature`   | Header         | string | ClearBank's Digital Signature                                                                                                                                           |
+| `Type`               | Payload        | string | The type of the event                                                                                                                                                   |
+| `Version`            | Payload        | int    | The webhook version                                                                                                                                                     |
+| `Nonce`              | Payload        | int    | Cryptographically secure number generated by ClearBank for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication |
+| `Payload`            | Payload        | object | Object which contains information related to the webhook                                                                                                                |
+
+##### Retry reason table
+
+Refer to the below table for definitions of the retry reasons that may be included in the `x-retry-reason` header for reattempted webhook.
+
+| Enum value                    | Reason                                             |
+| ----------------------------- | -------------------------------------------------- |
+| `"Timeout"`                   | Webhook endpoint did not respond within 5 seconds. |
+| `"HTTP"`                      | Webhook endpoint returned 4xx/5xx instead of 200.  |
+| `"Non-repudiation"`           | Webhook response signature could not be verified.  |
+| `"Payload / Response Format"` | Webhook response format was invalid                |
+
+**Note:** The `x-retry-reason` header will only be present in the case of a retry, it will not be present for the original webhook attempt. You should therefore not rely on this header to detect duplicates. Instead, you should check for duplicates based on the payload of the webhook.
 
 #### Response structure
+
 Webhook responses contain a `200` HTTP status code which includes a `Nonce` number in the body and your `DigitalSignature`.
 
 | Element            | Type   | Description                                                                     |
