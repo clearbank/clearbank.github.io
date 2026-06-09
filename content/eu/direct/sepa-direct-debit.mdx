@@ -147,9 +147,27 @@ SEPA Direct Debit has three 'R-flows': Refuse, Return, and Refund. Each R-flow r
 
 ### Refuse
 
-<Callout colour="blue">
-  Further details to be confirmed.
-</Callout>
+A refusal is a **pre-settlement R-flow** where a SEPA Direct Debit collection is rejected before settlement.
+
+Refusals can occur when the debtor account cannot be debited or the instruction fails scheme validation checks.
+
+#### Refusal reason code table
+
+| Reason Code | Description                          |
+| ----------- | ------------------------------------ |
+| `AC06`      | BlockedAccount                       |
+| `AM04`      | InsufficientFunds                    |
+| `BE05`      | UnrecognisedInitiatingParty          |
+| `MD01`      | NoMandate                            |
+| `MD02`      | MissingMandatoryInformationInMandate |
+| `MD07`      | EndCustomerDeceased                  |
+| `MS02`      | NotSpecifiedReasonCustomerGenerated  |
+| `MS03`      | NotSpecifiedReasonAgentGenerated     |
+| `RR04`      | RegulatoryReason                     |
+
+#### Simulate a SEPA DD Refusal
+
+To simulate a SEPA DD refusal, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refusal reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
 ### Return
 
@@ -209,6 +227,7 @@ These timeframes are only applicable in our EU production environment: you can s
       path: "/payments/sepa-dd/v1/r-message-instructions",
       version: "1.0.SEPA-R-FLOW",
       webhooks: [
+        'sepa-dd-debit-refusal-completed-v1',
         'sepa-dd-debit-payment-return-completed-v1'
       ]
     }
@@ -269,3 +288,5 @@ ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity
 <WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
 
 <WebhookPlaceholder render='sepa-dd-debit-payment-refund-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-refusal-completed-v1' />
