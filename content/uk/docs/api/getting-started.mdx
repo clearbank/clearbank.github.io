@@ -423,7 +423,7 @@ Refer to the below table for definitions of the retry reasons that may be includ
 | `"Non-repudiation"`           | Webhook response signature could not be verified.  |
 | `"Payload / Response Format"` | Webhook response format was invalid                |
 
-**Note:** The `x-retry-reason` header will only be present in the case of a retry, it will not be present for the original webhook attempt. You should therefore not rely on this header to detect duplicates. Instead, you should check for duplicates based on the payload of the webhook.
+**Note:** The `x-retry-reason` header is only present when we are unable to verify successful delivery and retry sending the webhook. It is not present on the first webhook attempt, or in duplicate attempts. You should therefore not rely on this header to detect duplicates. Instead, you should check for duplicates based on the webhook's `payload`.
 
 #### Response structure
 Webhook responses contain a `200` HTTP status code which includes a `Nonce` number in the body and your `DigitalSignature`.
