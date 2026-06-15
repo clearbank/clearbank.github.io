@@ -173,12 +173,14 @@ Refusals can be initiated until up to 10:45 Netherlands time on the collection d
 
 #### Simulate a SEPA DD Refusal
 
+Before simulating a refusal, an inbound SDD must first be created via the [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request) endpoint with a future-dated `requestedCollectionDate` (see [Simulate an inbound SDD payment request](#simulate-an-inbound-sdd-payment-request)).
+
 To simulate a SEPA DD refusal, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint.
 
 Fields must be populated with:
 
 - An appropriate refusal reason code.
-- The original payment ID, as set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
+- The original payment ID from the inbound SDD request.
 
 ### Return
 
