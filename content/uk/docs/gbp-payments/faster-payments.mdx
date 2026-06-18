@@ -103,7 +103,9 @@ Our Faster Payments service supports payment returns up to 90 days after clearin
 
 To return a single Faster Payment, you can use the [POST /v3/payments/fps/return](#return-a-faster-payment) endpoint.
 
-ClearBank does not permit the return of Faster Payments over **90 calendar days old**. To return a payment older than this, you should do so by making a normal outbound payment. If you do attempt to return a Faster Payment that's older than 90 days, you'll receive a synchronous **'422 - Unprocessable Content'** error.
+ClearBank does not permit the return of Faster Payments over **90 calendar days old** or payments that are **temporarily ineligible for return** (for example, if the transaction has not yet settled or been reflected as settled throughout our system). If a return cannot be completed (including after retry attempts), you'll receive a **'400 - Bad Request'** response.
+
+To return a payment older than 90 days, or a payment you cannot send through the return endpoint, make a normal outbound payment instead.
 
 Faster Payments are dated against UTC from their clearing timestamp, which is given in the [Transaction Settled](#transaction-settled-webhook) webhook's `TimestampCreated` field. Held transactions can still age, so a payment held for over 90 days - identifiable from the same field in the [Transaction Held webhook](#inbound-transaction-held-webhook) - will also be invalid for return.
 

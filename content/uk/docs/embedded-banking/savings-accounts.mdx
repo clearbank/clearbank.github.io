@@ -13,9 +13,18 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Savings accounts
 
-ClearBank supports singular and joint savings accounts. A savings account is an FSCS-protected account that can accrue interest on behalf of a customer. If you'd like access to this product, please speak to your Client Director.
+### Overview
+
+A savings account is an FSCS-protected bank account that can accrue interest on behalf of a retail or business customer. Savings accounts may be held individually or jointly.
+
+ClearBank calculates interest accruals on savings account deposits based on pre-agreed interest configurations. You can update the interest rate on your savings accounts to a pre-agreed configuration at any time.
+
+Interest accruals are posted for you as regular payments to your customers' savings accounts. To learn more about interest configurations, refer to [Interest configuration](./interest-configuration).
+
+If you're interested in using savings accounts, please contact your Client Director.
 
 ClearBank supports the following savings account types:
+
 - **Single customer savings accounts** – held by one retail or business customer.
 - **Joint savings accounts** – held by two or more retail customers.
 - **Junior savings accounts (ages 16–17)** – held by one retail customer aged 16 or 17 and identified using a dedicated ProductId.
@@ -25,108 +34,117 @@ ClearBank supports the following savings account types:
   <strong>Note:</strong> Deposits held in savings accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
-You can choose how much interest to pay customers. ClearBank will calculate accruals and post regular interest payments. For information on how to set up interest configurations, refer to [Interest configuration](./interest-configuration).
+### Savings account types
 
-**Single savings accounts**
+#### Single
 
 To create a single savings account, create a retail or business customer, then include their customer ID in the `customers` array when calling `POST /v2/savings`.
 
-**Joint savings accounts**
+#### Joint
 
 To create a joint savings account, include multiple customer IDs in the `customers` array when calling `POST /v2/savings`. All customers must be retail customers.
 
-**Junior savings accounts**
+#### Junior (16-17)
 
 Savings accounts for customers aged 16–17 are created using the standard `POST /v2/savings` endpoint. The `productId` provided in the request identifies the account as a Junior savings account.
 
 To create a product identification for this account type, please speak to your Client Director.
 
-**Under-16 (U16) savings accounts**
+#### Under-16 (U16)
 
-Under-16 savings accounts are created using using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as a Junior savings account.
+Under-16 savings accounts are created using the standard `POST /v2/savings` endpoint in the name of the parent or guardian. The `productId` provided in the request identifies the account as an Under-16 savings account.
 
 No customer record or customer ID is required for the child.
 
 To create a product identification for this account type, please speak to your Client Director.
 
-#### Savings account creation summary
+<br/>
 
-| Account type | Endpoint | Customers provided | Identification method |
-|-------------|----------|--------------------|-----------------------|
-| Single savings account | POST /v2/savings | One retail customer ID | None |
-| Joint savings account | POST /v2/savings | Multiple retail customer IDs | Customers array |
-| 16–17 savings account | POST /v2/savings | One retail customer ID | Junior ProductId |
-| Under-16 savings account | POST /v2/savings | Parent/guardian retail customer only | U16 ProductId |
+#### Summary table
 
-**To create a savings account:**
-1. Check that you already have a customer defined. This can be a retail or business customer. If you need to create a retail customer, use the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
-2. Use the [POST /v2/savings](#create-a-savings-account) endpoint to create the account on behalf of the customer.
-> The `interestConfigurationId` field is used to provide the initial interest configuration ID when creating the savings account (refer to [Interest configuration](./interest-configuration)).
-3. Set the nominated account using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-> **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between accounts is your responsibility.
+| Account type             | Endpoint         | Customers provided                   | Identification method |
+| ------------------------ | ---------------- | ------------------------------------ | --------------------- |
+| Single savings account   | POST /v2/savings | One retail or business customer ID   | None                  |
+| Joint savings account    | POST /v2/savings | Multiple retail customer IDs         | Customers array       |
+| 16–17 savings account    | POST /v2/savings | One retail customer ID               | Junior ProductId      |
+| Under-16 savings account | POST /v2/savings | Parent/guardian retail customer only | U16 ProductId         |
 
-![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
+## Create savings accounts
 
-<Callout colour="blue">
-Always note down the X-Request-Id when creating an account. If you receive a 500 response, resubmitting the request with the same X-Request-Id will avoid creating a duplicate account.
-</Callout>
+### Steps to create a savings account
 
-Once you have opened a savings account, you can deposit and withdraw payments using the Faster Payments or CHAPS payment endpoints. Incoming or outgoing Bacs payments are not accepted.
+Savings accounts have several interdependencies. When creating a savings account, follow the below steps to ensure you cover them all:
 
-You can retrieve information on all savings accounts by using the [GET /v3/accounts](#get-all-real-accounts-including-savings-accounts) endpoint and filtering for savings accounts, or retrieve information for a specific savings account through the [GET /v3/Accounts/{accountId}](#get-information-for-a-savings-account) endpoint.
+1. Check you've created the **retail** or **business customer** this new savings account will belong to. To create a retail customer, refer to the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
+2. Confirm which **interest configuration** should apply to the account (`interestConfigurationId`).  
+  Interest configuration IDs refer to a specific interest accrual arrangement, and are provided to you directly by a ClearBank contact. Refer to [Interest configuration](./interest-configuration) for more details.  
+3. Create the **savings account** by calling the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint using the customer's ID and the interest configuration's ID.
+4. Specify a **nominated account** to fund or defund the savings account using the [POST /v1/accounts/{accountId}/related-accounts](#add-a-nominated-account) endpoint.  
+  **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between savings and nominated accounts is your responsibility.
 
-You can amend a savings account with the [PATCH /v1/accounts/{accountId}](#amend-a-savings-account) endpoint.
-
-To retrieve end of day balances for a savings account, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
+Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
 
 <Callout colour="blue">
-These are the same endpoints used to retrieve and amend information on real accounts.
+Always take note of the X-Request-Id when requesting creation of an account. In the event you receive a 500 response, you can resubmit your request using the same X-Request-Id to prevent accidental duplication of the account.
 </Callout>
 
-**To close a savings account:**
-1. Withdraw all funds from the account.
-2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
-3. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
-> The process is asynchronous and can take longer if an interest calculation is pending. Unpaid accrued interest, if any, will be deposited into the nominated account. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
-4. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
-5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+#### Message flow diagram
 
-![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close.svg)
+![Submit the POST /v2/savings endpoint. Once you receive a 201 response, submit the POST /v1/accounts/{accountId}/related-accounts to set up a nominated account. Once you receive a 201 response, funds can now be added to the savings account.](/assets/images/savings-account-open.svg)
 
-<Callout colour="blue">
-Webhooks are not instant and may take up to the following day to arrive. Wait until you receive a webhook before trying to close the account again.
-</Callout>
+### Create joint savings accounts
 
-Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
+Both single and joint savings accounts can be created using the [POST /v2/savings](#create-a-savings-account-endpoint) endpoint. To make joint accounts using this endpoint, specify each customer's ID in the `customers` array.
 
-See the following possible combinations of `accountStatus` and `closureStatus`:
+#### Example payload: two customers
 
-| accountStatus | closureStatus | Description                 |
-|---------------|---------------|-----------------------------|
-| Enabled       | None          | No closure request submitted |
-| Enabled       | Pending       | Closure requested, interest being calculated |
-| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details |
-| Suspended     | Pending       | Closure requested for suspended account, interest being calculated |
-| Closed        | Complete      | Closure completed successfully |
+```json
+{
+  "ownerName": "John and Jane Smith",
+  "sortCode": "010203",
+  "productId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+  "customers": [
+    {
+      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f"
+    },
+    {
+      "customerId": "abcdef12-3456-7890-1234-56789abcdef0"
+    }
+  ],
+  "interestConfigurationId": "1234abcd-5678-9ef0-1234-56789abcdef0"
+}
+```
 
-<br/> <br/>
-<Callout colour="blue">
-If account closure fails and hasn't been resolved by the end of the month, then accrued interest, if any, will be paid into the account. You will need to empty the account again before retrying the closure.
-</Callout>
+#### Example payload: four customers
 
-**To reset the nominated account and close the account:**
-1. OPTIONAL Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#get-a-nominated-account) endpoint.
-2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint.
-4. Use the [POST /v1/accounts/{id}/closure](#close-a-savings-account) endpoint.
-> The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
-5. OPTIONAL Check closure status using the [GET /v1/accounts/{id}/closure](#get-account-closure-status) endpoint.
-6. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+While joint accounts will typically have two customers, we can support any number of customers where there is a valid use case. Please contact your Client Director before attempting to create a joint account with more than two customers.
 
-![To close an account, set the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set up a nominated account. Once you receive a 200 response, funds can now be added to the savings account.](/assets/images/savings-account-close-fail-nominated-account.svg)
+```json
+{
+  "ownerName": "John Smith, Jane Smith, Steve Doe, and Emily Doe",
+  "sortCode": "010203",
+  "productId": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+  "customers": [
+    {
+      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f"
+    },
+    {
+      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"
+    },
+    {
+      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6"
+    },
+    {
+      "customerId": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
+    }
+  ],
+  "interestConfigurationId": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a"
+}
+```
 
 <EndpointBlock
   type="post"
-  title="Create a savings account"
+  title="Create a savings account endpoint"
   endpoints={[
         {
       path: "/v2/savings",
@@ -145,50 +163,67 @@ If account closure fails and hasn't been resolved by the end of the month, then 
   ]}
 />
 
-#### Example request bodies for creating a savings account with multiple customers
-
-##### Example joint account with two customers
-
-```json
-{
-  "ownerName": "John and Jane Smith",
-  "sortCode": "010203",
-  "productId": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
-  "customers": [
-    {
-      "customerId": "0f1e2d3c-4b5a-6c7d-8e9f-0a1b2c3d4e5f",
-      "customerId": "abcdef12-3456-7890-1234-56789abcdef0"
-    }
-  ],
-  "interestConfigurationId": "1234abcd-5678-9ef0-1234-56789abcdef0"
-}
-```
-While joint accounts will typically have two customers, we can support any amount with a valid use case.
-
-##### Example joint account with four customers
-
-```json
-{
-  "ownerName": "John Smith, Jane Smith, Steve Doe, and Emily Doe",
-  "sortCode": "010203",
-  "productId": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
-  "customers": [
-    {
-      "customerId": "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f",
-      "customerId": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
-      "customerId": "f1e2d3c4-b5a6-c7d8-e9f0-a1b2c3d4e5f6",
-      "customerId": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e"
-    }
-  ],
-  "interestConfigurationId": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a"
-}
-```
-
 <WebhookPlaceholder render='account-created-webhook-v1' />
+
+## Manage nominated accounts
+
+ClearBank maintains two methods of managing nominated accounts. The first, newer method uses four `related-accounts` endpoints. These endpoints are also used to manage Hub Accounts.
+
+To update a nominated account, you can call the [DELETE /v1/accounts/{accountId}/related-accounts/{iban}](#remove-a-nominated-account) followed by the [POST /v1/accounts/{accountId}/related-accounts](#add-a-nominated-account).
+
+The second legacy method uses just `nominated-account` endpoints:
+* You can call the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account-legacy) to set and update a nominated account for a savings account
+* You can call the [GET /v1/accounts/{accountId}/nominated-account](#retrieve-a-nominated-account-legacy) to retrieve the details of the current nominated account.
+
+<EndpointBlock
+  type="post"
+  title="Add a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Retrieve a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Amend the account holder of a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Remove a nominated account"
+  endpoints={[
+    {
+      path: "/v1/accounts/{accountId}/related-accounts/{iban}",
+      version: "1.0.Sterling",
+    }
+  ]}
+/>
+
+**Older, nominated account only endpoints:**
 
 <EndpointBlock
   type="put"
-  title="Set a nominated account"
+  title="Set a nominated account (legacy)"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -199,7 +234,7 @@ While joint accounts will typically have two customers, we can support any amoun
 
 <EndpointBlock
   type="get"
-  title="Get a nominated account"
+  title="Retrieve a nominated account (legacy)"
   endpoints={[
     {
       path: "/v1/accounts/{accountId}/nominated-account",
@@ -208,7 +243,25 @@ While joint accounts will typically have two customers, we can support any amoun
   ]}
 />
 
+## Receive and manage interest payments
+
+Guidance on configuring interest payments can be found on [Interest configuration](./interest-configuration).
+
+When an interest payment is made to a savings account, you'll be notified via the [Interest Paid webhook](#interest-paid-webhook).
+
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
+
+## Retrieve savings accounts
+
+To retrieve all your institution's savings accounts, call the [GET /v3/accounts](#get-all-real-accounts-including-savings-accounts) endpoint and filter the result for savings accounts.
+
+To retrieve a single savings account, call the [GET /v3/Accounts/{accountId}](#get-information-for-one-savings-account) endpoint.
+
+<Callout colour="blue">
+These are the same endpoints used to retrieve information on real GBP accounts.
+</Callout>
+
+To retrieve end of day balances for a savings account, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
 
 <EndpointBlock
   type="get"
@@ -223,7 +276,7 @@ While joint accounts will typically have two customers, we can support any amoun
 
 <EndpointBlock
   type="get"
-  title="Get information for a savings account"
+  title="Get information for one savings account"
   endpoints={[
     {
       path: "/v3/Accounts/{accountId}",
@@ -231,6 +284,12 @@ While joint accounts will typically have two customers, we can support any amoun
     }
   ]}
 />
+
+## Update a savings account
+
+<Callout colour="blue">
+This is the same endpoint used to amend information for real GBP accounts.
+</Callout>
 
 <EndpointBlock
   type="patch"
@@ -242,6 +301,52 @@ While joint accounts will typically have two customers, we can support any amoun
     }
   ]}
 />
+
+## Close a savings account
+
+### Steps to close an account
+
+There are several steps you should follow to close a savings account:
+
+1. Withdraw all funds from the account.
+2. Verify that a nominated account has been defined. You can obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#retrieve-a-nominated-account) endpoint.
+3. Use the [POST /v1/accounts/{accountId}/closure](#close-a-savings-account) endpoint.
+  This process is asynchronous and can take longer if an interest calculation is pending. Unpaid accrued interest, if any, will be deposited into the nominated account. If there is no interest to be paid, then it's possible to close the account without a nominated account being defined.
+4. (OPTIONAL) Check closure status using the [GET /v1/accounts/{accountId}/closure](#get-account-closure-status) endpoint.
+5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+
+![To close an account, submit the POST /v1/accounts/{accountId}/closure endpoint. Once you receive a 202 response, you may check the status of the closure using the GET /v1/accounts/{accountId}/closure endpoint.](/assets/images/savings-account-close.svg)
+
+<Callout colour="blue">
+Webhooks are not instant and may take up to the following day to arrive. Wait until you receive a webhook before reattempting account closure.
+</Callout>
+
+Account closure may fail due to the nominated account details being incorrect. You will know from the `ClosureFailureReason` field in the Account Closure Failed webhook.
+
+See the following possible combinations of `accountStatus` and `closureStatus`:
+
+| accountStatus | closureStatus | Description                                                            |
+| ------------- | ------------- | ---------------------------------------------------------------------- |
+| Enabled       | None          | No closure request submitted.                                          |
+| Enabled       | Pending       | Closure requested, interest being calculated.                          |
+| Enabled       | Failed        | Closure request failed, see `closureFailureReasons` field for details. |
+| Suspended     | Pending       | Closure requested for suspended account, interest being calculated.    |
+| Closed        | Complete      | Closure completed successfully.                                        |
+
+<br/> <br/>
+<Callout colour="blue">
+If account closure fails and hasn't been resolved by the end of the month, then accrued interest, if any, will be paid into the account. You will need to withdraw these funds from the account again before reattempting closure.
+</Callout>
+
+**To reset the nominated account and close the account:**
+1. OPTIONAL Obtain details of the currently configured nominated account using the [GET /v1/accounts/{accountId}/nominated-account](#retrieve-a-nominated-account) endpoint.
+2. Correct the nominated account details using the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account-legacy) endpoint.
+3. Use the [POST /v1/accounts/{accountId}/closure](#close-a-savings-account) endpoint.
+> The process is asynchronous. Unpaid accrued interest, if any, will be deposited into the nominated account.
+4. OPTIONAL Check closure status using the [GET /v1/accounts/{accountId}/closure](#get-account-closure-status) endpoint.
+5. The [Account Closure Completed webhook](#account-closure-completed-webhook) will be sent once the account has closed.
+
+![To close a savings account, update the nominated account using the PUT /v1/accounts/{accountId}/nominated-account endpoint. Once you receive a 200 response, submit the POST /v1/accounts/{accountId}/closure endpoint.](/assets/images/savings-account-close-fail-nominated-account.svg)
 
 <EndpointBlock
   type="post"

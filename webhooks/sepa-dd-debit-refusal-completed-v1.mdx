@@ -1,0 +1,49 @@
+---
+title: "SEPA DD Debit Payment Refusal Completed webhook"
+version: 1
+webhook: true
+---
+
+Notifies when a SEPA Direct Debit payment refusal has completed.
+
+You will receive this webhook once ClearBank has successfully completed processing a refusal for an SDD collection. After you receive this webhook, the collection will not settle, and no debit will be applied to the debtor's account.
+
+#### Request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.RefusalCompleted",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+##### Payload Fields
+
+| Field           | Type   | Format | Required | Min/Max length | Pattern                                                                         | Description                                                                                     |
+| --------------- | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `PaymentId`     | string | guid   | Yes      | 36/36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Unique ClearBank identifier for the transaction we will apply on to the advised Debtor Account. |
+| `TransactionId` | string | guid   | No       | 36/36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.        |
+
+#### Example SEPA DD Debit Payment Refusal Completed webhook request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.RefusalCompleted",
+  "Version": 1,
+  "Payload": {
+    "PaymentId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  },
+  "Nonce": 781245093
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 781245093
+}
+```

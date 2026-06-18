@@ -147,9 +147,40 @@ SEPA Direct Debit has three 'R-flows': Refuse, Return, and Refund. Each R-flow r
 
 ### Refuse
 
+A refusal is a **pre-settlement R-flow** where a SEPA Direct Debit collection is rejected before settlement takes place. This means the debtor's account will not be debited and the payment will not proceed.
+
+Refusals can arise either when the debtor account cannot be debited - such as due to insufficient funds or account restrictions - or when the instruction fails scheme validation checks.
+
+Refusals can be initiated until up to 10:45 Netherlands time on the collection day. After this time, a refusal can no longer be initiated and the request will be rejected and not processed.
+
 <Callout colour="blue">
-  Further details to be confirmed.
+  Our cut-off time follows daylight savings, so we recommend aligning to Central European Standard Time or Western Europe Standard Time on Windows, and Europe/Amsterdam if on Linux.
 </Callout>
+
+#### Refusal reason code table
+
+| Reason Code | Description                          |
+| ----------- | ------------------------------------ |
+| `AC06`      | BlockedAccount                       |
+| `AM04`      | InsufficientFunds                    |
+| `BE05`      | UnrecognisedInitiatingParty          |
+| `MD01`      | NoMandate                            |
+| `MD02`      | MissingMandatoryInformationInMandate |
+| `MD07`      | EndCustomerDeceased                  |
+| `MS02`      | NotSpecifiedReasonCustomerGenerated  |
+| `MS03`      | NotSpecifiedReasonAgentGenerated     |
+| `RR04`      | RegulatoryReason                     |
+
+#### Simulate a SEPA DD Refusal
+
+Before simulating a refusal, an inbound SDD must first be created via the [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request) endpoint with a future-dated `requestedCollectionDate` (see [Simulate an inbound SDD payment request](#simulate-an-inbound-sdd-payment-request)).
+
+To simulate a SEPA DD refusal, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint.
+
+Fields must be populated with:
+
+- An appropriate refusal reason code.
+- The original payment ID from the inbound SDD request.
 
 ### Return
 
@@ -209,6 +240,7 @@ These timeframes are only applicable in our EU production environment: you can s
       path: "/payments/sepa-dd/v1/r-message-instructions",
       version: "1.0.SEPA-R-FLOW",
       webhooks: [
+        'sepa-dd-debit-refusal-completed-v1',
         'sepa-dd-debit-payment-return-completed-v1'
       ]
     }
@@ -269,3 +301,5 @@ ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity
 <WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
 
 <WebhookPlaceholder render='sepa-dd-debit-payment-refund-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-refusal-completed-v1' />
