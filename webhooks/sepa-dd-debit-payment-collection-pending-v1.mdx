@@ -1,0 +1,150 @@
+---
+title: "SEPA DD Debit Payment Collection Pending webhook"
+version: 1
+webhook: true
+---
+
+Sent when an inbound SEPA Direct Debit collection is imminent.
+
+#### Request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.CollectionPending",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload Fields
+
+| Field                          | Type   | Format | Required | Min length | Max length | Pattern                        | Description                                                                                                                                                                                              |
+| ------------------------------ | ------ | ------ | -------- | ---------- | ---------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`                | string | uuid   | Yes      | -          | -          | -                              | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.                                                                                                                 |
+| `PaymentId`                    | string | uuid   | Yes      | -          | -          | -                              | Unique ClearBank identifier for the transaction we will apply on to the advised Debtor Account.                                                                                                          |
+| `EndToEndId`                   | string | -      | Yes      | 1          | 35         | -                              | Non-unique identifier advised by the originating bank. Corresponds to the `EndToEndId` submitted in the POST request.                                                                                    |
+| `MandateId`                    | string | -      | Yes      | 1          | 35         | -                              | Unique identification, as assigned by the creditor, to unambiguously identify the mandate. Corresponds to the `MandateId` submitted in the POST request.                                                 |
+| `CreditorSchemeIdentification` | object | -      | Yes      | -          | -          | -                              | Unique and unambiguous identification of the creditor party who signed the mandate. See `CreditorSchemeIdentification`.                                                                                  |
+| `InstructedAmount`             | object | -      | Yes      | -          | -          | -                              | The instructed amount. See `InstructedAmount`.                                                                                                                                                           |
+| `RequestedCollectionDate`      | string | date   | Yes      | -          | -          | `YYYY-MM-DD`                   | Date at which the creditor requests that the amount is to be collected from the debtor.                                                                                                                  |
+| `SequenceType`                 | string | enum   | Yes      | -          | -          | `FNAL`, `FRST`, `OOFF`, `RCUR` | Identifies the direct debit sequence. FNAL = Final, FRST = First, OOFF = One-off, RCUR = Recurrent.                                                                                                      |
+| `Debtor`                       | object | -      | Yes      | -          | -          | -                              | Party that owes an amount of money to the (ultimate) creditor. See `Party`.                                                                                                                              |
+| `DebtorAccount`                | object | -      | Yes      | -          | -          | -                              | Account of the debtor to which a debit entry will be made. See `PartyAccount`.                                                                                                                           |
+| `Creditor`                     | object | -      | Yes      | -          | -          | -                              | Party that is owed an amount of money. See `Party`.                                                                                                                                                      |
+| `CreditorAccount`              | object | -      | Yes      | -          | -          | -                              | Account of the creditor to which a credit entry will be made. See `PartyAccount`.                                                                                                                        |
+| `CreditorAgent`                | object | -      | Yes      | -          | -          | -                              | Financial institution servicing an account for the creditor. See `CreditorAgent`.                                                                                                                        |
+| `TransactionReference`         | string | -      | No       | 1          | 140        | -                              | The reference of the transaction that was credited to your account. Populated from the unstructured remittance information submitted with the payment. Absent if no remittance information was provided. |
+
+##### CreditorSchemeIdentification
+
+| Field            | Type   | Required | Min length | Max length | Description                                                                              |
+| ---------------- | ------ | -------- | ---------- | ---------- | ---------------------------------------------------------------------------------------- |
+| `Identification` | string | Yes      | 1          | 35         | Creditor party that signs the mandate. Unique and unambiguous identification of a party. |
+
+##### InstructedAmount
+
+| Field      | Type    | Required | Constraints       | Pattern      | Description                                                           |
+| ---------- | ------- | -------- | ----------------- | ------------ | --------------------------------------------------------------------- |
+| `Amount`   | decimal | Yes      | 0.01–999999999.99 | -            | The instructed amount. Must be 0.01 or more and 999999999.99 or less. |
+| `Currency` | string  | Yes      | Must be `EUR`     | `^[A-Z]{3}$` | Currency of the instructed amount. Only EUR is allowed.               |
+
+##### Party (Debtor and Creditor)
+
+| Field           | Type   | Required | Min length | Max length | Description                                                                                                       |
+| --------------- | ------ | -------- | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
+| `Name`          | string | Yes      | 1          | 70         | The name used to identify the legal owner of the account.                                                         |
+| `PostalAddress` | object | No       | -          | -          | Address of the party. Present only if a postal address was provided on the original payment. See `PostalAddress`. |
+
+##### PostalAddress (within webhook Party)
+
+All six fields are always present in the payload. Fields that were not provided on the original payment are serialised as empty strings (`""`).
+
+| Field            | Type   | Required | Min length | Max length | Description                                                                                                                                                           |
+| ---------------- | ------ | -------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `StreetName`     | string | Yes      | 1          | 70         | Name of a street or thoroughfare. Always non-empty (required on the original request).                                                                                |
+| `Country`        | string | Yes      | 2          | 2          | Nation with its own government. ISO 3166-1 alpha-2 country code. Always non-empty (required on the original request).                                                 |
+| `BuildingNumber` | string | Yes*     | 1          | 16         | Number that identifies the position of a building on a street. Empty string if not provided on the original request.                                                  |
+| `BuildingName`   | string | Yes*     | 1          | 35         | Name of the building or house. Empty string if not provided on the original request.                                                                                  |
+| `PostCode`       | string | Yes*     | 1          | 16         | Identifier consisting of a group of letters and/or numbers added to a postal address to assist sorting of mail. Empty string if not provided on the original request. |
+| `TownName`       | string | Yes*     | 1          | 35         | Name of a built-up area, with defined boundaries, and a local government. Empty string if not provided on the original request.                                       |
+
+\*- Always present in the payload, but value may be an empty string.
+
+##### PartyAccount (DebtorAccount and CreditorAccount)
+
+| Field  | Type   | Required | Min length | Max length | Pattern                                 | Description                                                                 |
+| ------ | ------ | -------- | ---------- | ---------- | --------------------------------------- | --------------------------------------------------------------------------- |
+| `Iban` | string | Yes      | 1          | 30         | `[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}` | International Bank Account Number (IBAN) of the debtor or creditor account. |
+
+##### CreditorAgent
+
+| Field | Type   | Required | Min length | Max length | Pattern                                                      | Description                                                                                                         |
+| ----- | ------ | -------- | ---------- | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `Bic` | string | Yes      | 8          | 11         | `^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}$` | Business Identifier Code (BIC) of the financial institution servicing the creditor account, as defined by ISO 9362. |
+
+#### Example SEPA DD Debit Payment Collection Pending webhook request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.CollectionPending",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "PaymentId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "TxId": "TXN-0947eaf62b51496b",
+    "EndToEndId": "E2E-REF-0947eaf62b51496b",
+    "MandateId": "MND-0947eaf62b51496b",
+    "CreditorSchemeIdentification": {
+      "Identification": "DE98ZZZ09999999999"
+    },
+    "InstructedAmount": {
+      "Amount": 1224.48,
+      "Currency": "EUR"
+    },
+    "RequestedCollectionDate": "2024-06-01",
+    "SequenceType": "FRST",
+    "Debtor": {
+      "Name": "John Doe",
+      "PostalAddress": {
+        "StreetName": "Morissette Union",
+        "BuildingNumber": "99",
+        "BuildingName": "BroadGateHouse",
+        "PostCode": "RV7 4IS",
+        "TownName": "Sipesville",
+        "Country": "GB"
+      }
+    },
+    "DebtorAccount": {
+      "Iban": "GB24BKEN10000031510604"
+    },
+    "Creditor": {
+      "Name": "Jane Smith",
+      "PostalAddress": {
+        "StreetName": "High Street",
+        "BuildingNumber": "1",
+        "BuildingName": "Commerce House",
+        "PostCode": "EC1A 1BB",
+        "TownName": "London",
+        "Country": "GB"
+      }
+    },
+    "CreditorAccount": {
+      "Iban": "GB29NWBK60161331926819"
+    },
+    "CreditorAgent": {
+      "Bic": "NWBKGB2L"
+    },
+    "TransactionReference": "Invoice 12345"
+  },
+  "Nonce": 726190809
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 726190809
+}
+```

@@ -1,0 +1,15 @@
+{
+  "image": "node:22.21.1-trixie",
+  "forwardPorts": [8000],
+  "mounts": [
+    "source=app_node_modules,target=/workspaces/clearbank.github.io/node_modules,type=volume",
+    "source=gatsby_public,target=/workspaces/clearbank.github.io/public,type=volume",
+    "source=gatsby_cache,target=/workspaces/clearbank.github.io/.cache,type=volume",
+    "source=${localWorkspaceFolder}/.env,target=/workspaces/clearbank.github.io/.env,type=bind"
+  ],
+  "containerEnv":{
+    "CYPRESS_CACHE_FOLDER": "/opt/cypress/cache"
+  },
+  "runArgs": ["--user", "root"],
+  "postCreateCommand":"bash -lc '.devcontainer/postCreate.sh'"
+}

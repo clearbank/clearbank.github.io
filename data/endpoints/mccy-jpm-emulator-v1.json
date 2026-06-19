@@ -1,0 +1,385 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "JPM Emulator API",
+    "version": "1.0.JPM"
+  },
+  "paths": {
+    "/v1/mccy/inboundpayment/{accountUniqueId}": {
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "This endpoint is meant for the simulation environment only as it enables you to make an inbound payment into your account in our simulation environment.",
+        "parameters": [
+
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+          {
+            "name": "accountUniqueId",
+            "in": "path",
+            "description": "The unique identifier for the account. This will be the currency supported by the account e.g., EUR.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The unique identifier for the account. This will be the currency supported by the account e.g., EUR.",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Data to make an inbound payment into your account in our simulation environment.",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest"
+              }
+            },
+            "text/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Check query parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. AccountUniqueId not recognized.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.CreditorDetails": {
+        "required": [
+          "iban",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "type": "string",
+            "description": "Ultimate creditor's International Bank Account Number.",
+            "example": "GB14BARC20031838591122"
+          },
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Ultimate Creditor Name.",
+            "example": "Rob Robinson"
+          },
+          "address": {
+            "maxLength": 70,
+            "minLength": 0,
+            "type": "string",
+            "description": "Ultimate creditor's address.",
+            "nullable": true,
+            "example": "1 High St Northleach Gloucestershire"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the ultimate creditor of the transaction."
+      },
+      "ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.DebtorDetails": {
+        "required": [
+          "identifier",
+          "name",
+          "address"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "Ultimate debtor's unique identifier value. This can only be an IBAN or BIC.",
+            "example": "IE29AIBK99082942345625"
+          },
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Ultimate Debtor Name.",
+            "example": "Joe Bloggs"
+          },
+          "address": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Ultimate debtor's address.",
+            "example": "2 Main St Dublin"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the ultimate debtor of the transaction."
+      },
+      "ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentRequest": {
+        "required": [
+          "instructedAmount",
+          "instructedCurrency",
+          "ultimateCreditor"
+        ],
+        "type": "object",
+        "properties": {
+          "instructedCurrency": {
+            "type": "string",
+            "description": "Currency of the instructed payment. This is the three-letter ISO currency code.",
+            "enum": ["EUR", "USD", "CAD", "CHF", "CZK", "DKK", "HUF", "NOK", "PLN", "RON", "SEK"],
+            "example": "EUR"
+          },
+          "instructedAmount": {
+            "type": "number",
+            "description": "Instructed payment amount.",
+            "format": "double",
+            "example": 2345.67,
+            "minimum": 0.01,
+            "multipleOf": 0.01,
+            "maximum": 999999999.99
+          },
+          "reference": {
+            "maxLength": 140,
+            "minLength": 0,
+            "type": "string",
+            "description": "Reference provided by the ultimate debtor for the payment.",
+            "nullable": true,
+            "example": "Human readable example text"
+          },
+          "endToEndId": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "description": "Unique identifier supplied by you in your API request to simulate the sending bank's reference.",
+            "nullable": true,
+            "example": "87654321"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.CreditorDetails"
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.DebtorDetails"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Inbound Payment Request"
+      },
+      "ClearBank.JPM.Emulator.InternalApi.Client.Transactions.Payments.InboundPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "description": "Unique identifier defined by ClearBank for each payment.",
+            "format": "uuid",
+            "example": "c8f18c69-927a-5233-ab5a-14a8d60e754e"
+          },
+          "instructedCurrency": {
+            "type": "string",
+            "description": "Currency of the instructed payment. This is the three-letter ISO currency code.",
+            "nullable": true,
+            "enum": ["EUR", "USD", "CAD", "CHF", "CZK", "DKK", "HUF", "NOK", "PLN", "RON", "SEK"],
+            "example": "EUR"
+          },
+          "instructedAmount": {
+            "type": "number",
+            "description": "Instructed payment amount.",
+            "format": "double",
+            "example": 2345.67
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference provided by the ultimate debtor for the payment.",
+            "nullable": true,
+            "example": "Human readable example text"
+          },
+          "endToEndId": {
+            "type": "string",
+            "description": "Unique identifier supplied by you in your API request to simulate the sending bank's reference.",
+            "nullable": true,
+            "example": "87654321"
+          },
+          "ultimateCreditorIBAN": {
+            "type": "string",
+            "description": "Ultimate creditor's International Bank Account Number.",
+            "nullable": true,
+            "example": "GB14BARC20031838591122"
+          },
+          "ultimateCreditorName": {
+            "type": "string",
+            "description": "Ultimate Creditor Name.",
+            "nullable": true,
+            "example": "Rob Robinson"
+          },
+          "ultimateDebtorIdentifier": {
+            "type": "string",
+            "description": "Ultimate debtor's unique identifier value. This can only be an IBAN or BIC.",
+            "nullable": true,
+            "example": "IE29AIBK99082942345625"
+          },
+          "ultimateDebtorName": {
+            "type": "string",
+            "description": "Ultimate Debtor Name.",
+            "nullable": true,
+            "example": "Joe Bloggs"
+          },
+          "timestampCreated": {
+            "type": "string",
+            "description": "Date and time in UTC that the transaction was created.",
+            "format": "date-time",
+            "example": "2025-02-19T11:32:10.934Z"
+          },
+          "bankRefSearchable": {
+            "type": "string",
+            "description": "A bank reference ID generated by ClearBank.",
+            "nullable": true,
+            "example": "Reference generated by ClearBank"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Inbound Payment Response"
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced, it provides a human-readable documentation for the problem type. When not present, default value is assumed to be \"about:blank\"."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type. "
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to a retrieve more information about the error, if available"
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Internal",
+      "tags": [
+        "Internal"
+      ]
+    },
+    {
+      "name": "JPMorgan",
+      "tags": [
+        "JPMorgan"
+      ]
+    }
+  ]
+}

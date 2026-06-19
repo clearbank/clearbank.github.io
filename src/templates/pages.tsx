@@ -2,17 +2,11 @@ import React from 'react'
 import { graphql } from 'gatsby'
 
 import Doc, { Head as DocHead } from 'src/containers/doc'
-import CookieBanner from '../components/cookie-banner'
-
-import * as Styles from './pages.styles'
 
 const Pages = (props: any) => {
   return (
     <>
       <Doc {...props} />
-      <Styles.CookieWrapper>
-        <CookieBanner />
-      </Styles.CookieWrapper>
     </>
   )
 }

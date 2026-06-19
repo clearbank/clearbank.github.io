@@ -12,13 +12,13 @@ import Callout from "src/components/callout";
 
 ## SEPA Credit Transfer
 
-SEPA Credit Transfer (SCT) is a payment scheme that enables you to move euros between scheme participants. Transactions are capped at €999,999,999 per payment.
+SEPA Credit Transfer (SCT) is a payment scheme that enables you to move euros between scheme participants. Transactions are capped at €999,999,999.99 per payment.
 
 You can:
 - [Send an SCT payment](#send-an-sct-payment)
 - [Recall an SCT payment](#recall-an-sct-payment)
-- [Return an SCT payment](#returning-sct-payments) (Integrating with recall and return is required.)
-- [Respond to an SCT recall request](#responding-to-an-sct-recall-request)
+- [Return an SCT payment](#return-an-sct-payment) (Integrating with recall and return is required.)
+- [Receive and respond to an SCT recall request](#receive-and-respond-to-an-sct-recall-request)
 - [Receive an SCT payment](#receive-an-sct-payment)
 - [Receive a returned SCT payment](#receive-a-returned-sct-payment)
 - [Simulate SCT payment scenarios](#simulate-sct-payment-scenarios)
@@ -29,6 +29,27 @@ You can:
 Inbound SCT payments can be received on Netherlands business days between 02:30 and 16:30 CET.
 
 Outbound SCT payments can be sent on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
+
+## SEPA Indirect
+SEPA Indirect allows you to participate in SEPA under **your own BIC and IBANs**, while connecting to ClearBank through the same APIs you already use. ClearBank Europe (ClearBank NL) acts as your sponsoring direct participant, providing scheme access, clearing, and settlement on your behalf.
+
+You retain full ownership of your customers and payment flows. Send and receive SEPA Credit Transfer (SCT) and SEPA Instant Credit Transfer (SCT Inst) payments with minimal change to your existing integration — ClearBank handles the underlying scheme connectivity so you don't need to become a direct participant yourself.
+
+With SEPA Indirect you get:
+- **Your own BIC and IBANs** – maintain your brand identity across all SEPA payments.
+- **Full scheme participation** – access SCT and SCT Inst through ClearBank Europe's connectivity.
+- **Minimal change to existing flows** – integrate with our API and continue operating as you do today.
+- **API-first integration** – connect programmatically with a modern, RESTful interface.
+
+<Callout colour="blue">
+<p><b>To be eligible for SEPA Indirect, you must:</b><br />
+- Be a regulated financial institution (holding a Credit Institution, Electronic Money Institution, or Payment Institution licence).<br />
+- Be licensed to operate in a country where ClearBank passports its licence.<br />
+- Have, or be in the process of obtaining, your own SWIFT BIC.<br />
+- Complete the European Payments Council (EPC) SEPA Adherence process. This is required for both SCT and SCT Inst. </p>
+</Callout>
+
+If are interested in becoming a SEPA Indirect participant, contact your Client Director to confirm eligibility and request prerequisite documentation.
 
 ## Send an SCT payment
 
@@ -53,8 +74,139 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 />
 
 <WebhookPlaceholder render='sepa-ct-outbound-payment-completed-v1' />
-<WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
 <WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+<WebhookPlaceholder render='sepa-ct-outbound-payment-failed-v1' />
+
+#### Failure reason codes 
+
+Outbound payments may fail due to **internal validation failure** (the payment did not pass our internal validation rules) or **external validation failure** (the payment did not pass SEPA scheme or beneficiary bank validation rules).
+
+When a payment fails, you'll receive an [Outbound Payment Failed webhook](#sepa-ct-outbound-payment-failed-webhook), which includes a `reason` code specifying the reason for failure. The failure codes include, but are not limited to:
+
+
+| Reason code | Description                                                           | Internal validation failure | External validation failure |
+| ----------- | --------------------------------------------------------------------- | --------------------------- | --------------------------- |
+| AB15        | Account is held suspense account / account is repair suspense account | X                           |                             |
+| AC01        | Account identifier invalid or incorrect                               | X                           | X                           |
+| AC04        | Account not active / closed                                           | X                           | X                           |
+| AC06        | Blocked account                                                       | X                           | X                           |
+| AM03        | EUR currency not enabled                                              | X                           |                             |
+| AM04        | Insufficient funds                                                    | X                           | X                           |
+| BE01        | Account does not belong to institution                                | X                           |                             |
+| CB01        | Unknown error                                                         | X                           | X                           |
+| CB02        | A valid creditor agent BIC cannot be derived from the supplied IBAN   | X                           |                             |
+| CNOR        | Creditor bank is not registered                                       | X                           | X                           |
+| CUST        | Requested by customer                                                 |                             | X                           |
+| RR04        | Regulatory reason                                                     |                             | X                           |
+
+### Testable IBANs
+
+When you call our endpoints in simulation, any IBANs you provide are validated. To support your testing, refer to the below tables of valid and invalid IBANs:
+
+| Valid IBAN                  | Country     |
+| --------------------------- | ----------- |
+| NL73ABNA0529451824          | Netherlands |
+| FR7630006000011234567890189 | France      |
+| GB33BUKB20201555555555      | UK          |
+| DE75512108001245126199      | Germany     |
+| DK9520000123456789          | Denmark     |
+| IE07BOFI900017556967        | Ireland     |
+| PT88003506514393326125714   | Portugal    |
+| ES7921000813610123456789    | Spain       |
+| AT483200000012345864        | Austria     |
+
+<br />
+
+| Invalid IBAN           | Country     |
+| ---------------------- | ----------- |
+| GB20FMFX42731695687653 | UK          |
+| NL51IKXV1050288017     | Netherlands |
+| BE66173933352443       | Belgium     |
+| LT089128849492191749   | Lithuania   |
+
+<br />
+
+**Example Customer Accounts Transaction Completed webhook request body for inbound SCT payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"ce57422c-1276-4820-b97b-e7108f9c59cd",
+      "EndToEndIdentification":"Inbound12345677",
+      "CreatedDateTime":"2025-02-10T12:54:58.0766667Z",
+      "CompletedDateTime":"2025-02-10T12:54:58.0966667Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"Funding",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"NL51XBLT6087402426",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":740685879
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 740685879
+}
+```
+
+**Example Customer Accounts Transaction Completed webhook request body for outbound SCT payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"2a259909-e2b5-4bb5-ba91-5e40070ce901",
+      "EndToEndIdentification":"4751967232218871296240",
+      "CreatedDateTime":"2024-07-29T09:56:59.58Z",
+      "CompletedDateTime":"2024-07-29T10:00:23.82Z",
+      "ClearingChannel":"SEPA",
+      "DebitCreditCode":"Debit",
+      "Amount":224.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"deposit",
+      "DebtorAccount":{
+         "AccountId":"c182ac1e-3f15-4b58-b9c3-22719a6b6461",
+         "Iban":"NL74CLRB0113702695",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"NL32INGB0000092273",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":437327901
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 437327901
+}
+```
 
 ## Receive an SCT payment
 <WebhookPlaceholder render='sepa-ct-inbound-payment-completed-v1' />
@@ -73,14 +225,18 @@ You can send an SCT recall requests using the [POST /payments/sepa-ct/v1/recall]
 
 Recalls can be requested using the following reason codes:
 
-| Reason | Description                                                           | Time limit to send recall request |
-| ------ | --------------------------------------------------------------------- | --------------------------------- |
-| DUPL   | Duplicate sending                                                     | 10 business days                  |
+| Reason | Description                                                  | Time limit to send recall request |
+| ------ | ------------------------------------------------------------ | --------------------------------- |
+| DUPL   | Duplicate sending                                            | 10 business days                  |
 | TECH   | Technical problems resulting in an erroneous SCT Transaction | 10 business days                  |
 | FRAD   | Fraudulent originated SCT Instruction                        | 13 months                         |
-| AC03   | Wrong account number in original transfer                             | 13 months                         |
-| AM09   | Wrong amount in original transfer                                     | 13 months                         |
-| CUST   | Requested by customer                                                 | 13 months                         |
+| AC03   | Wrong account number in original transfer                    | 13 months                         |
+| AM09   | Wrong amount in original transfer                            | 13 months                         |
+| CUST   | Requested by customer                                        | 13 months                         |
+
+<br />
+
+
 
 <EndpointBlock
   type="post"
@@ -101,11 +257,31 @@ Recalls can be requested using the following reason codes:
 <WebhookPlaceholder render='sepa-ct-outbound-payment-return-completed-v1' />
 <WebhookPlaceholder render='sepa-ct-outbound-payment-recall-rejected-v1' />
 
-## Responding to an SCT recall request
+## Receive and respond to an SCT recall request
 
-You may receive a recall request via the [SEPA CT Inbound Payment Recalled webhook](#sepa-ct-inbound-payment-recalled-webhook). To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-an-sct-recall-request) endpoint.
+You may receive a recall request via the [SEPA CT Inbound Payment Recalled webhook](#sepa-ct-inbound-payment-recalled-webhook). You can review the details of the request by referring to the 'PaymentId' for details of the original payment received and 'CancellationReasonInformation' for the reason the sending party is requesting the recall (see [recall request reason codes](#recall-request-reason-codes)). 
 
-![A message flow diagram showing how to respond to an SCT recall request](/assets/images/sepa-ct-recall-response.svg)
+To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-response](#respond-to-an-sct-recall-request) endpoint. Recall requests should be responded to within 15 business days. If after 15 business days you do not accept or reject the recall, ClearBank will automatically reject the request.
+
+#### Accept recall requests
+You can accept the recall request by setting the `RecallResponseAccepted` boolean to `true`.
+
+![A message flow diagram showing how to accept an inbound SCT recall request](/assets/images/sepa-ct-recall-response-accepted.svg)
+
+<Callout colour="blue">
+<p>If <b>RecallResponseAccepted</b> is set to <b>true</b>, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.</p>
+</Callout>
+
+#### Reject recall requests
+If you do not agree with the reason for the recall cited by the requesting party in the `CancellationReasonInformation` field, you can reject the recall request by setting the `RecallResponseAccepted` boolean to `false`. When rejecting a recall request, the 'RejectCode' field must be populated (see [recall response reason codes](#recall-response-reason-codes)).
+
+![A message flow diagram showing how to reject an inbound SCT recall request](/assets/images/sepa-ct-recall-response-rejected.svg)
+
+<Callout colour="blue">
+<p>If <b>RecallResponseAccepted</b> is set to <b>false</b>, the <b>rejectionCode</b> field must be populated with a rejection reason code.</p>
+</Callout>
+
+
 
 #### Recall response reason codes
 
@@ -150,7 +326,7 @@ If you accept the recall, a pacs.004 payment will be automatically initiated.  Y
   ]}
 />
 
-## Returning SCT payments
+## Return an SCT payment
 
 SCT payments can also be returned to the payment originator.
 

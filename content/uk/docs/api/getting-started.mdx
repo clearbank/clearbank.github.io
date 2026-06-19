@@ -13,10 +13,19 @@ import ExternalLink from 'src/components/external-link';
 Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
 
-| Environment             | ClearBank Portal URL |What you need for access|
-|-------------------------|-----|---|
-| Simulation      | <ExternalLink href="https://institution-sim.clearbank.co.uk/">https://institution-sim.clearbank.co.uk/</ExternalLink>  | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile|
-| Production      | <ExternalLink href="https://institution.clearbank.co.uk/">https://institution.clearbank.co.uk/</ExternalLink> | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
+<br/>
+
+<Callout colour="blue">
+  <strong>Security notice: Protecting your credentials</strong><br/><br/>
+  To access the ClearBank API you will use sensitive credentials including API tokens, private keys and digital certificates. These credentials grant direct access to your data and must be protected at all times. You must store, transmit and manage these credentials securely.<br/><br/>
+  Credentials must never be shared and may expire periodically, you are responsible for renewing them promptly. Any suspected compromise must be reported to ClearBank immediately, as exposure of credentials could allow unauthorised access to your ClearBank services.
+</Callout>
+
+| Environment | ClearBank Portal URL                                                                                                  | What you need for access                                                                                                                                                                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Simulation  | <ExternalLink href="https://institution-sim.clearbank.co.uk/">https://institution-sim.clearbank.co.uk/</ExternalLink> | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - Your authentication profile                                                                                                                           |
+| Production  | <ExternalLink href="https://institution.clearbank.co.uk/">https://institution.clearbank.co.uk/</ExternalLink>         | - Sign in credentials for the ClearBank Portal (these are provided to you during the onboarding process) <br/> - A generic authenticator app such as Microsoft Authenticator registered with your Android, iOS, or Windows device  <br/> - Your authentication profile |
+
 
 ### Create your authentication profile
 
@@ -96,12 +105,12 @@ We utilise HTTP-request headers for our API calls which include `Authorization`,
 
 Different request types require different headers as shown in this table:
 
-|Request method/Response   | Header parameters                           |
-|-----------------|---------------------------------------------|
-|GET              |Authorization                                |
-|POST, PATCH, PUT |Authorization, DigitalSignature, X-Request-Id|
-|DELETE           |Authorization, X-Request-Id                  |
-|Response         |X-Correlation-Id                             |
+| Request method/Response | Header parameters                             |
+| ----------------------- | --------------------------------------------- |
+| GET                     | Authorization                                 |
+| POST, PATCH, PUT        | Authorization, DigitalSignature, X-Request-Id |
+| DELETE                  | Authorization, X-Request-Id                   |
+| Response                | X-Correlation-Id                              |
 
 Here are the details of each parameter:
 
@@ -171,8 +180,8 @@ We use webhooks to deliver transaction confirmation notifications and account-sp
 
 For most of our `GET` requests, one or more query parameters in the request URL can be used to specify the number of returned results and the number of pages returned.
 
-| Parameter    | Type | Description|
-|--------------|------|------------|
+| Parameter    | Type | Description                                                                                                 |
+| ------------ | ---- | ----------------------------------------------------------------------------------------------------------- |
 | `pageNumber` | int  | The page number to control returned results into manageable sets. Default if not supplied: 1 `pageNumber=1` |
 | `pageSize`   | int  | The page size to control returned results into manageable sets. Default if not supplied: 50 `pageSize=50`   |
 
@@ -180,26 +189,26 @@ For most of our `GET` requests, one or more query parameters in the request URL 
 
 When you send a request, the response will include a HTTP status code to indicate the success or failure of the request. Some endpoints return JSON response bodies that include errors and additional properties.
 
-| Status code | Description|
-|-------------|------------|
-| `200`       | **OK** - The request has succeeded.   |
-| `201`       | **Created** - The request has succeeded and a new resource has been created as a result.   |
-| `202`       | **Accepted** - The request has been received but not completed yet. Indicates that the request will be completed asynchronously.  |
-| `204`       | **No content** - The request has been fulfilled but we do not need to return a response body. We may return the updated meta information.  |
-| `400`       | **Bad request** - The request could not be understood or processed. The response should include the reason why the request has failed.  |
-| `401`       | **Unauthorised** - The request was not authorised due to missing or invalid credentials.   |
-| `403`       | **Forbidden** - Unable to perform the request as the provided credentials could not be verified.   |
-| `404`       | **Not found** - The resource you are looking for cannot be found.                  |
-| `405`       | **Method not allowed** - The request is recognised but the target resource does not support this method.   |
-| `406`       | **Not acceptable** - The `Accept` header in the request is not supported.    |
-| `409`       | **Conflict** - The request conflicts with the current state of the server.            |
-| `410`       | **Gone** - The requested resource is no longer available, likely due to deprecation.            |
-| `415`       | **Unsupported media type** - The `Content-Type` of the request is not supported. No match for a key in the requestBody content map.           |
-| `422`       | **Client error** - The request cannot be processed due to failure processing payload. The payload may be valid but the data within the request could not be acted upon.            |
-| `423`       | **Locked** - The resource that is being accessed is locked.  |
-| `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting))  |
-| `500`       | **Internal server error** |
-| `503`       | **Server error** - Service unavailable. |
+| Status code | Description                                                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `200`       | **OK** - The request has succeeded.                                                                                                                                     |
+| `201`       | **Created** - The request has succeeded and a new resource has been created as a result.                                                                                |
+| `202`       | **Accepted** - The request has been received but not completed yet. Indicates that the request will be completed asynchronously.                                        |
+| `204`       | **No content** - The request has been fulfilled but we do not need to return a response body. We may return the updated meta information.                               |
+| `400`       | **Bad request** - The request could not be understood or processed. The response should include the reason why the request has failed.                                  |
+| `401`       | **Unauthorised** - The request was not authorised due to missing or invalid credentials.                                                                                |
+| `403`       | **Forbidden** - Unable to perform the request as the provided credentials could not be verified.                                                                        |
+| `404`       | **Not found** - The resource you are looking for cannot be found.                                                                                                       |
+| `405`       | **Method not allowed** - The request is recognised but the target resource does not support this method.                                                                |
+| `406`       | **Not acceptable** - The `Accept` header in the request is not supported.                                                                                               |
+| `409`       | **Conflict** - The request conflicts with the current state of the server.                                                                                              |
+| `410`       | **Gone** - The requested resource is no longer available, likely due to deprecation.                                                                                    |
+| `415`       | **Unsupported media type** - The `Content-Type` of the request is not supported. No match for a key in the requestBody content map.                                     |
+| `422`       | **Client error** - The request cannot be processed due to failure processing payload. The payload may be valid but the data within the request could not be acted upon. |
+| `423`       | **Locked** - The resource that is being accessed is locked.                                                                                                             |
+| `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting))                                                           |
+| `500`       | **Internal server error**                                                                                                                                               |
+| `503`       | **Server error** - Service unavailable (see [5XX status codes](#5-xx-status-codes)).                                                                                    |
 
 #### 2XX status codes
 Responses with a `2XX` status code indicate the request was successfully received and verified. The status code will indicate if the request has been completed or is due to be completed shortly (asynchronously).
@@ -238,8 +247,14 @@ See the below examples of some common 4XX responses and their meaning which may 
 "status": 400
 ```
 
-#### 5xx status codes
-Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same X-Request-Id header and payload to prevent duplication. In exceptional circumstances where the initial request was effectively processesed, the second request would make that clear either in the response or via an appropriate webhook. In the event this response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
+#### 5XX status codes
+Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same **X-Request-Id** header and payload to prevent duplication.
+
+In exceptional circumstances where the initial request was effectively processed despite returning a `5XX` status, your second request would make that clear either in the response or via an appropriate webhook. 
+
+In the event a `5XX` response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
+
+You may receive a `503 - Service unavailable` response containing a **Retry-After** header. The value of this header denotes a duration in seconds expressed as an integer. If you receive a `503` with this header, you should reattempt the request after the specified number of seconds pass.
 
 #### Example of a response containing detailed errors
 
@@ -270,7 +285,7 @@ We use rate limiting to protect our systems from excessive load and to ensure a 
 Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to be able to handle rate limits and react accordingly. 
 </Callout>
 
-Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try and again later. All requests are safe to retry after a short period of time. To aid with the testing of this our rate limits are significantly lower in our simulation environment. This should make it easier to hit the limit and validate that your systems behave accordingly.
+Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try and again later. All requests are safe to retry after a short period of time. To aid with the testing of this, our rate limits are significantly lower in our simulation environment. This should make it easier to hit the limit and validate that your systems behave accordingly.
 
 ### HAL Links
 
@@ -278,10 +293,10 @@ We use HAL (Hypertext Application Language) to hyperlink between resources in ou
 
 Each HAL hyperlink contains:
 
-| Parameter   | Type      | Required | Description |
-|-------------|-----------|----------|-------------|
-| `name`      | `string`  | Required | The named link type     |
-| `href`      | `string`  | Required | URI to be used          |
+| Parameter   | Type      | Required | Description                                                                                                               |
+| ----------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `name`      | `string`  | Required | The named link type                                                                                                       |
+| `href`      | `string`  | Required | URI to be used                                                                                                            |
 | `templated` | `boolean` |          | Specified as `true` if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to `false` |
 
 #### Example HAL Links
@@ -386,22 +401,38 @@ Webhooks are asynchronous events and can be delivered in any order. We provide a
 
 #### Webhook structure
 
-| Element          | Type          | Description  |
-| ---------------- | ------------- | -------------|
-| `DigitalSignature` | string        | ClearBank's Digital Signature  |
-| `Type`             | string        | The type of the event          |
-| `Version`          | int           | The webhook version            |
-| `Nonce`            | int           | Cryptographically secure number generated by ClearBank for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication |
-| `Payload`          | object        | Object which contains information related to the webhook |
+| Element              | Body/Header | Type   | Description                                                                                                                                                             |
+| -------------------- | ----------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `x-delivery-attempt` | Header      | string | Starting from 1 with the original webhook, increments with each retry attempt. Should not be used to assure idempotency.                                                |
+| `x-retry-reason`     | Header      | string | If this is a retry, the reason for the retry attempt.                                                                                                                   |
+| `DigitalSignature`   | Header      | string | ClearBank's Digital Signature                                                                                                                                           |
+| `Type`               | Body        | string | The type of the event                                                                                                                                                   |
+| `Version`            | Body        | int    | The webhook version                                                                                                                                                     |
+| `Nonce`              | Body        | int    | Cryptographically secure number generated by ClearBank for every single webhook. A nonce number is generated randomly and should not be used as a check for duplication |
+| `Payload`            | Body        | object | Object which contains information related to the webhook                                                                                                                |
+
+##### Retry reason table
+
+Refer to the below table for definitions of the retry reasons that may be included in the `x-retry-reason` header for reattempted webhook.
+
+| Enum value                    | Reason                                             |
+| ----------------------------- | -------------------------------------------------- |
+| `"Connection"`                | HTTP Connection errors such as DNS/SSL failures.   |
+| `"Timeout"`                   | Webhook endpoint did not respond within 5 seconds. |
+| `"HTTP"`                      | Webhook endpoint returned 4xx/5xx instead of 200.  |
+| `"Non-repudiation"`           | Webhook response signature could not be verified.  |
+| `"Payload / Response Format"` | Webhook response format was invalid                |
+
+**Note:** The `x-retry-reason` header is only present when we are unable to verify successful delivery and retry sending the webhook. It is not present on the first webhook attempt, or in duplicate attempts. You should therefore not rely on this header to detect duplicates. Instead, you should check for duplicates based on the webhook's `Payload`.
 
 #### Response structure
 Webhook responses contain a `200` HTTP status code which includes a `Nonce` number in the body and your `DigitalSignature`.
 
-| Element          | Type          | Description                                                                 |
-| ---------------- | ------------- | --------------------------------------------------------------------------- |
-| `DigitalSignature` | string      | Signed hash of the body of the request. The hash is signed by your private key. |
-| `Nonce`            | int         | The value that you receive in the webhook                                   |
-| `200`              | int         | HTTP response status code                                                   |
+| Element            | Type   | Description                                                                     |
+| ------------------ | ------ | ------------------------------------------------------------------------------- |
+| `DigitalSignature` | string | Signed hash of the body of the request. The hash is signed by your private key. |
+| `Nonce`            | int    | The value that you receive in the webhook                                       |
+| `200`              | int    | HTTP response status code                                                       |
 
 ### IP address ranges
 

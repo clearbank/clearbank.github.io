@@ -28,11 +28,12 @@ This webhook confirms an inbound SCT Inst payment has settled.
 | `CreditorName`                | **Required**<br />The name used to identify the legal owner of the account from which to credit funds.<br/>Type: `string`<br/>Max. Length: `140`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,140}`                                                                                                         |
 | `CreditorAccount`             | **Required**<br />International Bank Account Number associated with the account to which a credit entry will be posted as a result of the payment transaction.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1`<br/>Pattern: `[^\n]{1,35}`                                                   |
 | `InstructedAmount`            | **Required**<br />Instructed payment amount in euros, for example 12.51 would indicate €12.51.<br/>Type: `number`<br/>Format: `decimal`                                                                                                                                                                   |
-| `SchemePaymentMethod`         | **Required**<br />Payment scheme used to submit the transaction. This will always be INST, which indicates SEPA CT Instant.<br /> Type: `string`                                                                                                                                                          |
+| `SchemePaymentMethod`         | **Required**<br />Payment scheme used to submit the transaction. This will always be INST, which indicates SCT Inst.<br /> Type: `string`                                                                                                                                                          |
 | `TimestampCreated`            | **Required**<br />Date and time transaction was created, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                             |
 | `TimestampSubmitted`          | **Required**<br />Date and time transaction was sent to scheme, in UTC.<br /> Type: `string`<br/>Format: `date-time`                                                                                                                                                                                      |
 | `EndToEndId`                  | **Required**<br />Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.<br/>Type: `string`<br/>Max. Length: `35`<br/>Min. Length: `1` <br/>Pattern: `^[^\n]{1,35}$` |
 | `AdditionalPaymentProperties` | *Optional*<br />Type: `object`<br/><br/>&nbsp;&nbsp;`Key`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`<br/><br/>&nbsp;&nbsp;`Value`<br/>&nbsp;&nbsp;Type: `null` or `string`<br/>&nbsp;&nbsp;Pattern: `[^\n]`                                                                |
+| `TransactionReference`   | **Optional**<br />Provides contextual information about the payment. For outbound SCT Inst transactions, this will match the information supplied in the Reference field. For inbound SCT Inst transactions, this provides unstructured remittance information; structured information if unstructured is not provided; otherwise NOTPROVIDED.<br/>Type: `string`<br/>Max. Length: `143`<br/>Min. Length: `1` |
 
 #### Example SEPA Instant Inbound Payment Settled webhook request body
 
@@ -57,7 +58,8 @@ This webhook confirms an inbound SCT Inst payment has settled.
         "Key": "CreditorAgentBic",
         "Value": "RZKTAT2K288"
       }
-    ]
+    ],
+    "TransactionReference": "InvoiceReference00189900567844320"
   },
   "Nonce": 1225137631
 }

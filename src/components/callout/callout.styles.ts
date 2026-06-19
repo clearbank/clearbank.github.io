@@ -10,6 +10,10 @@ const colours = {
   green: {
     background: colors.brandSecondary,
     border: colors.brandSecondaryDarker
+  },
+  red: {
+    background: colors.brandGrayLight,
+    border: colors.brandRedDark
   }
 }
 

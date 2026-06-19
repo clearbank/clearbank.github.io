@@ -1,0 +1,305 @@
+---
+title: "SEPA Direct Debit"
+metaTitle: "SEPA Direct Debit"
+order: 4
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary'
+import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
+
+## SEPA Direct Debit
+
+<Callout colour="green">
+<h3>SEPA Direct Debit is coming soon</h3>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our EU simulation environment.</p>
+</Callout>
+
+SEPA Direct Debit (SDD) is a pan-European payment scheme that enables organisations to collect euro-denominated payments from a payer’s account, provided the payer has authorised the collection in advance. The scheme is defined and maintained by the <ExternalLink href="https://www.europeanpaymentscouncil.eu/what-we-do/sepa-direct-debit">European Payments Council (EPC)</ExternalLink> and is available across SEPA-participating countries.
+
+This page describes **SEPA Core Direct Debit only**, where ClearBank acts as the **debtor bank**. In this model, ClearBank receives direct debit instructions from the scheme and processes the resulting payment.
+
+SEPA Direct Debits are initiated by the payee (creditor) rather than the payer. This makes the scheme suitable for recurring payments, subscriptions, and variable-amount collections where a prior authorisation exists.
+
+### SEPA Direct Debit mandates
+
+An SDD mandate is the payer’s authorisation for a creditor to initiate direct debit collections against the payer’s account. A mandate provides a legal basis for each collection submitted under the scheme.
+
+From an integration perspective, mandates are **referenced rather than transmitted** as part of the payment flow: ClearBank receives mandate details from the scheme but does **not** create, store, validate, or manage mandates directly.
+
+You are responsible for ensuring that:
+
+- A valid mandate exists for each payment collection.
+- Mandate details can be produced in the event of a dispute or scheme enquiry.
+- Mandates are managed in accordance with the EPC's SEPA Core Direct Debit rulebook.
+
+<Callout colour="blue">  
+<strong>Note:</strong> ClearBank does not validate mandate existence or correctness when processing SDD collections. Responsibility for mandate management remains with the creditor.
+</Callout>
+
+### Pre-notification
+
+Under the SEPA Core Direct Debit scheme, creditors are required to notify debtors in advance of an upcoming direct debit collection. This is known as **pre-notification**.
+
+Pre-notification is a scheme obligation between the creditor and the debtor and typically includes the collection amount and date. The timing of the notification is defined by the EPC rulebook unless an alternative agreement is in place.
+
+ClearBank does not validate or enforce pre-notification requirements, and pre-notification is not represented in the API or event model.
+
+### Payment cycles
+
+SEPA Core Direct Debit payments are processed using **batch-based clearing and settlement cycles**, rather than real-time processing. ClearBank receives debit collection instructions from the scheme and applies the resulting debit to the debtor account.
+
+At a high level, a SEPA Core Direct Debit follows these stages:
+
+1. **Collection received**  
+   ClearBank receives an inbound direct debit instruction from the scheme.
+
+2. **Payment processing**  
+   The debit is applied to the debtor account in line with scheme processing rules.
+
+3. **Settlement**  
+   Funds are settled to the creditor via the scheme.
+
+4. **Post-settlement outcomes**  
+   Depending on scheme rules and reason codes, a collection may later be refused, returned, or refunded.
+
+Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection.
+
+<Callout colour="blue">  
+<strong>Note:</strong> Scheme timelines are defined by the EPC SEPA Core Direct Debit rulebook and may change. You should not rely on fixed day counts when modelling payment states.
+</Callout>
+
+## Simulating inbound SEPA Direct Debit collections
+
+![A message flow diagram showing which responses and webhooks you will receive after requesting to simulate an inbound direct debit.](/assets/images/sepa-dd/sepa-dd-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Simulate an inbound SDD payment request"
+  endpoints={[
+    {
+      path: "/payments/sepa-dd/v1/emulator/inbound-direct-debits",
+      version: "1.0.SepaDD",
+      webhooks: [
+        'sepa-dd-debit-payment-collection-pending-v1',
+        'sepa-dd-debit-payment-completed-v1',
+        'sctuk-customer-accounts-transaction-completed-v1'
+      ]
+    }
+  ]}
+/>
+
+### Example request
+
+```json
+[
+  {
+    "endToEndId": "E2E-REF-0947eaf62b51496b",
+    "instructionId": "INSTR-0947eaf62b51496b",
+    "txId": "TXN-0947eaf62b51496b",
+    "mandateId": "MND-0947eaf62b51496b",
+    "amount": {
+      "amount": 100.00,
+      "currency": "EUR"
+    },
+    "debtor": {
+      "name": "John Doe",
+      "postalAddress": {
+        "streetName": "Morissette Union",
+        "buildingNumber": "99",
+        "townName": "Sipesville",
+        "postCode": "RV7 4IS",
+        "countrySubdivision": "Buckinghamshire",
+        "country": "GB"
+      }
+    },
+    "debtorAccount": {
+      "accountIban": "GB24BKEN10000031510604"
+    },
+    "creditor": {
+      "name": "Jane Smith",
+      "postalAddress": {
+        "streetName": "High Street",
+        "buildingNumber": "1",
+        "townName": "London",
+        "postCode": "EC1A 1BB",
+        "country": "GB"
+      }
+    },
+    "creditorAccount": {
+      "accountIban": "GB29NWBK60161331926819"
+    },
+    "remittanceInformationUnstructured": "Invoice 12345",
+    "requestedCollectionDate": "2024-06-01",
+    "sequenceType": "FRST"
+  }
+]
+```
+
+## SEPA Direct Debit R-flows
+
+### Overview
+
+SEPA Direct Debit has three 'R-flows': Refuse, Return, and Refund. Each R-flow represents an outcome in the payment lifecycle. The safest way to reconcile R-flows is by using canonical payment identifiers.
+
+### Refuse
+
+A refusal is a **pre-settlement R-flow** where a SEPA Direct Debit collection is rejected before settlement takes place. This means the debtor's account will not be debited and the payment will not proceed.
+
+Refusals can arise either when the debtor account cannot be debited - such as due to insufficient funds or account restrictions - or when the instruction fails scheme validation checks.
+
+Refusals can be initiated until up to 10:45 Netherlands time on the collection day. After this time, a refusal can no longer be initiated and the request will be rejected and not processed.
+
+<Callout colour="blue">
+  Our cut-off time follows daylight savings, so we recommend aligning to Central European Standard Time or Western Europe Standard Time on Windows, and Europe/Amsterdam if on Linux.
+</Callout>
+
+#### Refusal reason code table
+
+| Reason Code | Description                          |
+| ----------- | ------------------------------------ |
+| `AC06`      | BlockedAccount                       |
+| `AM04`      | InsufficientFunds                    |
+| `BE05`      | UnrecognisedInitiatingParty          |
+| `MD01`      | NoMandate                            |
+| `MD02`      | MissingMandatoryInformationInMandate |
+| `MD07`      | EndCustomerDeceased                  |
+| `MS02`      | NotSpecifiedReasonCustomerGenerated  |
+| `MS03`      | NotSpecifiedReasonAgentGenerated     |
+| `RR04`      | RegulatoryReason                     |
+
+#### Simulate a SEPA DD Refusal
+
+Before simulating a refusal, an inbound SDD must first be created via the [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request) endpoint with a future-dated `requestedCollectionDate` (see [Simulate an inbound SDD payment request](#simulate-an-inbound-sdd-payment-request)).
+
+To simulate a SEPA DD refusal, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint.
+
+Fields must be populated with:
+
+- An appropriate refusal reason code.
+- The original payment ID from the inbound SDD request.
+
+### Return
+
+A return is a request submitted by you after a SEPA Direct Debit has settled, instructing the bank to return the funds back to the debtor. This must be requested within the scheme’s permitted timeframe (up to 5 working days after settlement).
+
+A return can be submitted when you determine that a settled SEPA Direct Debit should be returned to the debtor, for example due to insufficient funds or account restrictions. You must specify a valid return reason code when submitting the request.
+
+Returns may be requested and received up to 5 working days after the date of settlement.
+
+Returns have standard reason codes to help you resolve and communicate the underlying reason for a return:
+
+#### Return reason code table
+
+| Reason Code | Description                         |
+| ----------- | ----------------------------------- |
+| `AC06`      | BlockedAccount                      |
+| `AM04`      | InsufficientFunds                   |
+| `BE05`      | UnrecognisedInitiatingParty         |
+| `MD01`      | NoMandate                           |
+| `MD07`      | EndCustomerDeceased                 |
+| `MS02`      | NotSpecifiedReasonCustomerGenerated |
+| `MS03`      | NotSpecifiedReasonAgentGenerated    |
+| `RR04`      | RegulatoryReason                    |
+
+#### Simulate a SEPA DD Return
+
+To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate return reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
+
+### Refund
+
+A refund is a **post-settlement R-flow** where funds from a SEPA Direct Debit are returned to the debtor’s account following a request from the debtor. It covers both authorised and unauthorised refund scenarios, depending on whether a valid mandate existed for the original debit.
+
+There are two refund types:
+
+- **Authorised refund (MD06)**: The original debit was valid and supported by a mandate, but the debtor has requested a reversal of the transaction (within 8 weeks of settlement).
+- **Unauthorised refund (MD01)**: The original debit was not supported by a valid mandate and should not have been processed. The debtor can request a refund for up to 13 months after settlement.
+
+#### Refund reason code table
+
+| Reason Code | Description                |
+| ----------- | -------------------------- |
+| `MD01`      | NoMandate                  |
+| `MD06`      | RefundRequestByEndCustomer |
+
+#### Simulate a SEPA DD Refund
+
+To simulate a SEPA DD refund, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refund reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
+
+Use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate an unauthorised refund where no valid mandate exists, which can be requested from 8 weeks up to 13 months after settlement.  
+These timeframes are only applicable in our EU production environment: you can simulate a refund of either type at any time in our EU simulation environment.
+
+<EndpointBlock
+  type="post"
+  title="Simulate an R-flow for a SEPA Direct Debit payment"
+  endpoints={[
+    {
+      path: "/payments/sepa-dd/v1/r-message-instructions",
+      version: "1.0.SEPA-R-FLOW",
+      webhooks: [
+        'sepa-dd-debit-refusal-completed-v1',
+        'sepa-dd-debit-payment-return-completed-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+ClearBank uses webhooks to notify you of inbound SEPA Core Direct Debit activity, settlement outcomes, and R-flows. You should subscribe to these webhooks to keep your systems in sync with scheme events.
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-collection-pending-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-completed-v1' />
+
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
+
+**Example Customer Accounts Transaction Completed webhook request body for SEPA Direct Debit**
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "57382c8b-795a-db02-3ea0-805876c6a73d",
+    "EndToEndIdentification": "964326986563985",
+    "CreatedDateTime": "2026-06-02T07:59:49.76Z",
+    "CompletedDateTime": "2026-06-02T08:00:02.65Z",
+    "ClearingChannel": "SEPA-DirectDebits",
+    "DebitCreditCode": "Debit",
+    "Amount": 150,
+    "Currency": "EUR",
+    "RemittanceInformation": "964326986563985",
+    "DebtorAccount": {
+      "AccountId": "5602a737-675f-4c85-bbc1-d5d4b4478e64",
+      "Iban": "NL25CLRB0066110345",
+      "Bban": null,
+      "Descriptor": null
+    },
+    "CreditorAccount": {
+      "AccountId": null,
+      "Iban": "DE89370400440532013000",
+      "Bban": null,
+      "Descriptor": null
+    }
+  },
+  "Nonce": 1695586203
+}
+```
+
+**Example Customer Accounts Transaction Completed response**
+
+```json
+{
+  "Nonce": 1695586203
+}
+```
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-return-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-refund-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-refusal-completed-v1' />
