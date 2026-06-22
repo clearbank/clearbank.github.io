@@ -50,11 +50,15 @@ In general, AutoFX is available Mon to Fri, 9:30am to 3:30pm Central European Ti
 
 ### Request a payment
 
-Payment requests should be submitted to our **POST /payments/cross-border/v1/payments** endpoint. We'll respond to a valid request synchronously with a **200 - OK** response, with a payload confirming details of the requested payment. The payment is only proposed at this stage; we will not proceed with sending the payment until you accept it.
+Payment requests should be submitted to our **POST /payments/cross-border/v1/fx-payments/** endpoint. We'll respond to a valid request synchronously with a **200 - OK** response, with a payload confirming details of the requested payment. The payment is only proposed at this stage; we will not proceed with sending the payment until you accept it.
 
 ### Accept a payment
 
-To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v1/payments/accept** endpoint using the UETR of your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
+To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v1/fx-payments/accept** endpoint using the UETR of your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
+
+We'll respond with a **202 - Accepted** response.
+
+Note: You can request additional payments in parallel without accepting existing ones. There is currently no limit to the number of open payment requests you can have at once.
 
 ### Abandon a payment
 
@@ -86,7 +90,7 @@ We'll update you about payments' statuses via webhook. AutoFX has three such web
   title="Request an AutoFX payment"
   endpoints={[
     {
-      path: "/payments/cross-border/v1/payments",
+      path: "/payments/cross-border/v1/fx-payments/",
       version: "1.0MCCYEU",
       webhooks: [
       ]
@@ -99,7 +103,7 @@ We'll update you about payments' statuses via webhook. AutoFX has three such web
   title="Accept an AutoFX payment"
   endpoints={[
     {
-      path: "/payments/cross-border/v1/payments/accept",
+      path: "/payments/cross-border/v1/fx-payments/accept",
       version: "1.0MCCYEU",
       webhooks: [
         'mccy-eu-accepted-v1',
