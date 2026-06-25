@@ -12,9 +12,37 @@ import WebhookSummary from "src/components/webhook-summary";
 import WebhookPlaceholder from "src/components/webhook-placeholder";
 import ExternalLink from "src/components/external-link"
 
-## How response authentication works
+## Overview
+
+We wont check that you've authenticated our responses, but you should do it anyway to ensure that the responses you receive are valid and have not been tampered with. All responses from our API are signed, and you should verify the integrity of all responses you receive from our API to ensure that your requests reached us successfully.
 
 ## Verify the signature in our response
+
+All responses from our API are signed. You should verify the integrity of all responses you receive from our API to ensure that your requests reached us successfully, untampered.
+
+### Retrieve our public keys
+
+ClearBank signs endpoint responses using multiple public keys, and we can sign our responses using any valid key. You should verify our response signatures using our public keys' details. You can retrieve our our public JSON Web Keys (JWKs) by ID using our Public Key Endpoint:
+
+`ENDPOINT HERE`
+<EndpointBlock
+  type="get"
+  title="Retrieve a Public Key by ID"
+  endpoints={[
+    {
+      path: "/authentication/v1/public-keys/{keyId}",
+      version: "EXAPIKEYS_1.0.0"
+    }
+  ]}
+/>
+
+In the interest of performance, we recommend you cache these keys and only call the Public Key Endpoint if we sign a response using a key you have not already cached.
+
+### Build the signature base
+
+To verify our response signature you must build our signature base using the composition specified in the response's `Signature Input` header. The steps to do this are identical to those used to build the signature base for a request.
+
+Once this has been built, you can then use our public key to verify the signature.
 
 ## Headers used for response verification
 

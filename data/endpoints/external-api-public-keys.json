@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank endpoint for retrieving our public keys.",
+    "version": "EXAPIKEYS_1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://mtls.api.clearbank.co.uk"
+    }
+  ],
+  "paths": {
+    "/authentication/v1/public-keys/{keyId}": {
+      "get": {
+        "tags": [
+          "DigitalSignatures"
+        ],
+        "summary": "Get a public key",
+        "description": "ClearBank's public key can be used to verify the digital signatures of endpoint responses.",
+        "parameters": [
+          {
+            "name": "keyId",
+            "in": "path",
+            "description": "The ID of the public key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "example:baa6842f89394d2eb8f5ec716c7116"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public key found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonWebKeyWrapper"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Public key not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JsonWebKeyWrapper": {
+        "required": [
+          "kid",
+          "kty",
+          "crv",
+          "x",
+          "y",
+          "key_ops"
+        ],
+        "type": "object",
+        "properties": {
+          "kid": {
+            "type": "string",
+            "description": "The key ID.",
+            "readOnly": true,
+            "example": "example:baa6842f89394d2eb8f5ec716c7116"
+          },
+          "kty": {
+            "type": "string",
+            "description": "The key type.",
+            "readOnly": true,
+            "example": "EC"
+          },
+          "crv": {
+            "type": "string",
+            "description": "The type of elliptic curve.",
+            "readOnly": true,
+            "example": "P-256"
+          },
+          "x": {
+            "type": "string",
+            "description": "The X coordinate on the curve (Base64 URL encoded).",
+            "readOnly": true,
+            "example": "wvOmablm7ilYyhJ-AujxBK9CDdMrgZ-6se8PXrf5Liw"
+          },
+          "y": {
+            "type": "string",
+            "description": "The Y coordinate on the curve (Base64 URL encoded).",
+            "readOnly": true,
+            "example": "fUqazO3-VkdIKcUc3ruTG4ZmUOGBPguuIQ-mI4LUiMM"
+          },
+          "key_ops": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of operations this key can perform.",
+            "readOnly": true,
+            "example": [
+              "verify"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
