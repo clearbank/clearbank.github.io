@@ -24,7 +24,6 @@ All responses from our API are signed. You should verify the integrity of all re
 
 ClearBank signs endpoint responses using multiple public keys, and we can sign our responses using any valid key. You should verify our response signatures using our public keys' details. You can retrieve our our public JSON Web Keys (JWKs) by ID using our Public Key Endpoint:
 
-`ENDPOINT HERE`
 <EndpointBlock
   type="get"
   title="Retrieve a Public Key by ID"
@@ -46,7 +45,12 @@ Once this has been built, you can then use our public key to verify the signatur
 
 ## Headers used for response verification
 
+`Signature Input`
+
 ## Handling failed signature checks
+
+If an attempt to verify a response signature fails, you should treat the response as invalid and discard it. You should also log the failed signature check for further investigation.
 
 ## Operational best practices
 
+You should ensure your system can handle failed signature checks when verifying our responses. This includes implementing retry logic, monitoring for failed signature checks, and alerting the appropriate team should any issues arise.
