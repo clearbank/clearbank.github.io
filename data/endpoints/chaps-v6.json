@@ -1,0 +1,1006 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ClearBank CHAPS RTGS FI API V6",
+    "version": "CHAPS-6.0"
+  },
+  "paths": {
+    "/payments/chaps/v6/institution-payments": {
+      "post": {
+        "tags": [
+          "ExternalInstitutionPaymentsV6"
+        ],
+        "description": "Create an outbound institution payment",
+        "operationId": "ExternalCreateInstitutionPayment-v6",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstitutionPaymentDtoV6"
+              },
+              "example": {
+                "instructionIdentification": "INSTR-INST-001",
+                "endToEndIdentification": "E2E-INST-001",
+                "interBankSettlementAmount": {
+                  "amount": 100000.00,
+                  "currency": "GBP"
+                },
+                "sourceAccount": {
+                  "iban": "GB29NWBK60161331926819"
+                },
+                "debtor": {
+                  "name": "Acme Bank Ltd"
+                },
+                "creditorAccount": {
+                  "schemeName": "SortcodeAccountNumber",
+                  "identification": "040004-12345678"
+                },
+                "creditor": {
+                  "name": "Example Financial Institution"
+                },
+                "purpose": "TREA",
+                "categoryPurpose": "TREA"
+              }
+            },
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstitutionPaymentDtoV6"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstitutionPaymentDtoV6"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstitutionPaymentDtoV6"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/payments/chaps/v6/customer-payments": {
+      "post": {
+        "tags": [
+          "ExternalCustomerPaymentsV6"
+        ],
+        "description": "Create an outbound customer payment",
+        "operationId": "ExternalCreateCustomerPayment-v6",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV6"
+              },
+              "example": {
+                "instructionIdentification": "INSTR-CUST-001",
+                "endToEndIdentification": "E2E-CUST-001",
+                "interBankSettlementAmount": {
+                  "amount": 1000.00,
+                  "currency": "GBP"
+                },
+                "sourceAccount": {
+                  "iban": "GB29NWBK60161331926819"
+                },
+                "debtorAccount": {
+                  "schemeName": "SortcodeAccountNumber",
+                  "identification": "040004-12345678"
+                },
+                "debtor": {
+                  "name": "Jane Smith"
+                },
+                "creditorAccount": {
+                  "schemeName": "SortcodeAccountNumber",
+                  "identification": "200000-55779911"
+                },
+                "creditor": {
+                  "name": "Bob Jones",
+                  "postalAddress": {
+                    "townName": "London",
+                    "country": "GB",
+                    "postCode": "EC2V 8RT"
+                  }
+                },
+                "purpose": "SALA",
+                "categoryPurpose": "SALA",
+                "remittanceInformation": {
+                  "creditorReferenceInformation": "INV-2026-001"
+                }
+              }
+            },
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV6"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV6"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerPaymentDtoV6"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/payments/chaps/v6/return-payments": {
+      "post": {
+        "tags": [
+          "ExternalReturnPaymentsV6"
+        ],
+        "description": "Return a payment",
+        "operationId": "ExternalReturnPayment-v6",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_DigitalSignature"
+          },
+          {
+            "$ref": "#/components/parameters/ParametersOpenapi_RequestIdentifier"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV6"
+              },
+              "example": {
+                "paymentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "reason": "AC04",
+                "instructionIdentification": "RETURN-001"
+              }
+            },
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV6"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV6"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReturnPaymentDtoV6"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "X-Correlation-Id": {
+                "$ref": "#/components/headers/HeadersOpenapi_CorrelationIdentifier"
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreatedResponseDtoV6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "headers": {
+      "HeadersOpenapi_CorrelationIdentifier": {
+        "description": "A unique identifier generated by ClearBank® for the request. It is recommended you store this response header for debugging purposes",
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_CorrelationIdentifierType"
+        }
+      }
+    },
+    "parameters": {
+      "ParametersOpenapi_Authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "description": "Your API token retrieved from the portal",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_AuthorizationType"
+        }
+      },
+      "ParametersOpenapi_DigitalSignature": {
+        "name": "DigitalSignature",
+        "in": "header",
+        "description": "The hash of the request body signed with your private key",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_DigitalSignatureType"
+        }
+      },
+      "ParametersOpenapi_RequestIdentifier": {
+        "name": "X-Request-Id",
+        "in": "header",
+        "description": "A unique identifier that provides an idempotency check. This must be unique for any subsequent requests sent for at least 24 hours after the initial request was sent.",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/ApiHeadersSchema_RequestIdentifierType"
+        }
+      }
+    },
+    "schemas": {
+      "ClearBankSchema_PaymentId": {
+        "description": "ClearBank identifier that uniquely identifies the payment instruction. Supplied in response to the original payment instruction request.",
+        "type": "string",
+        "format": "uuid"
+      },
+      "PaymentCreatedResponseDtoV6": {
+        "required": [
+          "paymentId"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "$ref": "#/components/schemas/ClearBankSchema_PaymentId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "ClearBank identifier that uniquely identifies the new outbound/return payment instruction."
+      },
+      "ApiHeadersSchema_AuthorizationType": {
+        "description": "Authorization header restricted to Bearer token only",
+        "type": "string",
+        "pattern": "^Bearer +.+"
+      },
+      "ApiHeadersSchema_DigitalSignatureType": {
+        "description": "The digital signature generated by the API consumer",
+        "type": "string"
+      },
+      "ApiHeadersSchema_RequestIdentifierType": {
+        "description": "The request identifier supplied by the API consumer",
+        "type": "string"
+      },
+      "ApiHeadersSchema_CorrelationIdentifierType": {
+        "description": "A unique identifier generated by ClearBank®",
+        "type": "string"
+      },
+      "AccountIdentificationIbanDtoV6": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions.",
+            "type": "string",
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "maxLength": 34
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountIdentificationOtherDtoV6": {
+        "required": [
+          "schemeName",
+          "identification"
+        ],
+        "type": "object",
+        "properties": {
+          "schemeName": {
+            "description": "Scheme Type",
+            "type": "string",
+            "enum": [
+              "BBan",
+              "SortcodeAccountNumber"
+            ]
+          },
+          "identification": {
+            "description": "Unambiguous Identification for the given scheme",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InterBankSettlementAmountDtoV6": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217.",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PartyAddressDetailsDtoV6": {
+        "required": [
+          "townName",
+          "country",
+          "postCode"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNumber": {
+            "description": "Number that identifies the position of a building on a street.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "buildingName": {
+            "description": "Name of the building or house.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "streetName": {
+            "description": "Name of a street or thoroughfare.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 70
+          },
+          "townName": {
+            "description": "Name of a built-up area, with defined boundaries, and a local government.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "country": {
+            "description": "Nation with its own government.",
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Z]{2}$"
+          },
+          "postCode": {
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          }
+        },
+        "additionalProperties": false
+      },
+      "PartyDetailsDtoV6": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the party",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6"
+          },
+          "lei": {
+            "description": "Legal Entity Identifier of the party",
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 20
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrganisationIdentifierV6": {
+        "type": "object",
+        "properties": {
+          "bic": {
+            "description": "BIC of the entity",
+            "type": "string",
+            "pattern": "^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$"
+          },
+          "lei": {
+            "description": "Legal Entity Identifier of the entity",
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 20
+          },
+          "otherIdentification": {
+            "description": "Corporate share Companies House identifier with us",
+            "type": "string",
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrivateIdentifierV6": {
+        "type": "object",
+        "properties": {
+          "otherIdentification": {
+            "description": "Personal identifier",
+            "type": "string",
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerPartyDetailsDtoV6": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the party",
+            "type": "string",
+            "minLength": 1
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6"
+          },
+          "organisationIdentifier": {
+            "$ref": "#/components/schemas/OrganisationIdentifierV6"
+          },
+          "privateIdentifier": {
+            "$ref": "#/components/schemas/PrivateIdentifierV6"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnstructuredRemittanceInformationDtoV6": {
+        "type": "object",
+        "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
+        "properties": {
+          "unstructured": {
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle, such as commercial invoices in an accounts' receivable system, in an unstructured form.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          }
+        },
+        "additionalProperties": false
+      },
+      "StructuredRemittanceInformationDtoV6": {
+        "type": "object",
+        "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
+        "properties": {
+          "creditorReferenceInformation": {
+            "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurposeCodeV6": {
+        "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
+        "type": "string",
+        "enum": [
+          "BKFE", "BKIP", "BKPP", "CBLK", "ACCT", "CASH", "COLL", "CSDB", "DEPT", "INTC",
+          "INTP", "LIMA", "NETT", "EXTD", "OTCD", "REPO", "SBSC", "SLEB", "AGRT", "AREN",
+          "BEXP", "BOCE", "COMC", "CPYR", "GDSV", "GSCB", "LICF", "ROYA", "SERV", "SUBS",
+          "SUPP", "TRAD", "CHAR", "COMT", "ECPR", "EPAY", "CLPR", "COMP", "DBTC", "HLRP",
+          "HLST", "INPC", "INPR", "INSC", "INSU", "INTE", "LBRI", "LIFI", "LOAN", "LOAR",
+          "PENO", "PPTI", "RELG", "TRFD", "FORW", "FXNT", "BLDM", "BNET", "CDBL", "CORT",
+          "CPKC", "EDUC", "FAND", "FEES", "GIFT", "GOVT", "INSM", "IVPT", "REBT", "REFU",
+          "RENT", "REOD", "TCSC", "CMDT", "DERI", "DIVD", "FREX", "HEDG", "INVS", "SAVG",
+          "SECU", "TREA", "FNET", "FUTR", "DNTS", "HLTI", "LTCF", "MDCS", "VIEW", "SWFP",
+          "SWPP", "SWRS", "SWUF", "ADCS", "ALMY", "BECH", "BENE", "BONU", "COMM", "HREC",
+          "PEFC", "PENS", "SALA", "SSBE", "LREB", "LREV", "ESTX", "HSTX", "INTX", "PTXP",
+          "RDTX", "TAXS", "VATX", "WHLD", "TAXR", "CBTV", "ELEC", "GASB", "PHON", "UBIL",
+          "WTER", "GAMB", "LOTT", "PCOM", "PDEP", "PLDS", "PLRF"
+        ]
+      },
+      "CategoryPurposeCodeV6": {
+        "description": "Category purpose, in a proprietary form.",
+        "type": "string",
+        "enum": [
+          "BONU", "CASH", "CBLK", "CCRD", "CORT", "DCRD", "DIVI", "DVPM", "FCOL", "GP2P",
+          "GOVT", "HEDG", "INTC", "INTE", "LOAN", "MP2P", "OTHR", "PENS", "RRCT", "SALA",
+          "SECU", "SSBE", "SUPP", "TAXS", "TRAD", "TREA", "VATX", "WHLD"
+        ]
+      },
+      "ReturnReasonCodeV6": {
+        "description": "Specifies the reason for the return.",
+        "type": "string",
+        "enum": [
+          "AM09", "BE01", "BE04", "BE05", "BE06", "FOCR", "MD06", "MS02", "CURR", "AC04",
+          "AM02", "AM03", "AG01", "RR04", "AC01", "AC02", "AC03", "AC06", "AC07", "AC13",
+          "AC14", "AC15", "AC16", "AC17", "AG02", "AG07", "AGNT", "AM01", "AM04", "AM05",
+          "AM06", "AM07", "AM10", "ARDT", "BE07", "BE08", "BE10", "BE11", "BE16", "BE17",
+          "CN01", "CNOR", "CNPC", "CUST", "DNOR", "DS28", "DT01", "DT02", "ED01", "ED03",
+          "ED05", "EMVL", "ERIN", "FF03", "FF04", "FF05", "FF06", "FF07", "FR01", "FRTR",
+          "G004", "MD01", "MD02", "MD05", "MD07", "MS03", "NARR", "NOAS", "NOCM", "NOOR",
+          "PINL", "RC01", "RC07", "RC08", "RC11", "RF01", "RR01", "RR02", "RR03", "RR05",
+          "RR06", "RR07", "RR08", "RR09", "RR11", "RR12", "RUTA", "SL01", "SL02", "SL11",
+          "SL12", "SL13", "SL14", "SP01", "SP02", "SVNR", "TM01", "TRAC", "UPAY"
+        ]
+      },
+      "CreateInstitutionPaymentDtoV6": {
+        "required": [
+          "instructionIdentification",
+          "endToEndIdentification",
+          "interBankSettlementAmount",
+          "sourceAccount",
+          "debtor",
+          "creditorAccount",
+          "creditor"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "endToEndIdentification": {
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "interBankSettlementAmount": {
+            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6"
+          },
+          "sourceAccount": {
+            "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV6"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
+              }
+            ]
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyDetailsDtoV6",
+            "description": "Party that owes an amount of money to the (ultimate) creditor."
+          },
+          "creditorAccount": {
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV6"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
+              }
+            ]
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/PartyDetailsDtoV6",
+            "description": "Party that is owed an amount of money as the (ultimate) creditor."
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PurposeCodeV6"
+          },
+          "categoryPurpose": {
+            "$ref": "#/components/schemas/CategoryPurposeCodeV6"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/UnstructuredRemittanceInformationDtoV6"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCustomerPaymentDtoV6": {
+        "required": [
+          "instructionIdentification",
+          "endToEndIdentification",
+          "interBankSettlementAmount",
+          "sourceAccount",
+          "debtorAccount",
+          "debtor",
+          "creditorAccount",
+          "creditor",
+          "purpose",
+          "categoryPurpose"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "endToEndIdentification": {
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.\n\nUsage: The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction. It can be included in several messages related to the transaction.\n\nUsage: In case there are technical limitations to pass on multiple references, the end-to-end identification must be passed on throughout the entire end-to-end chain.",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "interBankSettlementAmount": {
+            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6"
+          },
+          "sourceAccount": {
+            "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV6"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
+              }
+            ]
+          },
+          "debtorAccount": {
+            "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV6"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
+              }
+            ]
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/CustomerPartyDetailsDtoV6",
+            "description": "Party that owes an amount of money to the (ultimate) creditor."
+          },
+          "creditorAccount": {
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccountIdentificationIbanDtoV6"
+              },
+              {
+                "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
+              }
+            ]
+          },
+          "creditor": {
+            "required": [
+              "name",
+              "postalAddress"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerPartyDetailsDtoV6"
+              }
+            ],
+            "description": "Party that is owed an amount of money as the (ultimate) creditor. Postal address is required."
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/PurposeCodeV6"
+          },
+          "categoryPurpose": {
+            "$ref": "#/components/schemas/CategoryPurposeCodeV6"
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV6"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateReturnPaymentDtoV6": {
+        "required": [
+          "paymentId",
+          "reason",
+          "instructionIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "description": "ClearBank identifier that uniquely identifies the inbound payment instruction.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/ReturnReasonCodeV6"
+          },
+          "instructionIdentification": {
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "additionalInformation": {
+            "description": "Optional additional information providing context for the return. Required when Reason is NARR. Maximum 105 characters.",
+            "type": "string",
+            "maxLength": 105
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "description": "Properties of a given error",
+        "type": "object",
+        "required": [
+          "type",
+          "title"
+        ],
+        "properties": {
+          "detail": {
+            "description": "A human-readable description of the problem unique to the instance of the problem.",
+            "type": "string"
+          },
+          "errors": {},
+          "instance": {
+            "description": "A URI that uniquely identifies the problem being reported.",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP response code returned by the API.",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type.",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI that uniquely identifies the problem type being reported",
+            "type": "string"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "description": "Validation error details",
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
