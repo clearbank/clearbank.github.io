@@ -18,15 +18,15 @@ import ExternalLink from 'src/components/external-link';
 - <strong>POST /payments/chaps/v5/return-payments</strong><br />
 - <strong>POST /payments/chaps/v5/institution-payments</strong><br /></p>
 
-<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints will be available in Q3 2026. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
 
 You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
-- CHAPS payments can be sent using the [POST payments/chaps/v5/customer-payments](#send-a-chaps-payment) endpoint.
+- CHAPS payments can be sent using the [POST /payments/chaps/v6/customer-payments](#send-a-chaps-payment) endpoint.
 - Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
-- If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v5/return-payments](#return-a-chaps-payment) endpoint.
+- If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v6/return-payments](#return-a-chaps-payment) endpoint.
 
 <Callout colour="blue">
   It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
@@ -65,7 +65,7 @@ Here is an example hybrid address:
 </PstlAdr>
 ```
 
-### Version 5 mandatory fields
+### Version 6 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: [UK recommended Purpose Code PDF](https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf)  
@@ -141,6 +141,16 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
     title="Send a CHAPS payment"
     endpoints={[
         {
+        path: "/payments/chaps/v6/customer-payments",
+        version: "CHAPS-6.0",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    },
+        {
         path: "/payments/chaps/v5/customer-payments",
         version: "5.0.Chaps-payment",
         webhooks: [
@@ -158,6 +168,16 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
     title="Return a CHAPS payment"
     endpoints={[
         {
+        path: "/payments/chaps/v6/return-payments",
+        version: "CHAPS-6.0",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    },
+        {
         path: "/payments/chaps/v5/return-payments",
         version: "5.0-ChapsReturn",
         webhooks: [
@@ -174,6 +194,17 @@ Depending on the creditor type, you will need to populate either the `PrivateIde
     type="post"
     title="Send a CHAPS bank-to-bank payment"
     endpoints={[
+        {
+        path: "/payments/chaps/v6/institution-payments",
+        version: "CHAPS-6.0",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'outbound-held-transaction-v1',
+        'transaction-rejected-v2'
+        ]
+    },
         {
         path: "/payments/chaps/v5/institution-payments",
         version: "5.0_BankToBank",
@@ -530,4 +561,3 @@ The following table details the CHAPS return reason codes used to populate the `
 | TM01       | CutOffTime                               | Associated message was received after the agreed processing cut-off time.                                  |
 | TRAC       | RemovedFromTracking                      | Return following a direct debit being removed from the tracking process.                                   |
 | UPAY       | UnduePayment                             | Payment is not justified.                                                                                  |
-
