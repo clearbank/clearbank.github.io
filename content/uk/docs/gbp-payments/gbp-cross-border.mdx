@@ -16,14 +16,14 @@ import ExternalLink from 'src/components/external-link';
 <p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
 - <strong>POST /payments/cross-border-sterling/v3/payments</strong><br /></p>
 
-<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint will be available in Q3 2026. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
 
 There is no limit to the amount that can be sent using this service.
 
-You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v3/payments](#send-a-gpb-cross-border-payment) endpoint. 
+You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) endpoint. 
 
 Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
 
@@ -43,7 +43,7 @@ If you receive a Transaction Rejected webhook outside of <a href="https://www.ba
 
 The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
 
-### Version 3 mandatory fields
+### Version 4 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.
@@ -100,7 +100,7 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 
 ### Populating the Creditor field in pacs.008 messages
 
-The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
+The `Creditor` field in [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
 
 Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
 
