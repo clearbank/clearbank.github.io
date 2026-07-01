@@ -57,16 +57,16 @@ At a high level, a SEPA Core Direct Debit follows these stages:
 1. **Collection received**  
    ClearBank receives an inbound direct debit instruction from the scheme.
 
-2. **Payment processing**  
-   The debit is applied to the debtor account in line with scheme processing rules.
+2. **Pre-settlement outcomes**  
+   Before settlement, inbound instructions are validated in line with scheme rules and may be stopped before settlement as a result of pre-settlement intervention.
 
 3. **Settlement**  
-   Funds are settled to the creditor via the scheme.
+   If successfully processed, the debit is applied to the debtor account and funds are settled to the creditor via the scheme.
 
 4. **Post-settlement outcomes**  
-   Depending on scheme rules and reason codes, a collection may later be refused, returned, or refunded.
+   Depending on scheme rules and reason codes, a settled collection may later be subject to reversals, returns, or refunds.
 
-Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection.
+Because processing is not immediate, you should design your integration to be **event-driven** and rely on webhooks to track the outcome of each collection across both pre-settlement and post-settlement stages.
 
 <Callout colour="blue">  
 <strong>Note:</strong> Scheme timelines are defined by the EPC SEPA Core Direct Debit rulebook and may change. You should not rely on fixed day counts when modelling payment states.
@@ -86,7 +86,7 @@ Because processing is not immediate, you should design your integration to be **
       webhooks: [
         'sepa-dd-debit-payment-collection-pending-v1',
         'sepa-dd-debit-payment-completed-v1',
-        'sctuk-customer-accounts-transaction-completed-v1'
+        'eu-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
@@ -139,6 +139,26 @@ Because processing is not immediate, you should design your integration to be **
 ]
 ```
 
+### Receive a SEPA DD debit payment collection
+
+ClearBank receives inbound SEPA Direct Debit collections from the scheme on behalf of your account. These are debit instructions submitted by creditors to collect funds from debtor accounts.
+
+This is the starting point of the SEPA Direct Debit lifecycle. Once received, the instruction is made available to your system prior to settlement and then processed in line with scheme rules.
+
+Depending on pre-settlement outcomes, the instruction may:
+
+- Proceed to settlement, resulting in a debit applied to the account.
+- Not proceed to settlement due to pre-settlement intervention.
+
+On settlement, the debit is applied to the account and reflected in transaction reporting.
+
+Associated webhook outcomes:
+
+- **SEPA DD Debit Payment Collection Pending**: sent when ClearBank has processed the inbound scheme instruction, confirmed it is intended for your institution, and made it available prior to settlement. This is sent at least one day before settlement (and up to 14 days in advance depending on scheme timelines).
+- **SEPA DD Debit Payment Completed**: sent when the collection has reached scheme settlement.
+- **Customer Accounts Transaction Completed**: sent when the transaction has been posted to your account at ClearBank.
+- **SEPA DD Debit Payment Failed**: sent when a collection does not proceed to settlement, for example due to pre-settlement processing failure or a creditor-side cancellation before settlement.
+
 ## SEPA Direct Debit R-flows
 
 ### Overview
@@ -152,6 +172,12 @@ A refusal is a **pre-settlement R-flow** where a SEPA Direct Debit collection is
 Refusals can arise either when the debtor account cannot be debited - such as due to insufficient funds or account restrictions - or when the instruction fails scheme validation checks.
 
 Refusals can be initiated until up to 10:45 Netherlands time on the collection day. After this time, a refusal can no longer be initiated and the request will be rejected and not processed.
+
+A refusal request may be rejected by the scheme during processing. Where permitted by scheme rules and timelines, ClearBank may attempt to preserve client intent by resubmitting the request as a return while maintaining the original reason code where possible.
+
+When this occurs, the collection proceeds to settlement and the associated debit is applied to the account. If the resubmitted return is successfully processed, the funds are subsequently credited back to the account.
+
+As a result, you may observe both a debit and a corresponding credit for the same collection, together with webhook events associated with the refusal, settlement, and return lifecycle.
 
 <Callout colour="blue">
   Our cut-off time follows daylight savings, so we recommend aligning to Central European Standard Time or Western Europe Standard Time on Windows, and Europe/Amsterdam if on Linux.
@@ -170,6 +196,11 @@ Refusals can be initiated until up to 10:45 Netherlands time on the collection d
 | `MS02`      | NotSpecifiedReasonCustomerGenerated  |
 | `MS03`      | NotSpecifiedReasonAgentGenerated     |
 | `RR04`      | RegulatoryReason                     |
+
+#### Associated Refusal webhooks
+
+- **SEPA DD Debit Payment Refusal Completed**: sent when a client-initiated refusal instruction is successfully processed before settlement.
+- **SEPA DD Debit Payment Refusal Failed**: sent when a client-initiated refusal instruction cannot be successfully processed, for example due to cut-off timing or validation constraints.
 
 #### Simulate a SEPA DD Refusal
 
@@ -205,6 +236,11 @@ Returns have standard reason codes to help you resolve and communicate the under
 | `MS03`      | NotSpecifiedReasonAgentGenerated    |
 | `RR04`      | RegulatoryReason                    |
 
+#### Associated Return webhooks
+
+- **SEPA DD Debit Payment Return Completed**: sent when a return request has been successfully processed after settlement.
+- **SEPA DD Debit Payment Return Failed**: sent when a return request cannot be successfully processed, for example due to timing constraints or validation failures.
+
 #### Simulate a SEPA DD Return
 
 To simulate a SEPA DD return, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate return reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
@@ -225,12 +261,27 @@ There are two refund types:
 | `MD01`      | NoMandate                  |
 | `MD06`      | RefundRequestByEndCustomer |
 
+#### Associated Refund webhooks
+
+- **SEPA DD Debit Payment Refund Completed**: sent when a refund request has been successfully processed after settlement.
+- **SEPA DD Debit Payment Refund Failed**: sent when a refund request cannot be successfully processed, for example due to timing constraints or validation failures.
+
 #### Simulate a SEPA DD Refund
 
 To simulate a SEPA DD refund, call the [POST /payments/sepa-dd/v1/r-message-instructions](#simulate-an-r-flow-for-a-sepa-direct-debit-payment) endpoint. Fields must be populated with an appropriate refund reason code and the original payment ID set out in [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request).
 
-Use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate an unauthorised refund where no valid mandate exists, which can be requested from 8 weeks up to 13 months after settlement.  
+You should use reasonCode `MD06` to simulate a refund request initiated by the debtor within the first 8 weeks of settlement. Use reasonCode `MD01` to simulate an unauthorised refund where no valid mandate exists, which can be requested from 8 weeks up to 13 months after settlement.  
 These timeframes are only applicable in our EU production environment: you can simulate a refund of either type at any time in our EU simulation environment.
+
+ClearBank executes refund requests submitted via the API and forwards them to the scheme. ClearBank does not assess or determine the validity of the underlying dispute.
+
+### Reversal (not exposed via API)
+
+A reversal is initiated by the creditor PSP after settlement to reverse a previously settled debit, typically to correct errors such as duplicate collections.
+
+Reversals occur within a short scheme-defined timeframe following settlement (up to 5 business days) and result in the original debit being reversed and funds credited back to your account.
+
+You will be notified of reversals directly by ClearBank Client Services: reversals are not currently surfaced via webhooks.
 
 <EndpointBlock
   type="post"
@@ -241,7 +292,8 @@ These timeframes are only applicable in our EU production environment: you can s
       version: "1.0.SEPA-R-FLOW",
       webhooks: [
         'sepa-dd-debit-refusal-completed-v1',
-        'sepa-dd-debit-payment-return-completed-v1'
+        'sepa-dd-debit-payment-return-completed-v1',
+        'sepa-dd-debit-payment-refund-completed-v1'
       ]
     }
   ]}
