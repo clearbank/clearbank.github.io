@@ -33,7 +33,7 @@
                 "instructionIdentification": "INSTR-INST-001",
                 "endToEndIdentification": "E2E-INST-001",
                 "interBankSettlementAmount": {
-                  "amount": 100000.00,
+                  "amount": 100000,
                   "currency": "GBP"
                 },
                 "sourceAccount": {
@@ -151,7 +151,7 @@
                 "instructionIdentification": "INSTR-CUST-001",
                 "endToEndIdentification": "E2E-CUST-001",
                 "interBankSettlementAmount": {
-                  "amount": 1000.00,
+                  "amount": 1000,
                   "currency": "GBP"
                 },
                 "sourceAccount": {
@@ -439,7 +439,8 @@
             "type": "string",
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "maxLength": 34,
-            "example": "GB29NWBK60161331926819"
+            "example": "GB29NWBK60161331926819",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -463,7 +464,9 @@
           "identification": {
             "description": "Unambiguous Identification for the given scheme",
             "type": "string",
-            "example": "040004-12345678"
+            "example": "040004-12345678",
+            "minLength": 1,
+            "maxLength": 34
           }
         },
         "additionalProperties": false
@@ -479,12 +482,14 @@
           "amount": {
             "type": "number",
             "format": "decimal",
-            "example": 1000.00
+            "example": 1000
           },
           "currency": {
             "type": "string",
             "pattern": "^[A-Z]{3}$",
-            "example": "GBP"
+            "example": "GBP",
+            "description": "Set to 'GBP' as other currencies are not supported.",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -559,10 +564,13 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 140,
-            "example": "Acme Bank Ltd"
+            "example": "Acme Bank Ltd",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$"
           },
           "postalAddress": {
-            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6"
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6",
+            "type": "object",
+            "description": "Information that locates and identifies a specific address, as defined by postal services."
           },
           "lei": {
             "description": "Legal Entity Identifier of the party",
@@ -596,10 +604,12 @@
             "description": "Corporate share Companies House identifier with us",
             "type": "string",
             "maxLength": 35,
-            "example": "12345678"
+            "example": "12345678",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Option to provide either OrganisationIdentifier or PrivateIdentifier, but not both."
       },
       "PrivateIdentifierV6": {
         "type": "object",
@@ -608,10 +618,12 @@
             "description": "Personal identifier",
             "type": "string",
             "maxLength": 35,
-            "example": "AB123456C"
+            "example": "AB123456C",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Option to provide either OrganisationIdentifier or PrivateIdentifier, but not both."
       },
       "CustomerPartyDetailsDtoV6": {
         "required": [
@@ -623,16 +635,22 @@
             "description": "Name of the party",
             "type": "string",
             "minLength": 1,
-            "example": "Jane Smith"
+            "example": "Jane Smith",
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "maxLength": 140
           },
           "postalAddress": {
-            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6"
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV6",
+            "type": "object",
+            "description": "Information that locates and identifies a specific address, as defined by postal services."
           },
           "organisationIdentifier": {
-            "$ref": "#/components/schemas/OrganisationIdentifierV6"
+            "$ref": "#/components/schemas/OrganisationIdentifierV6",
+            "type": "object"
           },
           "privateIdentifier": {
-            "$ref": "#/components/schemas/PrivateIdentifierV6"
+            "$ref": "#/components/schemas/PrivateIdentifierV6",
+            "type": "object"
           }
         },
         "additionalProperties": false
@@ -671,44 +689,272 @@
         "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
         "type": "string",
         "enum": [
-          "BKFE", "BKIP", "BKPP", "CBLK", "ACCT", "CASH", "COLL", "CSDB", "DEPT", "INTC",
-          "INTP", "LIMA", "NETT", "EXTD", "OTCD", "REPO", "SBSC", "SLEB", "AGRT", "AREN",
-          "BEXP", "BOCE", "COMC", "CPYR", "GDSV", "GSCB", "LICF", "ROYA", "SERV", "SUBS",
-          "SUPP", "TRAD", "CHAR", "COMT", "ECPR", "EPAY", "CLPR", "COMP", "DBTC", "HLRP",
-          "HLST", "INPC", "INPR", "INSC", "INSU", "INTE", "LBRI", "LIFI", "LOAN", "LOAR",
-          "PENO", "PPTI", "RELG", "TRFD", "FORW", "FXNT", "BLDM", "BNET", "CDBL", "CORT",
-          "CPKC", "EDUC", "FAND", "FEES", "GIFT", "GOVT", "INSM", "IVPT", "REBT", "REFU",
-          "RENT", "REOD", "TCSC", "CMDT", "DERI", "DIVD", "FREX", "HEDG", "INVS", "SAVG",
-          "SECU", "TREA", "FNET", "FUTR", "DNTS", "HLTI", "LTCF", "MDCS", "VIEW", "SWFP",
-          "SWPP", "SWRS", "SWUF", "ADCS", "ALMY", "BECH", "BENE", "BONU", "COMM", "HREC",
-          "PEFC", "PENS", "SALA", "SSBE", "LREB", "LREV", "ESTX", "HSTX", "INTX", "PTXP",
-          "RDTX", "TAXS", "VATX", "WHLD", "TAXR", "CBTV", "ELEC", "GASB", "PHON", "UBIL",
-          "WTER", "GAMB", "LOTT", "PCOM", "PDEP", "PLDS", "PLRF"
+          "BKFE",
+          "BKIP",
+          "BKPP",
+          "CBLK",
+          "ACCT",
+          "CASH",
+          "COLL",
+          "CSDB",
+          "DEPT",
+          "INTC",
+          "INTP",
+          "LIMA",
+          "NETT",
+          "EXTD",
+          "OTCD",
+          "REPO",
+          "SBSC",
+          "SLEB",
+          "AGRT",
+          "AREN",
+          "BEXP",
+          "BOCE",
+          "COMC",
+          "CPYR",
+          "GDSV",
+          "GSCB",
+          "LICF",
+          "ROYA",
+          "SERV",
+          "SUBS",
+          "SUPP",
+          "TRAD",
+          "CHAR",
+          "COMT",
+          "ECPR",
+          "EPAY",
+          "CLPR",
+          "COMP",
+          "DBTC",
+          "HLRP",
+          "HLST",
+          "INPC",
+          "INPR",
+          "INSC",
+          "INSU",
+          "INTE",
+          "LBRI",
+          "LIFI",
+          "LOAN",
+          "LOAR",
+          "PENO",
+          "PPTI",
+          "RELG",
+          "TRFD",
+          "FORW",
+          "FXNT",
+          "BLDM",
+          "BNET",
+          "CDBL",
+          "CORT",
+          "CPKC",
+          "EDUC",
+          "FAND",
+          "FEES",
+          "GIFT",
+          "GOVT",
+          "INSM",
+          "IVPT",
+          "REBT",
+          "REFU",
+          "RENT",
+          "REOD",
+          "TCSC",
+          "CMDT",
+          "DERI",
+          "DIVD",
+          "FREX",
+          "HEDG",
+          "INVS",
+          "SAVG",
+          "SECU",
+          "TREA",
+          "FNET",
+          "FUTR",
+          "DNTS",
+          "HLTI",
+          "LTCF",
+          "MDCS",
+          "VIEW",
+          "SWFP",
+          "SWPP",
+          "SWRS",
+          "SWUF",
+          "ADCS",
+          "ALMY",
+          "BECH",
+          "BENE",
+          "BONU",
+          "COMM",
+          "HREC",
+          "PEFC",
+          "PENS",
+          "SALA",
+          "SSBE",
+          "LREB",
+          "LREV",
+          "ESTX",
+          "HSTX",
+          "INTX",
+          "PTXP",
+          "RDTX",
+          "TAXS",
+          "VATX",
+          "WHLD",
+          "TAXR",
+          "CBTV",
+          "ELEC",
+          "GASB",
+          "PHON",
+          "UBIL",
+          "WTER",
+          "GAMB",
+          "LOTT",
+          "PCOM",
+          "PDEP",
+          "PLDS",
+          "PLRF"
         ]
       },
       "CategoryPurposeCodeV6": {
         "description": "Category purpose, in a proprietary form.",
         "type": "string",
         "enum": [
-          "BONU", "CASH", "CBLK", "CCRD", "CORT", "DCRD", "DIVI", "DVPM", "FCOL", "GP2P",
-          "GOVT", "HEDG", "INTC", "INTE", "LOAN", "MP2P", "OTHR", "PENS", "RRCT", "SALA",
-          "SECU", "SSBE", "SUPP", "TAXS", "TRAD", "TREA", "VATX", "WHLD"
+          "BONU",
+          "CASH",
+          "CBLK",
+          "CCRD",
+          "CORT",
+          "DCRD",
+          "DIVI",
+          "DVPM",
+          "FCOL",
+          "GP2P",
+          "GOVT",
+          "HEDG",
+          "INTC",
+          "INTE",
+          "LOAN",
+          "MP2P",
+          "OTHR",
+          "PENS",
+          "RRCT",
+          "SALA",
+          "SECU",
+          "SSBE",
+          "SUPP",
+          "TAXS",
+          "TRAD",
+          "TREA",
+          "VATX",
+          "WHLD"
         ]
       },
       "ReturnReasonCodeV6": {
         "description": "Specifies the reason for the return.",
         "type": "string",
         "enum": [
-          "AM09", "BE01", "BE04", "BE05", "BE06", "FOCR", "MD06", "MS02", "CURR", "AC04",
-          "AM02", "AM03", "AG01", "RR04", "AC01", "AC02", "AC03", "AC06", "AC07", "AC13",
-          "AC14", "AC15", "AC16", "AC17", "AG02", "AG07", "AGNT", "AM01", "AM04", "AM05",
-          "AM06", "AM07", "AM10", "ARDT", "BE07", "BE08", "BE10", "BE11", "BE16", "BE17",
-          "CN01", "CNOR", "CNPC", "CUST", "DNOR", "DS28", "DT01", "DT02", "ED01", "ED03",
-          "ED05", "EMVL", "ERIN", "FF03", "FF04", "FF05", "FF06", "FF07", "FR01", "FRTR",
-          "G004", "MD01", "MD02", "MD05", "MD07", "MS03", "NARR", "NOAS", "NOCM", "NOOR",
-          "PINL", "RC01", "RC07", "RC08", "RC11", "RF01", "RR01", "RR02", "RR03", "RR05",
-          "RR06", "RR07", "RR08", "RR09", "RR11", "RR12", "RUTA", "SL01", "SL02", "SL11",
-          "SL12", "SL13", "SL14", "SP01", "SP02", "SVNR", "TM01", "TRAC", "UPAY"
+          "AM09",
+          "BE01",
+          "BE04",
+          "BE05",
+          "BE06",
+          "FOCR",
+          "MD06",
+          "MS02",
+          "CURR",
+          "AC04",
+          "AM02",
+          "AM03",
+          "AG01",
+          "RR04",
+          "AC01",
+          "AC02",
+          "AC03",
+          "AC06",
+          "AC07",
+          "AC13",
+          "AC14",
+          "AC15",
+          "AC16",
+          "AC17",
+          "AG02",
+          "AG07",
+          "AGNT",
+          "AM01",
+          "AM04",
+          "AM05",
+          "AM06",
+          "AM07",
+          "AM10",
+          "ARDT",
+          "BE07",
+          "BE08",
+          "BE10",
+          "BE11",
+          "BE16",
+          "BE17",
+          "CN01",
+          "CNOR",
+          "CNPC",
+          "CUST",
+          "DNOR",
+          "DS28",
+          "DT01",
+          "DT02",
+          "ED01",
+          "ED03",
+          "ED05",
+          "EMVL",
+          "ERIN",
+          "FF03",
+          "FF04",
+          "FF05",
+          "FF06",
+          "FF07",
+          "FR01",
+          "FRTR",
+          "G004",
+          "MD01",
+          "MD02",
+          "MD05",
+          "MD07",
+          "MS03",
+          "NARR",
+          "NOAS",
+          "NOCM",
+          "NOOR",
+          "PINL",
+          "RC01",
+          "RC07",
+          "RC08",
+          "RC11",
+          "RF01",
+          "RR01",
+          "RR02",
+          "RR03",
+          "RR05",
+          "RR06",
+          "RR07",
+          "RR08",
+          "RR09",
+          "RR11",
+          "RR12",
+          "RUTA",
+          "SL01",
+          "SL02",
+          "SL11",
+          "SL12",
+          "SL13",
+          "SL14",
+          "SP01",
+          "SP02",
+          "SVNR",
+          "TM01",
+          "TRAC",
+          "UPAY"
         ]
       },
       "CreateInstitutionPaymentDtoV6": {
@@ -740,9 +986,11 @@
             "example": "E2E-001"
           },
           "interBankSettlementAmount": {
-            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6"
+            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6",
+            "type": "object"
           },
           "sourceAccount": {
+            "type": "object",
             "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction.",
             "oneOf": [
               {
@@ -755,7 +1003,8 @@
           },
           "debtor": {
             "$ref": "#/components/schemas/PartyDetailsDtoV6",
-            "description": "Party that owes an amount of money to the (ultimate) creditor."
+            "description": "Party that owes an amount of money to the (ultimate) creditor.",
+            "type": "object"
           },
           "creditorAccount": {
             "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
@@ -770,16 +1019,26 @@
           },
           "creditor": {
             "$ref": "#/components/schemas/PartyDetailsDtoV6",
-            "description": "Party that is owed an amount of money as the (ultimate) creditor."
+            "description": "Party that is owed an amount of money as the (ultimate) creditor.",
+            "type": "object"
           },
           "purpose": {
-            "$ref": "#/components/schemas/PurposeCodeV6"
+            "$ref": "#/components/schemas/PurposeCodeV6",
+            "description": "Underlying reason for the payment transaction, as published in an external Purpose Code list.",
+            "example": "INTC",
+            "minLength": "4",
+            "maxLength": "4"
           },
           "categoryPurpose": {
-            "$ref": "#/components/schemas/CategoryPurposeCodeV6"
+            "$ref": "#/components/schemas/CategoryPurposeCodeV6",
+            "description": "Broader nature of the payment, as published in an external Category Purpose Code list.",
+            "example": "INTC",
+            "minLength": "4",
+            "maxLength": "4"
           },
           "remittanceInformation": {
-            "$ref": "#/components/schemas/UnstructuredRemittanceInformationDtoV6"
+            "$ref": "#/components/schemas/UnstructuredRemittanceInformationDtoV6",
+            "type": "object"
           }
         },
         "additionalProperties": false
@@ -816,7 +1075,8 @@
             "example": "E2E-001"
           },
           "interBankSettlementAmount": {
-            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6"
+            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6",
+            "type": "object"
           },
           "sourceAccount": {
             "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction.",
@@ -842,7 +1102,8 @@
           },
           "debtor": {
             "$ref": "#/components/schemas/CustomerPartyDetailsDtoV6",
-            "description": "Party that owes an amount of money to the (ultimate) creditor."
+            "description": "Party that owes an amount of money to the (ultimate) creditor.",
+            "type": "object"
           },
           "creditorAccount": {
             "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
@@ -857,16 +1118,26 @@
           },
           "creditor": {
             "$ref": "#/components/schemas/CustomerPartyDetailsDtoV6",
-            "description": "Party that is owed an amount of money as the (ultimate) creditor. Postal address is required."
+            "description": "Party that is owed an amount of money as the (ultimate) creditor. Postal address is required.",
+            "type": "object"
           },
           "purpose": {
-            "$ref": "#/components/schemas/PurposeCodeV6"
+            "$ref": "#/components/schemas/PurposeCodeV6",
+            "description": "Underlying reason for the payment transaction, as published in an external Purpose Code list.",
+            "example": "LOAN",
+            "minLength": "4",
+            "maxLength": "4"
           },
           "categoryPurpose": {
-            "$ref": "#/components/schemas/CategoryPurposeCodeV6"
+            "$ref": "#/components/schemas/CategoryPurposeCodeV6",
+            "description": "Broader nature of the payment, as published in an external Category Purpose Code list.",
+            "example": "LOAN",
+            "minLength": "4",
+            "maxLength": "4"
           },
           "remittanceInformation": {
-            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV6"
+            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV6",
+            "type": "object"
           }
         },
         "additionalProperties": false
@@ -886,7 +1157,9 @@
             "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
           },
           "reason": {
-            "$ref": "#/components/schemas/ReturnReasonCodeV6"
+            "$ref": "#/components/schemas/ReturnReasonCodeV6",
+            "description": "Specifies the reason for the return.",
+            "example": "AC04"
           },
           "instructionIdentification": {
             "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.\n\nUsage: The instruction identification is a point to point reference that can be used between the instructing party and the instructed party to refer to the individual instruction. It can be included in several messages related to the instruction.",

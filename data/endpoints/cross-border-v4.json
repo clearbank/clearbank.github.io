@@ -33,7 +33,7 @@
                 "instructionIdentification": "XBDR-001",
                 "endToEndIdentification": "XBE2E-001",
                 "interBankSettlementAmount": {
-                  "amount": 5000.00,
+                  "amount": 5000,
                   "currency": "GBP"
                 },
                 "sourceAccount": {
@@ -301,7 +301,9 @@
         "type": "object",
         "properties": {
           "paymentId": {
-            "$ref": "#/components/schemas/ClearBankSchema_PaymentId"
+            "$ref": "#/components/schemas/ClearBankSchema_PaymentId",
+            "description": "ClearBank identifier that uniquely identifies the new outbound/return payment instruction.",
+            "example": "bd382f05e8fa4056b25e"
           }
         },
         "additionalProperties": false,
@@ -335,7 +337,8 @@
             "type": "string",
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "maxLength": 34,
-            "example": "GB29NWBK60161331926819"
+            "example": "GB29NWBK60161331926819",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -353,12 +356,15 @@
             "enum": [
               "BBan",
               "SortcodeAccountNumber"
-            ]
+            ],
+            "example": "Other"
           },
           "identification": {
             "description": "Unambiguous Identification for the given scheme",
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "example": "01020301234567",
+            "maxLength": 34
           }
         },
         "additionalProperties": false
@@ -373,7 +379,9 @@
             "description": "International Bank Account Number (IBAN) - identifier used internationally by financial institutions to uniquely identify the account of a customer. Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions.",
             "type": "string",
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
-            "maxLength": 34
+            "maxLength": 34,
+            "example": "NL91ABNA04171643008894",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -391,13 +399,15 @@
             "enum": [
               "BBan",
               "Other"
-            ]
+            ],
+            "example": "Other"
           },
           "identification": {
             "description": "Unambiguous Identification for the given scheme",
             "type": "string",
             "maxLength": 34,
-            "pattern": "[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]*(\\/[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+])?)*"
+            "pattern": "[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]*(\\/[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+])?)*",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -413,12 +423,14 @@
           "amount": {
             "type": "number",
             "format": "decimal",
-            "example": 5000.00
+            "example": 5000
           },
           "currency": {
             "type": "string",
             "pattern": "^[A-Z]{3}$",
-            "example": "GBP"
+            "example": "GBP",
+            "description": "Set to 'GBP' as other currencies are not supported.",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -496,10 +508,12 @@
           "otherIdentification": {
             "description": "Corporate share Companies House identifier with us",
             "type": "string",
-            "maxLength": 35
+            "maxLength": 35,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Optional information to be provided when the payment recipient is a business or financial institution. If you use this object, do not use the privateIdentifier object."
       },
       "PrivateIdentifierV5": {
         "type": "object",
@@ -507,10 +521,12 @@
           "otherIdentification": {
             "description": "Personal identifier",
             "type": "string",
-            "maxLength": 35
+            "maxLength": 35,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ ]+$"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Optional information to be provided when the payment recipient is an individual. If you use this object, do not use the OrganisationIdentifier object."
       },
       "CustomerPartyDetailsDtoV5": {
         "required": [
@@ -526,13 +542,17 @@
             "example": "Jane Smith"
           },
           "postalAddress": {
-            "$ref": "#/components/schemas/PartyAddressDetailsDtoV5"
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV5",
+            "type": "object",
+            "description": "Information that locates and identifies a specific address, as defined by postal services."
           },
           "organisationIdentifier": {
-            "$ref": "#/components/schemas/OrganisationIdentifierV5"
+            "$ref": "#/components/schemas/OrganisationIdentifierV5",
+            "type": "object"
           },
           "privateIdentifier": {
-            "$ref": "#/components/schemas/PrivateIdentifierV5"
+            "$ref": "#/components/schemas/PrivateIdentifierV5",
+            "type": "object"
           }
         },
         "additionalProperties": false
@@ -623,13 +643,15 @@
             "example": "Example Intermediary Bank"
           },
           "postalAddress": {
-            "$ref": "#/components/schemas/PartyAddressDetailsDtoV4"
+            "$ref": "#/components/schemas/PartyAddressDetailsDtoV4",
+            "type": "object"
           },
           "bic": {
             "description": "BIC of the intermediary agent",
             "type": "string",
             "pattern": "^[A-Z0-9]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$",
-            "example": "BARCGB22XXX"
+            "example": "BARCGB22XXX",
+            "minLength": 1
           },
           "lei": {
             "description": "Legal Entity Identifier of the agent",
@@ -650,7 +672,9 @@
             "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.\n\nUsage: If available, the initiating party should provide this reference in the structured remittance information, to enable reconciliation by the creditor upon receipt of the amount of money.\n\nIf the business context requires the use of a creditor reference or a payment remit identification, and only one identifier can be passed through the end-to-end chain, the creditor's reference or payment remittance identification should be quoted in the end-to-end transaction identification.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 35
+            "maxLength": 35,
+            "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$",
+            "example": "SALARY25112024"
           }
         },
         "additionalProperties": false
@@ -659,28 +683,167 @@
         "description": "Underlying reason for the payment transaction, as published in an external purpose code list.",
         "type": "string",
         "enum": [
-          "BKFE", "BKIP", "BKPP", "CBLK", "ACCT", "CASH", "COLL", "CSDB", "DEPT", "INTC",
-          "INTP", "LIMA", "NETT", "EXTD", "OTCD", "REPO", "SBSC", "SLEB", "AGRT", "AREN",
-          "BEXP", "BOCE", "COMC", "CPYR", "GDSV", "GSCB", "LICF", "ROYA", "SERV", "SUBS",
-          "SUPP", "TRAD", "CHAR", "COMT", "ECPR", "EPAY", "CLPR", "COMP", "DBTC", "HLRP",
-          "HLST", "INPC", "INPR", "INSC", "INSU", "INTE", "LBRI", "LIFI", "LOAN", "LOAR",
-          "PENO", "PPTI", "RELG", "TRFD", "FORW", "FXNT", "BLDM", "BNET", "CDBL", "CORT",
-          "CPKC", "EDUC", "FAND", "FEES", "GIFT", "GOVT", "INSM", "IVPT", "REBT", "REFU",
-          "RENT", "REOD", "TCSC", "CMDT", "DERI", "DIVD", "FREX", "HEDG", "INVS", "SAVG",
-          "SECU", "TREA", "FNET", "FUTR", "DNTS", "HLTI", "LTCF", "MDCS", "VIEW", "SWFP",
-          "SWPP", "SWRS", "SWUF", "ADCS", "ALMY", "BECH", "BENE", "BONU", "COMM", "HREC",
-          "PEFC", "PENS", "SALA", "SSBE", "LREB", "LREV", "ESTX", "HSTX", "INTX", "PTXP",
-          "RDTX", "TAXS", "VATX", "WHLD", "TAXR", "CBTV", "ELEC", "GASB", "PHON", "UBIL",
-          "WTER", "GAMB", "LOTT", "PCOM", "PDEP", "PLDS", "PLRF"
+          "BKFE",
+          "BKIP",
+          "BKPP",
+          "CBLK",
+          "ACCT",
+          "CASH",
+          "COLL",
+          "CSDB",
+          "DEPT",
+          "INTC",
+          "INTP",
+          "LIMA",
+          "NETT",
+          "EXTD",
+          "OTCD",
+          "REPO",
+          "SBSC",
+          "SLEB",
+          "AGRT",
+          "AREN",
+          "BEXP",
+          "BOCE",
+          "COMC",
+          "CPYR",
+          "GDSV",
+          "GSCB",
+          "LICF",
+          "ROYA",
+          "SERV",
+          "SUBS",
+          "SUPP",
+          "TRAD",
+          "CHAR",
+          "COMT",
+          "ECPR",
+          "EPAY",
+          "CLPR",
+          "COMP",
+          "DBTC",
+          "HLRP",
+          "HLST",
+          "INPC",
+          "INPR",
+          "INSC",
+          "INSU",
+          "INTE",
+          "LBRI",
+          "LIFI",
+          "LOAN",
+          "LOAR",
+          "PENO",
+          "PPTI",
+          "RELG",
+          "TRFD",
+          "FORW",
+          "FXNT",
+          "BLDM",
+          "BNET",
+          "CDBL",
+          "CORT",
+          "CPKC",
+          "EDUC",
+          "FAND",
+          "FEES",
+          "GIFT",
+          "GOVT",
+          "INSM",
+          "IVPT",
+          "REBT",
+          "REFU",
+          "RENT",
+          "REOD",
+          "TCSC",
+          "CMDT",
+          "DERI",
+          "DIVD",
+          "FREX",
+          "HEDG",
+          "INVS",
+          "SAVG",
+          "SECU",
+          "TREA",
+          "FNET",
+          "FUTR",
+          "DNTS",
+          "HLTI",
+          "LTCF",
+          "MDCS",
+          "VIEW",
+          "SWFP",
+          "SWPP",
+          "SWRS",
+          "SWUF",
+          "ADCS",
+          "ALMY",
+          "BECH",
+          "BENE",
+          "BONU",
+          "COMM",
+          "HREC",
+          "PEFC",
+          "PENS",
+          "SALA",
+          "SSBE",
+          "LREB",
+          "LREV",
+          "ESTX",
+          "HSTX",
+          "INTX",
+          "PTXP",
+          "RDTX",
+          "TAXS",
+          "VATX",
+          "WHLD",
+          "TAXR",
+          "CBTV",
+          "ELEC",
+          "GASB",
+          "PHON",
+          "UBIL",
+          "WTER",
+          "GAMB",
+          "LOTT",
+          "PCOM",
+          "PDEP",
+          "PLDS",
+          "PLRF"
         ]
       },
       "CategoryPurposeCodeV5": {
         "description": "Category purpose, in a proprietary form.",
         "type": "string",
         "enum": [
-          "BONU", "CASH", "CBLK", "CCRD", "CORT", "DCRD", "DIVI", "DVPM", "FCOL", "GP2P",
-          "GOVT", "HEDG", "INTC", "INTE", "LOAN", "MP2P", "OTHR", "PENS", "RRCT", "SALA",
-          "SECU", "SSBE", "SUPP", "TAXS", "TRAD", "TREA", "VATX", "WHLD"
+          "BONU",
+          "CASH",
+          "CBLK",
+          "CCRD",
+          "CORT",
+          "DCRD",
+          "DIVI",
+          "DVPM",
+          "FCOL",
+          "GP2P",
+          "GOVT",
+          "HEDG",
+          "INTC",
+          "INTE",
+          "LOAN",
+          "MP2P",
+          "OTHR",
+          "PENS",
+          "RRCT",
+          "SALA",
+          "SECU",
+          "SSBE",
+          "SUPP",
+          "TAXS",
+          "TRAD",
+          "TREA",
+          "VATX",
+          "WHLD"
         ]
       },
       "CreateCrossBorderCustomerPaymentDtoV7": {
@@ -714,9 +877,11 @@
             "maxLength": 35
           },
           "interBankSettlementAmount": {
-            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6"
+            "$ref": "#/components/schemas/InterBankSettlementAmountDtoV6",
+            "type": "object"
           },
           "sourceAccount": {
+            "type": "object",
             "description": "The ClearBank account that will be credited or debited based on the successful completion of the payment instruction.",
             "oneOf": [
               {
@@ -736,11 +901,13 @@
               {
                 "$ref": "#/components/schemas/AccountIdentificationOtherDtoV6"
               }
-            ]
+            ],
+            "type": "object"
           },
           "debtor": {
             "$ref": "#/components/schemas/CustomerPartyDetailsDtoV5",
-            "description": "Party that owes an amount of money to the (ultimate) creditor."
+            "description": "Party that owes an amount of money to the (ultimate) creditor.",
+            "type": "object"
           },
           "creditorAccount": {
             "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
@@ -751,26 +918,40 @@
               {
                 "$ref": "#/components/schemas/CrossBorderCreditorIdentificationOtherDtoV4"
               }
-            ]
+            ],
+            "type": "object"
           },
           "creditor": {
             "$ref": "#/components/schemas/CustomerPartyDetailsDtoV5",
-            "description": "Party that is owed an amount of money as the (ultimate) creditor."
+            "description": "Party that is owed an amount of money as the (ultimate) creditor.",
+            "type": "object"
           },
           "creditorAgent": {
-            "$ref": "#/components/schemas/CrossBorderCreditorAgentV6"
+            "$ref": "#/components/schemas/CrossBorderCreditorAgentV6",
+            "type": "object"
           },
           "purpose": {
-            "$ref": "#/components/schemas/PurposeCodeV5"
+            "$ref": "#/components/schemas/PurposeCodeV5",
+            "description": "Underlying reason for the payment transaction, as set out in the Bank of England's ISO 20022 data enhancement requirements. When sending payments to countries requiring other purpose codes, you can provide them in the optional creditorReferenceInformation field in the remittanceInformation object.",
+            "example": "SALA",
+            "minLength": 4,
+            "maxLength": 4
           },
           "categoryPurpose": {
-            "$ref": "#/components/schemas/CategoryPurposeCodeV5"
+            "$ref": "#/components/schemas/CategoryPurposeCodeV5",
+            "description": "A broader categorisation of the transaction's purpose, as set out in the Bank of England's ISO 20022 data enhancement requirements.",
+            "example": "SALA",
+            "minLength": 4,
+            "maxLength": 4
           },
           "remittanceInformation": {
-            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV4"
+            "$ref": "#/components/schemas/StructuredRemittanceInformationDtoV4",
+            "type": "object"
           },
           "intermediaryAgent1": {
-            "$ref": "#/components/schemas/IntermediaryAgentDetailsV4"
+            "$ref": "#/components/schemas/IntermediaryAgentDetailsV4",
+            "type": "object",
+            "description": "Optional intermediary agent details for the payment. If provided, the BIC and name of the agent are required. If not provided, we will route the payment to the Creditor Agent BIC."
           }
         },
         "additionalProperties": false
