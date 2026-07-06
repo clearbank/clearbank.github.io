@@ -354,7 +354,7 @@
             ]
           },
           "identification": {
-            "description": "Information to identify an account.",
+            "description": "Unambiguous identification for the given scheme. For SortCodeAccountNumber, provide the sort code and account number (e.g., 601613319269). For BBan, provide the basic bank account number.",
             "minLength": 1,
             "type": "string",
             "example": "601613319269"
@@ -406,7 +406,7 @@
             "example": "BARCGB22XXX"
           },
           "debtorAccount": {
-            "description": "Information on the account of the debtor.",
+            "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV3"
@@ -417,12 +417,12 @@
             ]
           },
           "debtor": {
-            "description": "Information to identify the debtor.",
+            "description": "Party that owes an amount of money to the (ultimate) creditor.",
             "$ref": "#/components/schemas/PartyDetailsDtoV3",
             "type": "object"
           },
           "creditorAccount": {
-            "description": "Information on the account of the creditor.",
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV3"
@@ -567,7 +567,7 @@
             "type": "string"
           },
           "categoryPurpose": {
-            "description": "Category purpose, in a proprietary form.",
+            "description": "Broader nature of the payment, as published in an external Category Purpose Code list.",
             "enum": [
               "BONU",
               "CASH",
@@ -727,18 +727,19 @@
           },
           "instructionIdentification": {
             "type": "string",
-            "description": "Instruction identifier for the return payment.",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
             "minLength": 1,
             "maxLength": 35,
             "pattern": "^[0-9a-zA-Z/\\-\\?:\\(\\)\\.,'\\+ !#$%&\\*=^_`\\{\\|\\}~\";<>@\\[\\\\\\]]+$"
           },
           "returnedInterBankSettlementAmount": {
             "$ref": "#/components/schemas/ReturnedInterBankSettlementAmountDtoV3",
-            "type": "object"
+            "type": "object",
+            "description": "Optional. The amount of money to be returned. If not provided, the full original settlement amount will be returned."
           },
           "additionalInformation": {
             "type": "string",
-            "description": "Optional narrative when reason is NARR.",
+            "description": "Optional additional information providing context for the return. Required when Reason is NARR. Maximum 105 characters.",
             "maxLength": 105
           }
         },
@@ -790,7 +791,7 @@
             "example": "BARCGB22XXX"
           },
           "debtorAccount": {
-            "description": "Information on the account of the debtor.",
+            "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV3"
@@ -822,7 +823,7 @@
             "example": "BARCGB22XXX"
           },
           "creditorAccount": {
-            "description": "Information on the account of the creditor.",
+            "description": "Unambiguous identification of the account of the creditor to which a credit entry will be posted as a result of the payment transaction.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AccountIdentificationIbanDtoV3"
@@ -967,7 +968,7 @@
             "type": "string"
           },
           "categoryPurpose": {
-            "description": "Category purpose, in a proprietary form.",
+            "description": "Broader nature of the payment, as published in an external Category Purpose Code list.",
             "enum": [
               "BONU",
               "CASH",
@@ -1024,7 +1025,7 @@
           "postalAddress": {
             "$ref": "#/components/schemas/PartyAddressDetailsDtoV3",
             "type": "object",
-            "description": "Address of the person or business who owns the account."
+            "description": "Information that locates and identifies a specific address, as defined by postal services."
           },
           "lei": {
             "description": "Legal Entity Identifier of the party.",
@@ -1100,7 +1101,7 @@
             "example": "10"
           },
           "buildingName": {
-            "description": "Name that identifies a building.",
+            "description": "Name of the building or house.",
             "type": "string",
             "example": "Example House"
           },
@@ -1110,7 +1111,7 @@
             "example": "Generic Street"
           },
           "townName": {
-            "description": "Name of a town, city or village.",
+            "description": "Name of a built-up area, with defined boundaries, and a local government.",
             "minLength": 1,
             "maxLength": 35,
             "type": "string",
@@ -1228,7 +1229,8 @@
         "type": "object",
         "properties": {
           "uetr": {
-            "type": "string"
+            "type": "string",
+            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction."
           }
         }
       },
@@ -1242,16 +1244,18 @@
           "amount": {
             "type": "number",
             "format": "decimal",
-            "minimum": 0.01
+            "minimum": 0.01,
+            "description": "Amount of money to be returned, expressed in GBP. Must be greater than or equal to 0.01."
           },
           "currency": {
             "type": "string",
-            "description": "Currency of returned amount.",
+            "description": "Set to 'GBP' as other currencies are not supported.",
             "pattern": "^GBP$",
             "example": "GBP"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "A number of monetary units specified in an active or a historic currency where the unit of currency is explicit and compliant with ISO 4217."
       },
       "StructuredRemittanceInformationDtoV3": {
         "type": "object",
