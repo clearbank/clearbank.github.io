@@ -74,9 +74,9 @@ Because processing is not immediate, you should design your integration to be **
 
 ## Notification of SEPA Direct Debit payment collections
 
-### Collections notification overview
+### Overview of collections notifications
 
-ClearBank receives inbound SEPA Direct Debit collections from the scheme on behalf of your account. These are debit instructions submitted by creditors to collect funds from debtor accounts.
+ClearBank receives inbound SEPA Direct Debit collections from the scheme on behalf of your accounts. These are debit instructions submitted by creditors to collect funds from debtor accounts (you).
 
 This is the starting point of the SEPA Direct Debit lifecycle. Once received, the instruction is made available to your system prior to settlement and then processed in line with scheme rules.
 
@@ -91,7 +91,7 @@ On settlement, the debit is applied to the account and reflected in transaction 
 
 ![A message flow diagram showing which responses and webhooks you will receive after requesting to simulate an inbound direct debit.](/assets/images/sepa-dd/sepa-dd-flow.svg)
 
-### Associated Collection and Payment webhooks
+### Associated webhooks with collections
 
 - **[SEPA DD Debit Payment Collection Pending](sepa-dd-debit-payment-collection-pending-webhook)**: sent when ClearBank processes the inbound scheme instruction, confirms it is intended for your institution, and makes it available prior to settlement. You'll receive this at least one day before settlement (and up to 14 days in advance depending on scheme timelines).
 - **[SEPA DD Debit Payment Completed](sepa-dd-debit-payment-completed-webhook)**: sent when the collection has reached scheme settlement.
@@ -299,7 +299,7 @@ To emulate an inbound SDD collection, call the [POST /payments/sepa-dd/v1/emulat
   ]}
 />
 
-### Example request
+### Example emulator request
 
 ```json
 [
