@@ -133,6 +133,28 @@ endpoints={[
 />
 
 <WebhookPlaceholder render='transaction-settled-webhook-v6' />
+
+#### Faster Payments Transaction Settled webhook error codes
+
+| Error code                       | Description                                                                                | Recommended action                                                   | Retry Policy      |
+|----------------------------------|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------|-------------------|
+| **AC03**                             | Beneficiary Sort Code/Account Number unknown                                               | Verify beneficiary account details and resubmit                      | Review then retry |
+| **AC06**                             | Beneficiary Account stopped                                                                | Contact beneficiary to confirm account status or provide alternative | Review then retry |
+| **AC07**                             | Beneficiary Account closed                                                                 | Contact beneficiary for updated account details                      | Review then retry |
+| **AC09**                             | Account is not in currency quoted                                                          | Confirm currency requirements and resend in supported currency       | Review then retry |
+| **AG01**                             | Terms and Conditions of Account do not permit crediting of these funds                     | Contact beneficiary for alternative payment method or account        | Do not retry      |
+| **BE08**                             | Error stems from participant error or unavailability                                       | Please retry payment; if it continues to fail, wait and then retry   | Retry             |
+| **CB_AccountHoldersBankrupt**        | Payment cannot be applied because of Beneficiary sensitivities – e.g. possible bankruptcy  | Do not retry; escalate and seek legal/compliance guidance            | Do not retry      |
+| **CB_AccountNameAndNumberMismatch**  | The payment has been rejected by the receiving bank because the beneficiary account name does not match the beneficiary account number | Validate account name against account number (e.g. via CoP) before retrying | Review then retry |
+| **CB_AccountSwitched**               | Account transferred                                                                        | Use account switching data (e.g. CASS redirection) or request updated details. Follow account switching/redirection guidance or obtain updated details  | Do not retry |
+| **CB_InitiatingPartyActionRequired** | Sending FPS Institution action required                                                    | Review payment details and format and retry. If payment fails again, contact ClearBank | Review then retry |
+| **CB_PaymentBeneficiaryNameMissing** | The payment has been rejected by the receiving bank as the beneficiary name is not present | Include beneficiary name and retry                                   | Review then retry |
+| **CB_PaymentReferenceIncorrect**     | The payment has been rejected by the receiving bank due to reference information field being incorrect | Correct the reference format/content and resubmit        | Review then retry |
+| **CB_PaymentReferenceMissing**       | The payment has been rejected by the receiving bank because the receiving account cannot be identified without a Payee Reference | Ensure mandatory payment reference is included and retry | Review then retry |
+| **MD09** | Beneficiary deceased | Do not retry; contact beneficiary organisation or sender for next steps | Do not retry |
+| **MS03** | Reasons not specified by end agent | Retry or contact beneficiary bank for clarification | Retry |
+| **PY01** | The payment has been rejected due to an unknown sort code/account number | Reconfirm sort code and account number before resubmission | Review then retry |
+
 <WebhookPlaceholder render='payment-message-assessment-failed-webhook-v1' />
 <WebhookPlaceholder render='payment-message-validation-failed-webhook-v1' />
 <WebhookPlaceholder render='transaction-rejected-v2' />
