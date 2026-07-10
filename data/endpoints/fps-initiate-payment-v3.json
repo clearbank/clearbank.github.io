@@ -70,7 +70,14 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationProblemDetails"
+                                    "oneOf":[
+                                        {
+                                            "$ref": "#/components/schemas/ValidationProblemDetails"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/BatchCreditTransferResponse"
+                                        }
+                                    ]
                                 }
                             }
                         }
@@ -791,7 +798,6 @@
                         "enum": [
                             "Accepted",
                             "AccountDisabled",
-                            "InsufficientFunds",
                             "InvalidAccount",
                             "InvalidCurrency",
                             "Rejected",
@@ -864,6 +870,24 @@
                     "instance": {
                         "type": "string",
                         "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": {},
+                "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+            },
+            "InsufficientFundsDetails": {
+                "type": "object",
+                "properties": {
+                    "transactions": {
+                        "type": "array",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "TODO TODO TODO",
                         "nullable": true
                     }
                 },
