@@ -70,14 +70,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "oneOf":[
-                                        {
-                                            "$ref": "#/components/schemas/ValidationProblemDetails"
-                                        },
-                                        {
-                                            "$ref": "#/components/schemas/InsufficientFundsDetails"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/InsufficientFundsDetails"
                                 }
                             }
                         }
@@ -844,17 +837,23 @@
                             }
                         },
                         "description": "The validation errors.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": {
+                            "field1": ["Error message 1"],
+                            "field2": ["Error message 2"]
+                        }
                     },
                     "type": {
                         "type": "string",
                         "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "https://example.com/probs/error-code"
                     },
                     "title": {
                         "type": "string",
-                        "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
-                        "nullable": true
+                        "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+                        "nullable": true,
+                        "example": "Error title"
                     },
                     "status": {
                         "type": "integer",
@@ -866,12 +865,14 @@
                     "detail": {
                         "type": "string",
                         "description": "A human-readable explanation specific to this occurrence of the problem.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "The request is invalid. See errors for details."
                     },
                     "instance": {
                         "type": "string",
                         "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                        "nullable": true
+                        "nullable": true,
+                        "example": "/errors/12345"
                     }
                 },
                 "additionalProperties": {},
@@ -891,21 +892,17 @@
                                     "description": "Unique identification, as assigned by the initiating party to unambiguously identify the transaction."
                                 },
                                 "response": {
-                                    "enum": [
-                                        "InsufficientFunds"
-                                    ],
                                     "description": "Indicates the reason for the rejection of the payment instruction.",
                                     "type": "string",
                                     "example": "InsufficientFunds"
                                 }
                             }
                         },
-                        "description": "TODO TODO TODO",
+                        "description": "If all payments in the batch fail, you'll receive a 400 response with this object in the body. It contains the endToEndIdentification and response for each payment instruction in the batch that failed. You'll receive a 202 if any payments in the batch succeed. The model for 400 responses will be the same as 422 - Client Error in all other cases.",
                         "nullable": true
                     }
                 },
-                "additionalProperties": {},
-                "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+                "additionalProperties": false
             }
         }
     }
