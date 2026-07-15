@@ -64,6 +64,8 @@ export const DropdownWrapper = styled.div`
 
 export const ApiVariantTabs = styled.div`
   display: inline-flex;
+  position: relative;
+  z-index: 1;
   margin-top: 0;
   border: 1px solid ${colors.wedgewoodapprox};
   border-radius: 5px;
