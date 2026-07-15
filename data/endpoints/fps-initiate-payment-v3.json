@@ -472,7 +472,7 @@
                         "items": {
                             "$ref": "#/components/schemas/PaymentInstructionResponse"
                         },
-                        "description": "The acceptance or rejection status of each individual payment instruction",
+                        "description": "An array containing the the acceptance or rejection status of each individual payment instruction. You'll receive a 400 - Bad Request response if all payments in the batch fail. You'll receive a 202 - Accepted response if any payments in the batch succeed.",
                         "nullable": true
                     },
                     "halLinks": {
@@ -785,12 +785,14 @@
                 "properties": {
                     "endToEndIdentification": {
                         "type": "string",
-                        "description": "Unique identification, as assigned by the initiating party to unambiguously identify the transaction."
+                        "description": "Unique identification, as assigned by the initiating party to unambiguously identify the transaction.",
+                        "example": "E2E12345"
                     },
                     "response": {
                         "enum": ["Accepted", "InsufficientFunds", "InvalidAccount", "InvalidCurrency", "Rejected", "DebitPaymentDisabled", "InvalidInstructionIdentification"],
                         "type": "string",
-                        "description": "The result of how the payment instruction has been processed."
+                        "description": "The result of how the payment instruction has been processed.",
+                        "example": "Accepted"
                     }
                 },
                 "additionalProperties": false,
@@ -892,7 +894,7 @@
                                 }
                             }
                         },
-                        "description": "If all payments in the batch fail, you'll receive a 400 response with this object in the body. It contains the endToEndIdentification and response for each payment instruction in the batch that failed. You'll receive a 202 if any payments in the batch succeed. The model for 400 responses will match the model of 422 - Client Error in all other cases.",
+                        "description": "If all payments in the batch fail, you'll receive a 400 response containing this array in the body, with an entry for each failed payment. You'll receive a 202 - Accepted response if any payments in the batch succeed. The model for 400 responses will match the model of 422 - Client Error in all other cases.",
                         "nullable": true
                     }
                 },
