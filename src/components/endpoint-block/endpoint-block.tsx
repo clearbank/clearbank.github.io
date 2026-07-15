@@ -12,6 +12,12 @@ import CodeSnippet from 'src/components/code-snippet'
 import * as Types from './endpoint-block.types'
 import * as Styles from './endpoint-block.styles'
 import * as Helpers from './endpoint-block.helpers'
+import {
+  ApiVariant,
+  API_VARIANT_LABELS,
+  getInjectedHeaders,
+  stripStandardHeaders
+} from './endpoint-block.headers'
 import { getAllWebhooks } from 'src/hooks/allWebhooks'
 
 import APIFiles from '../../../data/endpoints.json'
@@ -66,6 +72,26 @@ const renderVersionDropdown = (
   </SelectDropdown>
 )
 
+const renderApiVariantTabs = (
+  apiVariant: ApiVariant,
+  setApiVariant: (variant: ApiVariant) => void
+) => (
+  <Styles.ApiVariantTabs role='tablist' aria-label='API variant'>
+    {Object.values(ApiVariant).map((variant: ApiVariant) => (
+      <Styles.ApiVariantTab
+        key={variant}
+        type='button'
+        role='tab'
+        aria-selected={apiVariant === variant}
+        active={apiVariant === variant}
+        onClick={() => setApiVariant(variant)}
+      >
+        {API_VARIANT_LABELS[variant]}
+      </Styles.ApiVariantTab>
+    ))}
+  </Styles.ApiVariantTabs>
+)
+
 const getRelatedWebhooks = (webhooks: string[] = []) => {
   const allWebhooks: any = getAllWebhooks()
 
@@ -92,6 +118,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   description: descriptionProps
 }): ReactElement => {
   const [currentVersion, setCurrentVersion] = useState(0)
+  const [apiVariant, setApiVariant] = useState(ApiVariant.FinancialInstitution)
   const hasCustomContent = !!children
   const currentEndpoint = endpoints[currentVersion]
 
@@ -126,6 +153,11 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   const titleTransformed = kebabCase(title.toLowerCase())
   const relatedWebhooks = getRelatedWebhooks(webhooks)
 
+  const injectedParameters = [
+    ...getInjectedHeaders(apiVariant, type),
+    ...stripStandardHeaders(parameters)
+  ]
+
   if (hasCustomContent) {
     return children(APIFiles[version].paths[path][type])
   }
@@ -149,6 +181,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
           className='endpoint-block-code'
         />
         {renderVersionDropdown(endpoints, setCurrentVersion, currentVersion)}
+        {renderApiVariantTabs(apiVariant, setApiVariant)}
       </Styles.DropdownWrapper>
       <Styles.Description>{message}</Styles.Description>
 
@@ -159,7 +192,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
       <Styles.FlexContainer>
         <Styles.EndpointWrapper>
           <EndpointBlockParameters
-            parameters={parameters}
+            parameters={injectedParameters}
             codeblocks={getCodeBlocks('parameters', codeblocks)}
           />
           <EndpointBlockModel

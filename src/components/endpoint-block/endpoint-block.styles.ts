@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Box } from 'rebass'
 
-import { breakpoints, fonts, heights } from 'src/components/theme'
+import { breakpoints, colors, fonts, heights } from 'src/components/theme'
 
 export const Title: any = styled.h3`
   margin: 0;
@@ -60,6 +60,30 @@ export const CodeblockWrapper = styled.div`
 export const DropdownWrapper = styled.div`
   margin-bottom: 15px;
   width: 100%;
+`
+
+export const ApiVariantTabs = styled.div`
+  display: inline-flex;
+  margin-top: 15px;
+  border: 1px solid ${colors.alto};
+  border-radius: 5px;
+  overflow: hidden;
+`
+
+export const ApiVariantTab: any = styled.button`
+  padding: 8px 16px;
+  border: none;
+  background: ${(props: any) =>
+    props.active ? colors.brandGrayDarkest : colors.brandLight};
+  color: ${(props: any) =>
+    props.active ? colors.brandLight : colors.brandGrayDarkest};
+  font-family: ${fonts.body};
+  font-size: 15px;
+  cursor: pointer;
+
+  & + & {
+    border-left: 1px solid ${colors.alto};
+  }
 `
 
 export const Type: any = styled.span`
