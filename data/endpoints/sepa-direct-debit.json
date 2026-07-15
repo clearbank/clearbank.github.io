@@ -1,0 +1,454 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Sepa Direct Debits Emulator API",
+    "version": "1.0.SepaDD"
+  },
+  "paths": {
+    "/payments/sepa-dd/v1/emulator/inbound-direct-debits": {
+      "post": {
+        "tags": [
+          "InboundDirectDebit"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DirectDebit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "description": "Use this endpoint to simulate 1-5 SEPA Core Direct Debit payments. You may request this using an array of the following payload."
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "required": [
+          "accountIban"
+        ],
+        "type": "object",
+        "properties": {
+          "accountIban": {
+            "description": "International Bank Account Number (IBAN) of the account. Must be a structurally valid IBAN.",
+            "example": "NL91CBEU1718765453",
+            "minLength": 5,
+            "maxLength": 34,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Creditor": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name used to identify the legal owner of the account.",
+            "example": "Samwise",
+            "minLength": 1,
+            "maxLength": 70,
+            "type": "string",
+            "nullable": true
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Debtor": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name used to identify the legal owner of the account.",
+            "example": "Billiam Huang",
+            "minLength": 1,
+            "maxLength": 70,
+            "type": "string",
+            "nullable": true
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DirectDebit": {
+        "required": [
+          "endToEndId",
+          "txId",
+          "mandateId",
+          "amount",
+          "debtor",
+          "debtorAccount",
+          "creditor",
+          "creditorAccount",
+          "sequenceType",
+          "requestedCollectionDate"
+        ],
+        "type": "object",
+        "properties": {
+          "endToEndId": {
+            "description": "Unique identification, as assigned by the originating party, to unambiguously identify the transaction. Passed on unchanged throughout the entire end-to-end chain.",
+            "example": "Y7DHQ8PXIB1DUUZE3PDEGUTLEA77LXSN6ES",
+            "minLength": 1,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "instructionId": {
+            "description": "Unique identifier used by the client financial institution to identify this instruction in the simulator. Recommended for traceability.",
+            "example": "SKAVJPXKWBQGCUHJTH0IS25HSC2K3B3QWQO",
+            "minLength": 0,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "txId": {
+            "description": "Unique identifier used by the client financial institution to identify this transaction in scheme.",
+            "example": "wnPrv0z42GrxqpPucyr2qOC5SPrvKvNYEG0",
+            "minLength": 1,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "mandateId": {
+            "description": "Unique identification, as assigned by the creditor, to unambiguously identify the mandate.",
+            "example": "MANDATE-007",
+            "minLength": 1,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "$ref": "#/components/schemas/InterBankSettlementAmount"
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/Debtor"
+          },
+          "debtorAccount": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/Creditor"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "remittanceInformationUnstructured": {
+            "description": "Unstructured remittance information for this transaction. Either unstructured or structured may be provided; not both.",
+            "example": "Karma payment; €1224.48; REF:22334455",
+            "minLength": 0,
+            "maxLength": 140,
+            "type": "string",
+            "nullable": true
+          },
+          "remittanceInformationStructured": {
+            "description": "Structured remittance information for this transaction. Either structured or unstructured may be provided; not both.",
+            "example": null,
+            "minLength": 1,
+            "maxLength": 140,
+            "type": "string",
+            "nullable": true
+          },
+          "requestedCollectionDate": {
+            "description": "The date on which the creditor requests the funds to be collected. Formatted yyyy-MM-dd.",
+            "example": "2026-08-27",
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "sequenceType": {
+            "description": "Identifies the direct debit sequence. FRST = First, RCUR = Recurrent, FNAL = Final, OOFF = One-off.",
+            "enum": [
+              "FRST",
+              "RCUR",
+              "FNAL",
+              "OOFF"
+            ],
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "InterBankSettlementAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "description": "The amount to be collected between creditor and debtor.",
+            "minimum": 0.01,
+            "maximum": 999999999.99,
+            "example": 1224.48,
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "description": "Currency used. Only EUR is supported.",
+            "example": "EUR",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PostalAddress": {
+        "required": [
+          "streetName",
+          "country"
+        ],
+        "type": "object",
+        "properties": {
+          "department": {
+            "description": "Identification of a division of a large organisation or building.",
+            "example": "Department of Truth",
+            "type": "string",
+            "nullable": true
+          },
+          "subDepartment": {
+            "description": "Identification of a sub-division of a large organisation or building.",
+            "example": "Block 3",
+            "type": "string",
+            "nullable": true
+          },
+          "streetName": {
+            "description": "Name of a street or thoroughfare.",
+            "example": "Distelweg",
+            "minLength": 1,
+            "maxLength": 70,
+            "type": "string",
+            "nullable": true
+          },
+          "buildingNumber": {
+            "description": "Number that identifies the position of a building on a street.",
+            "example": "322",
+            "minLength": 1,
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
+          "buildingName": {
+            "description": "Name of the building or house.",
+            "example": "Peach Trees",
+            "type": "string",
+            "nullable": true
+          },
+          "floor": {
+            "description": "Floor or storey within a building.",
+            "example": "27",
+            "type": "string",
+            "nullable": true
+          },
+          "postBox": {
+            "description": "Numbered box in a post office, assigned to a person or organisation, where letters are kept.",
+            "example": "4",
+            "type": "string",
+            "nullable": true
+          },
+          "room": {
+            "description": "Room name or number within a building.",
+            "example": "6A",
+            "type": "string",
+            "nullable": true
+          },
+          "townName": {
+            "description": "Name of a built-up area, with defined boundaries, and a local government.",
+            "example": "Mega City One",
+            "minLength": 1,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "townLocationName": {
+            "description": "Specific location name within the town.",
+            "example": "Town sublocation example",
+            "type": "string",
+            "nullable": true
+          },
+          "districtName": {
+            "description": "Identifies a subdivision within a country sub-division.",
+            "example": "Sky District",
+            "type": "string",
+            "nullable": true
+          },
+          "postCode": {
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "example": "1031 HB",
+            "minLength": 1,
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
+          "countrySubdivision": {
+            "description": "Identifies a subdivision of a country such as state, region, or county.",
+            "example": "North Holland",
+            "minLength": 1,
+            "maxLength": 35,
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "description": "Nation with its own government, given as an ISO 3166-1 alpha-2 country code.",
+            "example": "NL",
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Z]{2,2}$",
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine": {
+            "description": "Address presented in a freetext format, as defined by postal services.",
+            "example": "6A, Floor 27, 322 Long Road, Mega City One, North Holland, Netherlands",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "example": "https://httpstatuses.io/400",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see[RFC7231], Section 3.4).",
+            "example": "One or more validation errors occurred.",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "example": "400",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "example": "",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "example": "",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The validation errors.",
+            "example": [
+              "'EndToEndId' must not be empty.",
+              "Amount must be greater than zero."
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      }
+    }
+  }
+}

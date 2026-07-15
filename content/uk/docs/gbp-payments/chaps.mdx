@@ -12,19 +12,21 @@ import ExternalLink from 'src/components/external-link';
 
 ## CHAPS
 
-<Callout colour="blue"><h2>Deprecation notice</h2><p>The following endpoints were deprecated on <strong>1 November 2024</strong>:<br />
-- <strong>POST /payments/chaps/v4/customer-payments</strong><br />
-- <strong>POST /payments/chaps/v4/institution-payments</strong><br />
-- <strong>POST /payments/chaps/v4/return-payments</strong><br /></p>
+<Callout colour="blue"><h2>Deprecation notice</h2>
+<p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
+- <strong>POST /payments/chaps/v5/customer-payments</strong><br />
+- <strong>POST /payments/chaps/v5/return-payments</strong><br />
+- <strong>POST /payments/chaps/v5/institution-payments</strong><br /></p>
 
- <p>These endpoints will remain available for use until <strong>1 May 2025</strong>. We recommend switching to version 5 of these endpoints. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
-However, you can only send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
-- CHAPS payments can be sent using the [POST payments/chaps/v4/customer-payments](#send-a-chaps-payment) endpoint.
+You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
+
+- CHAPS payments can be sent using the [POST /payments/chaps/v6/customer-payments](#send-a-chaps-payment) endpoint.
 - Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
-- If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v4/return-payments](#return-a-chaps-payment) endpoint.
+- If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v6/return-payments](#return-a-chaps-payment) endpoint.
 
 <Callout colour="blue">
   It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
@@ -32,40 +34,43 @@ However, you can only send or return CHAPS payments between 08:00 – 17:00 Mond
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
-**CHAPS validation**
+### Hybrid address
 
-| Element     | Type   | Validation                                                                      | Description                                                                                                                                                                                           |
-|-------------|--------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `name`      | string | maxLength: 140<br /> minLength: 1 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as Account Holder Name** <br /> This the Creditor’s name.<br /> If max length exceeds 35 characters, this will be truncated before sending to scheme.                                   |
-| `reference` | string | maxLength: 35 <br /> minLength: 0 <br /> pattern: ``[0-9a-zA-Z/\-\?:\(\)\.,'\+ !#$%&\*=^_`\{\|\}~";<>@\[\\\]]+`` | **Also known as the Payment Reference** <br /> This is the Payment reference under remittance information.  |
+From 24 November 2025, some inbound CHAPS payments may include a new address format called hybrid address. A hybrid address is an address format that includes both structured fields (such as town name and country) and unstructured address lines.
 
-The character set defined by the pattern for the `name` and `reference` fields includes all SWIFT allowed characters. These are alphanumeric (uppercase and lowercase) and the special characters shown in this table:<br />
+The structured and unstructured address formats will also continue to be used alongside the hybrid address format. These formats appear in the `Iso20022XmlDocument` field in the [Transaction Settled webhook](#transaction-settled-webhook).
 
-|Special character|Description|Special character|Description|
-|---|----|---|---|
-|**\!**|Exclamation mark|**\|**|Pipe|
-|**\#**|Hash|**\}**|Right curly bracket|
-|**$**|Dollar sign|**\~**|Tilde|
-|**%**|Percent|**"**|Double straight quote|
-|**&**|Ampersand|**\(**|Left parenthesis|
-|**'**|Single straight quote|**\)**|Right parenthesis|
-|**\***|Asterisk|**,**|Comma|
-|**\+**|Plus sign|**:**|Colon|
-|**\-**|Hyphen|**;**|Semicolon|
-|**/**|Forward slash|**<**|Left angle bracket|
-|**=**|Equals sign|**\>**|Right angle bracket|
-|**?**|Question mark|**@**|At sign|
-|**^**|Caret|**\[**|Left square bracket|
-|**_**|Underscore|**\\**|Backslash|
-|**\`**|Backtick|**\]**|Right square bracket|
-|**\{**|Left curly bracket|||
+Hybrid address is being introduced as part of the Bank of England’s CHAPS updates to harmonise payment standards across jurisdictions in line with the Cross Border Payment Reporting Plus (CBPR+) requirements.
 
-### Version 5 mandatory fields
+Each format has different requirements:
+- Hybrid address formats contain up to two `<AdrLine>` XML tags of up to 70 characters each, alongside mandatory `<TwnNm>` and `<Ctry>` address tags
+> Information received in the `<AdrLine>` XML tags should be distinct from what is received in the structured address elements. If a payment message contains duplicate information across structured and unstructured fields, we expect it will be rejected by the Bank of England.
+- Unstructured address formats contain up to three `<AdrLine>` XML tags of up to 35 characters each
+
+You can extract all address information from `<AdrLine>` XML tags, regardless of whether you receive a hybrid or unstructured address.
+
+<Callout colour="blue">
+In November 2026, the Bank of England will fully retire unstructured address formats.
+</Callout>
+
+Ensure your systems can process hybrid address formats for inbound payments. No changes are required for outbound payments as they already use structured address.
+
+Here is an example hybrid address:
+```
+<Nm>Jane Doe</Nm>
+<PstlAdr>
+  <TwnNm>Chicago</TwnNm>
+  <Ctry>US</Ctry>
+  <AdrLine>222 Merchandise Plaza 20th Floor Suite 2024, IL 60654</AdrLine>
+</PstlAdr>
+```
+
+### Version 6 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: [UK recommended Purpose Code PDF](https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf)  
 
-#### Legal Entity Identifer (LEI)
+#### Legal Entity Identifier (LEI)
 The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
@@ -115,10 +120,44 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 | Repayment of a loan | LOAR – Loan Repayment | LOAN - Loan |
 | Funding your account at Bank of England (pacs.009) | LIMA – Liquidity Management | CASH – Cash Management Transfer |
 
+#### Populating the Creditor field in pacs.008 messages
+
+The Creditor field in CHAPS pacs.008 messages identifies the party receiving the funds. This party may be an **individual**, a **business**, or a **financial institution**. The correct population of this field is essential for accurate payment routing and compliance with ISO 20022 standards.
+
+<Callout colour="blue">
+The <strong>CreditorAgent</strong> field is not required in the CHAPS pacs.008 endpoint, as this information can be inferred from the UK sort code.
+</Callout>
+
+Depending on the creditor type, you will need to populate either the `PrivateIdentifier` or `OrganisationIdentifier` block within the `Creditor` object:
+
+|Creditor type	|Creditor object population	| Creditor name field population |
+|---------------|---------------------------|--------------------------------|
+|Individual	|PrivateIdentifier	| Full name of the individual |
+|Business	|OrganisationIdentifier	| Registered business name |
+|Financial institution	|OrganisationIdentifier	| Institution name (if acting as creditor)|
+
+### Pacs.009 defund payment timing
+If you are a Reserve Account Holder (RAH) and use BERTI to set up future-dated or future-timed pacs.009 defund payments from your Bank of England Reserve Account to your ClearBank account, you must specify a payment time no earlier than **06:00**.
+  
+If no time is specified, the payment defaults to when the Bank of England system opens. After an industry release, this may be before 06:00. In alignment with Bank of England rules, CHAPS BAU (Business as Usual) traffic must not be sent before 06:00.
+
+**Please note:** This only applies to payments initiated by you in the Bank of England system and sent to your ClearBank account (defunding scenario). There is no impact to outbound CHAPS pacs.009 payments sent from ClearBank.
+
+
 <EndpointBlock
     type="post"
     title="Send a CHAPS payment"
     endpoints={[
+        {
+        path: "/payments/chaps/v6/customer-payments",
+        version: "6.0-CHAPS",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'payment-message-validation-failed-webhook-v1',
+        'transaction-rejected-v2'
+        ]
+    },
         {
         path: "/payments/chaps/v5/customer-payments",
         version: "5.0.Chaps-payment",
@@ -128,18 +167,7 @@ The following table details common uses of Purpose Codes and Category Purpose Co
         'payment-message-validation-failed-webhook-v1',
         'transaction-rejected-v2'
         ]
-    },
-    {
-        path: "payments/chaps/v4/customer-payments",
-        version: "4.0.Chaps-payment",
-        webhooks: [
-        'transaction-settled-webhook-v6',
-        'payment-message-assessment-failed-webhook-v1',
-        'payment-message-validation-failed-webhook-v1',
-        'outbound-held-transaction-v1',
-        'transaction-rejected-v2'
-        ]
-    },
+    }
     ]}
 />
 
@@ -148,8 +176,8 @@ The following table details common uses of Purpose Codes and Category Purpose Co
     title="Return a CHAPS payment"
     endpoints={[
         {
-        path: "/payments/chaps/v5/return-payments",
-        version: "5.0-ChapsReturn",
+        path: "/payments/chaps/v6/return-payments",
+        version: "6.0-CHAPS",
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
@@ -157,9 +185,9 @@ The following table details common uses of Purpose Codes and Category Purpose Co
         'transaction-rejected-v2'
         ]
     },
-    {
-        path: "/payments/chaps/v4/return-payments",
-        version: "4.0-ChapsReturn",
+        {
+        path: "/payments/chaps/v5/return-payments",
+        version: "5.0-ChapsReturn",
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
@@ -175,8 +203,8 @@ The following table details common uses of Purpose Codes and Category Purpose Co
     title="Send a CHAPS bank-to-bank payment"
     endpoints={[
         {
-        path: "/payments/chaps/v5/institution-payments",
-        version: "5.0_BankToBank",
+        path: "/payments/chaps/v6/institution-payments",
+        version: "6.0-CHAPS",
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
@@ -185,9 +213,9 @@ The following table details common uses of Purpose Codes and Category Purpose Co
         'transaction-rejected-v2'
         ]
     },
-    {
-        path: "/payments/chaps/v4/institution-payments",
-        version: "4.0_BankToBank",
+        {
+        path: "/payments/chaps/v5/institution-payments",
+        version: "5.0_BankToBank",
         webhooks: [
         'transaction-settled-webhook-v6',
         'payment-message-assessment-failed-webhook-v1',
@@ -208,11 +236,34 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 
 ## CHAPS simulation endpoints
 
+<Callout colour="blue"><h2>Deprecation notice for sim</h2>
+<p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/customer-payments</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/return-payments</strong><br />
+- <strong>POST /v2/inbound-payment-simulation/return-payment-simplified</strong><br />
+- <strong>POST /inbound-payment-simulation/chaps/v2/institution-payments</strong><br /></p>
+
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Please reach out to your Client Director with any questions.</p>
+
+<p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+
 These endpoints can be used to simulate payments. You can also use them for automated testing.
 
-- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v1/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
-- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v1/return-payments](#simulate-a-return-chaps-payment) endpoint.
-- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v1/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+To support Bank of England changes effective 13 November 2026, version 3 of the simulator endpoints for inbound CHAPS payments is now available. Version 3 removes support for unstructured address types, as well as other Bank of England mandated changes. This aligns with international SWIFT standards.
+
+<Callout colour="blue">
+    Outbound CHAPS payments sent via ClearBank already use structured address formatting. No changes are required to your outbound integration.
+</Callout>
+
+Please update your test integration to ensure continued compatibility with the hybrid address format.
+
+- Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v3/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
+- Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v3/return-payments](#simulate-a-returned-chaps-payment) endpoint.
+- Simulate a CHAPS bank-to-bank payment (pacs.009) through the [POST /inbound-payment-simulation/chaps/v3/institution-payments](#simulate-a-chaps-bank-to-bank-payment) endpoint.
+
+<Callout colour="blue">
+    The <a href="../gbp-payments/chaps#simulate-a-chaps-return-payment-using-a-simplified-request">POST /v2/inbound-payment-simulation/return-payment-simplified</a> endpoint has been deprecated. All requests through the new v3 <a href="#simulate-a-returned-chaps-payment">POST /inbound-payment-simulation/chaps/v3/return-payments</a> use a simplified request format.
+</Callout>
 
 The ClearBank Payment Simulator should no longer be used for CHAPS payments.
 
@@ -221,8 +272,139 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     title="Simulate an inbound CHAPS payment"
     endpoints={[
     {
-        path: "/inbound-payment-simulation/chaps/v1/customer-payments",
-        version: "1.0-ChapsSim",
+        path: "/inbound-payment-simulation/chaps/v3/customer-payments",
+        version: "3.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
+    {
+        path: "/inbound-payment-simulation/chaps/v2/customer-payments",
+        version: "2.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    }
+    ]}
+/>
+
+### Examples of valid payloads
+
+**Payload for a structured address**
+
+```
+{
+  "InstructionIdentification": "12345678TEST1234567899100",
+  "EndToEndIdentification": "12345678TEST12345678100",
+  "InstructedAmount": {
+    "Amount": 1001,
+    "Currency": "GBP"
+  },
+  "InstructingAgentBic": "LOYDGB22XXX",
+  "DebtorAccount": {
+    "Iban": "GB71CPBK08929969687998"
+  },
+  "Debtor": {
+    "Name": "Name 1",
+    "PostalAddress": {
+      "BuildingNumber": "No 12",
+      "BuildingName": "LL House",
+      "StreetName": "StreetName Value 5",
+      "TownName": "TownName Value 6",
+      "Country": "GB",
+      "PostCode": "NN4 5QQ"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "CreditorAccount": {
+    "Iban": "GB86CLRB04056810005205"
+  },
+  "Creditor": {
+    "Name": "Name 2",
+    "PostalAddress": {
+      "BuildingNumber": "No 27",
+      "BuildingName": "AA House",
+      "StreetName": "StreetName Value 20",
+      "TownName": "TownName Value 21",
+      "Country": "GB",
+      "PostCode": "CC9 0FF"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "Purpose": "CASH",
+  "CategoryPurpose": "CASH",
+  "RemittanceInformation": null
+}
+```
+
+**Payload for a hybrid address**
+```
+{
+  "InstructionIdentification": "12345678TEST1234567810011",
+  "EndToEndIdentification": "12345678TEST1234567810011",
+  "InstructedAmount": {
+    "Amount": 1001,
+    "Currency": "GBP"
+  },
+  "InstructingAgentBic": "LOYDGB22XXX",
+  "DebtorAccount": {
+    "Iban": "GB71CPBK08929969687998"
+  },
+  "Debtor": {
+    "Name": "Name 1",
+    "PostalAddress": {
+      "BuildingNumber": "No 12",
+      "BuildingName": "LL House",
+      "StreetName": "StreetName Value 5",
+      "TownName": "TownName Value 6",
+      "Country": "GB",
+      "PostCode": "NN4 5QQ",
+      "AddressLine1": "57 Hello World Street, London, EC3A 1AB",
+      "AddressLine2": "57 Hello World Street, London, EC3A 1AB"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "CreditorAccount": {
+    "Iban": "GB86CLRB04056810005205"
+  },
+  "Creditor": {
+    "Name": "Name 2",
+    "PostalAddress": {
+      "BuildingNumber": "No 27",
+      "BuildingName": "AA House",
+      "StreetName": "StreetName Value 20",
+      "TownName": "TownName Value 21",
+      "Country": "GB",
+      "PostCode": "CC9 0FF",
+      "AddressLine1": "57 Hello World Street, London, EC3A 1AB",
+      "AddressLine2": "57 Hello World Street, London, EC3A 1AB"
+    },
+    "OrganisationIdentifier": null,
+    "PrivateIdentifier": null
+  },
+  "Purpose": "CASH",
+  "CategoryPurpose": "CASH",
+  "RemittanceInformation": null
+}
+```
+
+<EndpointBlock
+    type="post"
+    title="Simulate a returned CHAPS payment"
+    endpoints={[
+    {
+        path: "/inbound-payment-simulation/chaps/v3/return-payments",
+        version: "3.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
+    {
+        path: "/inbound-payment-simulation/chaps/v2/return-payments",
+        version: "2.0-ChapsSim",
         webhooks: [
         'transaction-settled-webhook-v6',
         ]
@@ -232,11 +414,11 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
 
 <EndpointBlock
     type="post"
-    title="Simulate a returned CHAPS payment"
+    title="Simulate a CHAPS return payment using a simplified request"
     endpoints={[
     {
-        path: "/inbound-payment-simulation/chaps/v1/return-payments",
-        version: "1.0-ChapsSim",
+        path: "/v2/inbound-payment-simulation/return-payment-simplified",
+        version: "2.0-ChapsSim",
         webhooks: [
         'transaction-settled-webhook-v6',
         ]
@@ -248,9 +430,16 @@ The ClearBank Payment Simulator should no longer be used for CHAPS payments.
     type="post"
     title="Simulate a CHAPS bank-to-bank payment"
     endpoints={[
+        {
+        path: "/inbound-payment-simulation/chaps/v3/institution-payments",
+        version: "3.0-ChapsSim",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        ]
+    },
     {
-        path: "/inbound-payment-simulation/chaps/v1/institution-payments",
-        version: "1.0-ChapsSim",
+        path: "/inbound-payment-simulation/chaps/v2/institution-payments",
+        version: "2.0-ChapsSim",
         webhooks: [
         'transaction-settled-webhook-v6',
         ]

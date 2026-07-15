@@ -1,0 +1,24 @@
+---
+title: "Cheque Process Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms the outcome of an asynchronous cheque submission request made using `POST /payments/cheques/v1/submit-deposit-async`.
+
+#### Request body
+
+```json
+{
+    "Type": "ChequeProcessCompleted",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                    | Description                |
+|----------------------------|----------------------------|
+| `MessageId`                |**Required**<br/>Unique identifier of the cheque request.<br/>Type: `string`<br/>Min. Length: `1`|
+| `Status`                   |**Required**<br/>Outcome of the asynchronous cheque submission request.<br/>Type: `string`<br/>Min. Length: `1`<br/>Possible values:<br/>`ACCEPTED` - the request was accepted, including same replays of a previously accepted request; this does not guarantee scheme acceptance.<br/>`REJECTED` - the cheque was processed and rejected, including same replays of a previously rejected request.<br/>`ERROR` - the request could not be accepted, for example due to a duplicate cheque submission with a different `MessageId` or other validation errors.|

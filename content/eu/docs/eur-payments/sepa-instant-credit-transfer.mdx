@@ -12,9 +12,7 @@ import Callout from "src/components/callout";
 
 ## SEPA Instant Credit Transfer
 
-SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables customers to make and receive payments, up to a maximum value of €100,000 within a 10 second period. Payments can be sent at any time, including bank holidays and weekends.
-
-SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables customers to make and receive payments quickly. It allows payments up to a maximum value of €100,000, which can settle in as little as 10 seconds - and no more than 25 seconds. Payments can be sent at any time, including bank holidays and weekends.
+SEPA Instant Credit Transfer (SCT Inst) is a pan-European payment scheme that enables real-time euro transfers, delivering funds to the recipient within 10 seconds, 24 hours a day, 365 days a year.
 
 You can:
 - [Send an SCT Inst payment](#send-an-sct-inst-payment)
@@ -28,11 +26,36 @@ You can:
 It is essential to integrate with the <a href="#customer-accounts-transaction-completed-webhook">Customer Accounts Transaction Completed webhook</a> as funds without any other associated webhook may be deposited to your suspense account.
 </Callout>
 
+## SEPA Indirect
+SEPA Indirect allows you to participate in SEPA under **your own BIC and IBANs**, while connecting to ClearBank through the same APIs you already use. ClearBank Europe (ClearBank NL) acts as your sponsoring direct participant, providing scheme access, clearing, and settlement on your behalf.
+
+You retain full ownership of your customers and payment flows. Send and receive SEPA Credit Transfer (SCT) and SEPA Instant Credit Transfer (SCT Inst) payments with minimal change to your existing integration — ClearBank handles the underlying scheme connectivity so you don't need to become a direct participant yourself.
+
+With SEPA Indirect you get:
+- **Your own BIC and IBANs** – maintain your brand identity across all SEPA payments.
+- **Full scheme participation** – access SCT and SCT Inst through ClearBank Europe's connectivity.
+- **Minimal change to existing flows** – integrate with our API and continue operating as you do today.
+- **API-first integration** – connect programmatically with a modern, RESTful interface.
+
+<Callout colour="blue">
+<p><b>To be eligible for SEPA Indirect, you must:</b><br />
+- Be a regulated financial institution (holding a Credit Institution, Electronic Money Institution, or Payment Institution licence).<br />
+- Be licensed to operate in a country where ClearBank passports its licence.<br />
+- Have, or be in the process of obtaining, your own SWIFT BIC.<br />
+- Complete the European Payments Council (EPC) SEPA Adherence process. This is required for both SCT and SCT Inst. </p>
+</Callout>
+
+If are interested in becoming a SEPA Indirect participant, contact your Client Director to confirm eligibility and request prerequisite documentation.
+
 ## Sending an SCT Inst payment
 
 To send an SCT Inst payment, use the [POST /v1/payments/sepa-instant](#send-an-sct-inst-payment) endpoint.
 
-You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
+The SCT Inst scheme does not have a limit for maximum payment amounts, and ClearBank does not impose one. Instead, our clients are responsible for provisioning and managing transaction limits for their underlying customers in accordance with their own operational and risk requirements.
+
+Transactions must be settled within a normal maximum of **5 seconds**, with an upper limit of **10 seconds** permitted only in exceptional circumstances, as mandated by SCT Inst 2025 rulebook.
+
+You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-instant-outbound-payment-created-webhook). If 10 seconds pass without settlement, you'll receive the [SEPA Instant Outbound Payment Delayed webhook](#sepa-instant-outbound-payment-delayed-webhook). Once the payment has settled, you will receive the [SEPA Instant Outbound Payment Settled webhook](#sepa-instant-outbound-payment-settled-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 ![A message flow diagram explaining how to send an SCT Inst payment](/assets/images/sct-inst-send-payment.svg)
 
@@ -47,7 +70,8 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
         'sepa-instant-outbound-payment-created-v1',
         'sepa-instant-outbound-payment-settled-v1',
         'sepa-instant-outbound-payment-cancelled-v1',
-        'eu-customer-accounts-transaction-completed-v1'
+        'eu-customer-accounts-transaction-completed-v1',
+        'sepa-instant-outbound-payment-delayed-v1'
       ]
     }
   ]}
@@ -56,20 +80,42 @@ You will receive the [SEPA Instant Outbound Payment Created webhook](#sepa-insta
 <WebhookPlaceholder render='sepa-instant-outbound-payment-created-v1' />
 <WebhookPlaceholder render='sepa-instant-outbound-payment-settled-v1'/>
 <WebhookPlaceholder render='sepa-instant-outbound-payment-cancelled-v1' />
-<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
-### Cancellation reason codes
+#### Cancellation reason codes
 
-Cancelled outbound payments can return the following reason codes:
+Outbound payments may be cancelled due to **internal validation failure** (the payment did not pass our internal validation rules) or **external validation failure** (the payment did not pass SEPA scheme or beneficiary bank validation rules). Cancelled payments return a reason code which is reflected in the `CancellationCode` field of the [SEPA Instant Outbound Payment Cancelled webhook](#sepa-instant-outbound-payment-cancelled-webhook). The cancellation codes include, but are not limited to:
 
-| Reason Code | Description                                |
-| ----------- | ------------------------------------------ |
-| AC01        | Account identifier invalid or incorrect.   |
-| AM02        | Amount not allowed.                        |
-| AM04        | Insufficient funds on the account.         |
-| CB01        | Unknown error.                             |
-| CNOR        | Creditor bank is not registered.           |
-| MS03        | Payment failed screening, re-send via SCT. |
+| Reason code | Description                                                           | Internal validation failure | External validation failure |
+| ----------- | --------------------------------------------------------------------- | --------------------------- | --------------------------- |
+| AB05        | Timeout Creditor Agent                                                |                             | X                           |
+| AB08        | Offline Creditor Agent                                                |                             | X                           |
+| AB09        | Error Creditor Agent                                                  |                             | X                           |
+| AB10        | Error Instructed Agent                                                |                             | X                           |
+| AB15        | Account Is Held Suspense Account / Account Is Repair Suspense Account | X                           |                             |
+| AC01        | Account identifier invalid or incorrect                               | X                           | X                           |
+| AC04        | Account Not Active / Closed                                           | X                           | X                           |
+| AC06        | Blocked Account                                                       | X                           | X                           |
+| AG01        | Transaction Forbidden                                                 |                             | X                           |
+| AG10        | Agent Suspended                                                       |                             | X                           |
+| AG11        | Creditor Agent Suspended                                              |                             | X                           |
+| AM03        | EUR Currency Not Enabled                                              | X                           |                             |
+| AM04        | Insufficient Funds                                                    | X                           | X                           |
+| AM05        | Duplication                                                           |                             | X                           |
+| BE01        | Account Does Not Belong To Institution                                | X                           |                             |
+| BE04        | Missing Creditor Address                                              |                             | X                           |
+| CB01        | Unknown Error                                                         | X                           | X                           |
+| CB02        | A valid creditor agent BIC cannot be derived from the supplied IBAN   | X                           |                             |
+| CB05        | Payment delayed                                                       |                             | X                           |
+| CNOR        | Creditor Bank Is Not Registered                                       | X                           | X                           |
+| DNOR        | Debtor Bank Is Not Registered                                         |                             | X                           |
+| MD07        | End Customer Deceased                                                 |                             | X                           |
+| MS02        | Not Specified Reason Customer Generated                               |                             | X                           |
+| MS03        | Payment failed screening, re-send via SCT                             |                             | X                           |
+| RC01        | Bank Identifier Incorrect                                             |                             | X                           |
+| RC05        | Invalid BIC Identifier                                                | X                           |                             |
+| RR03        | Missing Creditor’s Name Or Address                                    |                             | X                           |
+| RR04        | Regulatory Reason                                                     |                             | X                           |
+| TM01        | Invalid Cut Off Time                                                  |                             | X                           |
 
 <br />
 
@@ -77,7 +123,116 @@ Cancelled outbound payments can return the following reason codes:
   If you receive cancellation reason code <strong>MS03</strong>, you should attempt to resend the affected payment via SEPA Credit Transfer instead of SCT Inst. Reattempting the payment via SCT Inst will not succeed.
 </Callout>
 
+<WebhookPlaceholder render='sepa-instant-outbound-payment-delayed-v1' />
+<WebhookPlaceholder render='eu-customer-accounts-transaction-completed-v1' />
 
+**Example Customer Accounts Transaction Completed webhook request body for inbound SCT Inst payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "EndToEndIdentification":"12345678",
+      "CreatedDateTime":"2025-02-10T12:52:43.7433333Z",
+      "CompletedDateTime":"2025-02-10T12:52:43.7666667Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Credit",
+      "Amount":1000.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"e05bfe3b-3187-28b1-340d-57d57a8739fa",
+      "DebtorAccount":{
+         "AccountId":null,
+         "Iban":"GB68INST20182441739477",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":263934935
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 263934935
+}
+```
+
+**Example Customer Accounts Transaction Completed webhook request body for outbound SCT Inst payment**
+
+```json
+{
+   "Type":"CustomerAccounts.TransactionCompleted",
+   "Version":1,
+   "Payload":{
+      "TransactionId":"8fa1ceea-e592-480c-26fa-1fd040c89df1",
+      "EndToEndIdentification":"0947eaf6-2b51-496b-afba-969a0a72f38",
+      "CreatedDateTime":"2025-02-10T15:54:09.97Z",
+      "CompletedDateTime":"2025-02-10T15:54:14.29Z",
+      "ClearingChannel":"SEPA-Instant",
+      "DebitCreditCode":"Debit",
+      "Amount":100.0,
+      "Currency":"EUR",
+      "RemittanceInformation":"testing instant",
+      "DebtorAccount":{
+         "AccountId":"5602a737-675f-4c85-bbc1-d5d4b4478e64",
+         "Iban":"NL25CLRB0066110527",
+         "Bban":null,
+         "Descriptor":null
+      },
+      "CreditorAccount":{
+         "AccountId":null,
+         "Iban":"DE25370502991000122343",
+         "Bban":null,
+         "Descriptor":null
+      }
+   },
+   "Nonce":1778087803
+}
+```
+
+**Example webhook response**
+
+```json
+{
+    "Nonce": 1778087803
+}
+```
+### Testable IBANs
+
+When you call our endpoints in simulation, any IBANs you provide are validated. To support your testing, the below tables list valid and invalid IBANs for your use:
+
+| Valid IBAN                  | Country     |
+| --------------------------- | ----------- |
+| NL73ABNA0529451824          | Netherlands |
+| FR7630006000011234567890189 | France      |
+| GB33BUKB20201555555555      | UK          |
+| DE75512108001245126199      | Germany     |
+| DK9520000123456789          | Denmark     |
+| IE07BOFI900017556967        | Ireland     |
+| PT88003506514393326125714   | Portugal    |
+| ES7921000813610123456789    | Spain       |
+| AT483200000012345864        | Austria     |
+
+<br />
+
+| Invalid IBAN           | Country     |
+| ---------------------- | ----------- |
+| GB20FMFX42731695687653 | UK          |
+| NL51IKXV1050288017     | Netherlands |
+| BE66173933352443       | Belgium     |
+| LT089128849492191749   | Lithuania   |
+
+<br />
 
 ## Receive an SCT Inst payment
 
@@ -96,6 +251,23 @@ Recall requests remain valid for a maximum of **15 business days**.  If after 15
 ![A message flow diagram explaining a successful SCT Inst recall which results in receiving a SEPA Instant Recall Payment Settled webhook](/assets/images/sct-inst-successful-recall.svg)
 
 ![A message flow diagram explaining a rejected SCT Inst recall which results in receiving a SEPA Instant Recall Request Rejected webhook](/assets/images/sct-inst-rejected-recall.svg)
+
+If the receiving party rejects the recall request, a rejection code will be provided and populated in the `RejectionCode` field of the [SEPA Instant Recall Request Rejected webhook](#sepa-instant-recall-request-rejected-webhook). The recall rejection codes include, but are not limited to:
+
+| Reason Code | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| AC04        | Closed Account Number                                        |
+| AM04        | Insufficient Funds                                           |
+| ARDT        | The Transaction Has Already Been Returned                    |
+| ARJT        | Already rejected original SCT (SEPA Credit Transfer)         |
+| CUST        | Requested By Customer                                        |
+| LEGL        | Legal Decision                                               |
+| NOAS        | No Answer From Customer                                      |
+| NOOR        | No Original Transaction Received                             |
+| RNPR        | Original credit transfer was received but is not processable |
+| RR04        | Regulatory reason                                            |
+
+External code sets can be downloaded from [iso20022.org](https://www.iso20022.org)
 
 <EndpointBlock
   type="post"
@@ -179,6 +351,22 @@ Following a rejected pacs.004 and receipt of the SEPA Instant Recall Payment Can
 <WebhookPlaceholder render='sepa-instant-recall-payment-cancelled-v2' />
 
 ## Simulate SCT Inst payment scenarios
+
+### Simulate a delayed outbound SCT Inst payment
+
+To test the SEPA Instant Outbound Payment Delayed webhook, you can provide one of the following values in the `reference` field of a Send SCT Inst Payment request:
+
+| Reference field value      | Simulated behavior                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------- |
+| `--DelayPayment--`         | Delays the payment by 10 seconds, then proceeds as normal - validation still applies.     |
+| `--CancelDelayedPayment--` | Delays the payment by 10 seconds, then cancels the payment with cancellation code `CB05`. |
+
+
+<Callout colour="blue">
+  When a payment is delayed and then settles, it will settle under a new TransactionId for regulatory reasons. You can instead use the PaymentId for an identifier that remains unchanged throughout the payment's lifecycle.
+</Callout>
+
+
 
 <EndpointBlock
   type="post"

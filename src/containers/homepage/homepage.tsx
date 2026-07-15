@@ -57,6 +57,8 @@ const Homepage: React.FC<any> = (props) => {
           </>
         )}
 
+        <Styles.SectionSpacer />
+
         {pageContext?.pullRequests?.length > 0 && (
           <>
             <Styles.SectionTitle>Existing user? Pick up where you left off</Styles.SectionTitle>

@@ -39,13 +39,16 @@ const getSubPagesQuery = folderpath => `
       },
       sort: { fields: frontmatter___order }
     ) {
-      edges {
-        node {
-          fields {
-            id
-            order
-            slug
-            title
+      nodes {
+        fields {
+          id
+          order
+          slug
+          title
+        }
+        parent {
+          ... on File {
+            relativeDirectory
           }
         }
       }
@@ -54,19 +57,37 @@ const getSubPagesQuery = folderpath => `
 
 async function buildMenu (rootLevelPages, graphql) {
   const fetchSubPages = rootLevelPages.map(async ({ node }) => {
+
     const folderName = node.fields.slug
     const isHomePage = node.fields.slug === '/'
 
     const subPages = await fetchData(getSubPagesQuery(folderName), graphql)
 
-    const hasSubMenuItems = !!subPages.data.subMenuItems.edges.length
-    const subMenuItems =
-      hasSubMenuItems && !isHomePage
-        ? subPages.data.subMenuItems.edges
-        : null
+    const hasSubMenuItems = !!subPages.data.subMenuItems.nodes.length
+    const subMenuItems = hasSubMenuItems && !isHomePage ? subPages.data.subMenuItems.nodes : null
+
+    const slugMap = new Map()
+
+    subMenuItems.forEach(item => {
+      item.leafMenuItems = []
+      slugMap.set(item.fields.slug, item)
+    })
+
+    // Note this only performs one step of the algorithm to link up the 3rd level
+    // If we wanted to add further levels we'd need to effectively perform a full DFS
+    // i.e. keep track of the next directory level to link up using a stack.
+    subMenuItems.forEach(item => {
+      let parentDirectory = "/" + item.parent.relativeDirectory;
+
+      if (slugMap.has(parentDirectory)) {
+        let parent = slugMap.get(parentDirectory)
+        parent.leafMenuItems.push(item)
+        slugMap.delete(item.fields.slug)
+      }
+    })
 
     return {
-      subMenuItems,
+      subMenuItems: Array.from(slugMap.values()),
       menuItem: { ...node.fields }
     }
   })

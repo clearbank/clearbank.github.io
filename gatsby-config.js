@@ -82,7 +82,7 @@ const plugins = [
     }
   },
   'gatsby-plugin-client-side-redirect',
-  {
+  /*{
     resolve: "gatsby-source-graphql",
     options: {
       typeName: "GitHub",
@@ -92,7 +92,7 @@ const plugins = [
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       },
     },
-  },
+  },*/
 ]
 // check and add pwa functionality
 if (config.pwa && config.pwa.enabled && config.pwa.manifest) {

@@ -5,7 +5,7 @@ const euHomeContent = require('./static-data/eu-home-content.json')
 const ukHomeContent = require('./static-data/uk-home-content.json')
 
 const ALL_PAGES_SCHEMA = `
-  query($repositoryName: String!, $repositoryOwner: String!) {
+  query {
     allMdx(
       filter: {
         frontmatter: { webhook: { ne: true }, order: { gt: 0 } }
@@ -19,19 +19,6 @@ const ALL_PAGES_SCHEMA = `
             order
             slug
             title
-          }
-        }
-      }
-    }
-    github {
-      repository(name: $repositoryName, owner: $repositoryOwner) {
-        pullRequests(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
-          totalCount
-          nodes {
-            title
-            state
-            mergedAt
-            url
           }
         }
       }
@@ -51,10 +38,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
     statusCode: 200,
   }))
 
-  const result = await graphql(
-    ALL_PAGES_SCHEMA,
-    { repositoryName: REPOSITORY_NAME, repositoryOwner: REPOSITORY_OWNER }
-  )
+  const result = await graphql(ALL_PAGES_SCHEMA)
 
   if (result.errors) {
     console.log(result.errors)
@@ -71,8 +55,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
   const ukMenuItems = await Helpers.buildMenu(ukMenu, graphql)
   const euMenuItems = await Helpers.buildMenu(euMenu, graphql)
 
-  const pullRequests = result.data.github.repository.pullRequests.nodes
-    .filter(node => node.state === 'MERGED')
+  const pullRequests = []
 
   createPage({
     path: '/uk',
