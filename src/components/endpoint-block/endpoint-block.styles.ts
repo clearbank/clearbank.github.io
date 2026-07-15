@@ -64,8 +64,8 @@ export const DropdownWrapper = styled.div`
 
 export const ApiVariantTabs = styled.div`
   display: inline-flex;
-  margin-top: 15px;
-  border: 1px solid ${colors.alto};
+  margin-top: 0;
+  border: 1px solid ${colors.wedgewoodapprox};
   border-radius: 5px;
   overflow: hidden;
 `
@@ -74,15 +74,27 @@ export const ApiVariantTab: any = styled.button`
   padding: 8px 16px;
   border: none;
   background: ${(props: any) =>
-    props.active ? colors.brandGrayDarkest : colors.brandLight};
+    props.active ? colors.wedgewoodapprox : colors.brandGrayLight};
   color: ${(props: any) =>
-    props.active ? colors.brandLight : colors.brandGrayDarkest};
+    props.active ? colors.brandLight : '#4D4D4D'};
   font-family: ${fonts.body};
   font-size: 15px;
+  font-weight: ${(props: any) => (props.active ? 600 : 400)};
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: ${(props: any) =>
+      props.active ? colors.wedgewoodapprox : colors.brandGray};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.wedgewoodapprox};
+    outline-offset: -2px;
+  }
 
   & + & {
-    border-left: 1px solid ${colors.alto};
+    border-left: 1px solid ${colors.wedgewoodapprox};
   }
 `
 
