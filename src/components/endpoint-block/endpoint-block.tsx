@@ -1,4 +1,5 @@
 import React, { ReactElement, useState } from 'react'
+import { useLocation } from '@reach/router'
 
 import { SelectDropdown, SelectOption } from 'src/components/select-dropdown'
 import { SectionType } from 'src/global.types'
@@ -119,6 +120,8 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
 }): ReactElement => {
   const [currentVersion, setCurrentVersion] = useState(0)
   const [apiVariant, setApiVariant] = useState(ApiVariant.FinancialInstitution)
+  const location = useLocation()
+  const isEu = !!location?.pathname?.includes('/eu')
   const hasCustomContent = !!children
   const currentEndpoint = endpoints[currentVersion]
 
@@ -154,7 +157,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   const relatedWebhooks = getRelatedWebhooks(webhooks)
 
   const injectedParameters = [
-    ...getInjectedHeaders(apiVariant, type),
+    ...getInjectedHeaders(apiVariant, type, isEu, !!requestBody),
     ...stripStandardHeaders(parameters)
   ]
 
