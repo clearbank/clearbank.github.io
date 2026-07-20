@@ -183,3 +183,19 @@ Our SCT UK service has two dedicated inbound payment webhooks:
     }
   ]}
 />
+
+### Simulate a returned SCT UK payment
+
+To simulate the return of an SCT UK payment in the simulation environment, use the [Send an SCT payment](#send-an-sct-payment) endpoint with the `remittanceInformation.unstructured` field populated with `--SCTRETURN--`. This will simulate an outbound SCT UK payment settling and then being returned by the creditor.
+
+Receipt of the [Cross-border Outbound Payment Return Completed webhook](#cross-border-outbound-payment-return-completed-webhook) confirms the return payment.
+
+```json
+"remittanceInformation": {
+  "unstructured": [
+    "--SCTRETURN--"
+  ]
+}
+```
+
+<WebhookPlaceholder render='sctuk-outbound-payment-return-completed-v1' />
