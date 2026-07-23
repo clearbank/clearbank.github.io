@@ -21,13 +21,13 @@ Sent when a SEPA Direct Debit payment is collected from an account.
 
 #### Payload Fields
 
-| Field                       | Type   | Format | Required | Min length | Max length | Description                                                                                                                                                     |
-| --------------------------- | ------ | ------ | -------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PaymentId`                 | string | uuid   | Yes      | -          | -          | Unique ClearBank identifier for the transaction we will apply on to the advised Debtor Account.                                                                 |
-| `TransactionId`             | string | uuid   | Yes      | -          | -          | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.                                                                        |
-| `SettlementDate`            | string | date   | Yes      | -          | -          | Date on which the amount of money ceases to be available to the agent that owes it and becomes available to the agent to which it is due. Format: `YYYY-MM-DD`. |
-| `InterbankSettlementAmount` | object | -      | Yes      | -          | -          | Settled amount in the interbank space. See `InstructedAmount`.                                                                                                  |
-| `DebtorAccount`             | object | -      | Yes      | -          | -          | Account of the debtor to which the debit entry was applied. See `PartyAccount`.                                                                                 |
+| Field                       | Type   | Format | Required | Min-Max length | Description                                                                                                                                                     |
+| --------------------------- | ------ | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`                 | string | uuid   | Yes      | -              | Unique ClearBank identifier for the transaction we will apply on to the advised Debtor Account.                                                                 |
+| `TransactionId`             | string | uuid   | Yes      | -              | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.                                                                        |
+| `SettlementDate`            | string | date   | Yes      | -              | Date on which the amount of money ceases to be available to the agent that owes it and becomes available to the agent to which it is due. Format: `YYYY-MM-DD`. |
+| `InterbankSettlementAmount` | object | -      | Yes      | -              | Settled amount in the interbank space. See `InstructedAmount`.                                                                                                  |
+| `DebtorAccount`             | object | -      | Yes      | -              | Account of the debtor to which the debit entry was applied. See `PartyAccount`.                                                                                 |
 
 ##### InstructedAmount
 
@@ -38,9 +38,9 @@ Sent when a SEPA Direct Debit payment is collected from an account.
 
 ##### PartyAccount (DebtorAccount)
 
-| Field  | Type   | Required | Min length | Max length | Pattern                                 | Description                                                                      |
-| ------ | ------ | -------- | ---------- | ---------- | --------------------------------------- | -------------------------------------------------------------------------------- |
-| `Iban` | string | Yes      | 1          | 30         | `[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}` | International Bank Account Number (IBAN) of the debtor account that was debited. |
+| Field  | Type   | Required | Min-Max length | Pattern                                 | Description                                                                      |
+| ------ | ------ | -------- | -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
+| `Iban` | string | Yes      | 1-30           | `[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}` | International Bank Account Number (IBAN) of the debtor account that was debited. |
 
 #### Example SEPA DD Debit Payment Completed webhook request body
 
