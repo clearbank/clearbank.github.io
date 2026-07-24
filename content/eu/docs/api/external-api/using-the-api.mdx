@@ -1,0 +1,156 @@
+---
+title: "Using the API"
+order: 5
+metaTitle: "Using the API"
+metaDescription: "How to request access tokens, set request headers, call the External API test endpoints, and handle pagination, status codes, rate limiting, and HAL links."
+showPageMenu: true
+---
+
+import Callout from "src/components/callout";
+import EndpointBlock from "src/components/endpoint-block";
+import ExternalLink from "src/components/external-link"
+
+## Overview
+
+Once you have [registered your API client](./register-your-api-client), you are ready to authenticate and send requests to our API endpoints. This page covers how to request an access token, the headers we require, and the conventions we use for pagination, status codes, rate limiting, and hypermedia links.
+
+## Authenticate your API calls
+
+We use OAuth 2.0 access tokens to authenticate your requests and allow you to securely access protected resources. Access tokens are requested directly from our authentication service.
+
+Our authentication service is available at the following base URLs. mTLS must be used when requesting access tokens.
+
+| Environment  | Authentication service base URL          |
+| ------------ | ---------------------------------------- |
+| Simulation UK | `https://mtls.auth-sim.clearbank.co.uk` |
+| Simulation EU | `https://mtls.auth-sim.eu.clearbank.io` |
+| Production UK | `https://mtls.auth.clearbank.co.uk`     |
+| Production EU | `https://mtls.auth.eu.clearbank.io`     |
+
+Our authentication service provides a standard OpenID Connect discovery document at `/.well-known/openid-configuration`, which can be accessed over an mTLS connection. You can use this to discover the token endpoint and supported capabilities.
+
+### Request an access token
+
+Access tokens are requested from the `/connect/token` endpoint using the OAuth 2.0 `client_credentials` grant. You must:
+
+* Connect using mTLS with the certificate you registered for your client.
+* Provide your `client_id` — the ID of the client you created to communicate with our APIs.
+* Provide a `grant_type` of `client_credentials`.
+
+The optional `scope` parameter takes a space-separated list of scopes. If no value is provided, an access token is issued granting access to all scopes currently available to your registered client. We recommend requesting only the scopes you need for the calls you intend to make with the token.
+
+```bash
+curl -X POST https://mtls.auth-sim.eu.clearbank.io/connect/token \
+  --cert client-certificate.pem --key client-key.pem \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=<<your client id>>" \
+  -d "scope=<<optional space separated scopes>>"
+```
+
+The response contains an access token that you include in the `Authorization` header of your API calls.
+
+## Header parameters
+
+We use HTTP request headers for our API calls, including `Authorization`, `x-fapi-interaction-id`, `Signature-Input`, `Content-Digest`, and `Signature`. In our responses we return an `x-fapi-interaction-id` together with an [HTTP status code](#http-status-codes), and — on signed responses — `Signature-Input`, `Content-Digest`, and `Signature`.
+
+All requests require `Authorization`, `Signature-Input`, `Signature`, and `x-fapi-interaction-id`. `Content-Digest` is required for requests that have a body (and is returned on responses that have a body).
+
+| Header                  | Type                 | Required                     | Description                                                                                                                                              |
+| ----------------------- | -------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Authorization`         | string               | Required                     | The access token provided by our authentication service, for example `Bearer <<your access token>>`.                                                    |
+| `x-fapi-interaction-id` | string               | Required                     | An [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) UUID used for correlation. The value you provide is returned on the response. An invalid or missing value results in a `400 Bad Request`. |
+| `Signature-Input`       | structured dictionary | Required                    | Describes how the signature base for the request signature is formed. See [Sign your requests](./sign-your-requests).                                    |
+| `Content-Digest`        | string               | Required if a body is present | A hashing algorithm (`sha-256`) and a Base64 hash of the message body, in the format `sha-256=:{hash-of-body}:`.                                        |
+| `Signature`             | string               | Required                     | Your request signature, built as described by the `Signature-Input` and signed with your private key. See [Sign your requests](./sign-your-requests).    |
+
+## Test endpoints
+
+Once your connection is set up, you can use our test endpoints to confirm that authentication and signature verification are working as expected.
+
+* `GET /apis/v1/test` — verifies an authenticated, signed `GET` request.
+* `POST /webhooks/v1/test` — verifies an authenticated, signed `POST` request and triggers a test webhook to any listener URL you have configured (see [Webhooks](./webhooks)).
+
+An example signed `POST` to the test endpoint:
+
+```http
+POST https://mtls.api-sim.eu.clearbank.io/webhooks/v1/test HTTP/1.1
+Authorization: Bearer <<your access token>>
+x-fapi-interaction-id: 7a1f49ac-1e46-479c-be28-44b384115a5b
+Content-Digest: sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:
+Signature-Input: sig=("@method" "@target-uri" "authorization" "x-fapi-interaction-id" "content-digest");keyid="207236b3-b69a-4192-baa7-3dd2992874f8";created=1713800893;tag="fapi-2-request"
+Signature: sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:
+Content-Type: application/json
+
+{ "body": "hello world!" }
+```
+
+## Query parameters
+
+For most of our `GET` requests, one or more query parameters in the request URL can be used to control the number of returned results and the number of pages returned.
+
+| Parameter    | Type | Description                                                                                                  |
+| ------------ | ---- | ----------------------------------------------------------------------------------------------------------- |
+| `pageNumber` | int  | The page number, to control returned results into manageable sets. Default if not supplied: 1 (`pageNumber=1`). |
+| `pageSize`   | int  | The page size, to control returned results into manageable sets. Default if not supplied: 50 (`pageSize=50`).  |
+
+## HTTP status codes
+
+When you send a request, the response includes an HTTP status code to indicate the success or failure of the request. Some endpoints return JSON response bodies that include errors and additional properties.
+
+| Status code | Description                                                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `200`       | **OK** - The request has succeeded.                                                                                                    |
+| `201`       | **Created** - The request has succeeded and a new resource has been created as a result.                                              |
+| `202`       | **Accepted** - The request has been received but not completed yet. Indicates that the request will be completed asynchronously.       |
+| `204`       | **No content** - The request has been fulfilled but we do not need to return a response body.                                          |
+| `400`       | **Bad request** - The request could not be understood or processed. The response should include the reason why the request failed.    |
+| `401`       | **Unauthorised** - The request was not authorised due to missing or invalid credentials.                                              |
+| `403`       | **Forbidden** - Unable to perform the request as the provided credentials could not be verified.                                       |
+| `404`       | **Not found** - The resource you are looking for cannot be found.                                                                      |
+| `405`       | **Method not allowed** - The request is recognised but the target resource does not support this method.                              |
+| `406`       | **Not acceptable** - The `Accept` header in the request is not supported.                                                              |
+| `409`       | **Conflict** - The request conflicts with the current state of the server.                                                            |
+| `415`       | **Unsupported media type** - The `Content-Type` of the request is not supported.                                                       |
+| `422`       | **Client error** - The request cannot be processed due to a failure processing the payload.                                            |
+| `429`       | **Too many requests** - You have sent too many requests in a given time (see [Rate limiting](#rate-limiting)).                         |
+| `500`       | **Internal server error**.                                                                                                            |
+| `503`       | **Service unavailable** - See [5XX status codes](#5-xx-status-codes).                                                                  |
+
+### 4XX status codes
+
+Responses with a `4XX` status code indicate the request was received but could not be actioned. Details of the error can be found in the `title` field of the response in a human-readable format. `4XX` errors are typically caused by an issue with the request (for example, incorrect formatting or missing data) or with validating the request (for example, missing or invalid credentials).
+
+### 5XX status codes
+
+Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same `x-fapi-interaction-id` header and payload to prevent duplication.
+
+You may receive a `503 - Service unavailable` response containing a `Retry-After` header. The value of this header denotes a duration in seconds. If you receive a `503` with this header, you should reattempt the request after the specified number of seconds has passed.
+
+## Rate limiting
+
+We use rate limiting to protect our systems from excessive load and to ensure a consistent level of availability and performance for all our clients.
+
+<Callout colour="blue">
+  Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to handle rate limits and react accordingly.
+</Callout>
+
+Rate limits result in a `429` status code response from our platform. Upon receipt of a `429` you should reasonably back off and try again later. All requests are safe to retry after a short period of time. Our rate limits are significantly lower in our simulation environment to make it easier to validate that your systems behave accordingly.
+
+## HAL links
+
+We use HAL (Hypertext Application Language) to hyperlink between resources in our API.
+
+Each HAL hyperlink contains:
+
+| Parameter   | Type      | Required | Description                                                                                                                |
+| ----------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `name`      | `string`  | Required | The named link type.                                                                                                     |
+| `href`      | `string`  | Required | The URI to be used.                                                                                                       |
+| `templated` | `boolean` |          | Specified as `true` if `href` is a URI template (i.e. with parameters). Otherwise, this property is absent or `false`.    |
+
+## Regular expressions
+
+At ClearBank, we use JavaScript-formatted regular expressions in our endpoint fields. If you're using a language other than JavaScript, some characters in the regular expression patterns we provide may need to be escaped.
+
+It is your responsibility to find details of the regular expression characters permitted by your programming language. We cannot provide regular expressions in other languages.
