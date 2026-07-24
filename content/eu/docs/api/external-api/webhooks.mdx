@@ -7,10 +7,6 @@ showPageMenu: true
 ---
 
 import Callout from "src/components/callout";
-import EndpointBlock from "src/components/endpoint-block";
-import WebhookSummary from "src/components/webhook-summary";
-import WebhookPlaceholder from "src/components/webhook-placeholder";
-import ExternalLink from "src/components/external-link"
 
 ## What are webhooks?
 
@@ -62,7 +58,7 @@ To verify the integrity of the webhook received from ClearBank:
 
 1. Verify that the `created` timestamp within the `signature-input` header is within 60 seconds of the moment the webhook was received.
 2. Verify that the `content-digest` header matches the SHA-256 hash of the webhook body.
-3. Get the public key information for the `keyid` specified in the `signature-input` header. This can be retrieved from `GET /authentication/v1/public-keys/{keyId}` and should be cached locally.
+3. Get the public key information for the `keyid` specified in the `signature-input` header. This can be retrieved from `GET /authentication/v1/public-keys/{keyId}` (see [Retrieve our public keys](./verify-our-responses#retrieve-our-public-keys)) and should be cached locally.
 4. Build the signature base as described by the `signature-input` header. See [Creating the signature base](#creating-the-signature-base).
 5. Verify the signature using the signature base and the public key.
 
@@ -92,7 +88,7 @@ You must be able to handle duplicate webhooks idempotently. This means you shoul
 
 We use digital signatures to ensure that the integrity of a request is maintained, so we require and verify signatures on all requests sent to our APIs. We also sign responses from our APIs and our webhooks so that you are able to verify the integrity of the communication originating from us.
 
-Our digital signatures are based on the [FAPI 2.0 Message Signing](https://openid.net/specs/fapi-2_0-message-signing.html) standard, which is based on [RFC 9421 HTTP Message Signatures](https://datatracker.ietf.org/doc/rfc9421/). These standards should be used when working with your digital signatures; this documentation is provided to help you understand them.
+Our digital signatures are based on the [FAPI 2.0 Message Signing](https://openid.net/specs/fapi-2_0-message-signing.html) standard, which is based on [RFC 9421 HTTP Message Signatures](https://datatracker.ietf.org/doc/rfc9421/). These standards should be used when working with your digital signatures; this documentation is provided to help you understand them. For details on signing your own API requests, see [Sign your requests](./sign-your-requests).
 
 ### Signature input
 

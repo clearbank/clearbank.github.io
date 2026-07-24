@@ -7,8 +7,6 @@ showPageMenu: true
 ---
 
 import Callout from "src/components/callout";
-import EndpointBlock from "src/components/endpoint-block";
-import ExternalLink from "src/components/external-link"
 
 ## Overview
 
@@ -48,21 +46,21 @@ curl -X POST https://mtls.auth-sim.clearbank.co.uk/connect/token \
   -d "scope=<<optional space separated scopes>>"
 ```
 
-The response contains an access token that you include in the `Authorization` header of your API calls.
+The response contains an access token that you include in the `authorization` header of your API calls.
 
 ## Header parameters
 
-We use HTTP request headers for our API calls, including `Authorization`, `x-fapi-interaction-id`, `Signature-Input`, `Content-Digest`, and `Signature`. In our responses we return an `x-fapi-interaction-id` together with an [HTTP status code](#http-status-codes), and — on signed responses — `Signature-Input`, `Content-Digest`, and `Signature`.
+We use HTTP request headers for our API calls, including `authorization`, `x-fapi-interaction-id`, `signature-input`, `content-digest`, and `signature`. In our responses we return an `x-fapi-interaction-id` together with an [HTTP status code](#http-status-codes), and — on signed responses — `signature-input`, `content-digest`, and `signature`.
 
-All requests require `Authorization`, `Signature-Input`, `Signature`, and `x-fapi-interaction-id`. `Content-Digest` is required for requests that have a body (and is returned on responses that have a body).
+All requests require `authorization`, `signature-input`, `signature`, and `x-fapi-interaction-id`. `content-digest` is required for requests that have a body (and is returned on responses that have a body).
 
 | Header                  | Type                 | Required                     | Description                                                                                                                                              |
 | ----------------------- | -------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization`         | string               | Required                     | The access token provided by our authentication service, for example `Bearer <<your access token>>`.                                                    |
+| `authorization`         | string               | Required                     | The access token provided by our authentication service, for example `Bearer <<your access token>>`.                                                    |
 | `x-fapi-interaction-id` | string               | Required                     | An [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) UUID used for correlation. The value you provide is returned on the response. An invalid or missing value results in a `400 Bad Request`. |
-| `Signature-Input`       | structured dictionary | Required                    | Describes how the signature base for the request signature is formed. See [Sign your requests](./sign-your-requests).                                    |
-| `Content-Digest`        | string               | Required if a body is present | A hashing algorithm (`sha-256`) and a Base64 hash of the message body, in the format `sha-256=:{hash-of-body}:`.                                        |
-| `Signature`             | string               | Required                     | Your request signature, built as described by the `Signature-Input` and signed with your private key. See [Sign your requests](./sign-your-requests).    |
+| `signature-input`       | structured dictionary | Required                    | Describes how the signature base for the request signature is formed. See [Sign your requests](./sign-your-requests).                                    |
+| `content-digest`        | string               | Required if a body is present | A hashing algorithm (`sha-256`) and a Base64 hash of the message body, in the format `sha-256=:{hash-of-body}:`.                                        |
+| `signature`             | string               | Required                     | Your request signature, built as described by the `signature-input` and signed with your private key. See [Sign your requests](./sign-your-requests).    |
 
 ## Test endpoints
 

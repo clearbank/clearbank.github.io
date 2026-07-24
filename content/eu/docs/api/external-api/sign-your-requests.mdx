@@ -7,10 +7,6 @@ showPageMenu: true
 ---
 
 import Callout from "src/components/callout";
-import EndpointBlock from "src/components/endpoint-block";
-import WebhookSummary from "src/components/webhook-summary";
-import WebhookPlaceholder from "src/components/webhook-placeholder";
-import ExternalLink from "src/components/external-link"
 
 ## Overview
 
@@ -48,15 +44,17 @@ _Example:_ `sig=("@method" "@target-uri" "authorization" "x-fapi-interaction-id"
 
 #### Signature input components
 
-There are two allowable types of digital signature components:
+For requests, there are two allowable types of digital signature components:
 
 1. HTTP fields, including `authorization` and `content-digest` (when a message body is present).
 2. Derived components, such as `@method` and `@target-uri`. These are the only derived components we support.
 
+A third form, *request components* (suffixed with `;req`), is used only when signing responses and webhooks. See [Webhooks](./webhooks#digital-signatures).
+
 **List of components**
 
 - `{signature-id}` - An id/key that must match the `signature-id` provided in your `signature` header. This is used to link the two headers.
-- `{key-id}` - The identifier of the key that can be used to verify the Signature. This ID must match the ID of the public key provided to our Signature Key APIs.
+- `{key-id}` - The identifier of the key that can be used to verify the signature. This ID must match the ID of the public key you registered (see [Register your API client](./register-your-api-client)).
 - `{timestamp}` - A Unix timestamp in Seconds. This must be the time that the request is made. This value will be rejected if it is not received by our API in a timely manner. We expect this value to be within 60 seconds of the time the request is received.
 - `{list-of-components}` - A space separated list of double-quoted components to be used when calculating the Signature Base
   - `@method` **Required.** The HTTP method being used, e.g. GET or POST.
