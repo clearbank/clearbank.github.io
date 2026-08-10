@@ -25,14 +25,14 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
 | `OriginalTransactionId`  | string | uuid   | Yes      | -              | -       | A unique identifier assigned by ClearBank referencing the debit transaction that relates to the original outbound payment. |
 | `TransactionId`          | string | uuid   | Yes      | -              | -       | A unique identifier assigned by ClearBank referencing the credit transaction that relates to the returned payment.         |
 | `ReturnId`               | string | uuid   | Yes      | -              | -       | A unique identifier assigned by ClearBank referencing the return message.                                                  |
+| `OriginalMessageIdentification` | string | -      | Yes      | 1-35           | -       | Point to point reference assigned by the original instructing party to unambiguously identify the original message.       |
 | `TransactionInformation` | object | -      | Yes      | -              | -       | Information concerning the original transaction, to which the return refers. Refer to the 'TransactionInformation' table.       |
 
 ##### TransactionInformation
 
 | Field                               | Type   | Required | Min-Max length | Pattern | Description                                                                                                                                                               |
 | ----------------------------------- | ------ | -------- | -------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OriginalMessageIdentification`     | string | Yes      | 1-35           | -       | Point to point reference assigned by the original instructing party to unambiguously identify the original message.                                                       |
-| `OriginalUETR`                      | string | Yes      | -              | -       | Universally unique identifier to provide the original end-to-end reference of a payment transaction. Format: `guid`.                                                      |
+| `OriginalUETR`                      | string | Yes      | -              | -       | Universally unique identifier to provide the original end-to-end reference of a payment transaction. Format: `uuid`.                                                      |
 | `OriginalEndToEndIdentification`    | string | Yes      | 1-35           | -       | Unique identification, as assigned by the original initiating party, to unambiguously identify the original transaction.                                                  |
 | `OriginalInterbankSettlementAmount` | object | Yes      | -              | -       | Amount of money moved between the instructing agent and the instructed agent, as provided in the original instruction. Refer to the 'ActiveOrHistoricCurrencyAndAmount' table. |
 | `ReturnedInterbankSettlementAmount` | object | Yes      | -              | -       | Amount of money to be moved between the instructing agent and the instructed agent in the returned instruction. Refer to the 'ActiveOrHistoricCurrencyAndAmount' table.        |
@@ -42,7 +42,7 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
 
 | Field      | Type    | Required | Constraints      | Pattern      | Description                                             |
 | ---------- | ------- | -------- | ---------------- | ------------ | ------------------------------------------------------- |
-| `Amount`   | decimal | Yes      | Multiple of 0.01 | -            | Amount of money.                                        |
+| `Amount`   | decimal | Yes      | -                 | -            | Amount of money.                                        |
 | `Currency` | string  | Yes      | 3-3 length       | `^[A-Z]{3}$` | Currency of money. Three-letter ISO 4217 currency code. |
 
 ##### PaymentReturnReason
@@ -57,6 +57,7 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
 
 | Field            | Type   | Required | Min-Max length | Pattern | Description                                                              |
 | ---------------- | ------ | -------- | -------------- | ------- | ------------------------------------------------------------------------ |
+| `Name`           | string | No       | 1-140          | -       | Unique and unambiguous identification of a party.                            |
 | `Identification` | object | No       | -              | -       | Unique and unambiguous identification of a party. Refer to the 'Party' table. |
 
 ##### Party
@@ -67,9 +68,9 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
 
 ##### OrganisationIdentification
 
-| Field | Type   | Required | Min-Max length | Pattern                                                    | Description                                       |
-| ----- | ------ | -------- | -------------- | ---------------------------------------------------------- | ------------------------------------------------- |
-| `BIC` | string | No       | -              | `[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}` | Business identification code of the organisation. |
+| Field    | Type   | Required | Min-Max length | Pattern                                                    | Description                                       |
+| -------- | ------ | -------- | -------------- | ---------------------------------------------------------- | ------------------------------------------------- |
+| `AnyBIC` | string | No       | -              | `[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}` | Business identification code of the organisation. |
 
 #### Example Cross-border Outbound Payment Return Completed webhook request body
 
@@ -82,8 +83,8 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
     "OriginalTransactionId": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
     "TransactionId": "65c6876a-23a2-476c-a199-ec4523f45589",
     "ReturnId": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "OriginalMessageIdentification": "MSG-ORIG-0001",
     "TransactionInformation": {
-      "OriginalMessageIdentification": "MSG-ORIG-0001",
       "OriginalUETR": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
       "OriginalEndToEndIdentification": "E2E-REF-2024-00000001",
       "OriginalInterbankSettlementAmount": {
@@ -98,9 +99,10 @@ This webhook confirms that an outbound SEPA Credit Transfer (SCT) payment you se
         {
           "ReasonCode": "AC04",
           "Originator": {
+            "Name": "Midland Bank Plc",
             "Identification": {
               "OrganisationIdentification": {
-                "BIC": "MIDLGB22XXX"
+                "AnyBIC": "MIDLGB22XXX"
               }
             }
           },
