@@ -61,6 +61,22 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+                  "title": "Conflict",
+                  "status": 409,
+                  "detail": "A payment with the same combination of TxId and EndToEndId has already been submitted."
+                }
+              }
+            }
           }
         },
         "description": "Use this endpoint to simulate 1-5 SEPA Core Direct Debit payments. You may request this using an array of the following payload."
@@ -143,7 +159,7 @@
         "type": "object",
         "properties": {
           "endToEndId": {
-            "description": "Unique identification, as assigned by the originating party, to unambiguously identify the transaction. Passed on unchanged throughout the entire end-to-end chain.",
+            "description": "Unique identification, as assigned by the originating party, to unambiguously identify the transaction. Passed on unchanged throughout the entire end-to-end chain. The combination of EndToEndId and TxId must not have been previously submitted; if it has, a 409 response will be returned.",
             "example": "Y7DHQ8PXIB1DUUZE3PDEGUTLEA77LXSN6ES",
             "minLength": 1,
             "maxLength": 35,
@@ -159,7 +175,7 @@
             "nullable": true
           },
           "txId": {
-            "description": "Unique identifier used by the client financial institution to identify this transaction in scheme.",
+            "description": "Unique identifier used by the client financial institution to identify this transaction in scheme. The combination of TxId and EndToEndId must not have been previously submitted; if it has, a 409 response will be returned.",
             "example": "wnPrv0z42GrxqpPucyr2qOC5SPrvKvNYEG0",
             "minLength": 1,
             "maxLength": 35,

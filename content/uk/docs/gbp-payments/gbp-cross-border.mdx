@@ -36,12 +36,34 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
 - If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
+- Review the [address guidance](#guidance-on-populating-address-information) before submitting outbound payments.
 
 <Callout colour="blue">
 If you receive a Transaction Rejected webhook outside of <a href="https://www.bankofengland.co.uk/payment-and-settlement/chaps">industry opening hours</a>, retry the payment during the next open window.
 </Callout>
 
 The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
+
+### Guidance on populating address information
+
+When sending outbound GBP Cross-Border payments, we strongly recommend that you provide as much address information as possible for both:
+
+- the **remitter** (`Debtor`)
+- the **beneficiary** (`Creditor`)
+
+Different overseas jurisdictions have different requirements for address detail. Providing full address details reduces payment delays and post-submission requests for information.
+
+In [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment), the following `postalAddress` fields are mandatory and must always be provided:
+
+- `townName`
+- `country`
+- `postCode`
+
+The following fields are optional, but strongly recommended where available:
+
+- `buildingNumber`
+- `buildingName`
+- `streetName`
 
 ### Version 4 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
