@@ -22,3 +22,21 @@ This webhook confirms the outcome of an asynchronous cheque submission request m
 |----------------------------|----------------------------|
 | `MessageId`                |**Required**<br/>Unique identifier of the cheque request.<br/>Type: `string`<br/>Min. Length: `1`|
 | `Status`                   |**Required**<br/>Outcome of the asynchronous cheque submission request.<br/>Type: `string`<br/>Min. Length: `1`<br/>Possible values:<br/>`ACCEPTED` - the request was accepted, including same replays of a previously accepted request; this does not guarantee scheme acceptance.<br/>`REJECTED` - the cheque was processed and rejected, including same replays of a previously rejected request.<br/>`ERROR` - the request could not be accepted, for example due to a duplicate cheque submission with a different `MessageId` or other validation errors.|
+
+#### Rejected or error responses
+
+If the cheque processing `Status` is `REJECTED` or `ERROR`, the webhook payload includes a reason code indicating why the cheque couldn't be processed.
+
+| Reason cod                    | Description                                           |
+|-------------------------------|-------------------------------------------------------|
+| `Over Max Cheque Amount`      | Can't be retried                                      |
+| `Over Max Daily Amount`       | Can be retried the next day                           |
+| `Over_Max_Daily_Cheque_Count` | Can be retried the next day                           |
+| `Duplicate`                   | Can't be retried                                      |
+| `Invalid_Codeline`            | Can be retried. Ask the customer to re-take the image |
+| `Invalid_Image`               | Can be retried. Ask the customer to re-take the image |
+| `Failed_IUA`                  | Can be retried. Ask the customer to re-take the image |
+| `Failed_IQA`                  | Can be retried. Ask the customer to re-take the image |
+| `Failed_Recognition`          | Can be retried. Ask the customer to re-take the image |
+| `Unexpected_Server_Error`     | Can be retried                                        |
+| `Invalid_Request`             | Check the details provided                            |

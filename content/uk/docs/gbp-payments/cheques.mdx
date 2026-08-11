@@ -21,7 +21,7 @@ You can submit cheques using the [POST /payments/cheques/v1/submit-deposit-async
 
 The message flow for cheques submitted via the synchronous endpoint is shown here.
 
-![alt text](/assets/images/cheque_endpoint_async.png "Message flow diagram explaining how to submit cheques via the endpoint. This is explained in the text below.")
+![alt text](/assets/images/cheque_endpoint_async_v2.png "Message flow diagram explaining how to submit cheques via the endpoint. This is explained in the text below.")
 
 You can submit a cheque image in TIFF file format. ClearBank will return `202 Accepted` once the request is accepted.
 
@@ -30,9 +30,9 @@ The successful or unsuccessful cheque submission is returned through the [Cheque
 Cheques can be submitted any time and may take up to three working days to process. If the cheque passes processing, is submitted to the ICS scheme, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
 
 Scenarios where the cheque wouldn't process successfully include:
-- If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
-- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, you will receive a 400 response when you submit the cheque.
-- If the cheque is successfully submitted, but there is missing information, you will receive the transaction rejected report from ClearBank through our ticketing system.
+- If the cheque is over the limits you defined during onboarding, you will be notified via the Cheque Process Completed Webhook, accompanied by a reason code.
+- If a cheque cannot be submitted to the ICS scheme, for example, due to low image quality, you will be notified by the Cheque Process Completed Webhook, accompanied by a reason code.
+- If the cheque is successfully submitted, but there is missing information, you will receive the Cheque Failed Scrutiny Webhook, accompanied by a reason code.
 - If a decision is made by the issuing bank through ICS to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 
 <Callout colour="blue">Upon integrating with our cheque product, we will create a cheque suspense account for you, which is only accessible through the ClearBank Portal. You can find more information on the cheque suspense account on the Knowledge Centre.
