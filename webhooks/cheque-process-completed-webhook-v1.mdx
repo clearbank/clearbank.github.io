@@ -25,18 +25,17 @@ This webhook confirms the outcome of an asynchronous cheque submission request m
 
 #### Rejected or error responses
 
-If the cheque processing `Status` is `REJECTED` or `ERROR`, the webhook payload includes a reason code indicating why the cheque couldn't be processed.
-
-| Reason cod                    | Description                                           |
+If the cheque processing `Status` is `REJECTED` or `ERROR`, the webhook payload will provide a reason code indicating why the cheque couldn't be processed. The following table lists the reason codes and provides guidance on whether the request can be retried.
+| Reason code                   | Next step                                             |
 |-------------------------------|-------------------------------------------------------|
-| `Over Max Cheque Amount`      | Can't be retried                                      |
-| `Over Max Daily Amount`       | Can be retried the next day                           |
-| `Over_Max_Daily_Cheque_Count` | Can be retried the next day                           |
-| `Duplicate`                   | Can't be retried                                      |
-| `Invalid_Codeline`            | Can be retried. Ask the customer to re-take the image |
-| `Invalid_Image`               | Can be retried. Ask the customer to re-take the image |
-| `Failed_IUA`                  | Can be retried. Ask the customer to re-take the image |
-| `Failed_IQA`                  | Can be retried. Ask the customer to re-take the image |
-| `Failed_Recognition`          | Can be retried. Ask the customer to re-take the image |
+| `Over_Max_Cheque_Amount`      | Cannot retry                                          |
+| `Over_Max_Daily_Amount`       | Try again the next day                                |
+| `Over_Max_Daily_Cheque_Count` | Try again the next day                                |
+| `Duplicate`                   | Cannot retry                                          |
+| `Invalid_Codeline`            | Retry after asking the customer to retake the image   |
+| `Invalid_Image`               | Retry after asking the customer to retake the image   |
+| `Failed_IUA`                  | Retry after asking the customer to retake the image   |
+| `Failed_IQA`                  | Retry after asking the customer to retake the image   |
+| `Failed_Recognition`          | Retry after asking the customer to retake the image   |
 | `Unexpected_Server_Error`     | Can be retried                                        |
-| `Invalid_Request`             | Check the details provided                            |
+| `Invalid_Request`             | Review the error details                              |
