@@ -1,0 +1,76 @@
+---
+title: "Cheque Process Completed webhook"
+version: 2
+webhook: true
+---
+
+This webhook confirms the outcome of an asynchronous cheque submission request made using `POST /payments/cheques/v1/submit-deposit-async`.
+
+#### Request body
+
+```json
+{
+    "Type": "ChequeProcessCompleted",
+    "Version": 2,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element                    | Description                |
+|----------------------------|----------------------------|
+| `MessageId`                |**Required**<br/>Unique identifier of the cheque request.<br/>Type: `string`<br/>Min. Length: `1`|
+| `Status`                   |**Required**<br/>Outcome of the asynchronous cheque submission request.<br/>Type: `string`<br/>Min. Length: `1`<br/>Possible values:<br/>`ACCEPTED` - the request was accepted, including same replays of a previously accepted request; this does not guarantee scheme acceptance.<br/>`REJECTED` - The cheque was processed and rejected, including same replays of a previously rejected request.|
+|`ErrorCode`                 |**Required when `Status` is `REJECTED`**. Not returned when `Status` is `ACCEPTED`.<br/>Indicates why the cheque was rejected.<br/>Type: `string`    |  
+
+#### Example webhook request bodies
+
+The following examples show the webhook body returned for `ACCEPTED` and `REJECTED` cheque submissions. `ErrorCode` is only included when `Status` is `REJECTED`. 
+
+##### Accepted
+
+```json
+    {
+      "Type": "ChequeProcessCompleted",
+      "Version": 2,
+      "Payload": {
+        "MessageId": "example-message-id",
+        "Status": "ACCEPTED",
+      },
+      "Nonce": "..."
+    }
+```
+
+##### Rejected
+
+```json
+    {
+      "Type": "ChequeProcessCompleted",
+      "Version": 2,
+      "Payload": {
+        "MessageId": "example-message-id",
+        "Status": "REJECTED",
+        "ErrorCode": "Invalid_Request"
+      },
+      "Nonce": "..."
+    }
+```
+
+#### Rejected responses
+
+If the cheque processing `Status` is `REJECTED`, the webhook payload will provide a reason code indicating why the cheque couldn't be processed. The following table lists the reason codes and provides guidance on whether the request can be retried.
+
+| Reason code                   | Next step                                             |
+|-------------------------------|-------------------------------------------------------|
+| `Over_Max_Cheque_Amount`      | Cannot retry                                          |
+| `Over_Max_Daily_Amount`       | Try again the next day                                |
+| `Over_Max_Daily_Cheque_Count` | Try again the next day                                |
+| `Duplicate`                   | Cannot retry                                          |
+| `Invalid_Codeline`            | Retry after asking the customer to retake the image   |
+| `Invalid_Image`               | Retry after asking the customer to retake the image   |
+| `Failed_IUA`                  | Retry after asking the customer to retake the image   |
+| `Failed_IQA`                  | Retry after asking the customer to retake the image   |
+| `Failed_Recognition`          | Retry after asking the customer to retake the image   |
+| `Unexpected_Server_Error`     | Can be retried                                        |
+| `Invalid_Request`             | Review the error details                              |
