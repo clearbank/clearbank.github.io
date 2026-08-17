@@ -14,8 +14,7 @@ import Callout from "src/components/callout";
 
 ClearBank accounts can support cheque deposits. If you'd like access to this product, please speak to your relationship manager.
 
-<Callout colour="blue">This page is for new cheques customers. For cheques customers onboarded before 2026, refer to <a href="../../direct/cheque-sync">Cheque synchronous deposit</a>.
-</Callout>
+<Callout colour="blue">This page is for new cheques customers. For cheques customers onboarded before 2026, refer to <a href="../../direct/cheque-sync">Cheque synchronous deposit</a>.</Callout>
 
 You can submit cheques using the [POST /payments/cheques/v1/submit-deposit-async](#submit-a-cheque) endpoint.
 
@@ -35,8 +34,7 @@ Scenarios where the cheque wouldn't process successfully include:
 - If the cheque is successfully submitted, but there is missing information, you will receive the [Cheque Failed Scrutiny](#cheque-failed-scrutiny-webhook) webhook, accompanied by a reason code.
 - If a decision is made by the issuing bank through ICS to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 
-<Callout colour="blue">Upon integrating with our cheque product, we will create a cheque suspense account for you, which is only accessible through the ClearBank Portal. You can find more information on the cheque suspense account on the Knowledge Centre.
-</Callout>
+<Callout colour="blue">Upon integrating with our cheque product, we will create a cheque suspense account for you, which is only accessible through the ClearBank Portal. You can find more information on the cheque suspense account on the Knowledge Centre.</Callout>
 
 #### Image requirements
 For cheque images to successfully validate, they must satisfy the following requirements:
@@ -46,8 +44,7 @@ For cheque images to successfully validate, they must satisfy the following requ
 | Bitonal TIFF | Base64 encoded string | 200 DPI    | 90,000 characters           | 67,500 bytes        |
 <br/><br/>
 
-<Callout colour="blue">The front and back images have the same image requirements.
-</Callout>
+<Callout colour="blue">The front and back images have the same image requirements.</Callout>
 
 Cheque images must be:
 - Clear
@@ -64,6 +61,7 @@ Cheque images must be:
       version: "1.0Cheques",
       webhooks: [
         'cheque-process-completed-webhook-v2',
+        'cheque-process-completed-webhook-v1',
         'cheque-paid-webhook-v1',
         'cheque-scrutiny-webhook-v1',
         'cheque-not-paid-webhook-v1',
@@ -74,7 +72,9 @@ Cheque images must be:
   ]}
 />
 
+
 <WebhookPlaceholder render='cheque-process-completed-webhook-v2' />
+<WebhookPlaceholder render='cheque-process-completed-webhook-v1' />
 <WebhookPlaceholder render='cheque-paid-webhook-v1' />
 <WebhookPlaceholder render='cheque-scrutiny-webhook-v1' />
 <WebhookPlaceholder render='cheque-not-paid-webhook-v1' />
