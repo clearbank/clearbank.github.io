@@ -22,7 +22,7 @@ This webhook notifies that a cash ISA transfer request has been accepted by the 
 | Field | Type | Format | Required | Min-Max length | Pattern | Description |
 | ----- | ---- | ------ | -------- | -------------- | ------- | ----------- |
 | `SequenceNumber` | integer | - | Yes | - | - | Sequence number indicating the order of webhook events for this transfer. Minimum value: `0`. |
-| `MessageId` | string | - | Yes | - | `^[A-Z0-9\-]{35}$` | The unique message reference from the XML. |
+| `MessageId` | string | - | Yes | 35-35 | `^[A-Z0-9\-]{35}$` | The unique message reference from the XML. |
 | `TimestampCreation` | string | date-time | Yes | - | - | Timestamp created. |
 | `Surname` | string | - | Yes | - | - | Surname of the customer. |
 | `GivenName` | string | - | Yes | - | - | Given name (first name) of the customer. |
@@ -30,13 +30,13 @@ This webhook notifies that a cash ISA transfer request has been accepted by the 
 | `NINumber` | string | - | Yes | - | - | National Insurance number of the customer. |
 | `AddressLines` | array | - | Yes | - | - | Address of the customer. |
 | `PostCode` | string | - | Yes | - | - | Post code of the customer. |
-| `Country` | string | - | Yes | - | `^[A-Z]{2}$` | Country of the customer. Must be a valid ISO 3166-1 alpha-2 country code, for example, `GB` for the United Kingdom. |
+| `Country` | string | - | Yes | 2-2 | `^[A-Z]{2}$` | Country of the customer. Must be a valid ISO 3166-1 alpha-2 country code, for example, `GB` for the United Kingdom. |
 | `CedingPartyClientAccountIdentification` | string | - | Yes | - | - | Sort code and account number of the investor in the ceding party's system, or alternative account identifier (Roll Number). |
 | `AcquiringPartyClientAccountIdentification` | string | - | Yes | - | - | Sort code and account number of the investor in the acquiring party's system, or alternative account identifier (Roll Number). |
-| `CedingPartySun` | string | - | Yes | - | `^[0-9]{6}$` | Ceding party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
+| `CedingPartySun` | string | - | Yes | 6-6 | `^[0-9]{6}$` | Ceding party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
 | `AcquiringPartyCollectionAccount` | string | - | Yes | - | - | Sort code and account number of the account the ceding party is to send the transfer funds to. |
-| `AcquiringPartySun` | string | - | Yes | - | `^[0-9]{6}$` | Acquiring party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
-| `Urn` | string | - | Yes | 1-18 | `^[A-Z0-9]{18}$` | Unique reference number. |
+| `AcquiringPartySun` | string | - | Yes | 6-6 | `^[0-9]{6}$` | Acquiring party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
+| `Urn` | string | - | Yes | 18-18 | `^[A-Z0-9]{18}$` | Unique reference number. |
 | `ActualTransferDate` | string | date-time | Yes | - | - | Mandatory element but currently not used. It has a default value of `2000-01-01`. |
 | `ActualTransferAmount` | decimal | - | No | - | - | The total amount transferred. |
 | `ActualTransferMethod` | string | - | Yes | - | `BACS`, `CHAPS`, `FPS` | The method used to transfer the funds. |
