@@ -1,0 +1,113 @@
+---
+title: "Register your API client"
+order: 2
+metaTitle: "Register your API client"
+metaDescription: "How to register your External API client, including prerequisites, key material, and API token setup in the ClearBank Portal."
+showPageMenu: true
+---
+
+import ExternalLink from "src/components/external-link"
+
+# Register your API client
+
+## Overview
+
+Before you can integrate with our External Gateway API, you must register your API client with us in the ClearBank Portal. You'll then be able to generate API access tokens, make authenticated API calls, and sign your messages with digital signatures.
+
+This first client acts as your main, authoritative client. Once it's set up, you can register and manage further clients programmatically using the [Client Management API](./manage-your-api-clients).
+
+To register your API client, complete the following:
+
+* [Access the ClearBank Portal](#access-the-clearbank-portal)
+* [Register your mTLS certificate](#register-your-mtls-certificate) to authenticate your client with the API.
+* [Create a Public/Private key pair](#create-a-public--private-key-pair) for digitally signing your messages.
+
+## Access the ClearBank Portal
+
+As part of your onboarding you should receive an email instructing you to create login credentials for the ClearBank Portal. If you have yet to receive this email please reach out to your onboarding contact.
+
+You'll need to use a 2FA app on your mobile whenever you sign in. This can be a generic app, such as Microsoft Authenticator.
+
+The ClearBank Portal is accessible at the following URLs:
+
+* Simulation: <ExternalLink href="https://institution-sim.clearbank.co.uk/">https://institution-sim.clearbank.co.uk/</ExternalLink>
+* Production: <ExternalLink href="https://institution.clearbank.co.uk/">https://institution.clearbank.co.uk/</ExternalLink>
+
+## Register your mTLS certificate
+
+Our Authentication Service and API both use mTLS. Your client must have a valid mTLS certificate to authenticate with us in both the production and simulation environments.
+
+Our requirements for a valid mTLS certificate include:
+
+* The certificate must be signed using a [root certificate approved by us](#approved-root-certificates).
+* The certificate must be valid.
+* The certificate must not have expired.
+* The certificate must specify `Client Authentication` in its Enhanced Key Usage field.
+
+Your mTLS certificate can be used for authentication with our services for 1 year from registration or until its expiry date, whichever is sooner.
+
+Once you've appropriately configured and signed this certification, you can upload its public thumbprint to the ClearBank Portal as a Privacy Enhanced Mail (PEM) file.
+
+In the ClearBank Portal, go to **Institution** > **API Management** > **Create New Client** to upload the PEM file.
+
+From this page you can also configure this API client's permissions and give it an identifiable name. You should take note of the `ClientId` as this will be used later to generate access tokens.
+
+### Approved root certificates
+
+Below is a list of current approved root certificates:
+
+* DigiCert TLS RSA4096 Root G5
+* DigiCert Client RSA4096 Root G5
+* DigiCert Global Root G2
+* Sectigo User Trust RSA Root
+
+> TODO: self-signing guidance?
+
+## Create a Public / Private key pair
+
+Digital signatures require a Public / Private key pair. You'll use your Private key to sign your messages, and we'll use your Public key to validate your signatures.
+
+Below are our requirements for the Public / Private Key Pairs:
+
+* The key pair must be a valid ECDsa key pair.
+* The key pair must have been registered with us no more than 1 year ago.
+
+You should register your public key with us as a PEM file via the ClearBank Portal.
+
+In the ClearBank Portal, go to **Institution** > **API Management** > **\*Select your client\*** > **Create new signature key** to upload your public key PEM file.
+
+You can quickly generate a key pair for the simulation environment using OpenSSL:
+
+```bash
+openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out private.pem -outpubkey public.pem
+```
+
+**Do not use OpenSSL to generate production keys.** Refer to [our security requirements](#security-requirements-of-key-pairs-and-mtls-certificates) for more detail.
+
+Full guidance on signing your messages is covered in [Sign your requests](./sign-your-requests) and [Webhooks](./webhooks).
+
+## Security requirements of key pairs and mTLS certificates
+
+In the simulation environment, digital signature key pairs can be generated using open source solutions. However, mTLS certificates must always be signed using one of our [approved root certificates](#approved-root-certificates) regardless of environment.
+
+In the production environment, digital signature key pairs **must** be generated using a FIPS 140-2 level 2 compliant Hardware Security Module (HSM) such as:
+
+* Azure KV HSM
+* Amazon CloudHSM
+* GoogleCloudHSM
+
+This is not an exhaustive list.
+
+## Test your mTLS certificate
+
+To verify your mTLS certificate is working, you can make an **unsigned** GET request to our authentication service's discovery endpoint. To do this, make an empty mTLS authenticated request to:
+
+`GET https://mtls.auth-sim.clearbank.co.uk/.well-known/openid-configuration` for Simulation  
+or  
+`GET https://mtls.auth.clearbank.co.uk/.well-known/openid-configuration` for Production
+
+This endpoint does not require digital signatures, permissions, tokens, or any special headers - just a valid mTLS certificate.
+
+If your mTLS certificate has been set up correctly, you should receive a **200** response. If your mTLS certificate is invalid, or mTLS is not being used, you'll receive a **400 Bad Request** error.
+
+Once your client is registered, the next step is to [request an access token and call our endpoints](./using-the-api). Creating and verifying digital signatures is covered in [Sign your requests](./sign-your-requests) and [Verify our responses](./verify-our-responses).
