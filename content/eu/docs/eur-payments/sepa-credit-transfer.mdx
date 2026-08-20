@@ -60,7 +60,7 @@ To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-a
 To comply with the SEPA scheme rulebook, if the payment originates from outside the <a href="https://european-union.europa.eu/principles-priorities-and-initiatives/eu-countries_en">European Economic Area (EEA)</a> or the beneficiary resides outside the EEA, you must include the originator's <b>town</b> and <b>country</b> address fields in your request. Payments missing these fields will be rejected.</p>
 </Callout>
 
-![A message flow diagram explaining how to send an SCT payment](/assets/images/sepa-ct-send-payment.svg)
+![A message flow diagram explaining how to send an SCT payment](/assets/images/diagrams/eu/sepa-ct-send-payment.svg)
 
 <EndpointBlock
   type="post"
@@ -224,7 +224,7 @@ You can send an SCT recall requests using the [POST /payments/sepa-ct/v1/recall]
 
 * If your recall request has been **rejected**, you will be notified via the [SEPA CT Outbound Payment Recall Rejected](#sepa-ct-outbound-payment-recall-rejected-webhook) webhook.
 
-![A message flow diagram explaining how to an SCT recall request is sent, then accepted or rejected by the original creditor](/assets/images/sepa-ct-recall-request.svg)
+![A message flow diagram explaining how to an SCT recall request is sent, then accepted or rejected by the original creditor](/assets/images/diagrams/eu/sepa-ct-recall-request.svg)
 
 #### Recall request reason codes
 
@@ -271,7 +271,7 @@ To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-
 #### Accept recall requests
 You can accept the recall request by setting the `RecallResponseAccepted` boolean to `true`.
 
-![A message flow diagram showing how to accept an inbound SCT recall request](/assets/images/sepa-ct-recall-response-accepted.svg)
+![A message flow diagram showing how to accept an inbound SCT recall request](/assets/images/diagrams/eu/sepa-ct-recall-response-accepted.svg)
 
 <Callout colour="blue">
 <p>If <b>RecallResponseAccepted</b> is set to <b>true</b>, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.</p>
@@ -280,7 +280,7 @@ You can accept the recall request by setting the `RecallResponseAccepted` boolea
 #### Reject recall requests
 If you do not agree with the reason for the recall cited by the requesting party in the `CancellationReasonInformation` field, you can reject the recall request by setting the `RecallResponseAccepted` boolean to `false`. When rejecting a recall request, the 'RejectCode' field must be populated (see [recall response reason codes](#recall-response-reason-codes)).
 
-![A message flow diagram showing how to reject an inbound SCT recall request](/assets/images/sepa-ct-recall-response-rejected.svg)
+![A message flow diagram showing how to reject an inbound SCT recall request](/assets/images/diagrams/eu/sepa-ct-recall-response-rejected.svg)
 
 <Callout colour="blue">
 <p>If <b>RecallResponseAccepted</b> is set to <b>false</b>, the <b>rejectionCode</b> field must be populated with a rejection reason code.</p>
@@ -337,7 +337,7 @@ SCT payments can also be returned to the payment originator.
 
 You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#return-an-sct-payment) endpoint. You can only return a payment after receiving the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook). Returns must be sent within three business days of the original payment's settlement date.
 
-![A message flow diagram explaining how to send an SCT return](/assets/images/sepa-ct-return.svg)
+![A message flow diagram explaining how to send an SCT return](/assets/images/diagrams/eu/sepa-ct-return.svg)
 
 Once the return has been processed, you will either receive the [SEPA CT Inbound Payment Return Completed](#sepa-ct-inbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks or the [SEPA CT Inbound Payment Return Failed](#sepa-ct-inbound-payment-return-failed-webhook) webhook.
 

@@ -57,7 +57,7 @@ To set up a cash ISA:
 
 The process is shown in this message flow diagram:
 
-![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/cash-isa-open.svg)
+![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/diagrams/uk/cash-isa-open.svg)
 
 The account is now open and fully operational. You can retrieve information on all ISAs by using the [GET /v3/accounts](#get-all-accounts-real) endpoint and filtering for ISAs. You can also retrieve details on a specific cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
 
@@ -81,7 +81,7 @@ There are several ways you can close a cash ISA. You need to choose the appropri
 
 You can use this diagram to validate if the account should be closed, cancelled or transferred out:
 
-<img src="/assets/images/cash-isa-life-cycle.svg" alt="A decision tree diagram explaining the life cycle of a cash ISA." width="100%"/>
+<img src="/assets/images/diagrams/uk/cash-isa-life-cycle.svg" alt="A decision tree diagram explaining the life cycle of a cash ISA." width="100%"/>
 
 The sections below explain how to:
 - [Close a cash ISA](#close)
@@ -110,7 +110,7 @@ If the account closure fails, re-request the closure.
 
 The process is shown in this message flow diagram:
 
-![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/cash-isa-close.svg)
+![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/diagrams/uk/cash-isa-close.svg)
 
 #### Cancel
 When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
@@ -128,7 +128,7 @@ To cancel a cash ISA:
 
 The process is shown in this message flow diagram:
 
-![Message flow diagram of the cancellation process, as detailed above.](/assets/images/cash-isa-cancel.svg)
+![Message flow diagram of the cancellation process, as detailed above.](/assets/images/diagrams/uk/cash-isa-cancel.svg)
 
 ### Manage customer ISA eligibility
 
@@ -351,7 +351,7 @@ To transfer in a cash ISA:
 > OPTIONAL To check the status of a transfer in, use the [GET /v1/isas/{accountId}/transfer-in/{transferInId}](#get-information-on-a-transfer-in) endpoint.
 5. Once the transfer in has been approved, move the funds from the transfer hub to the cash ISA.
 
-![Message flow diagram of the transfer in process, as detailed above.](/assets/images/cash-isa-transfer-in.svg)
+![Message flow diagram of the transfer in process, as detailed above.](/assets/images/diagrams/uk/cash-isa-transfer-in.svg)
 
 <EndpointBlock
   type="post"
@@ -421,7 +421,7 @@ To transfer out a cash ISA:
 
 The process is shown in this message flow diagram:
 
-![Message flow diagram of the transfer out path, as detailed above.](/assets/images/cash-isa-transfer-out.svg)
+![Message flow diagram of the transfer out path, as detailed above.](/assets/images/diagrams/uk/cash-isa-transfer-out.svg)
 
 <EndpointBlock
   type="post"
@@ -465,7 +465,7 @@ To complete an automated transfer in:
 13. The ceding party receives a **Transfer Complete message**.
 14. You receive the **Transfer Status Update webhook** with the State of `Completed`.
 
-![Message flow diagram of the automated transfer in process, as detailed above.](/assets/images/tisa-transfer-in-success-message-flow.svg)
+![Message flow diagram of the automated transfer in process, as detailed above.](/assets/images/diagrams/uk/tisa-transfer-in-success-message-flow.svg)
 
 <EndpointBlock
   type="post"
@@ -513,11 +513,11 @@ Following the referral, the ceding party can:
 
 **Accept the transfer:**
 
-![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred.](/assets/images/tisa-transfer-in-referred-accepted-message-flow.svg)
+![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred.](/assets/images/diagrams/uk/tisa-transfer-in-referred-accepted-message-flow.svg)
 
 **or reject the transfer:**
 
- ![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred. The ceding party will then advise of the rejection via the Transfer Rejected Message which triggers another status update webhook with a state of Rejected.](/assets/images/tisa-transfer-in-referred-rejected-message-flow.svg)
+ ![Message flow diagram of the automated transfer in process where the transfer is referred. This follows the automated transfer in steps with an additional response from the ceding party advising of the referral. This in turn triggers a status update webhook with a state of Referred. The ceding party will then advise of the rejection via the Transfer Rejected Message which triggers another status update webhook with a state of Rejected.](/assets/images/diagrams/uk/tisa-transfer-in-referred-rejected-message-flow.svg)
 
 If the transfer is rejected, the customer should decide how they wish to proceed, either:
 
@@ -543,7 +543,7 @@ To complete an automated transfer out:
 13. The acquiring party sends a **Transfer Completed message**.
 14. You receive the **Transfer Status Update webhook** with the `State` of `Completed`.
 
-![Message flow diagram of the automated transfer out process, as detailed above.](/assets/images/tisa-transfer-out-success-message-flow.svg)
+![Message flow diagram of the automated transfer out process, as detailed above.](/assets/images/diagrams/uk/tisa-transfer-out-success-message-flow.svg)
 
 <EndpointBlock
   type="patch"
