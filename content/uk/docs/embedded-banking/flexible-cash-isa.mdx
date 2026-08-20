@@ -489,6 +489,23 @@ To complete an automated transfer in:
 <WebhookPlaceholder render='tisa-transfer-accepted-webhook-v1' />
 
 <EndpointBlock
+  type="put"
+  title="Resubmit an automated cash ISA transfer in"
+  endpoints={[
+    {
+      path: "/v1/isas/{accountId}/automated-transfer-in/{urn}",
+      version: "1.0.SterlingAutomatedTransfer",
+      webhooks: [
+        'tisa-transfer-request-webhook-v1',
+        'tisa-transfer-accepted-webhook-v1',
+        'transaction-settled-webhook-v6',
+        'tisa-transfer-status-update-webhook-v1'
+      ]
+    }
+  ]}
+/>
+
+<EndpointBlock
   type="patch"
   title="Update an existing automated cash ISA transfer in"
   endpoints={[
@@ -521,24 +538,7 @@ Following the referral, the ceding party can:
 
 If the transfer is rejected, the customer should decide how they wish to proceed, either:
 
-- **Resubmit the transfer request** - you can do this by calling the **PUT /v1/isas/{accountId}/automated-transfer-in/{urn}** and providing the URN of the existing transfer. An example payload is shown below:
-
-```json
-{
-  "effectiveDateOfTransfer": "2024-12-01T00:00:00+00:00",
-  "SortCode": "010203",
-  "AccountNumber": "01234567",
-  "RollNumber": "ROLL234567",
-  "extendedCurrentYearType": "IncludeCurrent",
-  "allPreviousYears": "true",
-  "amountFromPreviousYearsSubscriptions": "12350",
-  "earlyClosureWaiver": "true",
-  "cedingPartySun": "546248"
-}
-```
-
-The payload parameters, requirements, and response are the same as **POST /v1/isas/{accountId}/automated-transfer-in**, with the account identification fields renamed as shown above.
-
+- **Resubmit the transfer request** - you can do this by calling the [**PUT /v1/isas/{accountId}/automated-transfer-in/{urn}**](#resubmit-an-automated-cash-isa-transfer-in) and providing the URN of the existing transfer, or
 - **Abandon the transfer request** - you can update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and update the `State` to `Abandoned`.
 
 ## Automated cash ISA transfer out
