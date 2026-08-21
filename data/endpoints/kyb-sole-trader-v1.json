@@ -323,57 +323,6 @@
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "$ref": "#/components/schemas/SoleTraderPersonName",
-            "description": "The sole trader's full name. Their first name and surname are required."
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "example": "1985-06-20",
-            "description": "The sole trader's date of birth, formatted: yyyy-MM-dd."
-          },
-          "nationality": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CountryCode"
-            },
-            "description": "An array containing the sole trader's nationalities as ISO 3166 Alpha-3 country-codes. You can provide multiple values for sole traders with more than one nationality.",
-            "example": ["GBR"]
-          },
-          "taxResidency": {
-            "minItems": 1,
-            "maxItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CountryCode"
-            },
-            "description": "An array containing the country the sole trader resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
-            "example": ["GBR"]
-          },
-          "nationalInsuranceNumber": {
-            "minLength": 1,
-            "maxLength": 12,
-            "pattern": "^[a-zA-Z0-9]+$",
-            "type": "string",
-            "example": "AB123456C",
-            "description": "The UK National Insurance (NI) number of the sole trader. Should not include whitespace."
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email",
-            "example": "john.smith@smithconsulting.co.uk",
-            "description": "The sole trader's email address."
-          },
-          "mobile": {
-            "pattern": "^\\+?\\d+$",
-            "type": "string",
-            "nullable": true,
-            "example": "+447700900123",
-            "description": "The sole trader's international mobile number, including its country-code prefix. For example '+44' for UK numbers. The use of '+' is optional."
-          },
           "businessName": {
             "$ref": "#/components/schemas/SoleTraderBusinessName",
             "description": "The sole trader's business name details."
@@ -415,13 +364,64 @@
             "example": "Business Revenue",
             "description": "A description of the sole trader's source of funds."
           },
+          "tax": {
+            "$ref": "#/components/schemas/SoleTraderTaxInfo",
+            "description": "The sole trader's tax details."
+          },
+          "name": {
+            "$ref": "#/components/schemas/SoleTraderPersonName",
+            "description": "The sole trader's full name. Their first name and surname are required."
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1985-06-20",
+            "description": "The sole trader's date of birth, formatted: yyyy-MM-dd."
+          },
+          "nationality": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the sole trader's nationalities as ISO 3166 Alpha-3 country-codes. You can provide multiple values for sole traders with more than one nationality.",
+            "example": ["GBR"]
+          },
+          "taxResidency": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the country the sole trader resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
+            "example": ["GBR"]
+          },
           "countryOfOperations": {
             "$ref": "#/components/schemas/CountryCode",
             "description": "The country the sole trader operates in, represented as an ISO 3166 Alpha-3 country-code."
           },
-          "tax": {
-            "$ref": "#/components/schemas/SoleTraderTaxInfo",
-            "description": "The sole trader's tax details."
+          "nationalInsuranceNumber": {
+            "minLength": 1,
+            "maxLength": 12,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "example": "AB123456C",
+            "description": "The UK National Insurance (NI) number of the sole trader. Should not include whitespace."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "example": "john.smith@smithconsulting.co.uk",
+            "description": "The sole trader's email address."
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true,
+            "example": "+447700900123",
+            "description": "The sole trader's international mobile number, including its country-code prefix. For example '+44' for UK numbers. The use of '+' is optional."
           }
         },
         "additionalProperties": false
