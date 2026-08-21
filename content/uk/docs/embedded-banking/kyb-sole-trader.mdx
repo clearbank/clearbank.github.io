@@ -1,0 +1,55 @@
+---
+title: "KYB Sole Trader"
+metaTitle: "KYB Sole Trader Service"
+order: 10
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Sole trader KYB
+
+Our Sole Trader KYB endpoint enables you to meet your due diligence requirements when onboarding sole traders. By sharing business and individual information, you can conduct Know Your Business (KYB) checks and receive the results via webhook.
+
+For convenience, we'll also use the provided information to register a new sole trader customer if the checks succeed.
+
+If you'd like access to this product, please speak with your Client Director.
+
+### Message flow diagrams
+
+#TODO
+
+<EndpointBlock
+  type="post"
+  title="KYB check and create a new sole trader customer"
+  endpoints={[
+    {
+      path: "/customer-due-diligence/v1/sole-trader/onboard",
+      version: "1.0kyb-sole-trader",
+      webhooks: [
+        'sole-trader-application-successful-v1',
+        'sole-trader-application-declined-v1',
+        'sole-trader-application-pending-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<WebhookPlaceholder render='sole-trader-application-successful-v1' />
+<WebhookPlaceholder render='sole-trader-application-pending-v1' />
+<WebhookPlaceholder render='sole-trader-application-declined-v1' />
+
+## Simulating KYB webhooks
+
+You can simulate successful and declined KYB webhooks - as well as additional information webhooks - in our simulation environment.  
+To do this, call the [**POST /customer-due-diligence/v1/sole-trader/onboard**](#kyb-check-and-create-a-new-sole-trader-customer) endpoint with the `soleTraderData.name.surname` property set to:
+
+* `"pass"` to simulate a successful KYB webhook.
+* `"fail"` to simulate a declined KYB webhook.
+* `"info"` to simulate a KYB check requiring additional information.

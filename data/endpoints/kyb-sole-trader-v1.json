@@ -1,0 +1,524 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Customer Due Diligence API",
+    "version": "1.0kyb-sole-trader"
+  },
+  "paths": {
+    "/customer-due-diligence/v1/sole-trader/onboard": {
+      "post": {
+        "description": "Use this endpoint to conduct KYB checks for a new sole trader customer. If the checks pass, the provided details are then used to create a new sole trader customer.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, retrieved from the web portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoleTraderCheckRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoleTraderCheckRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoleTraderCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SoleTraderCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SoleTraderCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountryCode": {
+        "format": "ISO 3166 Alpha-3 country-code",
+        "type": "string",
+        "example": "GBR"
+      },
+      "IndustryClassificationCode": {
+        "type": "string",
+        "example": "_6E_OtherConstructionActivities",
+        "enum": [
+          "_1_AgricultureHuntingAndFishing",
+          "_2_Fishing",
+          "_3_MiningAndQuarrying",
+          "_4A_FoodBeveragesAndTobacco",
+          "_4B_TextilesWearingApparelAndLeather",
+          "_4C_PulpPaperAndPrinting",
+          "_4D_ChemicalsPharmaceuticalsRubberAndPlastics",
+          "_4E_OtherNonmetalicMineralProductsAndMetals",
+          "_4F_MachineryAndEquipmentIncludingTransportEquipment",
+          "_4G_ElectricalMedicalAndOpticalProductsAndEquipment",
+          "_4H_OtherManufacturing",
+          "_5A_ElectricityGasSteamAndAirConditioningSupply",
+          "_5B_WaterCollectionAndSewerage",
+          "_5C_WasteManagementRelatedServicesAndRemediationActivities",
+          "_6A_DevelopmentOfBuildings",
+          "_6B_ConstructionOfCommercialBuildings",
+          "_6C_ConstructionOfDomesticBuildings",
+          "_6D_CivilEngineering",
+          "_6E_OtherConstructionActivities",
+          "_7A_WholesaleAndRetailTradeAndRepairOfMotorVehiclesCycles",
+          "_7B_WholesaleTradeExcludingMotorVehiclesCycles",
+          "_7C_RetailTradeExcludingMotorVehiclesCycles",
+          "_8_AccommodationAndFoodServiceActivities",
+          "_9A_TransportAndStorage",
+          "_9B_InformationAndCommunication",
+          "_10A_BuyingSellingAndRentingOfOwnOrLeasedRealEstate",
+          "_10B_RealEstateAndRelatedActivitiesOnAFeeOrContractBasis",
+          "_10C_ProfessionalScientificAndTechnicalActivities",
+          "_10D_AdministrationAndSupportServices",
+          "_11_PublicAdministrationAndDefence",
+          "_12_Education",
+          "_13_HumanHealthAndSocialWork",
+          "_14A_PersonalAndCommunityServiceActivities",
+          "_14B_RecreationalCulturalAndSportingActivities",
+          "_15A_FinancialLeasingCorporations",
+          "_15B_NonbankGrantorsOfCreditExcludingCreditUnionsAndSPVsRelatedToSecuritisations",
+          "_15C_CreditUnions",
+          "_15D_FactoringCorporations",
+          "_15E_MortgageAndHousingCreditCorporations",
+          "_15F_InvestmentAndUnitTrustsOtherThanMoneyMarketMutualFunds",
+          "_15G_MoneyMarketMutualFunds",
+          "_15H_BankHoldingCompanies",
+          "_15I_ActivitiesOfventureAndDevelopmentCapitalCompanies",
+          "_15Ja_SecurityAndCommodityContractBrokerage",
+          "_15JB_SecurityDealingOnOwnAccount",
+          "_15L_SPVsRelatedToSecuritisation",
+          "_15M_OtherFinancialIntermediaries",
+          "_16A_InsuranceCompanies",
+          "_16B_PensionFunds",
+          "_17A_FundManagementActivities",
+          "_17BA_CentralClearingCounterparties",
+          "_17BBA_AdministrationOfFinancialMarkets",
+          "_17BBB_RiskAndDamageEvaluation",
+          "_17BBC_ActivitiesOfInsuranceAgentsAndBrokers",
+          "_17BBD_OtherActivitiesAuxiliaryToInsuranceAndPensionFunding",
+          "_17BBE_EmoneyIssuers",
+          "_17BBF_OtherAuxiliaryActivitiesNotCoveredElsewhere",
+          "_18_IndividualsAndIndividualTrusts"
+        ]
+      },
+      "SoleTraderPersonName": {
+        "required": [
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "John",
+            "description": "The sole trader's first name."
+          },
+          "middleName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "William",
+            "description": "The sole trader's middle name, if they have one."
+          },
+          "surname": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Smith",
+            "description": "The sole trader's surname."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderBusinessName": {
+        "type": "object",
+        "properties": {
+          "tradingName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Smith Consulting",
+            "description": "The sole trader's trading name. A sole trader can use their personal name or a business name of their choosing."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderAddress": {
+        "required": [
+          "buildingNameNumber",
+          "city",
+          "countryCode",
+          "postalCode",
+          "streetName"
+        ],
+        "type": "object",
+        "properties": {
+          "buildingNameNumber": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "42",
+            "description": "The building's name or number at this address."
+          },
+          "streetName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "Baker Street",
+            "description": "The street of this address."
+          },
+          "city": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "London",
+            "description": "The postal city of this address."
+          },
+          "county": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Greater London",
+            "description": "The county of this address."
+          },
+          "postalCode": {
+            "maxLength": 8,
+            "minLength": 2,
+            "type": "string",
+            "example": "NW1 6XE",
+            "description": "The postal code of this address, formatted as a UK postcode including the appropriate use of whitespace."
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country of this address, represented as an ISO 3166 Alpha-3 country-code."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderAddressInfo": {
+        "required": [
+          "residentialAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "residentialAddress": {
+            "$ref": "#/components/schemas/SoleTraderAddress",
+            "description": "The sole trader's current residential address."
+          },
+          "tradingAddress": {
+            "$ref": "#/components/schemas/SoleTraderAddress",
+            "description": "The sole trader's trading address, if different to their residential address."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderTaxInfo": {
+        "required": [
+          "validSelfCertification"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "example": true,
+            "description": "Confirms that the sole trader has completed a valid tax self-certification."
+          },
+          "vatRegistrationNumber": {
+            "maxLength": 15,
+            "pattern": "^[a-zA-Z0-9 ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "GB987654321",
+            "description": "The sole trader's VAT registration number, if they have one."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderData": {
+        "required": [
+          "address",
+          "annualRevenue",
+          "countryOfOperations",
+          "dateOfBirth",
+          "email",
+          "incorporationDate",
+          "industryClassification",
+          "name",
+          "nationalInsuranceNumber",
+          "nationality",
+          "sourceOfFunds",
+          "tax",
+          "taxResidency"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/SoleTraderPersonName",
+            "description": "The sole trader's full name. Their first name and surname are required."
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1985-06-20",
+            "description": "The sole trader's date of birth, formatted: yyyy-MM-dd."
+          },
+          "nationality": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the sole trader's nationalities as ISO 3166 Alpha-3 country-codes. You can provide multiple values for sole traders with more than one nationality.",
+            "example": ["GBR"]
+          },
+          "taxResidency": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the country the sole trader resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
+            "example": ["GBR"]
+          },
+          "nationalInsuranceNumber": {
+            "minLength": 1,
+            "maxLength": 12,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "example": "AB123456C",
+            "description": "The UK National Insurance (NI) number of the sole trader. Should not include whitespace."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "example": "john.smith@smithconsulting.co.uk",
+            "description": "The sole trader's email address."
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true,
+            "example": "+447700900123",
+            "description": "The sole trader's international mobile number, including its country-code prefix. For example '+44' for UK numbers. The use of '+' is optional."
+          },
+          "businessName": {
+            "$ref": "#/components/schemas/SoleTraderBusinessName",
+            "description": "The sole trader's business name details."
+          },
+          "address": {
+            "$ref": "#/components/schemas/SoleTraderAddressInfo",
+            "description": "The sole trader's residential and, optionally, trading address."
+          },
+          "sicCode": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "An array of Standard Industrial Classification (SIC) codes describing the sole trader's business activities.",
+            "example": ["62020"]
+          },
+          "industryClassification": {
+            "$ref": "#/components/schemas/IndustryClassificationCode",
+            "description": "The industry classification that best describes the sole trader's business activities."
+          },
+          "incorporationDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2019-06-01",
+            "description": "The date the sole trader business began trading, formatted: yyyy-MM-dd."
+          },
+          "annualRevenue": {
+            "maximum": 99999999999.99,
+            "minimum": 1,
+            "type": "number",
+            "format": "double",
+            "example": 120000,
+            "description": "The sole trader's expected annual revenue, in GBP."
+          },
+          "sourceOfFunds": {
+            "minLength": 1,
+            "type": "string",
+            "example": "Business Revenue",
+            "description": "A description of the sole trader's source of funds."
+          },
+          "countryOfOperations": {
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country the sole trader operates in, represented as an ISO 3166 Alpha-3 country-code."
+          },
+          "tax": {
+            "$ref": "#/components/schemas/SoleTraderTaxInfo",
+            "description": "The sole trader's tax details."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderCheckRequest": {
+        "required": [
+          "soleTraderData"
+        ],
+        "type": "object",
+        "properties": {
+          "soleTraderData": {
+            "$ref": "#/components/schemas/SoleTraderData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoleTraderCheckResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "2d185f64-5717-4562-b3fc-2c963e23afa6",
+            "description": "A unique ID for each submitted application. Use this to identify which application a corresponding webhook pertains to."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced, it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true,
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true,
+            "description": "A URL reference to retrieve more information about the error, if available."
+          }
+        },
+        "additionalProperties": {}
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      }
+    }
+  }
+}
