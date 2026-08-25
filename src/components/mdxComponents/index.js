@@ -2,8 +2,7 @@ import React from 'react'
 import CodeBlock from './codeBlock'
 import '../styles.css'
 
-import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
+import LightboxImage from '../LightboxImage'
 
 import kebabCase from 'lodash.kebabcase'
 
@@ -91,14 +90,7 @@ export default {
 
   li: props => <Styles.ListItem {...props} />,
 
-    img: props => (
-    <Zoom>
-      <Styles.Img
-        {...props}
-        style={{ cursor: 'zoom-in' }}
-      />
-    </Zoom>
-  ),
+  img: props => <LightboxImage {...props} />,
 
   table: props => <Table.Table {...props} />,
 
