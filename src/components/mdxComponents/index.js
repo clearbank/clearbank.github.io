@@ -4,7 +4,7 @@ import '../styles.css';
 
 import LightboxImage from '../LightboxImage'
 
-import kebabCase from 'lodash.kebabcase'
+import kebabCase from 'lodash.kebabcase';
 
 import * as Styles from './mdx-components.styles';
 import * as Table from 'src/components/table/table.styles';
