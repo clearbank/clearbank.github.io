@@ -1,28 +1,5 @@
 const glossaryTerms = [
   {
-    id: 'two-factor-authentication',
-    term: 'Two-Factor Authentication',
-    acronym: '2FA',
-    aliases: [
-      '2fa',
-      'two factor authentication',
-      'two step authentication',
-      'two step verification',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'security',
-    definition:
-      'Two-Factor Authentication (2FA) is a security method that requires two forms of verification before access is granted.',
-    seoTitle:
-      'What is Two-Factor Authentication (2FA)?',
-    seoDescription:
-      'Learn what Two-Factor Authentication means and how it adds another verification step when accessing an account or service.',
-    relatedTerms: [
-      'application-programming-interface',
-    ],
-  },
-
-  {
     id: 'addacs',
     term:
       'Automated Direct Debit Amendment and Cancellation Service',
@@ -37,40 +14,44 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Direct Debit Amendment and Cancellation Service (ADDACS) is used to notify a service user when a Direct Debit Instruction has been amended or cancelled.',
+      'The Automated Direct Debit Amendment and Cancellation Service (ADDACS) is a Bacs service used to notify a service user when a Direct Debit Instruction has been amended or cancelled.',
     seoTitle:
       'What is the Automated Direct Debit Amendment and Cancellation Service (ADDACS)?',
     seoDescription:
-      'Learn what ADDACS means and how it is used to report amendments and cancellations relating to Direct Debit Instructions.',
+      'Learn what ADDACS means and how it reports amendments and cancellations relating to Direct Debit Instructions.',
     relatedTerms: [
+      'auddis',
+      'bacs',
       'direct-debit',
       'direct-debit-instruction',
       'service-user',
       'service-user-number',
-      'auddis',
     ],
   },
 
   {
-    id: 'application-programming-interface',
-    term: 'Application Programming Interface',
-    acronym: 'API',
+    id: 'app-scam',
+    term: 'Authorised Push Payment Scam',
+    acronym: 'APP scam',
     aliases: [
-      'api',
-      'banking api',
-      'payment api',
-      'clearbank api',
+      'app fraud',
+      'authorised push payment fraud',
+      'authorized push payment scam',
+      'payment scam',
     ],
-    regions: ['uk', 'eu'],
-    category: 'technical',
+    regions: ['uk'],
+    category: 'compliance',
     definition:
-      'An Application Programming Interface (API) enables software applications to communicate with one another using defined requests and responses.',
+      'An Authorised Push Payment scam occurs when a person is deceived into authorising a payment to an account controlled by a fraudster. The payment may appear legitimate because the payer authorises it themselves.',
     seoTitle:
-      'What is an Application Programming Interface (API)?',
+      'What is an Authorised Push Payment Scam?',
     seoDescription:
-      'Learn what an Application Programming Interface is and how APIs enable applications and services to exchange information.',
+      'Learn what an Authorised Push Payment scam is and how a payer can be deceived into authorising a fraudulent payment.',
     relatedTerms: [
-      'webhook',
+      'beneficiary',
+      'confirmation-of-payee',
+      'credit-payment-recovery',
+      'faster-payments',
     ],
   },
 
@@ -87,14 +68,15 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'The Automated Return of Unapplied Credits Service (ARUCS) is used to report credits that could not be applied to the intended account.',
+      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs service used to report credits that could not be applied to the intended account.',
     seoTitle:
       'What is the Automated Return of Unapplied Credits Service (ARUCS)?',
     seoDescription:
       'Learn what ARUCS means and how it is used when a credit cannot be applied to its intended account.',
     relatedTerms: [
-      'beneficiary',
       'bacs',
+      'bacs-direct-credit',
+      'beneficiary',
     ],
   },
 
@@ -111,15 +93,16 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is used to report Direct Debit collections that could not be paid.',
+      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used to report Direct Debit collections that could not be paid.',
     seoTitle:
       'What is the Automated Return of Unpaid Direct Debits Service (ARUDD)?',
     seoDescription:
-      'Learn what ARUDD means and how it is used to report unpaid Direct Debit collections.',
+      'Learn what ARUDD means and how it reports unpaid Direct Debit collections.',
     relatedTerms: [
+      'bacs',
       'direct-debit',
-      'direct-debit-instruction',
       'direct-debit-indemnity-claim',
+      'direct-debit-instruction',
       'service-user',
       'service-user-number',
     ],
@@ -138,68 +121,42 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that replaces the submission of a paper Direct Debit Instruction with an electronic message. The original instruction, or an image of it, must be retained in case its authority is challenged.',
+      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that supports the electronic submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
     seoTitle:
       'What is the Automated Direct Debit Instruction Service (AUDDIS)?',
     seoDescription:
-      'Learn what AUDDIS means and how it supports the electronic submission of Direct Debit Instructions through Bacs.',
+      'Learn what AUDDIS means and how it supports electronic Direct Debit Instructions through Bacs.',
     relatedTerms: [
+      'addacs',
       'bacs',
       'direct-debit',
       'direct-debit-instruction',
       'service-user',
       'service-user-number',
-      'addacs',
     ],
   },
 
   {
-    id: 'bacs',
-    term: 'Bacs',
+    id: 'bacs-direct-credit',
+    term: 'Bacs Direct Credit',
     acronym: '',
     aliases: [
-      "Bankers' Automated Clearing System",
-      'Bacs Payment Schemes Limited',
-      'Bacs payment',
-      'Bacs payments',
-      'Bacs transfer',
-      'BACS',
+      'direct credit',
+      'bacs credit',
+      'bacs credit payment',
     ],
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Bacs is a UK payment system used to process Direct Debits and Direct Credits between bank accounts. Bacs payments normally operate on a three-working-day cycle, excluding weekends and bank holidays.',
-    paymentCycle: [
-      {
-        title: 'Day 1 (input)',
-        description:
-          'Payment instructions are submitted to Bacs before the applicable cut-off time.',
-      },
-      {
-        title: 'Day 2 (processing)',
-        description:
-          'Bacs processes the instructions and sends them to the destination bank.',
-      },
-      {
-        title: 'Day 3 (entry)',
-        description:
-          'The payments are applied to the relevant accounts and settlement takes place.',
-      },
-    ],
-    paymentTypes: [
-      'Direct Debit',
-      'Direct Credit',
-    ],
-    seoTitle: 'What is Bacs?',
+      'A Bacs Direct Credit is a payment made through Bacs to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
+    seoTitle: 'What is a Bacs Direct Credit?',
     seoDescription:
-      'Learn what Bacs is, how its three-working-day payment cycle operates, and how Direct Debits and Direct Credits are processed.',
+      'Learn what a Bacs Direct Credit is and how it is used to send payments such as salaries and supplier payments.',
     relatedTerms: [
+      'arucs',
+      'bacs',
+      'beneficiary',
       'direct-debit',
-      'direct-debit-instruction',
-      'service-user-number',
-      'auddis',
-      'faster-payments',
-      'chaps',
     ],
   },
 
@@ -215,10 +172,10 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Bacs Suspense Account is an account used by ClearBank to record movements of funds associated with returned Bacs payments. Funds do not need to be deposited into the account solely because it has a negative balance.',
+      'A Bacs Suspense Account is used by ClearBank to record movements of funds associated with returned Bacs payments.',
     seoTitle: 'What is a Bacs Suspense Account?',
     seoDescription:
-      'Learn what a Bacs Suspense Account is and how ClearBank uses it to record fund movements associated with returned Bacs payments.',
+      'Learn what a Bacs Suspense Account is and how it records fund movements associated with returned Bacs payments.',
     relatedTerms: [
       'bacs',
       'operating-account',
@@ -238,16 +195,16 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'A Bank Identifier Code (BIC) identifies a bank or financial institution when payment information is exchanged between institutions.',
+      'A Bank Identifier Code (BIC) is a standardised code used to identify a bank or financial institution when financial information is exchanged between institutions.',
     seoTitle:
       'What is a Bank Identifier Code (BIC)?',
     seoDescription:
-      'Learn what a Bank Identifier Code is and how it identifies banks and financial institutions when payment information is exchanged.',
+      'Learn what a Bank Identifier Code is and how it identifies banks and financial institutions.',
     relatedTerms: [
-      'international-bank-account-number',
-      'swift',
       'beneficiary',
+      'international-bank-account-number',
       'sepa-credit-transfer',
+      'swift',
     ],
   },
 
@@ -267,10 +224,12 @@ const glossaryTerms = [
     seoTitle:
       'What is Banking as a Service (BaaS)?',
     seoDescription:
-      'Learn what Banking as a Service means and how businesses can incorporate banking capabilities into their products and services.',
+      'Learn what Banking as a Service means and how businesses can incorporate banking capabilities into their products.',
     relatedTerms: [
-      'application-programming-interface',
+      'hub-account',
+      'institution-account',
       'payment-service-provider',
+      'virtual-account',
     ],
   },
 
@@ -292,62 +251,43 @@ const glossaryTerms = [
     seoTitle:
       'What is a Beneficiary in Banking?',
     seoDescription:
-      'Learn what a beneficiary is in banking and payments, and how the term describes the intended recipient of funds.',
+      'Learn what a beneficiary is in banking and how the term describes the intended recipient of funds.',
     relatedTerms: [
-      'confirmation-of-payee',
-      'international-bank-account-number',
       'bank-identifier-code',
-      'faster-payments',
-      'sepa-credit-transfer',
+      'confirmation-of-payee',
+      'creditor',
+      'international-bank-account-number',
     ],
   },
 
   {
-    id: 'cass-7',
-    term: 'CASS 7',
-    acronym: '',
-    aliases: [
-      'client assets sourcebook',
-      'client money rules',
-      'fca client money rules',
-    ],
-    regions: ['uk'],
-    category: 'compliance',
-    definition:
-      'CASS 7 is the section of the FCA Client Assets Sourcebook that contains rules relating to the holding and control of client money.',
-    seoTitle: 'What is CASS 7?',
-    seoDescription:
-      'Learn what CASS 7 is and how the FCA Client Assets Sourcebook addresses the holding and control of client money.',
-    relatedTerms: [
-      'financial-conduct-authority',
-      'safeguarded-account',
-    ],
-  },
-
-  {
-    id: 'chaps',
-    term: 'CHAPS',
-    acronym: '',
-    aliases: [
-      'Clearing House Automated Payment System',
-      'chaps payment',
-      'high-value payment',
-      'same-day sterling payment',
-    ],
-    regions: ['uk'],
-    category: 'payments',
-    definition:
-      'CHAPS is the United Kingdom payment system used for high-value and time-critical sterling payments. CHAPS payments are processed and settled on the same business day.',
-    seoTitle: 'What is CHAPS?',
-    seoDescription:
-      'Learn what CHAPS is and how the UK payment system supports high-value and time-critical same-day sterling payments.',
-    relatedTerms: [
-      'bacs',
-      'faster-payments',
-      'beneficiary',
-      'pound-sterling',
-    ],
-  },
+  id: 'chaps',
+  term: 'Clearing House Automated Payment System',
+  acronym: 'CHAPS',
+  aliases: [
+    'chaps',
+    'chaps payment',
+    'chaps transfer',
+    'high-value payment',
+    'same-day payment',
+    'same-day sterling payment',
+  ],
+  regions: ['uk'],
+  category: 'payments',
+  definition:
+    'The Clearing House Automated Payment System (CHAPS) is the United Kingdom’s high-value payment system for time-critical sterling payments. CHAPS payments are processed and settled on the same business day.',
+  seoTitle: 'What is CHAPS?',
+  seoDescription:
+    'Learn what CHAPS is and how the UK payment system supports high-value, time-critical same-day sterling payments.',
+  relatedTerms: [
+    'bacs',
+    'faster-payments',
+    'swift',
+    'pound-sterling',
+    'beneficiary',
+    't2',
+  ],
+},
 
   {
     id: 'cheque',
@@ -364,9 +304,33 @@ const glossaryTerms = [
       'A cheque is a signed written instruction directing a bank to pay a specified amount from an account to a named recipient.',
     seoTitle: 'What is a Cheque?',
     seoDescription:
-      'Learn what a cheque is and how the signed written instruction directs a bank to pay funds to a named recipient.',
+      'Learn what a cheque is and how the written instruction directs a bank to pay funds to a named recipient.',
     relatedTerms: [
       'beneficiary',
+    ],
+  },
+
+  {
+    id: 'clearing',
+    term: 'Clearing',
+    acronym: '',
+    aliases: [
+      'payment clearing',
+      'clearing process',
+      'clearing system',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe; settlement transfers the corresponding funds.',
+    seoTitle: 'What is Payment Clearing?',
+    seoDescription:
+      'Learn what payment clearing is and how it differs from the settlement of funds.',
+    relatedTerms: [
+      'bacs',
+      'chaps',
+      'sepa-credit-transfer',
+      'settlement',
     ],
   },
 
@@ -384,15 +348,15 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Confirmation of Payee (CoP) is a name-checking service that helps confirm whether account details belong to the intended recipient before a payment is made.',
+      'Confirmation of Payee (CoP) is a name-checking service that helps confirm whether the details entered by a payer correspond to the intended recipient before a payment is made.',
     seoTitle:
       'What is Confirmation of Payee (CoP)?',
     seoDescription:
-      'Learn what Confirmation of Payee is and how name checking helps identify potentially incorrect recipient details before a payment is made.',
+      'Learn what Confirmation of Payee is and how name checking helps identify potentially incorrect recipient details.',
     relatedTerms: [
+      'app-scam',
       'beneficiary',
       'credit-payment-recovery',
-      'faster-payment-identifier',
       'faster-payments',
     ],
   },
@@ -410,16 +374,41 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Credit Payment Recovery (CPR) is a process used to request the recovery of funds sent through a credit payment.',
+      'Credit Payment Recovery (CPR) is a process used to request the recovery of funds sent through an eligible credit payment.',
     seoTitle:
       'What is Credit Payment Recovery (CPR)?',
     seoDescription:
-      'Learn what Credit Payment Recovery means and how it is used to request recovery of funds sent through a credit payment.',
+      'Learn what Credit Payment Recovery means and how it is used to request recovery of funds.',
     relatedTerms: [
+      'beneficiary',
       'confirmation-of-payee',
       'faster-payment-identifier',
-      'beneficiary',
       'faster-payments',
+    ],
+  },
+
+  {
+    id: 'creditor',
+    term: 'Creditor',
+    acronym: '',
+    aliases: [
+      'payee',
+      'payment recipient',
+      'party receiving payment',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'A creditor is a party to whom money is owed. In payment terminology, the creditor is generally the party receiving the payment.',
+    seoTitle:
+      'What is a Creditor in Payments?',
+    seoDescription:
+      'Learn what a creditor is and how the term identifies the party receiving a payment.',
+    relatedTerms: [
+      'beneficiary',
+      'debtor',
+      'direct-debit',
+      'sepa-credit-transfer',
     ],
   },
 
@@ -441,11 +430,34 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a cross-border payment is and how it differs from a domestic payment.',
     relatedTerms: [
+      'bank-identifier-code',
       'beneficiary',
       'foreign-exchange',
-      'swift',
-      'bank-identifier-code',
       'international-bank-account-number',
+      'swift',
+    ],
+  },
+
+  {
+    id: 'debtor',
+    term: 'Debtor',
+    acronym: '',
+    aliases: [
+      'payer',
+      'payment originator',
+      'party making payment',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'A debtor is a party that owes money. In payment terminology, the debtor is generally the party making the payment.',
+    seoTitle:
+      'What is a Debtor in Payments?',
+    seoDescription:
+      'Learn what a debtor is and how the term identifies the party making a payment.',
+    relatedTerms: [
+      'creditor',
+      'direct-debit',
     ],
   },
 
@@ -464,14 +476,15 @@ const glossaryTerms = [
       'A Direct Debit is an automated payment method through which an organisation collects payments from a payer’s account under the authority of an applicable instruction or mandate.',
     seoTitle: 'What is a Direct Debit?',
     seoDescription:
-      'Learn what a Direct Debit is and how an organisation can collect payments under the authority of a payer.',
+      'Learn what a Direct Debit is and how an organisation can collect payments under a payer’s authority.',
     relatedTerms: [
-      'direct-debit-instruction',
-      'direct-debit-indemnity-claim',
-      'auddis',
       'addacs',
       'arudd',
+      'auddis',
       'bacs',
+      'direct-debit-indemnity-claim',
+      'direct-debit-instruction',
+      'direct-debit-mandate',
     ],
   },
 
@@ -488,15 +501,15 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Indemnity Claim (DDIC) is a claim submitted in relation to a Direct Debit collected from a payer.',
+      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit scheme in relation to a Direct Debit collected from a payer.',
     seoTitle:
       'What is a Direct Debit Indemnity Claim (DDIC)?',
     seoDescription:
-      'Learn what a Direct Debit Indemnity Claim is and how it relates to a Direct Debit collected from a payer.',
+      'Learn what a Direct Debit Indemnity Claim is and how it relates to a collected Direct Debit.',
     relatedTerms: [
+      'arudd',
       'direct-debit',
       'direct-debit-instruction',
-      'arudd',
       'service-user',
       'service-user-number',
     ],
@@ -508,8 +521,8 @@ const glossaryTerms = [
     acronym: 'DDI',
     aliases: [
       'ddi',
-      'direct debit mandate',
       'direct debit authority',
+      'uk direct debit mandate',
     ],
     regions: ['uk'],
     category: 'direct-debits',
@@ -518,14 +531,39 @@ const glossaryTerms = [
     seoTitle:
       'What is a Direct Debit Instruction (DDI)?',
     seoDescription:
-      'Learn what a Direct Debit Instruction is and how it gives an organisation authority to collect payments by Direct Debit.',
+      'Learn what a Direct Debit Instruction is and how it gives an organisation authority to collect payments.',
     relatedTerms: [
-      'direct-debit',
-      'auddis',
       'addacs',
       'arudd',
+      'auddis',
+      'direct-debit',
       'direct-debit-indemnity-claim',
       'service-user-number',
+    ],
+  },
+
+  {
+    id: 'direct-debit-mandate',
+    term: 'Direct Debit Mandate',
+    acronym: '',
+    aliases: [
+      'mandate',
+      'direct debit authorisation',
+      'direct debit authorization',
+      'sepa direct debit mandate',
+    ],
+    regions: ['eu'],
+    category: 'direct-debits',
+    definition:
+      'A Direct Debit Mandate is the authority given by a payer that allows a creditor to collect payments from the payer’s account under the applicable Direct Debit scheme.',
+    seoTitle:
+      'What is a Direct Debit Mandate?',
+    seoDescription:
+      'Learn what a Direct Debit Mandate is and how it allows a creditor to collect payments from a payer’s account.',
+    relatedTerms: [
+      'creditor',
+      'debtor',
+      'direct-debit',
     ],
   },
 
@@ -564,16 +602,16 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'A Faster Payment Identifier (FPID) is an 18-digit reference generated when a Faster Payment is sent. It can be used in a Credit Payment Recovery case to help the beneficiary bank locate the funds.',
+      'A Faster Payment Identifier (FPID) is an 18-digit reference generated when a Faster Payment is sent. It may be used in a Credit Payment Recovery case to help locate the funds.',
     seoTitle:
       'What is a Faster Payment Identifier (FPID)?',
     seoDescription:
-      'Learn what a Faster Payment Identifier is and why the 18-digit reference may be required during Credit Payment Recovery.',
+      'Learn what a Faster Payment Identifier is and why the reference may be required during Credit Payment Recovery.',
     relatedTerms: [
-      'faster-payments',
-      'credit-payment-recovery',
       'beneficiary',
       'confirmation-of-payee',
+      'credit-payment-recovery',
+      'faster-payments',
     ],
   },
 
@@ -598,11 +636,12 @@ const glossaryTerms = [
     seoDescription:
       'Learn what Faster Payments are and how FPS supports near real-time sterling payments between participating UK accounts.',
     relatedTerms: [
-      'faster-payment-identifier',
-      'confirmation-of-payee',
-      'credit-payment-recovery',
       'bacs',
       'chaps',
+      'confirmation-of-payee',
+      'credit-payment-recovery',
+      'faster-payment-identifier',
+      'pound-sterling',
     ],
   },
 
@@ -626,8 +665,9 @@ const glossaryTerms = [
     relatedTerms: [
       'cass-7',
       'financial-services-compensation-scheme',
-      'know-your-customer',
       'know-your-business',
+      'know-your-customer',
+      'prudential-regulation-authority',
     ],
   },
 
@@ -651,7 +691,6 @@ const glossaryTerms = [
       'Learn what the FSCS is and its role as the UK statutory compensation scheme for eligible customers.',
     relatedTerms: [
       'financial-conduct-authority',
-      'cass-7',
     ],
   },
 
@@ -674,11 +713,11 @@ const glossaryTerms = [
     seoDescription:
       'Learn what Foreign Exchange means and how it relates to converting one currency into another.',
     relatedTerms: [
+      'cross-border-payment',
       'fx-trade',
-      'request-for-quote',
       'multicurrency',
       'pound-sterling',
-      'swift',
+      'request-for-quote',
     ],
   },
 
@@ -701,19 +740,20 @@ const glossaryTerms = [
       'Learn what an FX trade is and how one currency is exchanged for another at an agreed exchange rate.',
     relatedTerms: [
       'foreign-exchange',
-      'request-for-quote',
       'multicurrency',
+      'request-for-quote',
     ],
   },
 
   {
     id: 'general-segregation-account',
     term: 'General Segregation Account',
-    acronym: '',
+    acronym: 'GSA',
     aliases: [
       'segregation account',
       'general segregated account',
       'segregated funds account',
+      'gsa',
     ],
     regions: ['uk'],
     category: 'accounts',
@@ -725,8 +765,8 @@ const glossaryTerms = [
       'Learn how the term General Segregation Account is used in ClearBank documentation.',
     relatedTerms: [
       'operating-account',
-      'institution-account',
       'safeguarded-account',
+      'segregation',
     ],
     editorialReview: true,
   },
@@ -747,9 +787,10 @@ const glossaryTerms = [
     seoDescription:
       'Learn how the term Hub Account is used in ClearBank embedded-banking documentation.',
     relatedTerms: [
+      'banking-as-a-service',
+      'institution-account',
       'real-account',
       'virtual-account',
-      'institution-account',
     ],
     editorialReview: true,
   },
@@ -772,9 +813,10 @@ const glossaryTerms = [
     seoDescription:
       'Learn how the term Institution Account is used in ClearBank documentation.',
     relatedTerms: [
-      'operating-account',
-      'general-segregation-account',
+      'hub-account',
       'mandated-minimum-balance-account',
+      'operating-account',
+      'virtual-account',
     ],
     editorialReview: true,
   },
@@ -798,10 +840,11 @@ const glossaryTerms = [
       'Learn what an IBAN is and how the standardised identifier represents a bank account for applicable payments.',
     relatedTerms: [
       'bank-identifier-code',
-      'swift',
       'beneficiary',
       'sepa-credit-transfer',
       'sepa-instant-credit-transfer',
+      'swift',
+      'virtual-account',
     ],
   },
 
@@ -818,7 +861,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'liquidity',
     definition:
-      'An Intraday Liquidity Pool is a pool of funds available to support payment activity during a working day.',
+      'An Intraday Liquidity Pool is a pool of funds made available to support payment activity during a working day.',
     seoTitle:
       'What is an Intraday Liquidity Pool?',
     seoDescription:
@@ -852,7 +895,8 @@ const glossaryTerms = [
       'Learn what Know Your Business means and how KYB checks help verify a business and its ownership structure.',
     relatedTerms: [
       'know-your-customer',
-      'financial-conduct-authority',
+      'legal-entity',
+      'ultimate-beneficial-owner',
     ],
   },
 
@@ -876,8 +920,55 @@ const glossaryTerms = [
       'Learn what Know Your Customer means and how KYC checks help verify a customer’s identity and assess risk.',
     relatedTerms: [
       'know-your-business',
-      'financial-conduct-authority',
-      'two-factor-authentication',
+      'ultimate-beneficial-owner',
+    ],
+  },
+
+  {
+    id: 'legal-entity',
+    term: 'Legal Entity',
+    acronym: '',
+    aliases: [
+      'business entity',
+      'incorporated entity',
+      'organisation',
+      'organization',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'compliance',
+    definition:
+      'A legal entity is an organisation or other body that has a legally recognised identity separate from the individuals connected with it.',
+    seoTitle: 'What is a Legal Entity?',
+    seoDescription:
+      'Learn what a legal entity is and why organisations are identified separately from the individuals connected with them.',
+    relatedTerms: [
+      'know-your-business',
+      'legal-entity-identifier',
+      'ultimate-beneficial-owner',
+    ],
+  },
+
+  {
+    id: 'legal-entity-identifier',
+    term: 'Legal Entity Identifier',
+    acronym: 'LEI',
+    aliases: [
+      'lei',
+      'legal entity code',
+      'gleif identifier',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'compliance',
+    definition:
+      'A Legal Entity Identifier (LEI) is a standardised identifier used to identify a legal entity participating in applicable financial transactions.',
+    seoTitle:
+      'What is a Legal Entity Identifier (LEI)?',
+    seoDescription:
+      'Learn what a Legal Entity Identifier is and how an LEI identifies a legal entity in financial transactions.',
+    relatedTerms: [
+      'know-your-business',
+      'legal-entity',
+      'ultimate-beneficial-owner',
     ],
   },
 
@@ -897,12 +988,13 @@ const glossaryTerms = [
     seoTitle:
       'What is a Mandated Intraday Liquidity Balance?',
     seoDescription:
-      'Learn what a Mandated Intraday Liquidity Balance is and how it relates to the agreed minimum level of an Intraday Liquidity Pool.',
+      'Learn what a Mandated Intraday Liquidity Balance is and how it relates to an Intraday Liquidity Pool.',
     relatedTerms: [
       'intraday-liquidity-pool',
       'mandated-minimum-balance-account',
       'operating-account',
     ],
+    editorialReview: true,
   },
 
   {
@@ -920,16 +1012,16 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'liquidity',
     definition:
-      'A Mandated Minimum Balance Account holds a pre-agreed amount that a financial institution is required to maintain. The applicable amount depends on the financial institution’s transaction profile and applicable agreement.',
+      'A Mandated Minimum Balance Account holds a pre-agreed amount that a financial institution is required to maintain. The applicable amount is determined under the relevant ClearBank agreement.',
     seoTitle:
       'What is a Mandated Minimum Balance Account?',
     seoDescription:
-      'Learn what a Mandated Minimum Balance Account is and why a financial institution may be required to maintain a pre-agreed balance.',
+      'Learn what a Mandated Minimum Balance Account is and why a financial institution may be required to maintain a balance.',
     relatedTerms: [
+      'institution-account',
       'intraday-liquidity-pool',
       'mandated-intraday-liquidity-balance',
       'operating-account',
-      'institution-account',
     ],
     editorialReview: true,
   },
@@ -952,12 +1044,12 @@ const glossaryTerms = [
     seoTitle:
       'What does Multicurrency mean?',
     seoDescription:
-      'Learn what multicurrency means and how the term applies to accounts, products and services that support more than one currency.',
+      'Learn what multicurrency means and how it applies to accounts, products and services that support more than one currency.',
     relatedTerms: [
       'foreign-exchange',
       'fx-trade',
-      'request-for-quote',
       'pound-sterling',
+      'request-for-quote',
     ],
   },
 
@@ -978,13 +1070,37 @@ const glossaryTerms = [
     seoTitle:
       'What is an Operating Account?',
     seoDescription:
-      'Learn what an Operating Account is and how it is used to hold a financial institution’s own money and funds.',
+      'Learn what an Operating Account is and how it is used to hold a financial institution’s own funds.',
     relatedTerms: [
       'bacs-suspense-account',
       'general-segregation-account',
       'institution-account',
-      'mandated-minimum-balance-account',
       'intraday-liquidity-pool',
+      'mandated-minimum-balance-account',
+    ],
+  },
+
+  {
+    id: 'payment-finality',
+    term: 'Payment Finality',
+    acronym: '',
+    aliases: [
+      'finality',
+      'settlement finality',
+      'payment is final',
+      'irrevocable payment',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'Payment finality is the point at which the transfer of funds becomes final under the rules governing the relevant payment or settlement system.',
+    seoTitle: 'What is Payment Finality?',
+    seoDescription:
+      'Learn what payment finality means and when a transfer of funds becomes final under a payment system’s rules.',
+    relatedTerms: [
+      'clearing',
+      'real-time-gross-settlement',
+      'settlement',
     ],
   },
 
@@ -1008,7 +1124,7 @@ const glossaryTerms = [
     relatedTerms: [
       'banking-as-a-service',
       'beneficiary',
-      'application-programming-interface',
+      'sepa-credit-transfer',
     ],
   },
 
@@ -1031,11 +1147,33 @@ const glossaryTerms = [
     seoDescription:
       'Learn what GBP means and how the ISO currency code identifies pound sterling.',
     relatedTerms: [
+      'chaps',
+      'faster-payments',
       'foreign-exchange',
       'fx-trade',
       'multicurrency',
-      'chaps',
-      'faster-payments',
+    ],
+  },
+
+  {
+    id: 'prudential-regulation-authority',
+    term: 'Prudential Regulation Authority',
+    acronym: 'PRA',
+    aliases: [
+      'pra',
+      'prudential regulator',
+      'banking regulator',
+    ],
+    regions: ['uk'],
+    category: 'compliance',
+    definition:
+      'The Prudential Regulation Authority (PRA) is responsible for the prudential regulation and supervision of applicable banks, building societies, credit unions, insurers and major investment firms in the United Kingdom.',
+    seoTitle:
+      'What is the Prudential Regulation Authority (PRA)?',
+    seoDescription:
+      'Learn what the Prudential Regulation Authority is and its role in the prudential supervision of applicable UK firms.',
+    relatedTerms: [
+      'financial-conduct-authority',
     ],
   },
 
@@ -1046,21 +1184,47 @@ const glossaryTerms = [
     aliases: [
       'physical account',
       'underlying account',
+      'real bank account',
     ],
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Real Account is an account represented and maintained as an individual underlying bank account, rather than as a virtual account within another account structure.',
-    seoTitle:
-      'What is a Real Account?',
+      'A Real Account is an individual underlying account, rather than a virtual account identifier within another account structure.',
+    seoTitle: 'What is a Real Account?',
     seoDescription:
       'Learn how the term Real Account is used in ClearBank account structures.',
     relatedTerms: [
-      'virtual-account',
       'hub-account',
       'institution-account',
+      'virtual-account',
     ],
     editorialReview: true,
+  },
+
+  {
+    id: 'real-time-gross-settlement',
+    term: 'Real-Time Gross Settlement',
+    acronym: 'RTGS',
+    aliases: [
+      'rtgs',
+      'gross settlement',
+      'real-time settlement',
+      'high-value settlement',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'Real-Time Gross Settlement (RTGS) is a settlement method in which eligible payment obligations are settled individually, in real time, rather than being grouped into batches.',
+    seoTitle:
+      'What is Real-Time Gross Settlement (RTGS)?',
+    seoDescription:
+      'Learn what Real-Time Gross Settlement means and how eligible payment obligations are settled individually.',
+    relatedTerms: [
+      'chaps',
+      'payment-finality',
+      'settlement',
+      't2',
+    ],
   },
 
   {
@@ -1082,7 +1246,7 @@ const glossaryTerms = [
     seoTitle:
       'What is a Request for Quote (RFQ)?',
     seoDescription:
-      'Learn what a Request for Quote is and how an RFQ is used to obtain an exchange-rate quote before accepting an FX trade.',
+      'Learn what a Request for Quote is and how an RFQ is used before accepting an FX trade.',
     relatedTerms: [
       'foreign-exchange',
       'fx-trade',
@@ -1109,11 +1273,36 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a Safeguarded Account is and how it is used to keep applicable customer funds separate.',
     relatedTerms: [
+      'cass-7',
       'general-segregation-account',
       'operating-account',
-      'cass-7',
+      'segregation',
     ],
     editorialReview: true,
+  },
+
+  {
+    id: 'segregation',
+    term: 'Segregation',
+    acronym: '',
+    aliases: [
+      'fund segregation',
+      'client money segregation',
+      'segregated funds',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'compliance',
+    definition:
+      'Segregation is the practice of keeping specified funds separate from other funds, such as a firm’s own operating money.',
+    seoTitle:
+      'What is Fund Segregation?',
+    seoDescription:
+      'Learn what fund segregation means and why specified funds may be kept separate from a firm’s operating money.',
+    relatedTerms: [
+      'cass-7',
+      'general-segregation-account',
+      'safeguarded-account',
+    ],
   },
 
   {
@@ -1127,20 +1316,20 @@ const glossaryTerms = [
       'euro credit transfer',
       'single euro payments area credit transfer',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['eu'],
     category: 'payments',
     definition:
       'A SEPA Credit Transfer (SCT) is a payment scheme used to make euro credit transfers between eligible accounts within the Single Euro Payments Area.',
     seoTitle:
       'What is a SEPA Credit Transfer (SCT)?',
     seoDescription:
-      'Learn what a SEPA Credit Transfer is and how SCT payments support euro transfers within the Single Euro Payments Area.',
+      'Learn what a SEPA Credit Transfer is and how SCT payments support euro transfers within SEPA.',
     relatedTerms: [
-      'sepa-instant-credit-transfer',
-      'international-bank-account-number',
       'bank-identifier-code',
       'beneficiary',
-      'payment-service-provider',
+      'international-bank-account-number',
+      'sepa-instant-credit-transfer',
+      't2',
     ],
   },
 
@@ -1164,11 +1353,11 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a SEPA Instant Credit Transfer is and how the scheme supports euro payments completed within seconds.',
     relatedTerms: [
-      'sepa-credit-transfer',
-      'international-bank-account-number',
       'bank-identifier-code',
       'beneficiary',
-      'payment-service-provider',
+      'international-bank-account-number',
+      'sepa-credit-transfer',
+      't2',
     ],
   },
 
@@ -1187,13 +1376,13 @@ const glossaryTerms = [
     seoTitle:
       'What is a Bacs Service User?',
     seoDescription:
-      'Learn what a Service User is and how an authorised organisation uses a Service User Number when submitting payment instructions.',
+      'Learn what a Service User is and how an authorised organisation uses a Service User Number.',
     relatedTerms: [
-      'service-user-number',
-      'bacs',
-      'auddis',
       'addacs',
       'arudd',
+      'auddis',
+      'bacs',
+      'service-user-number',
     ],
   },
 
@@ -1210,46 +1399,42 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Service User Number (SUN) is a unique six-digit number allocated to a service user to identify its payment instructions. A service user can hold multiple SUNs, and ClearBank recommends using a separate SUN for each product.',
+      'A Service User Number (SUN) is a unique six-digit number allocated to a service user to identify its payment instructions. A service user can hold multiple SUNs.',
     seoTitle:
       'What is a Service User Number (SUN)?',
     seoDescription:
-      'Learn what a Service User Number is, how the six-digit identifier is used for Bacs payment instructions, and why an organisation may hold more than one.',
+      'Learn what a Service User Number is and how the six-digit identifier is used for Bacs payment instructions.',
     relatedTerms: [
-      'service-user',
-      'bacs',
-      'auddis',
       'addacs',
       'arudd',
+      'auddis',
+      'bacs',
       'direct-debit-instruction',
+      'service-user',
     ],
   },
 
   {
-    id: 'swift',
-    term: 'SWIFT',
+    id: 'settlement',
+    term: 'Settlement',
     acronym: '',
     aliases: [
-      'Society for Worldwide Interbank Financial Telecommunication',
-      'swift network',
-      'swift payment',
-      'swift payments',
-      'swift message',
-      'international payment messaging',
+      'fund settlement',
+      'payment settlement',
+      'settlement process',
     ],
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'SWIFT is a financial messaging network through which financial institutions exchange payment and other financial information.',
+      'Settlement is the transfer of funds needed to discharge the obligations arising from a payment transaction. It takes place after, or as part of, the applicable clearing and settlement process.',
     seoTitle:
-      'What is SWIFT in Banking?',
+      'What is Payment Settlement?',
     seoDescription:
-      'Learn what SWIFT means in banking and how financial institutions use the network to exchange financial messages.',
+      'Learn what payment settlement is and how funds are transferred to discharge payment obligations.',
     relatedTerms: [
-      'bank-identifier-code',
-      'international-bank-account-number',
-      'foreign-exchange',
-      'cross-border-payment',
+      'clearing',
+      'payment-finality',
+      'real-time-gross-settlement',
       'standard-settlement-instructions',
     ],
   },
@@ -1266,26 +1451,56 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'Standard Settlement Instructions (SSI) contain the details used to determine how and where applicable financial transactions are settled.',
+      'Standard Settlement Instructions (SSI) contain predefined details used to determine how and where applicable financial transactions are settled.',
     seoTitle:
       'What are Standard Settlement Instructions (SSI)?',
     seoDescription:
-      'Learn what Standard Settlement Instructions are and how they define where and how applicable financial transactions are settled.',
+      'Learn what Standard Settlement Instructions are and how they define where and how financial transactions are settled.',
     relatedTerms: [
       'bank-identifier-code',
       'international-bank-account-number',
+      'settlement',
       'swift',
-      'cross-border-payment',
     ],
   },
+
+{
+  id: 'swift',
+  term: 'Society for Worldwide Interbank Financial Telecommunication',
+  acronym: 'SWIFT',
+  aliases: [
+    'swift',
+    'swift network',
+    'swift payment',
+    'swift payments',
+    'swift message',
+    'international payment messaging',
+    'financial messaging network',
+  ],
+  regions: ['uk', 'eu'],
+  category: 'payments',
+  definition:
+    'The Society for Worldwide Interbank Financial Telecommunication (SWIFT) provides a global financial messaging network used by financial institutions to exchange payment instructions and related information. SWIFT transmits messages rather than moving funds itself.',
+  seoTitle: 'What is SWIFT in Banking?',
+  seoDescription:
+    'Learn what SWIFT is and how financial institutions use the SWIFT network to exchange payment instructions and financial messages.',
+  relatedTerms: [
+    'bank-identifier-code',
+    'international-bank-account-number',
+    'cross-border-payment',
+    'foreign-exchange',
+    'standard-settlement-instructions',
+    'chaps',
+  ],
+},
 
   {
     id: 't2',
     term: 'T2',
     acronym: '',
     aliases: [
-      'target2',
-      'target services',
+      'TARGET2',
+      'TARGET Services',
       't2 service',
       't2 system',
       'euro rtgs',
@@ -1297,13 +1512,40 @@ const glossaryTerms = [
       'T2 is the Eurosystem service used to settle eligible euro payments in central-bank money.',
     seoTitle: 'What is T2?',
     seoDescription:
-      'Learn what T2 is and how the Eurosystem service supports settlement of eligible euro payments in central-bank money.',
+      'Learn what T2 is and how the Eurosystem service supports settlement of eligible euro payments.',
     relatedTerms: [
+      'real-time-gross-settlement',
       'sepa-credit-transfer',
       'sepa-instant-credit-transfer',
-      'payment-service-provider',
+      'settlement',
     ],
     editorialReview: true,
+  },
+
+  {
+    id: 'ultimate-beneficial-owner',
+    term: 'Ultimate Beneficial Owner',
+    acronym: 'UBO',
+    aliases: [
+      'ubo',
+      'beneficial owner',
+      'true owner',
+      'ultimate owner',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'compliance',
+    definition:
+      'An Ultimate Beneficial Owner (UBO) is an individual who ultimately owns or controls a legal entity, whether directly or through one or more other entities.',
+    seoTitle:
+      'What is an Ultimate Beneficial Owner (UBO)?',
+    seoDescription:
+      'Learn what an Ultimate Beneficial Owner is and how an individual may ultimately own or control a legal entity.',
+    relatedTerms: [
+      'know-your-business',
+      'know-your-customer',
+      'legal-entity',
+      'legal-entity-identifier',
+    ],
   },
 
   {
@@ -1312,6 +1554,7 @@ const glossaryTerms = [
     acronym: '',
     aliases: [
       'virtual iban',
+      'viban',
       'virtual account number',
       'virtual bank account',
     ],
@@ -1324,36 +1567,92 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a Virtual Account is and how a virtual account identifier can support payment routing and reconciliation.',
     relatedTerms: [
-      'real-account',
       'hub-account',
+      'institution-account',
       'international-bank-account-number',
+      'real-account',
     ],
     editorialReview: true,
   },
 
-  {
-    id: 'webhook',
-    term: 'Webhook',
-    acronym: '',
-    aliases: [
-      'web hook',
-      'event notification',
-      'callback',
-      'http callback',
-      'payment notification',
-      'account notification',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'technical',
-    definition:
-      'A webhook is an automated message sent by ClearBank to a configured URL when an event occurs. Webhook events can notify a client that, for example, an account has been created or a payment has failed, enabling the client to take or automate a subsequent action.',
-    seoTitle: 'What is a Webhook?',
-    seoDescription:
-      'Learn what a webhook is and how ClearBank sends automated event notifications to a client-configured URL.',
-    relatedTerms: [
-      'application-programming-interface',
-    ],
-  },
+{
+  id: 'bacs',
+  term: `Bankers' Automated Clearing Services`,
+  acronym: 'Bacs',
+  aliases: [
+    'bacs',
+    'bacs payment',
+    'bacs payments',
+    'bacs transfer',
+    'bacs direct credit',
+    'bacs direct debit',
+    'bankers automated clearing services',
+    'bankers automated clearing system',
+  ],
+  regions: ['uk'],
+  category: 'payments',
+  definition:
+    'Bankers’ Automated Clearing Services (Bacs) is a UK payment system used to process Direct Debit and Direct Credit transactions between bank accounts. Bacs processes payments in batches and typically operates on a three-working-day cycle.',
+  paymentCycle: [
+    {
+      title: 'Day 1 (Input)',
+      description:
+        'Payment instructions are submitted to Bacs before the applicable cut-off time.',
+    },
+    {
+      title: 'Day 2 (Processing)',
+      description:
+        'Bacs processes the instructions and distributes them to participating institutions.',
+    },
+    {
+      title: 'Day 3 (Entry)',
+      description:
+        'Payments are applied to the relevant accounts and settlement takes place.',
+    },
+  ],
+  paymentTypes: [
+    'Direct Debit',
+    'Direct Credit',
+  ],
+  seoTitle: 'What is Bacs?',
+  seoDescription:
+    'Learn what Bacs is, how the three-working-day payment cycle works, and how Direct Debit and Direct Credit payments are processed.',
+  relatedTerms: [
+    'direct-debit',
+    'direct-debit-instruction',
+    'service-user',
+    'service-user-number',
+    'auddis',
+    'addacs',
+    'arudd',
+    'chaps',
+    'faster-payments',
+  ],
+},
+
+{
+  id: 'cass-7',
+  term: 'CASS 7',
+  acronym: '',
+  aliases: [
+    'client assets sourcebook',
+    'client money rules',
+    'fca client money rules',
+  ],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    'CASS 7 is the section of the FCA Client Assets Sourcebook that contains rules relating to the holding, protection and control of client money.',
+  seoTitle: 'What is CASS 7?',
+  seoDescription:
+    'Learn what CASS 7 is and how the FCA Client Assets Sourcebook governs the holding and protection of client money.',
+  relatedTerms: [
+    'financial-conduct-authority',
+    'safeguarded-account',
+    'segregation',
+  ],
+},
+
 ];
 
 export default glossaryTerms;

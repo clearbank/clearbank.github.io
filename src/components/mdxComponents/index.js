@@ -10,13 +10,15 @@ import * as Styles from './mdx-components.styles';
 import * as Table from 'src/components/table/table.styles';
 
 import Glossary from '../glossary/Glossary';
+import TechnicalReference from '../technical-reference/technical-reference';
 
 export default {
   Glossary,
+  TechnicalReference,
 
   h1: props => (
     <Styles.H1
-      as='h1'
+      as="h1"
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
     />
@@ -24,8 +26,8 @@ export default {
 
   h2: props => (
     <Styles.H2
-      as='h2'
-      className='cannon page-menu-entry'
+      as="h2"
+      className="cannon page-menu-entry"
       id={kebabCase(props.children.toLowerCase())}
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
@@ -34,8 +36,8 @@ export default {
 
   h3: props => (
     <Styles.H3
-      as='h3'
-      className='paragon page-menu-entry'
+      as="h3"
+      className="paragon page-menu-entry"
       id={kebabCase(props.children.toLowerCase())}
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
