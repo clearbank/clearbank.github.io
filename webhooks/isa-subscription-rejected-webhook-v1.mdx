@@ -6,8 +6,6 @@ webhook: true
 
 This webhook confirms the ISA subscription (payment into the ISA) has failed and provides a rejection reason.
 
-
-
 #### Request body
 
 ```json
@@ -19,27 +17,26 @@ This webhook confirms the ISA subscription (payment into the ISA) has failed and
 }
 ```
 
+#### Payload fields
 
-#### Payload
-| Element                   | Description  |
-|---------------------------|--------------|
-| `AccountId`               | The unique identifier of the ISA which was the creditor of the subscription. <br /> Type: `string` <br /> Format: `GUID` |
-| `RejectionReasons`           | An array of human readable reasons why the subscription was rejected. <br /> Type: `array` <br />Min. items: `1` |
-| `EndToEndId`    | The end to end identifier of the subscription. <br />Type: `string`, `null` <br />Max length: `35`|
-| `Amount` | The amount of the subscription. <br /> Type: `number` <br /> Format: `decimal` |
-| `TaxYear`                   | The tax year. <br /> Type: `string` <br /> Pattern: `^[0-9]{2}/[0-9]{2}$`|
-| `CashIsaStatus` | The status of the ISA. <br /> Type: `string` <br /> Example: `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut`|
-| `NetSubscription`                   | The net subscription for the ISA in the tax year. <br /> Type: `number` <br /> Format: `decimal`|
-| `RemainingSubscriptionAllowance`    | The remaining subscription allowance for the ISA in the tax year. <br /> Type: `number` <br /> Format: `decimal`|
-| `AnnualAllowanceUsed`    | The maximum value the net subscription reaches in the tax year. <br /> Type: `number`, `null` <br /> Format: `decimal`|
-| `PaymentMethodType`    | The payment method type of the subscription. <br /> Type: `null`, `string` <br />  Example: `Transfer`, `FasterPayments`, `Bacs`, `CHAPS` |
-| `DebtorAccountIdentifiers`    | The account identifiers of the debtor account of the subscription. <br /> Type: `null`, `string` <br /> Example: `IBAN`, `BBAN` |
-| `NominatedAccountIdentifiers`    | The account identifiers of the nominated account for the ISA. <br /> Type: `null`, `string` <br /> Example: `IBAN`, `BBAN` |
-| `DeclarationExpiryDate`    | The date the declaration expires (UTC). If null, the declaration is valid indefinitely. <br /> Type: `null`, `string` <br /> Format: `date-time`|
-| `CustomerEligibilityStatus`    | The eligibility status of the customer. <br /> Type: `string` <br /> Example: `NotProvided`, `Eligible`, `Ineligible`|
-| `CustomerEligibilityStatusReasons`    | The reasons for the eligibility status of the customer. <br /> Type: `null`, `array` of `string` <br /> Example: `NotProvided`, `CustomerAddressInvalid`, `CustomerResidencyInvalid`, `CustomerNationalInsuranceNumberInvalid`, `CustomerDateOfBirthInvalid`|
-| `TransferOutStatus`    | The transfer out status of the ISA. <br /> Type: `string` <br /> Example: `NotProvided`, `None`, `InProgress`, `FullTransferOutComplete`, `AwaitingFullTransferOutConfirmation`, `AwaitingFullFundReturn`, `Rejected`|
-
+| Field | Type | Format | Required | Min-Max length | Pattern | Description |
+| ----- | ---- | ------ | -------- | -------------- | ------- | ----------- |
+| `AccountId` | string | uuid | Yes | - | - | The unique identifier of the ISA which was the creditor of the subscription. |
+| `RejectionReasons` | array | - | Yes | - | - | An array of human-readable reasons why the subscription was rejected. At least one item. |
+| `EndToEndId` | string | - | No | 0-35 | - | The end-to-end identifier of the subscription. |
+| `Amount` | decimal | - | Yes | - | - | The amount of the subscription. |
+| `TaxYear` | string | - | Yes | 5-5 | `^[0-9]{2}/[0-9]{2}$` | The tax year. |
+| `CashIsaStatus` | string | - | Yes | - | `None`, `Inactive`, `Active`, `Cancelled`, `Closed`, `TransferredOut` | The status of the ISA. |
+| `NetSubscription` | decimal | - | Yes | - | - | The net subscription for the ISA in the tax year. |
+| `RemainingSubscriptionAllowance` | decimal | - | Yes | - | - | The remaining subscription allowance for the ISA in the tax year. |
+| `AnnualAllowanceUsed` | decimal | - | No | - | - | The maximum value the net subscription reaches in the tax year. |
+| `PaymentMethodType` | string | - | No | - | `Transfer`, `FasterPayments`, `Bacs`, `CHAPS` | The payment method type of the subscription. |
+| `DebtorAccountIdentifiers` | string | - | No | - | - | The account identifiers of the debtor account of the subscription, for example, `IBAN` or `BBAN`. |
+| `NominatedAccountIdentifiers` | string | - | No | - | - | The account identifiers of the nominated account for the ISA, for example, `IBAN` or `BBAN`. |
+| `DeclarationExpiryDate` | string | date-time | No | - | - | The date the declaration expires (UTC). If null, the declaration is valid indefinitely. |
+| `CustomerEligibilityStatus` | string | - | Yes | - | `NotProvided`, `Eligible`, `Ineligible` | The eligibility status of the customer. |
+| `CustomerEligibilityStatusReasons` | array | - | No | - | `NotProvided`, `CustomerAddressInvalid`, `CustomerResidencyInvalid`, `CustomerNationalInsuranceNumberInvalid`, `CustomerDateOfBirthInvalid` | The reasons for the eligibility status of the customer. |
+| `TransferOutStatus` | string | - | Yes | - | `NotProvided`, `None`, `InProgress`, `FullTransferOutComplete`, `AwaitingFullTransferOutConfirmation`, `AwaitingFullFundReturn`, `Rejected` | The transfer out status of the ISA. |
 
 #### Example ISA Subscription Rejected webhook request body
 
@@ -52,7 +49,7 @@ This webhook confirms the ISA subscription (payment into the ISA) has failed and
         "RejectionReasons":"ISA closure in progress or already closed",
         "EndToEndId":"a6f3c732a6a0b2a8018a06e10c6ecae254c",
         "Amount":180.90,
-        "TaxYear":"2024",
+        "TaxYear":"24/25",
         "CashIsaStatus":"Closed",
         "NetSubscription":1447.20,
         "RemainingSubscriptionAllowance":18552.80,
