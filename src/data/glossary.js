@@ -42,7 +42,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'An Authorised Push Payment scam occurs when a person is deceived into authorising a payment to an account controlled by a fraudster. The payment may appear legitimate because the payer authorises it themselves.',
+      'An Authorised Push Payment is a type of fraud where an individual or business is tricked into authorising the transfer of funds to a criminal's account.,
     seoTitle:
       'What is an Authorised Push Payment Scam?',
     seoDescription:
@@ -68,7 +68,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs service used to report credits that could not be applied to the intended account.',
+      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
     seoTitle:
       'What is the Automated Return of Unapplied Credits Service (ARUCS)?',
     seoDescription:
@@ -93,7 +93,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used to report Direct Debit collections that could not be paid.',
+      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
     seoTitle:
       'What is the Automated Return of Unpaid Direct Debits Service (ARUDD)?',
     seoDescription:
@@ -121,7 +121,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that supports the electronic submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
+      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that enables the electronic creation and submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
     seoTitle:
       'What is the Automated Direct Debit Instruction Service (AUDDIS)?',
     seoDescription:
@@ -148,7 +148,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'A Bacs Direct Credit is a payment made through Bacs to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
+      'Bacs Direct Credit is a secure Bacs payment scheme used to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
     seoTitle: 'What is a Bacs Direct Credit?',
     seoDescription:
       'Learn what a Bacs Direct Credit is and how it is used to send payments such as salaries and supplier payments.',
@@ -172,7 +172,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Bacs Suspense Account is used by ClearBank to record movements of funds associated with returned Bacs payments.',
+      `A Bacs Suspense Account is a specialised temporary holding account used by ClearBank to process and settle Bacs payments that cannot be automatically matched to a client's account.`,
     seoTitle: 'What is a Bacs Suspense Account?',
     seoDescription:
       'Learn what a Bacs Suspense Account is and how it records fund movements associated with returned Bacs payments.',
@@ -183,8 +183,8 @@ const glossaryTerms = [
   },
 
   {
-    id: 'bank-identifier-code',
-    term: 'Bank Identifier Code',
+    id: 'business-identifier-code',
+    term: 'Business Identifier Code',
     acronym: 'BIC',
     aliases: [
       'bic',
@@ -195,7 +195,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'A Bank Identifier Code (BIC) is a standardised code used to identify a bank or financial institution when financial information is exchanged between institutions.',
+      'A Business Identifier Code (BIC), formerly known as a Bank Identifier Code, is an internationally recognised standardised code used to identify financial and non-financial institutions. BICs are used in payment messages and international transactions to route funds and identify the parties involved. Also commonly referred to as a SWIFT code.',
     seoTitle:
       'What is a Bank Identifier Code (BIC)?',
     seoDescription:
@@ -220,7 +220,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'Banking as a Service (BaaS) is a model through which banking capabilities are made available to other businesses for incorporation into their own products or services.',
+      `Banking as a Service (BaaS) is a model in which a licensed bank provides banking infrastructure, enabling businesses without a banking licence to embed accounts, payments and other financial services within their own products and platforms. For example, ClearBank provides access to accounts, payment schemes and banking infrastructure through APIs, allowing clients to offer financial services to their customers.`,
     seoTitle:
       'What is Banking as a Service (BaaS)?',
     seoDescription:
@@ -283,7 +283,7 @@ const glossaryTerms = [
     'bacs',
     'faster-payments',
     'swift',
-    'pound-sterling',
+    'pound-ing',
     'beneficiary',
     't2',
   ],
@@ -322,7 +322,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe; settlement transfers the corresponding funds.',
+      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe, while settlement transfers the corresponding funds. Clearing is a fundamental component of payment systems and financial market infrastructure.',
     seoTitle: 'What is Payment Clearing?',
     seoDescription:
       'Learn what payment clearing is and how it differs from the settlement of funds.',
@@ -348,7 +348,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Confirmation of Payee (CoP) is a name-checking service that helps confirm whether the details entered by a payer correspond to the intended recipient before a payment is made.',
+      'Confirmation of Payee (CoP) is a name-checking service that confirms whether the details entered by a payer correspond to the intended recipient before a payment is made, ensuring payments are sent to the intended recipient.',
     seoTitle:
       'What is Confirmation of Payee (CoP)?',
     seoDescription:
@@ -399,7 +399,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'A creditor is a party to whom money is owed. In payment terminology, the creditor is generally the party receiving the payment.',
+      'A creditor is a person, business, or organisation that receives funds in a payment transaction. A creditor lends money or extends credit.',
     seoTitle:
       'What is a Creditor in Payments?',
     seoDescription:
@@ -450,7 +450,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'A debtor is a party that owes money. In payment terminology, the debtor is generally the party making the payment.',
+      'A debtor is a person, business or organisation that makes a payment or owes money to a creditor.',
     seoTitle:
       'What is a Debtor in Payments?',
     seoDescription:
@@ -473,7 +473,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit is an automated payment method through which an organisation collects payments from a payer’s account under the authority of an applicable instruction or mandate.',
+      `A Direct Debit is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
     seoTitle: 'What is a Direct Debit?',
     seoDescription:
       'Learn what a Direct Debit is and how an organisation can collect payments under a payer’s authority.',
@@ -501,7 +501,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit scheme in relation to a Direct Debit collected from a payer.',
+      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit Guarantee when a payer has been refunded for a Direct Debit collected in error. A DDIC enables the paying payment service provider (PSP) to recover funds from the Service User responsible for the collection.',
     seoTitle:
       'What is a Direct Debit Indemnity Claim (DDIC)?',
     seoDescription:
@@ -527,7 +527,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Instruction (DDI) is the authority provided by a payer that enables an organisation to collect payments from the payer’s account by Direct Debit.',
+      'A Direct Debit Instruction (DDI) is the authorisation provided by a payer that permits an organisation to collect payments from the payer’s account by Direct Debit.',
     seoTitle:
       'What is a Direct Debit Instruction (DDI)?',
     seoDescription:
@@ -555,7 +555,7 @@ const glossaryTerms = [
     regions: ['eu'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Mandate is the authority given by a payer that allows a creditor to collect payments from the payer’s account under the applicable Direct Debit scheme.',
+      'A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.',
     seoTitle:
       'What is a Direct Debit Mandate?',
     seoDescription:
