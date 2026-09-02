@@ -39,10 +39,10 @@ const glossaryTerms = [
       'authorized push payment scam',
       'payment scam',
     ],
-    regions: ['uk'],
+    regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
-      'An Authorised Push Payment scam occurs when a person is deceived into authorising a payment to an account controlled by a fraudster. The payment may appear legitimate because the payer authorises it themselves.',
+      `An Authorised Push Payment Scam (APP Scam) is a type of fraud where an individual or business is tricked into authorising the transfer of funds to a criminal's account.`,
     seoTitle:
       'What is an Authorised Push Payment Scam?',
     seoDescription:
@@ -68,7 +68,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs service used to report credits that could not be applied to the intended account.',
+      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
     seoTitle:
       'What is the Automated Return of Unapplied Credits Service (ARUCS)?',
     seoDescription:
@@ -93,7 +93,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used to report Direct Debit collections that could not be paid.',
+      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
     seoTitle:
       'What is the Automated Return of Unpaid Direct Debits Service (ARUDD)?',
     seoDescription:
@@ -121,7 +121,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that supports the electronic submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
+      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that enables the electronic creation and submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
     seoTitle:
       'What is the Automated Direct Debit Instruction Service (AUDDIS)?',
     seoDescription:
@@ -148,7 +148,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'A Bacs Direct Credit is a payment made through Bacs to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
+      'Bacs Direct Credit is a secure Bacs payment scheme used to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
     seoTitle: 'What is a Bacs Direct Credit?',
     seoDescription:
       'Learn what a Bacs Direct Credit is and how it is used to send payments such as salaries and supplier payments.',
@@ -172,7 +172,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Bacs Suspense Account is used by ClearBank to record movements of funds associated with returned Bacs payments.',
+      `A Bacs Suspense Account is a specialised temporary holding account used by ClearBank to process and settle Bacs payments that cannot be automatically matched to a client's account.`,
     seoTitle: 'What is a Bacs Suspense Account?',
     seoDescription:
       'Learn what a Bacs Suspense Account is and how it records fund movements associated with returned Bacs payments.',
@@ -183,8 +183,8 @@ const glossaryTerms = [
   },
 
   {
-    id: 'bank-identifier-code',
-    term: 'Bank Identifier Code',
+    id: 'business-identifier-code',
+    term: 'Business Identifier Code',
     acronym: 'BIC',
     aliases: [
       'bic',
@@ -195,11 +195,11 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'A Bank Identifier Code (BIC) is a standardised code used to identify a bank or financial institution when financial information is exchanged between institutions.',
+      'A Business Identifier Code (BIC), formerly known as a Bank Identifier Code, is an internationally recognised standardised code used to identify financial and non-financial institutions. BICs are used in payment messages and international transactions to route funds and identify the parties involved. Also commonly referred to as a SWIFT code.',
     seoTitle:
-      'What is a Bank Identifier Code (BIC)?',
+      'What is a Business or Bank Identifier Code (BIC)?',
     seoDescription:
-      'Learn what a Bank Identifier Code is and how it identifies banks and financial institutions.',
+      'Learn what a Business Identifier Code is and how it identifies banks and financial institutions.',
     relatedTerms: [
       'beneficiary',
       'international-bank-account-number',
@@ -220,7 +220,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'Banking as a Service (BaaS) is a model through which banking capabilities are made available to other businesses for incorporation into their own products or services.',
+      `Banking as a Service (BaaS) is a model in which a licensed bank and payment service provider (PSP) provides banking infrastructure, enabling businesses without a banking licence to embed accounts, payments and other financial services within their own products and platforms. For example, ClearBank provides access to accounts, payment schemes and banking infrastructure through APIs, allowing clients to offer financial services to their customers.`,
     seoTitle:
       'What is Banking as a Service (BaaS)?',
     seoDescription:
@@ -253,7 +253,6 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a beneficiary is in banking and how the term describes the intended recipient of funds.',
     relatedTerms: [
-      'bank-identifier-code',
       'confirmation-of-payee',
       'creditor',
       'international-bank-account-number',
@@ -283,7 +282,6 @@ const glossaryTerms = [
     'bacs',
     'faster-payments',
     'swift',
-    'pound-sterling',
     'beneficiary',
     't2',
   ],
@@ -322,7 +320,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe; settlement transfers the corresponding funds.',
+      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe, while settlement transfers the corresponding funds. Clearing is a fundamental component of payment systems and financial market infrastructure.',
     seoTitle: 'What is Payment Clearing?',
     seoDescription:
       'Learn what payment clearing is and how it differs from the settlement of funds.',
@@ -348,7 +346,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Confirmation of Payee (CoP) is a name-checking service that helps confirm whether the details entered by a payer correspond to the intended recipient before a payment is made.',
+      'Confirmation of Payee (CoP) is a name-checking service that confirms whether the details entered by a payer correspond to the intended recipient before a payment is made, ensuring payments are sent to the intended recipient.',
     seoTitle:
       'What is Confirmation of Payee (CoP)?',
     seoDescription:
@@ -392,14 +390,12 @@ const glossaryTerms = [
     term: 'Creditor',
     acronym: '',
     aliases: [
-      'payee',
-      'payment recipient',
-      'party receiving payment',
+      'party receiving payment'
     ],
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'A creditor is a party to whom money is owed. In payment terminology, the creditor is generally the party receiving the payment.',
+      'A creditor is a person, business, or organisation that receives funds in a payment transaction or Direct Debit collection.',
     seoTitle:
       'What is a Creditor in Payments?',
     seoDescription:
@@ -430,7 +426,6 @@ const glossaryTerms = [
     seoDescription:
       'Learn what a cross-border payment is and how it differs from a domestic payment.',
     relatedTerms: [
-      'bank-identifier-code',
       'beneficiary',
       'foreign-exchange',
       'international-bank-account-number',
@@ -450,7 +445,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'A debtor is a party that owes money. In payment terminology, the debtor is generally the party making the payment.',
+      'A debtor is a person, business or organisation that makes a payment or owes money to a creditor.',
     seoTitle:
       'What is a Debtor in Payments?',
     seoDescription:
@@ -473,7 +468,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit is an automated payment method through which an organisation collects payments from a payer’s account under the authority of an applicable instruction or mandate.',
+      `A Direct Debit is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
     seoTitle: 'What is a Direct Debit?',
     seoDescription:
       'Learn what a Direct Debit is and how an organisation can collect payments under a payer’s authority.',
@@ -501,7 +496,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit scheme in relation to a Direct Debit collected from a payer.',
+      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit Guarantee when a payer has been refunded for a Direct Debit collected in error. A DDIC enables the paying payment service provider (PSP) to recover funds from the Service User responsible for the collection.',
     seoTitle:
       'What is a Direct Debit Indemnity Claim (DDIC)?',
     seoDescription:
@@ -527,7 +522,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Instruction (DDI) is the authority provided by a payer that enables an organisation to collect payments from the payer’s account by Direct Debit.',
+      'A Direct Debit Instruction (DDI) is the authorisation provided by a payer that permits an organisation to collect payments from the payer’s account by Direct Debit.',
     seoTitle:
       'What is a Direct Debit Instruction (DDI)?',
     seoDescription:
@@ -555,7 +550,7 @@ const glossaryTerms = [
     regions: ['eu'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Mandate is the authority given by a payer that allows a creditor to collect payments from the payer’s account under the applicable Direct Debit scheme.',
+      'A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.',
     seoTitle:
       'What is a Direct Debit Mandate?',
     seoDescription:
@@ -568,28 +563,6 @@ const glossaryTerms = [
   },
 
   {
-    id: 'extended-industry-sort-code-directory',
-    term: 'Extended Industry Sort Code Directory',
-    acronym: 'EISCD',
-    aliases: [
-      'eiscd',
-      'sort code directory',
-      'bank sort code directory',
-    ],
-    regions: ['uk'],
-    category: 'banking',
-    definition:
-      'The Extended Industry Sort Code Directory (EISCD) contains information associated with UK sort codes and the financial institutions to which they belong.',
-    seoTitle:
-      'What is the Extended Industry Sort Code Directory (EISCD)?',
-    seoDescription:
-      'Learn what the EISCD is and how it provides information about UK sort codes and financial institutions.',
-    relatedTerms: [
-      'bank-identifier-code',
-    ],
-  },
-
-  {
     id: 'faster-payment-identifier',
     term: 'Faster Payment Identifier',
     acronym: 'FPID',
@@ -598,11 +571,13 @@ const glossaryTerms = [
       'faster payment identification number',
       'faster payment reference',
       '18-digit faster payment reference',
+      'faster payment identifier',
+      'faster payment indicator'
     ],
     regions: ['uk'],
     category: 'payments',
     definition:
-      'A Faster Payment Identifier (FPID) is an 18-digit reference generated when a Faster Payment is sent. It may be used in a Credit Payment Recovery case to help locate the funds.',
+      'A Faster Payment Identifier (FPID) is a unique reference number generated when a Faster Payment is processed. It appears on bank statements to help identify and track individual transactions.',
     seoTitle:
       'What is a Faster Payment Identifier (FPID)?',
     seoDescription:
@@ -630,7 +605,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real time.',
+      'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real-time.',
     seoTitle:
       'What are Faster Payments (FPS)?',
     seoDescription:
@@ -657,7 +632,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom.',
+      'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom. It works to protect consumers, maintain market integrity, and promote effective competition between financial service providers.',
     seoTitle:
       'What is the Financial Conduct Authority (FCA)?',
     seoDescription:
@@ -684,7 +659,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for eligible customers of authorised financial services firms.',
+      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
     seoTitle:
       'What is the Financial Services Compensation Scheme (FSCS)?',
     seoDescription:
@@ -703,6 +678,7 @@ const glossaryTerms = [
       'currency exchange',
       'currency conversion',
       'foreign currency exchange',
+      'forex'
     ],
     regions: ['uk', 'eu'],
     category: 'foreign-exchange',
@@ -730,6 +706,7 @@ const glossaryTerms = [
       'currency trade',
       'currency conversion trade',
       'fx transaction',
+      'forex trading'
     ],
     regions: ['uk', 'eu'],
     category: 'foreign-exchange',
@@ -745,24 +722,47 @@ const glossaryTerms = [
     ],
   },
 
+{
+  id: 'embedded-banking',
+  term: 'Embedded Banking',
+  aliases: [
+    'Banking Embedded in Products',
+    'Embedded Financial Services',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `Embedded Banking is the integration of banking services directly into a non-bank product, platform or customer journey. It enables organisations to offer services such as accounts, payments and other financial products without becoming a bank themselves. Embedded Banking is typically delivered through Banking as a Service (BaaS) providers, which supply the regulated banking infrastructure, technology and banking licence required to provide these services.`,
+  seoTitle:
+    'What is Embedded Banking? | Definition and Examples',
+  seoDescription:
+    `Learn what Embedded Banking is, how it works, and how businesses use Banking as a Service (BaaS) to offer accounts, payments and other banking services within their own products.`,
+  relatedTerms: [
+    'banking-as-a-service',
+    'payment-initiation',
+  ],
+  editorialReview: true,
+},
+
   {
-    id: 'general-segregation-account',
-    term: 'General Segregation Account',
+    id: 'general-segregated-account',
+    term: 'General Segregated Account',
     acronym: 'GSA',
     aliases: [
       'segregation account',
       'general segregated account',
       'segregated funds account',
       'gsa',
+      'segregated pooled account'
     ],
-    regions: ['uk'],
+    regions: ['uk','eu'],
     category: 'accounts',
     definition:
-      'A General Segregation Account is a ClearBank account type used to keep applicable funds separate from other balances.',
+      `A General Segregated Account (GSA) is a ClearBank account type that holds funds for one or more customers separately from an institution's operational funds. Also known as a Segregated Pooled account.`,
     seoTitle:
-      'What is a General Segregation Account?',
+      'What is a General Segregated Account?',
     seoDescription:
-      'Learn how the term General Segregation Account is used in ClearBank documentation.',
+      `Learn what a general segregated account (GSA) is and how it separates customer funds from an institution's operational funds.`,
     relatedTerms: [
       'operating-account',
       'safeguarded-account',
@@ -771,6 +771,32 @@ const glossaryTerms = [
     editorialReview: true,
   },
 
+ {
+    id: 'segregated-pooled-account',
+    term: 'Segregated Pooled Account',
+    aliases: [
+      'segregation account',
+      'general segregated account',
+      'segregated funds account',
+      'gsa',
+      'general segregated account'
+    ],
+    regions: ['uk'],
+    category: 'accounts',
+    definition:
+      `A Segregated Pooled Account is another name for a General Segregated Account, a pooled ClearBank account type that holds funds for one or more customers separately from an institution's operational funds.`,
+    seoTitle:
+      'What is a Segregated Pooled Account?',
+    seoDescription:
+      `Learn what a segregated pooled account is and how it separates customer funds from an institution's operational funds.`,
+    relatedTerms: [
+      'operating-account',
+      'safeguarded-account',
+      'segregation',
+    ],
+    editorialReview: true,
+  },
+  
   {
     id: 'hub-account',
     term: 'Hub Account',
@@ -782,7 +808,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Hub Account is a ClearBank account type used within applicable embedded-banking account structures.',
+      'A Hub Account is an FSCS-protected bank account held with ClearBank that enables payments to and from a defined set of associated accounts within an embedded-banking solution.',
     seoTitle: 'What is a Hub Account?',
     seoDescription:
       'Learn how the term Hub Account is used in ClearBank embedded-banking documentation.',
@@ -791,6 +817,7 @@ const glossaryTerms = [
       'institution-account',
       'real-account',
       'virtual-account',
+      'embedded-banking'
     ],
     editorialReview: true,
   },
@@ -807,16 +834,44 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'An Institution Account is a ClearBank account associated with a financial institution and used within an applicable ClearBank account structure.',
+      'An Institution Account is a digital representation of a financial institution with ClearBank and acts as a superset of all its financial accounts. It is not a financial account itself.',
     seoTitle:
       'What is an Institution Account?',
     seoDescription:
-      'Learn how the term Institution Account is used in ClearBank documentation.',
+      `Learn what an Institution Account is and  how it provides access to an institution's financial accounts with ClearBank.`,
     relatedTerms: [
       'hub-account',
       'mandated-minimum-balance-account',
       'operating-account',
       'virtual-account',
+      'institution-master-account'
+    ],
+    editorialReview: true,
+  },
+
+  {
+    id: 'institution-master-account',
+    term: 'Institution Master Account',
+    acronym: '',
+    aliases: [
+      'financial institution account',
+      'fi account',
+      'institutional account',
+    ],
+    regions: ['eu','uk'],
+    category: 'accounts',
+    definition:
+      `An Institution Master Account is a representation of a financial institution's account structure with ClearBank and acts as a superset of all its financial accounts. It is not a financial account itself.`,
+    seoTitle:
+      'What is an Institution Master Account?',
+    seoDescription:
+      `Learn what an Institution Master Account is and how it provides access to an institution's financial accounts with ClearBank.`,
+    relatedTerms: [
+      'hub-account',
+      'mandated-minimum-balance-account',
+      'operating-account',
+      'virtual-account',
+      'institution-account'
     ],
     editorialReview: true,
   },
@@ -833,24 +888,52 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      'An International Bank Account Number (IBAN) is a standardised identifier used to represent a bank account when processing applicable payments.',
+      'An International Bank Account Number (IBAN) is a globally standardised identifier, consisting of up to 34 alphanumeric characters, used to identify a bank account when processing applicable payments.',
     seoTitle:
       'What is an International Bank Account Number (IBAN)?',
     seoDescription:
       'Learn what an IBAN is and how the standardised identifier represents a bank account for applicable payments.',
     relatedTerms: [
-      'bank-identifier-code',
       'beneficiary',
       'sepa-credit-transfer',
       'sepa-instant-credit-transfer',
       'swift',
       'virtual-account',
+      'virtual-international-bank-account-number',
+      'cross-border-payment'
+    ],
+  },
+
+    {
+    id: 'virtual-international-bank-account-number',
+    term: 'Virtual International Bank Account Number',
+    acronym: 'vIBAN',
+    aliases: [
+      'viban',
+      'viban number',
+      'virtual international account number',
+    ],
+    regions: ['uk', 'eu'],
+    category: 'banking',
+    definition:
+      'A Virtual International Bank Account Number (vIBAN) is a virtual account identifier that routes payments to a designated underlying bank account through the IBAN infrastructure. To the sender, a vIBAN functions in the same way as a standard IBAN, while allowing incoming payments to be distinguished and managed separately from other transactions received into the underlying account.',
+    seoTitle:
+      'What is a virtual International Bank Account Number (IBAN)?',
+    seoDescription:
+      'Learn what a vIBAN is and how the standardised identifier represents a bank account for applicable payments.',
+    relatedTerms: [
+      'beneficiary',
+      'sepa-credit-transfer',
+      'sepa-instant-credit-transfer',
+      'swift',
+      'cross-border-payment',
+      'IBAN',
     ],
   },
 
   {
     id: 'intraday-liquidity-pool',
-    term: 'Intraday Liquidity Pool',
+    term: 'Intra-day Liquidity Pool',
     acronym: '',
     aliases: [
       'intra-day liquidity pool',
@@ -861,13 +944,12 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'liquidity',
     definition:
-      'An Intraday Liquidity Pool is a pool of funds made available to support payment activity during a working day.',
+      'An Intra-day Liquidity Pool is a centralised pool of funds made available to support payment activity in real-time during a working day.',
     seoTitle:
       'What is an Intraday Liquidity Pool?',
     seoDescription:
       'Learn what an Intraday Liquidity Pool is and how it supports payment activity during a working day.',
     relatedTerms: [
-      'mandated-intraday-liquidity-balance',
       'mandated-minimum-balance-account',
       'operating-account',
     ],
@@ -888,7 +970,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
-      'Know Your Business (KYB) refers to checks used to verify a business, understand its ownership and control structure, and assess relevant financial-crime risk.',
+      'Know Your Business (KYB) is the process of verifying a business and assessing its ownership, activities, customer base, payment flows and business model. KYB helps organisations comply with anti-money laundering (AML) and other financial crime regulations.',
     seoTitle:
       'What is Know Your Business (KYB)?',
     seoDescription:
@@ -934,10 +1016,10 @@ const glossaryTerms = [
       'organisation',
       'organization',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'compliance',
     definition:
-      'A legal entity is an organisation or other body that has a legally recognised identity separate from the individuals connected with it.',
+      'A legal entity is a registered business, organisation or other body that has a legally recognised identity separate from the individuals connected with it.',
     seoTitle: 'What is a Legal Entity?',
     seoDescription:
       'Learn what a legal entity is and why organisations are identified separately from the individuals connected with them.',
@@ -957,10 +1039,10 @@ const glossaryTerms = [
       'legal entity code',
       'gleif identifier',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'compliance',
     definition:
-      'A Legal Entity Identifier (LEI) is a standardised identifier used to identify a legal entity participating in applicable financial transactions.',
+      'A Legal Entity Identifier (LEI) is a standardised 20-character alphanumeric code, based on the ISO 17442 standard, used to uniquely identify a legal entity participating in applicable financial transactions. LEIs help improve transparency in financial markets by enabling organisations, regulators and counterparties to identify legal entities and their associated reference data.',
     seoTitle:
       'What is a Legal Entity Identifier (LEI)?',
     seoDescription:
@@ -973,34 +1055,9 @@ const glossaryTerms = [
   },
 
   {
-    id: 'mandated-intraday-liquidity-balance',
-    term: 'Mandated Intraday Liquidity Balance',
-    acronym: '',
-    aliases: [
-      'intraday liquidity balance',
-      'intraday liquidity minimum',
-      'mandated liquidity balance',
-    ],
-    regions: ['uk'],
-    category: 'liquidity',
-    definition:
-      'The Mandated Intraday Liquidity Balance is the agreed minimum level to which a financial institution must return its Intraday Liquidity Pool by the applicable time on each working day.',
-    seoTitle:
-      'What is a Mandated Intraday Liquidity Balance?',
-    seoDescription:
-      'Learn what a Mandated Intraday Liquidity Balance is and how it relates to an Intraday Liquidity Pool.',
-    relatedTerms: [
-      'intraday-liquidity-pool',
-      'mandated-minimum-balance-account',
-      'operating-account',
-    ],
-    editorialReview: true,
-  },
-
-  {
     id: 'mandated-minimum-balance-account',
     term: 'Mandated Minimum Balance Account',
-    acronym: 'MMB Account',
+    acronym: '',
     aliases: [
       'mandated minimum balance',
       'mmb',
@@ -1009,10 +1066,10 @@ const glossaryTerms = [
       'minimum required balance',
       'mandated balance',
     ],
-    regions: ['uk'],
+    regions: ['uk', 'eu'],
     category: 'liquidity',
     definition:
-      'A Mandated Minimum Balance Account holds a pre-agreed amount that a financial institution is required to maintain. The applicable amount is determined under the relevant ClearBank agreement.',
+      `A Mandated Minimum Balance Account is an account that holds an institution's pre-agreed mandated minimum balance. Funds held in the account are subject to the terms of the institution's contract with ClearBank.`,
     seoTitle:
       'What is a Mandated Minimum Balance Account?',
     seoDescription:
@@ -1020,8 +1077,10 @@ const glossaryTerms = [
     relatedTerms: [
       'institution-account',
       'intraday-liquidity-pool',
-      'mandated-intraday-liquidity-balance',
       'operating-account',
+      'Settlement',
+      'intraday-liquidity',
+      'reserve-account',
     ],
     editorialReview: true,
   },
@@ -1040,7 +1099,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'foreign-exchange',
     definition:
-      'Multicurrency describes an account, product or service that supports more than one currency.',
+      'Multicurrency refers to the ability to hold, receive and send funds in more than one currency, such as pounds sterling (GBP), euros (EUR) or US dollars (USD). Multicurrency products and services support activity across multiple currencies without requiring a separate banking relationship for each currency.',
     seoTitle:
       'What does Multicurrency mean?',
     seoDescription:
@@ -1062,47 +1121,232 @@ const glossaryTerms = [
       'financial institution operating account',
       'own funds account',
       'master account',
+      'your funds',
+      'primary operating account'
     ],
-    regions: ['uk'],
+    regions: ['uk', 'eu'],
     category: 'accounts',
     definition:
-      'An Operating Account holds a financial institution’s own money and funds, as defined in the applicable ClearBank agreement.',
+      `An Operating Account is an account that holds a financial institution's own funds, as defined in the applicable ClearBank agreement. This can include fees, interest and other funds that belong to the institution rather than its customers.`,
     seoTitle:
       'What is an Operating Account?',
     seoDescription:
       'Learn what an Operating Account is and how it is used to hold a financial institution’s own funds.',
     relatedTerms: [
       'bacs-suspense-account',
-      'general-segregation-account',
+      'general-segregated-account',
       'institution-account',
       'intraday-liquidity-pool',
       'mandated-minimum-balance-account',
     ],
   },
 
+{
+  id: 'segregated-account',
+  term: 'Segregated Account',
+  aliases: [
+    'Customer Segregated Account',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A Segregated Account holds customer funds separately from a financial institution's own operational funds. It must not be used to hold the institution's own funds. A financial institution can use Segregated Accounts when it is not subject to Safeguarding or Client Money rules but still wants to keep its customers' funds separate from its operational funds.`,
+  seoTitle:
+    'What is a Segregated Account?',
+  seoDescription:
+    `Learn what a Segregated Account is and how it keeps customer funds separate from a financial institution's operational funds.`,
+  relatedTerms: [
+    'general-segregated-account',
+    'designated-segregated-account',
+    'safeguarded-account',
+    'client-money-account',
+    'operating-account',
+  ],
+  editorialReview: true,
+},
+
+{
+  id: 'designated-segregated-account',
+  term: 'Designated Segregated Account',
+  aliases: [
+    'Segregated Designated Account',
+    'Designated Segregation',
+  ],
+  regions: ['uk', 'eu'],
+  category: 'accounts',
+  definition:
+    `A Designated Segregated Account holds funds belonging to a single customer separately from a financial institution's operational funds and the funds of its other customers.`,
+  seoTitle:
+    'What is a Designated Segregated Account?',
+  seoDescription:
+    `Learn how a Designated Segregated Account holds funds for a single customer separately from other customer and institutional funds.`,
+  relatedTerms: [
+    'segregated-account',
+    'general-segregated-account',
+    'designated-safeguarded-account',
+    'designated-client-account',
+  ],
+  editorialReview: true,
+},
+{
+  id: 'safeguarded-account',
+  term: 'Safeguarded Account',
+  aliases: [
+    'Safeguarding Account',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A Safeguarded Account is a type of Segregated Account used to hold customer funds separately from a financial institution's own funds in accordance with applicable regulatory requirements. It must not be used to hold the institution's own funds. Safeguarded Accounts can be structured as General Safeguarded or Designated Safeguarded accounts.`,
+  seoTitle:
+    'What is a Safeguarded Account?',
+  seoDescription:
+    `Learn what a Safeguarded Account is and how it keeps customer funds separate from a financial institution's own funds under applicable safeguarding requirements.`,
+  relatedTerms: [
+    'segregated-account',
+    'general-safeguarded-account',
+    'designated-safeguarded-account',
+    'client-assets-sourcebook',
+    'operating-account',
+  ],
+  editorialReview: true,
+},
+{
+  id: 'general-safeguarded-account',
+  term: 'General Safeguarded Account',
+  aliases: [
+    'Safeguarded Pooled Account',
+    'General Safeguarded',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A General Safeguarded Account is a pooled Safeguarded Account that holds funds belonging to one or more customers separately from a financial institution's own funds. Virtual accounts can be created under this account type to help identify and manage funds associated with individual customers.`,
+  seoTitle:
+    'What is a General Safeguarded Account?',
+  seoDescription:
+    `Learn how a General Safeguarded Account holds pooled customer funds in accordance with applicable safeguarding requirements.`,
+  relatedTerms: [
+    'safeguarded-account',
+    'designated-safeguarded-account',
+    'general-segregated-account',
+    'pooled-account',
+    'virtual-account',
+  ],
+  editorialReview: true,
+},
+{
+  id: 'designated-safeguarded-account',
+  term: 'Designated Safeguarded Account',
+  aliases: [
+    'Safeguarded Designated Account',
+    'Designated Safeguarded',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A Designated Safeguarded Account is a Safeguarded Account that holds funds belonging to a single customer separately from a financial institution's own funds and the funds of its other customers.`,
+  seoTitle:
+    'What is a Designated Safeguarded Account?',
+  seoDescription:
+    `Learn how a Designated Safeguarded Account holds safeguarded funds belonging to a single customer separately from other funds.`,
+  relatedTerms: [
+    'safeguarded-account',
+    'general-safeguarded-account',
+    'designated-segregated-account',
+    'designated-client-account',
+  ],
+  editorialReview: true,
+},
+
   {
-    id: 'payment-finality',
-    term: 'Payment Finality',
-    acronym: '',
-    aliases: [
-      'finality',
-      'settlement finality',
-      'payment is final',
-      'irrevocable payment',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'payments',
-    definition:
-      'Payment finality is the point at which the transfer of funds becomes final under the rules governing the relevant payment or settlement system.',
-    seoTitle: 'What is Payment Finality?',
-    seoDescription:
-      'Learn what payment finality means and when a transfer of funds becomes final under a payment system’s rules.',
-    relatedTerms: [
-      'clearing',
-      'real-time-gross-settlement',
-      'settlement',
-    ],
-  },
+  id: 'client-money-account',
+  term: 'Client Money Account',
+  aliases: [
+    'Client Account',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A Client Money Account is an account used to receive and hold money for or on behalf of customers in accordance with the FCA's Client Money rules. It separates client money from a financial institution's own funds. Client Money Accounts can be structured as General Client or Designated Client accounts.`,
+  seoTitle:
+    'What is a Client Money Account?',
+  seoDescription:
+    `Learn what a Client Money Account is and how it separates money held for customers from a financial institution's own funds under the CASS rules.`,
+  relatedTerms: [
+    'client-assets-sourcebook',
+    'general-client-account',
+    'designated-client-account',
+    'operating-account',
+  ],
+  editorialReview: true,
+},
+{
+  id: 'general-client-account',
+  term: 'General Client Account',
+  aliases: [
+    'Client Money Pooled Account',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `A General Client Account is a pooled Client Money Account that holds funds belonging to one or more named clients. Virtual accounts can be created under this account type to help identify and manage the funds associated with individual clients.`,
+  seoTitle:
+    'What is a General Client Account?',
+  seoDescription:
+    `Learn what a General Client Account is and how it holds funds for one or more named customers within a pooled Client Money Account.`,
+  relatedTerms: [
+    'client-money-account',
+    'designated-client-account',
+    'pooled-account',
+    'virtual-account',
+  ],
+  editorialReview: true,
+},
+{
+  id: 'designated-client-account',
+  term: 'Designated Client Account',
+  aliases: [
+    'Client Money Designated Account',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+  `A Designated Client Account is a type of Client Money Account used to receive and hold money for or on behalf of a single client in accordance with the FCA's Client Money rules. It separates the client's money from a financial institution's own funds.`,
+  seoTitle:
+    'What is a Designated Client Account?',
+  seoDescription:
+    `Learn what a Designated Client Account is and how it holds funds belonging to a single named customer separately from other customer funds.`,
+  relatedTerms: [
+    'client-money-account',
+    'general-client-account',
+    'designated-segregated-account',
+    'client-assets-sourcebook',
+  ],
+  editorialReview: true,
+},
+
+{
+  id: 'repair-suspense-account',
+  term: 'Repair Suspense Account',
+  aliases: [
+    'Repair Suspense',
+  ],
+  regions: ['eu'],
+  category: 'accounts',
+  definition:
+    `A Repair Suspense Account is a ClearBank account used to apply funds relating to an institution that cannot be applied to the intended creditor account. Funds held in this account should be redirected to the correct account or returned.`,
+  seoTitle:
+    'What is a Repair Suspense Account?',
+  seoDescription:
+    `Learn what a Repair Suspense Account is and what happens when funds cannot be applied to the intended creditor account.`,
+  relatedTerms: [
+    'suspense-account',
+    'bacs-suspense-account',
+    'creditor',
+  ],
+  editorialReview: true,
+},
 
   {
     id: 'payment-service-provider',
@@ -1129,33 +1373,6 @@ const glossaryTerms = [
   },
 
   {
-    id: 'pound-sterling',
-    term: 'Pound Sterling',
-    acronym: 'GBP',
-    aliases: [
-      'gbp',
-      'great british pound',
-      'british pound',
-      'sterling',
-      'pounds',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'currencies',
-    definition:
-      'Pound sterling is the currency of the United Kingdom. Its ISO currency code is GBP.',
-    seoTitle: 'What is GBP?',
-    seoDescription:
-      'Learn what GBP means and how the ISO currency code identifies pound sterling.',
-    relatedTerms: [
-      'chaps',
-      'faster-payments',
-      'foreign-exchange',
-      'fx-trade',
-      'multicurrency',
-    ],
-  },
-
-  {
     id: 'prudential-regulation-authority',
     term: 'Prudential Regulation Authority',
     acronym: 'PRA',
@@ -1167,7 +1384,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Prudential Regulation Authority (PRA) is responsible for the prudential regulation and supervision of applicable banks, building societies, credit unions, insurers and major investment firms in the United Kingdom.',
+      'The Prudential Regulation Authority (PRA) is responsible for the prudential regulation and supervision of applicable banks, building societies, credit unions, insurers and major investment firms in the United Kingdom. The PRA promotes the safety and soundness of regulated firms and seeks to reduce risks that could affect customers, financial markets and the wider economy.',
     seoTitle:
       'What is the Prudential Regulation Authority (PRA)?',
     seoDescription:
@@ -1189,7 +1406,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Real Account is an individual underlying account, rather than a virtual account identifier within another account structure.',
+      'A Real Account is an underlying bank account that can hold funds and process transactions. Unlike a Virtual Account, a Real Account holds the actual balance and transaction record associated with the account.',
     seoTitle: 'What is a Real Account?',
     seoDescription:
       'Learn how the term Real Account is used in ClearBank account structures.',
@@ -1214,14 +1431,13 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'Real-Time Gross Settlement (RTGS) is a settlement method in which eligible payment obligations are settled individually, in real time, rather than being grouped into batches.',
+      'Real-Time Gross Settlement (RTGS) is a settlement method in which eligible payment obligations are settled individually and in real time, rather than being grouped and settled in batches. RTGS systems are commonly used for high-value and time-critical payments.',
     seoTitle:
       'What is Real-Time Gross Settlement (RTGS)?',
     seoDescription:
       'Learn what Real-Time Gross Settlement means and how eligible payment obligations are settled individually.',
     relatedTerms: [
       'chaps',
-      'payment-finality',
       'settlement',
       't2',
     ],
@@ -1239,10 +1455,10 @@ const glossaryTerms = [
       'exchange-rate quote',
       'live exchange rate',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'foreign-exchange',
     definition:
-      'A Request for Quote (RFQ) is a request for an exchange-rate quote for a proposed FX trade before the trade is accepted.',
+      'A Request for Quote (RFQ) is a request for an exchange rate for a proposed foreign exchange (FX) transaction before the trade is accepted.',
     seoTitle:
       'What is a Request for Quote (RFQ)?',
     seoDescription:
@@ -1252,33 +1468,6 @@ const glossaryTerms = [
       'fx-trade',
       'multicurrency',
     ],
-  },
-
-  {
-    id: 'safeguarded-account',
-    term: 'Safeguarded Account',
-    acronym: '',
-    aliases: [
-      'safeguarding account',
-      'safeguarded funds',
-      'client funds account',
-      'customer funds account',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'accounts',
-    definition:
-      'A Safeguarded Account is used to hold applicable customer funds separately in support of safeguarding requirements.',
-    seoTitle:
-      'What is a Safeguarded Account?',
-    seoDescription:
-      'Learn what a Safeguarded Account is and how it is used to keep applicable customer funds separate.',
-    relatedTerms: [
-      'cass-7',
-      'general-segregation-account',
-      'operating-account',
-      'segregation',
-    ],
-    editorialReview: true,
   },
 
   {
@@ -1293,14 +1482,14 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
-      'Segregation is the practice of keeping specified funds separate from other funds, such as a firm’s own operating money.',
+      `Segregation is the practice of keeping specified funds separate from other funds, such as separating client funds from a financial institution's own operating funds.`,
     seoTitle:
       'What is Fund Segregation?',
     seoDescription:
       'Learn what fund segregation means and why specified funds may be kept separate from a firm’s operating money.',
     relatedTerms: [
       'cass-7',
-      'general-segregation-account',
+      'general-segregated-account',
       'safeguarded-account',
     ],
   },
@@ -1316,16 +1505,42 @@ const glossaryTerms = [
       'euro credit transfer',
       'single euro payments area credit transfer',
     ],
-    regions: ['eu'],
+    regions: ['eu', 'uk'],
     category: 'payments',
     definition:
-      'A SEPA Credit Transfer (SCT) is a payment scheme used to make euro credit transfers between eligible accounts within the Single Euro Payments Area.',
+      'A SEPA Credit Transfer (SCT) is a payment scheme that enables euro credit transfers between eligible accounts within the Single Euro Payments Area (SEPA).',
     seoTitle:
       'What is a SEPA Credit Transfer (SCT)?',
     seoDescription:
       'Learn what a SEPA Credit Transfer is and how SCT payments support euro transfers within SEPA.',
     relatedTerms: [
-      'bank-identifier-code',
+      'beneficiary',
+      'international-bank-account-number',
+      'sepa-instant-credit-transfer',
+      't2',
+    ],
+  },
+
+  {
+    id: 'sepa-credit-transfer-uk',
+    term: 'SEPA Credit Transfer UK',
+    acronym: 'SCT',
+    aliases: [
+      'sct',
+      'sepa payment',
+      'sepa transfer',
+      'euro credit transfer',
+      'single euro payments area credit transfer',
+    ],
+    regions: ['uk'],
+    category: 'payments',
+    definition:
+      'The SEPA Credit Transfer UK (SCT UK) service is a payment scheme that enables euro credit transfers between eligible accounts with any participant bank within the Single Euro Payments Area (SEPA) through the SEPA Credit Transfer scheme. Only euro can be sent inside the SEPA zone using SCT UK.',
+    seoTitle:
+      'What is a SEPA Credit Transfer UK (SCT)?',
+    seoDescription:
+      'Learn what a SEPA Credit Transfer is and how SCT payments support euro transfers within SEPA.',
+    relatedTerms: [
       'beneficiary',
       'international-bank-account-number',
       'sepa-instant-credit-transfer',
@@ -1347,13 +1562,12 @@ const glossaryTerms = [
     regions: ['eu'],
     category: 'payments',
     definition:
-      'A SEPA Instant Credit Transfer (SCT Inst) is a pan-European credit transfer through which funds are made available to the recipient within seconds, subject to the applicable scheme requirements.',
+      'A SEPA Instant Credit Transfer (SCT Inst) is a payment scheme that enables euro credit transfers between eligible accounts within seconds, subject to the applicable scheme requirements.',
     seoTitle:
       'What is a SEPA Instant Credit Transfer (SCT Inst)?',
     seoDescription:
       'Learn what a SEPA Instant Credit Transfer is and how the scheme supports euro payments completed within seconds.',
     relatedTerms: [
-      'bank-identifier-code',
       'beneficiary',
       'international-bank-account-number',
       'sepa-credit-transfer',
@@ -1372,7 +1586,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Service User is an organisation authorised to submit applicable payment instructions using a Service User Number.',
+      'A Service User is an organisation authorised to submit Bacs payment instructions using a Service User Number (SUN).',
     seoTitle:
       'What is a Bacs Service User?',
     seoDescription:
@@ -1399,7 +1613,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'A Service User Number (SUN) is a unique six-digit number allocated to a service user to identify its payment instructions. A service user can hold multiple SUNs.',
+      'A Service User Number (SUN) is a unique six-digit code assigned to a Service User to identify its Bacs payment instructions. A Service User can hold multiple SUNs.',
     seoTitle:
       'What is a Service User Number (SUN)?',
     seoDescription:
@@ -1426,41 +1640,14 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'payments',
     definition:
-      'Settlement is the transfer of funds needed to discharge the obligations arising from a payment transaction. It takes place after, or as part of, the applicable clearing and settlement process.',
+      'Settlement is the process by which funds are transferred between parties to complete a payment transaction. It takes place after, or as part of, the applicable clearing process.',
     seoTitle:
       'What is Payment Settlement?',
     seoDescription:
       'Learn what payment settlement is and how funds are transferred to discharge payment obligations.',
     relatedTerms: [
       'clearing',
-      'payment-finality',
-      'real-time-gross-settlement',
-      'standard-settlement-instructions',
-    ],
-  },
-
-  {
-    id: 'standard-settlement-instructions',
-    term: 'Standard Settlement Instructions',
-    acronym: 'SSI',
-    aliases: [
-      'ssi',
-      'settlement instructions',
-      'standing settlement instructions',
-    ],
-    regions: ['uk', 'eu'],
-    category: 'payments',
-    definition:
-      'Standard Settlement Instructions (SSI) contain predefined details used to determine how and where applicable financial transactions are settled.',
-    seoTitle:
-      'What are Standard Settlement Instructions (SSI)?',
-    seoDescription:
-      'Learn what Standard Settlement Instructions are and how they define where and how financial transactions are settled.',
-    relatedTerms: [
-      'bank-identifier-code',
-      'international-bank-account-number',
-      'settlement',
-      'swift',
+      'real-time-gross-settlement'
     ],
   },
 
@@ -1485,11 +1672,9 @@ const glossaryTerms = [
   seoDescription:
     'Learn what SWIFT is and how financial institutions use the SWIFT network to exchange payment instructions and financial messages.',
   relatedTerms: [
-    'bank-identifier-code',
     'international-bank-account-number',
     'cross-border-payment',
     'foreign-exchange',
-    'standard-settlement-instructions',
     'chaps',
   ],
 },
@@ -1509,7 +1694,7 @@ const glossaryTerms = [
     regions: ['eu'],
     category: 'payments',
     definition:
-      'T2 is the Eurosystem service used to settle eligible euro payments in central-bank money.',
+      `T2, formerly TARGET2, is the European Central Bank's real-time gross settlement (RTGS) system used to settle eligible euro transactions across the euro area.`,
     seoTitle: 'What is T2?',
     seoDescription:
       'Learn what T2 is and how the Eurosystem service supports settlement of eligible euro payments.',
@@ -1535,7 +1720,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
-      'An Ultimate Beneficial Owner (UBO) is an individual who ultimately owns or controls a legal entity, whether directly or through one or more other entities.',
+      'An Ultimate Beneficial Owner (UBO) is an individual who ultimately owns or controls a legal entity, either directly or indirectly through one or more other entities.',
     seoTitle:
       'What is an Ultimate Beneficial Owner (UBO)?',
     seoDescription:
@@ -1553,15 +1738,13 @@ const glossaryTerms = [
     term: 'Virtual Account',
     acronym: '',
     aliases: [
-      'virtual iban',
-      'viban',
       'virtual account number',
       'virtual bank account',
     ],
     regions: ['uk', 'eu'],
     category: 'accounts',
     definition:
-      'A Virtual Account is an account identifier used to route or reconcile applicable payments within an underlying account structure.',
+      'A Virtual Account is a digital account used to identify customers and distinguish funds within an underlying Real Account. Funds associated with a Virtual Account are held in an underlying Real Account rather than in the Virtual Account itself.',
     seoTitle:
       'What is a Virtual Account?',
     seoDescription:
@@ -1651,6 +1834,36 @@ const glossaryTerms = [
     'safeguarded-account',
     'segregation',
   ],
+},
+
+{
+  id: 'single-euro-payments-area',
+  term: 'Single Euro Payments Area',
+  acronym: 'SEPA',
+  aliases: [
+    'sepa',
+    'sepa zone',
+    'sepa area',
+  ],
+  regions: ['uk', 'eu'],
+  category: 'payments',
+  definition:
+    'The Single Euro Payments Area (SEPA) is a Europe-wide payment framework that enables euro payments across participating countries using common payment standards and schemes. SEPA includes 41 participating countries, including all EU member states and the United Kingdom.',
+
+  seoTitle:
+    'What is the Single Euro Payments Area (SEPA)?',
+
+  seoDescription:
+    'Learn what SEPA is, which countries participate and how it enables euro payments using common payment standards and schemes.',
+
+  relatedTerms: [
+    'sepa-credit-transfer',
+    'sepa-instant-credit-transfer',
+    'international-bank-account-number',
+    'business-identifier-code',
+  ],
+
+  editorialReview: true,
 },
 
 ];
