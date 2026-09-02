@@ -197,9 +197,9 @@ const glossaryTerms = [
     definition:
       'A Business Identifier Code (BIC), formerly known as a Bank Identifier Code, is an internationally recognised standardised code used to identify financial and non-financial institutions. BICs are used in payment messages and international transactions to route funds and identify the parties involved. Also commonly referred to as a SWIFT code.',
     seoTitle:
-      'What is a Bank Identifier Code (BIC)?',
+      'What is a Business or Bank Identifier Code (BIC)?',
     seoDescription:
-      'Learn what a Bank Identifier Code is and how it identifies banks and financial institutions.',
+      'Learn what a Business Identifier Code is and how it identifies banks and financial institutions.',
     relatedTerms: [
       'beneficiary',
       'international-bank-account-number',
@@ -568,28 +568,6 @@ const glossaryTerms = [
   },
 
   {
-    id: 'extended-industry-sort-code-directory',
-    term: 'Extended Industry Sort Code Directory',
-    acronym: 'EISCD',
-    aliases: [
-      'eiscd',
-      'sort code directory',
-      'bank sort code directory',
-    ],
-    regions: ['uk'],
-    category: 'banking',
-    definition:
-      'The Extended Industry Sort Code Directory (EISCD) contains information associated with UK sort codes and the financial institutions to which they belong.',
-    seoTitle:
-      'What is the Extended Industry Sort Code Directory (EISCD)?',
-    seoDescription:
-      'Learn what the EISCD is and how it provides information about UK sort codes and financial institutions.',
-    relatedTerms: [
-      'bank-identifier-code',
-    ],
-  },
-
-  {
     id: 'faster-payment-identifier',
     term: 'Faster Payment Identifier',
     acronym: 'FPID',
@@ -598,11 +576,13 @@ const glossaryTerms = [
       'faster payment identification number',
       'faster payment reference',
       '18-digit faster payment reference',
+      'faster payment identifier',
+      'faster payment indicator'
     ],
     regions: ['uk'],
     category: 'payments',
     definition:
-      'A Faster Payment Identifier (FPID) is an 18-digit reference generated when a Faster Payment is sent. It may be used in a Credit Payment Recovery case to help locate the funds.',
+      'A Faster Payment Identifier (FPID) is a unique reference number generated when a Faster Payment is processed. It appears on bank statements to help identify and track individual transactions.',
     seoTitle:
       'What is a Faster Payment Identifier (FPID)?',
     seoDescription:
@@ -630,7 +610,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real time.',
+      'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real-time.',
     seoTitle:
       'What are Faster Payments (FPS)?',
     seoDescription:
@@ -657,7 +637,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom.',
+      'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom. It works to protect consumers, maintain market integrity, and promote effective competition between financial service providers.',
     seoTitle:
       'What is the Financial Conduct Authority (FCA)?',
     seoDescription:
@@ -684,7 +664,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for eligible customers of authorised financial services firms.',
+      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
     seoTitle:
       'What is the Financial Services Compensation Scheme (FSCS)?',
     seoDescription:
@@ -703,6 +683,7 @@ const glossaryTerms = [
       'currency exchange',
       'currency conversion',
       'foreign currency exchange',
+      'forex'
     ],
     regions: ['uk', 'eu'],
     category: 'foreign-exchange',
@@ -730,6 +711,7 @@ const glossaryTerms = [
       'currency trade',
       'currency conversion trade',
       'fx transaction',
+      'forex trading'
     ],
     regions: ['uk', 'eu'],
     category: 'foreign-exchange',
@@ -745,6 +727,30 @@ const glossaryTerms = [
     ],
   },
 
+{
+  id: 'embedded-banking',
+  term: 'Embedded Banking',
+  aliases: [
+    'Banking Embedded in Products',
+    'Embedded Financial Services',
+  ],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    `Embedded Banking is the integration of banking services directly into a non-bank product, platform or customer journey. It enables organisations to offer services such as accounts, payments and other financial products without becoming a bank themselves. Embedded Banking is typically delivered through Banking as a Service (BaaS) providers, which supply the regulated banking infrastructure, technology and banking licence required to provide these services.`,
+  seoTitle:
+    'What is Embedded Banking? | Definition and Examples',
+  seoDescription:
+    `Learn what Embedded Banking is, how it works, and how businesses use Banking as a Service (BaaS) to offer accounts, payments and other banking services within their own products.`,
+  relatedTerms: [
+    'Banking as a Service (BaaS)',
+    'API',
+    'Account',
+    'Payment Initiation',
+  ],
+  editorialReview: true,
+},
+
   {
     id: 'general-segregation-account',
     term: 'General Segregation Account',
@@ -754,15 +760,16 @@ const glossaryTerms = [
       'general segregated account',
       'segregated funds account',
       'gsa',
+      'segregated pooled account'
     ],
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A General Segregation Account is a ClearBank account type used to keep applicable funds separate from other balances.',
+      `A General Segregation Account (GSA) is a ClearBank account type that holds funds for one or more customers separately from an institution's operational funds. Also known as a Segregated Pooled account.`,
     seoTitle:
       'What is a General Segregation Account?',
     seoDescription:
-      'Learn how the term General Segregation Account is used in ClearBank documentation.',
+      `Learn what a general segregation account (GSA) is and how it separates customer funds from an institution's operational funds.`,
     relatedTerms: [
       'operating-account',
       'safeguarded-account',
@@ -771,6 +778,32 @@ const glossaryTerms = [
     editorialReview: true,
   },
 
+ {
+    id: 'segregated-pooled-account',
+    term: 'Segregated Pooled Account',
+    aliases: [
+      'segregation account',
+      'general segregated account',
+      'segregated funds account',
+      'gsa',
+      'general segregation account'
+    ],
+    regions: ['uk'],
+    category: 'accounts',
+    definition:
+      `A Segregated Pooled Account is another name for a General Segregation Account, a pooled ClearBank account type that holds funds for one or more customers separately from an institution's operational funds.`,
+    seoTitle:
+      'What is a Segregated Pooled Account?',
+    seoDescription:
+      `Learn what a segregated pooled account is and how it separates customer funds from an institution's operational funds.`,
+    relatedTerms: [
+      'operating-account',
+      'safeguarded-account',
+      'segregation',
+    ],
+    editorialReview: true,
+  },
+  
   {
     id: 'hub-account',
     term: 'Hub Account',
@@ -782,7 +815,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'accounts',
     definition:
-      'A Hub Account is a ClearBank account type used within applicable embedded-banking account structures.',
+      'A Hub Account is an FSCS-protected bank account held with ClearBank that enables payments to and from a defined set of associated accounts within an embedded-banking solution.',
     seoTitle: 'What is a Hub Account?',
     seoDescription:
       'Learn how the term Hub Account is used in ClearBank embedded-banking documentation.',
@@ -791,6 +824,7 @@ const glossaryTerms = [
       'institution-account',
       'real-account',
       'virtual-account',
+      'embedded-banking'
     ],
     editorialReview: true,
   },
