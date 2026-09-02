@@ -550,7 +550,7 @@ const glossaryTerms = [
     regions: ['eu'],
     category: 'direct-debits',
     definition:
-      'A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.',
+      `A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.`,
     seoTitle:
       'What is a Direct Debit Mandate?',
     seoDescription:
@@ -572,7 +572,7 @@ const glossaryTerms = [
       'faster payment reference',
       '18-digit faster payment reference',
       'faster payment identifier',
-      'faster payment indicator'
+      'faster payment indicator',
     ],
     regions: ['uk'],
     category: 'payments',
@@ -778,8 +778,7 @@ const glossaryTerms = [
       'segregation account',
       'general segregated account',
       'segregated funds account',
-      'gsa',
-      'general segregated account'
+      'gsa'
     ],
     regions: ['uk'],
     category: 'accounts',
@@ -927,7 +926,7 @@ const glossaryTerms = [
       'sepa-instant-credit-transfer',
       'swift',
       'cross-border-payment',
-      'IBAN',
+      'international-bank-account-number',
     ],
   },
 
@@ -1078,8 +1077,7 @@ const glossaryTerms = [
       'institution-account',
       'intraday-liquidity-pool',
       'operating-account',
-      'Settlement',
-      'intraday-liquidity',
+      'settlement',
       'reserve-account',
     ],
     editorialReview: true,
@@ -1131,7 +1129,7 @@ const glossaryTerms = [
     seoTitle:
       'What is an Operating Account?',
     seoDescription:
-      'Learn what an Operating Account is and how it is used to hold a financial institution’s own funds.',
+      `Learn what an Operating Account is and how it is used to hold a financial institution’s own funds.`,
     relatedTerms: [
       'bacs-suspense-account',
       'general-segregated-account',
@@ -1775,7 +1773,7 @@ const glossaryTerms = [
   regions: ['uk'],
   category: 'payments',
   definition:
-    'Bankers’ Automated Clearing Services (Bacs) is a UK payment system used to process Direct Debit and Direct Credit transactions between bank accounts. Bacs processes payments in batches and typically operates on a three-working-day cycle.',
+    `Bankers’ Automated Clearing Services (Bacs) is a UK payment system used to process Direct Debit and Direct Credit transactions between bank accounts. Bacs processes payments in batches and typically operates on a three-working-day cycle.`,
   paymentCycle: [
     {
       title: 'Day 1 (Input)',
