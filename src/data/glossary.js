@@ -69,7 +69,6 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
-      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
     seoTitle:
       'What is the Automated Return of Unapplied Credits Service (ARUCS)?',
     seoDescription:
@@ -94,7 +93,6 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
-      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
       'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
     seoTitle:
       'What is the Automated Return of Unpaid Direct Debits Service (ARUDD)?',
