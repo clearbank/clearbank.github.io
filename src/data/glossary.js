@@ -69,6 +69,7 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
+      'The Automated Return of Unapplied Credits Service (ARUCS) is a Bacs payment scheme process that automatically returns a Direct Credit payment to the bank account of the organisation that sent the payment if the Direct Credit could not be applied to the intended destination account.',
     seoTitle:
       'What is the Automated Return of Unapplied Credits Service (ARUCS)?',
     seoDescription:
@@ -93,6 +94,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
+      'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
       'The Automated Return of Unpaid Direct Debits Service (ARUDD) is a Bacs service used by banks to return Direct Debit collections that could not be paid.',
     seoTitle:
       'What is the Automated Return of Unpaid Direct Debits Service (ARUDD)?',
@@ -122,6 +124,7 @@ const glossaryTerms = [
     category: 'direct-debits',
     definition:
       'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that enables the electronic creation and submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
+      'The Automated Direct Debit Instruction Service (AUDDIS) is a Bacs service that enables the electronic creation and submission of Direct Debit Instructions instead of sending paper instructions to the paying bank.',
     seoTitle:
       'What is the Automated Direct Debit Instruction Service (AUDDIS)?',
     seoDescription:
@@ -149,6 +152,7 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'Bacs Direct Credit is a secure Bacs payment scheme used to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
+      'Bacs Direct Credit is a secure Bacs payment scheme used to credit funds to a recipient account. It is commonly used for payments such as salaries, pensions, expenses and supplier payments.',
     seoTitle: 'What is a Bacs Direct Credit?',
     seoDescription:
       'Learn what a Bacs Direct Credit is and how it is used to send payments such as salaries and supplier payments.',
@@ -173,6 +177,7 @@ const glossaryTerms = [
     category: 'accounts',
     definition:
       `A Bacs Suspense Account is a specialised temporary holding account used by ClearBank to process and settle Bacs payments that cannot be automatically matched to a client's account.`,
+      `A Bacs Suspense Account is a specialised temporary holding account used by ClearBank to process and settle Bacs payments that cannot be automatically matched to a client's account.`,
     seoTitle: 'What is a Bacs Suspense Account?',
     seoDescription:
       'Learn what a Bacs Suspense Account is and how it records fund movements associated with returned Bacs payments.',
@@ -183,6 +188,8 @@ const glossaryTerms = [
   },
 
   {
+    id: 'business-identifier-code',
+    term: 'Business Identifier Code',
     id: 'business-identifier-code',
     term: 'Business Identifier Code',
     acronym: 'BIC',
@@ -196,9 +203,12 @@ const glossaryTerms = [
     category: 'banking',
     definition:
       'A Business Identifier Code (BIC), formerly known as a Bank Identifier Code, is an internationally recognised standardised code used to identify financial and non-financial institutions. BICs are used in payment messages and international transactions to route funds and identify the parties involved. Also commonly referred to as a SWIFT code.',
+      'A Business Identifier Code (BIC), formerly known as a Bank Identifier Code, is an internationally recognised standardised code used to identify financial and non-financial institutions. BICs are used in payment messages and international transactions to route funds and identify the parties involved. Also commonly referred to as a SWIFT code.',
     seoTitle:
       'What is a Business or Bank Identifier Code (BIC)?',
+      'What is a Business or Bank Identifier Code (BIC)?',
     seoDescription:
+      'Learn what a Business Identifier Code is and how it identifies banks and financial institutions.',
       'Learn what a Business Identifier Code is and how it identifies banks and financial institutions.',
     relatedTerms: [
       'beneficiary',
@@ -321,6 +331,7 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe, while settlement transfers the corresponding funds. Clearing is a fundamental component of payment systems and financial market infrastructure.',
+      'Clearing is the process of exchanging, validating and, where applicable, calculating the obligations arising from payment instructions before settlement. Clearing determines what participants owe, while settlement transfers the corresponding funds. Clearing is a fundamental component of payment systems and financial market infrastructure.',
     seoTitle: 'What is Payment Clearing?',
     seoDescription:
       'Learn what payment clearing is and how it differs from the settlement of funds.',
@@ -346,6 +357,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
+      'Confirmation of Payee (CoP) is a name-checking service that confirms whether the details entered by a payer correspond to the intended recipient before a payment is made, ensuring payments are sent to the intended recipient.',
       'Confirmation of Payee (CoP) is a name-checking service that confirms whether the details entered by a payer correspond to the intended recipient before a payment is made, ensuring payments are sent to the intended recipient.',
     seoTitle:
       'What is Confirmation of Payee (CoP)?',
@@ -446,6 +458,7 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'A debtor is a person, business or organisation that makes a payment or owes money to a creditor.',
+      'A debtor is a person, business or organisation that makes a payment or owes money to a creditor.',
     seoTitle:
       'What is a Debtor in Payments?',
     seoDescription:
@@ -468,6 +481,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'direct-debits',
     definition:
+      `A Direct Debit is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
       `A Direct Debit is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
     seoTitle: 'What is a Direct Debit?',
     seoDescription:
@@ -497,6 +511,7 @@ const glossaryTerms = [
     category: 'direct-debits',
     definition:
       'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit Guarantee when a payer has been refunded for a Direct Debit collected in error. A DDIC enables the paying payment service provider (PSP) to recover funds from the Service User responsible for the collection.',
+      'A Direct Debit Indemnity Claim (DDIC) is a claim made under the Direct Debit Guarantee when a payer has been refunded for a Direct Debit collected in error. A DDIC enables the paying payment service provider (PSP) to recover funds from the Service User responsible for the collection.',
     seoTitle:
       'What is a Direct Debit Indemnity Claim (DDIC)?',
     seoDescription:
@@ -522,6 +537,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'direct-debits',
     definition:
+      'A Direct Debit Instruction (DDI) is the authorisation provided by a payer that permits an organisation to collect payments from the payer’s account by Direct Debit.',
       'A Direct Debit Instruction (DDI) is the authorisation provided by a payer that permits an organisation to collect payments from the payer’s account by Direct Debit.',
     seoTitle:
       'What is a Direct Debit Instruction (DDI)?',
@@ -551,6 +567,7 @@ const glossaryTerms = [
     category: 'direct-debits',
     definition:
       'A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.',
+      'A Direct Debit Mandate is the authorisation provided by a payer that allows a creditor to collect payments from the payer’s account by Direct Debit. A Direct Debit Mandate provides the legal basis for collections under the applicable Direct Debit scheme.',
     seoTitle:
       'What is a Direct Debit Mandate?',
     seoDescription:
@@ -573,10 +590,13 @@ const glossaryTerms = [
       '18-digit faster payment reference',
       'faster payment identifier',
       'faster payment indicator'
+      'faster payment identifier',
+      'faster payment indicator'
     ],
     regions: ['uk'],
     category: 'payments',
     definition:
+      'A Faster Payment Identifier (FPID) is a unique reference number generated when a Faster Payment is processed. It appears on bank statements to help identify and track individual transactions.',
       'A Faster Payment Identifier (FPID) is a unique reference number generated when a Faster Payment is processed. It appears on bank statements to help identify and track individual transactions.',
     seoTitle:
       'What is a Faster Payment Identifier (FPID)?',
@@ -606,6 +626,7 @@ const glossaryTerms = [
     category: 'payments',
     definition:
       'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real-time.',
+      'Faster Payments is a UK payment system that enables participating banks and payment service providers to send and receive sterling payments in near real-time.',
     seoTitle:
       'What are Faster Payments (FPS)?',
     seoDescription:
@@ -632,6 +653,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
+      'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom. It works to protect consumers, maintain market integrity, and promote effective competition between financial service providers.',
       'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom. It works to protect consumers, maintain market integrity, and promote effective competition between financial service providers.',
     seoTitle:
       'What is the Financial Conduct Authority (FCA)?',
@@ -660,6 +682,7 @@ const glossaryTerms = [
     category: 'compliance',
     definition:
       'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
+      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
     seoTitle:
       'What is the Financial Services Compensation Scheme (FSCS)?',
     seoDescription:
@@ -678,6 +701,7 @@ const glossaryTerms = [
       'currency exchange',
       'currency conversion',
       'foreign currency exchange',
+      'forex'
       'forex'
     ],
     regions: ['uk', 'eu'],
@@ -706,6 +730,7 @@ const glossaryTerms = [
       'currency trade',
       'currency conversion trade',
       'fx transaction',
+      'forex trading'
       'forex trading'
     ],
     regions: ['uk', 'eu'],
@@ -797,6 +822,7 @@ const glossaryTerms = [
     editorialReview: true,
   },
   
+  
   {
     id: 'hub-account',
     term: 'Hub Account',
@@ -809,6 +835,7 @@ const glossaryTerms = [
     category: 'accounts',
     definition:
       'A Hub Account is an FSCS-protected bank account held with ClearBank that enables payments to and from a defined set of associated accounts within an embedded-banking solution.',
+      'A Hub Account is an FSCS-protected bank account held with ClearBank that enables payments to and from a defined set of associated accounts within an embedded-banking solution.',
     seoTitle: 'What is a Hub Account?',
     seoDescription:
       'Learn how the term Hub Account is used in ClearBank embedded-banking documentation.',
@@ -817,6 +844,7 @@ const glossaryTerms = [
       'institution-account',
       'real-account',
       'virtual-account',
+      'embedded-banking'
       'embedded-banking'
     ],
     editorialReview: true,
@@ -1869,3 +1897,4 @@ const glossaryTerms = [
 ];
 
 export default glossaryTerms;
+
