@@ -301,6 +301,16 @@
             "nullable": true,
             "example": "GB987654321",
             "description": "The sole trader's VAT registration number, if they have one."
+          },
+          "taxResidency": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "description": "An array containing the country the sole trader resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
+            "example": ["GBR"]
           }
         },
         "additionalProperties": false
@@ -318,8 +328,7 @@
           "nationalInsuranceNumber",
           "nationality",
           "sourceOfFunds",
-          "tax",
-          "taxResidency"
+          "tax"
         ],
         "type": "object",
         "properties": {
@@ -385,16 +394,6 @@
               "$ref": "#/components/schemas/CountryCode"
             },
             "description": "An array containing the sole trader's nationalities as ISO 3166 Alpha-3 country-codes. You can provide multiple values for sole traders with more than one nationality.",
-            "example": ["GBR"]
-          },
-          "taxResidency": {
-            "minItems": 1,
-            "maxItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CountryCode"
-            },
-            "description": "An array containing the country the sole trader resides in for tax purposes, represented as an ISO 3166 Alpha-3 country-code. Currently does not accept more than one country.",
             "example": ["GBR"]
           },
           "countryOfOperations": {
