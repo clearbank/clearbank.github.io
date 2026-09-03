@@ -44,6 +44,16 @@ If you receive a Transaction Rejected webhook outside of <a href="https://www.ba
 
 The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
 
+### What's changed in version 4
+
+Version 4 of the GBP Cross-Border endpoint introduces the changes required to remove unstructured address, together with a small number of ClearBank enhancements. If you are migrating from version 3, the key differences are:
+
+- On the `Other` account identification block for `sourceAccount`, `debtorAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- On the `Other` party identification block for the Debtor and Creditor: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to align with ISO 20022 wording.
+- Additional charge bearer options are now supported beyond `SHAR`, giving you more flexibility over how charges are allocated between the debtor and creditor.
+- `Other` remains a permitted value for the Creditor Account scheme name to accommodate non-UK identification formats — this is a difference from the domestic CHAPS v6 endpoints, where `Other` is not supported.
+
 ### Guidance on populating address information
 
 When sending outbound GBP Cross-Border payments, we strongly recommend that you provide as much address information as possible for both:

@@ -34,6 +34,23 @@ You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
+### What's changed in version 6
+The version 6 endpoints introduce the changes required to remove unstructured address, together with a small number of ClearBank enhancements. If you are migrating from version 5, the key differences are:
+
+**Customer payments (pacs.008) — `POST /payments/chaps/v6/customer-payments`**
+- The Creditor's `postalAddress` is now **mandatory** (optional in v5), in line with the BoE Name-Address scheme mandate.
+- The Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code are now **mandatory** on the Debtor and Creditor (see [Version 6 mandatory fields](#version-6-mandatory-fields)).
+- On the `Other` account identification block for `sourceAccount`, `debtorAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- On the `Other` party identification block for the Debtor and Creditor: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to align with ISO 20022 wording.
+
+**Institution / bank-to-bank payments (pacs.009) — `POST /payments/chaps/v6/institution-payments`**
+- On the `Other` account identification block for `sourceAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount`.
+
+**Return payments (pacs.004) — `POST /payments/chaps/v6/return-payments`**
+- A new optional `additionalInformation` field has been added to allow reason context to be supplied with a return. This field is **required** when the return reason code is `NARR`.
+
 ### Hybrid address
 
 From 24 November 2025, some inbound CHAPS payments may include a new address format called hybrid address. A hybrid address is an address format that includes both structured fields (such as town name and country) and unstructured address lines.
@@ -197,6 +214,10 @@ If no time is specified, the payment defaults to when the Bank of England system
     }
     ]}
 />
+
+<Callout colour="blue">
+The availability of the <strong>POST /payments/chaps/v6/institution-payments</strong> endpoint has been extended until <strong>17:55</strong>. This aligns with the Bank of England funding screen currently provided to clients in the ClearBank Portal.
+</Callout>
 
 <EndpointBlock
     type="post"
