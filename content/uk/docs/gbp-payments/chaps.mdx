@@ -35,21 +35,23 @@ You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
 
 ### What's changed in version 6
-The version 6 endpoints introduce the changes required to remove unstructured address, together with a small number of ClearBank enhancements. If you are migrating from version 5, the key differences are:
+The version 6 endpoints introduce the changes required by the Bank of England's November 2026 CHAPS release, together with a small number of ClearBank enhancements. If you are migrating from version 5, the key differences are:
 
 **Customer payments (pacs.008) — `POST /payments/chaps/v6/customer-payments`**
-- The Creditor's `postalAddress` is now **mandatory** (optional in v5), in line with the BoE Name-Address scheme mandate.
-- The Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code are now **mandatory** on the Debtor and Creditor (see [Version 6 mandatory fields](#version-6-mandatory-fields)).
+- The Creditor's `postalAddress` is now **mandatory** (optional in v5). This enriches payment information with additional creditor details to reduce follow-on queries, improve STP processing, and future-proof you for upcoming scheme-mandated requirements.
 - On the `Other` account identification block for `sourceAccount`, `debtorAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
-- On the `Other` party identification block for the Debtor and Creditor: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
-- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to align with ISO 20022 wording.
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to more accurately align with ISO 20022 wording.
 
 **Institution / bank-to-bank payments (pacs.009) — `POST /payments/chaps/v6/institution-payments`**
 - On the `Other` account identification block for `sourceAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
 - The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount`.
 
+<Callout colour="blue">
+For BoE funding clients: the new v6 and current v5 endpoints, as well as all Institution Portal screens, remain available until <strong>17:55</strong>. We recommend that clients who complete Bank of England account funding through the ClearBank Portal screens integrate with the pacs.009 v6 endpoint to offer an alternative means of submitting these payments.
+</Callout>
+
 **Return payments (pacs.004) — `POST /payments/chaps/v6/return-payments`**
-- A new optional `additionalInformation` field has been added to allow reason context to be supplied with a return. This field is **required** when the return reason code is `NARR`.
+- A new optional `additionalInformation` field (105 characters) has been added to allow reason context to be supplied with a return. This field is **required** when the return reason code is `NARR`.
 
 ### Hybrid address
 
@@ -286,7 +288,33 @@ Please update your test integration to ensure continued compatibility with the h
     The <a href="../gbp-payments/chaps#simulate-a-chaps-return-payment-using-a-simplified-request">POST /v2/inbound-payment-simulation/return-payment-simplified</a> endpoint has been deprecated. All requests through the new v3 <a href="#simulate-a-returned-chaps-payment">POST /inbound-payment-simulation/chaps/v3/return-payments</a> use a simplified request format.
 </Callout>
 
-The ClearBank Payment Simulator should no longer be used for CHAPS payments.
+<Callout colour="blue">
+Clients should use the v3 API inbound simulator endpoints as the strategic go-forward means of simulating inbound CHAPS payments. Do not use the legacy web-based URL simulator for inbound CHAPS payments.
+</Callout>
+
+#### What's changed in simulator version 3
+If you are migrating from the version 2 simulator endpoints, the key differences are:
+
+**Customer payments (pacs.008)**
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount`.
+- The Debtor `addressLine1` and `addressLine2` fields have been removed, as SWIFT no longer supports unstructured address formats.
+- The Creditor `addressLine1` and `addressLine2` fields have been removed, as SWIFT no longer supports unstructured address formats.
+- The `instructingAgentBIC` is now intelligently deduced from the Debtor details provided; a standard default value is used if not provided.
+- If you supply an `instructingAgentBIC`, it is validated to ensure it is a valid CHAPS Direct Participant BIC.
+
+**Institution payments (pacs.009)**
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount`.
+- The Debtor `addressLine1` and `addressLine2` fields have been removed, as SWIFT no longer supports unstructured address formats.
+- The Creditor `addressLine1` and `addressLine2` fields have been removed, as SWIFT no longer supports unstructured address formats.
+- The `instructingAgentBIC` is now intelligently deduced from the Debtor details provided; a standard default value is used if not provided.
+- If you supply an `instructingAgentBIC`, this is validated to ensure it is a valid CHAPS Direct Participant BIC.
+
+**Return payments (pacs.004)**
+- The amount field has been renamed from `instructedAmount` to `returnedInterBankSettlementAmount`.
+- A new optional `additionalInformation` field (105 characters) has been added. The `NARR` return reason code is supported when this field is populated.
+- The `returnReasonCode` field has been renamed to `reason` to align with the outbound pacs.004 API endpoint.
+- The `paymentId` in the request must reference an outbound CHAPS payment previously initiated in the simulation environment.
+
 
 <EndpointBlock
     type="post"
