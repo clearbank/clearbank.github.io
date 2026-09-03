@@ -1,0 +1,264 @@
+---
+title: IDs and Identifiers
+metaTitle: "IDs and Identifiers"
+order: 7
+showPageMenu: true
+description: Understand the identifiers used in ClearBank APIs, payments and webhooks.
+---
+
+## IDs and Identifiers
+
+When working with ClearBank APIs and webhooks, you might encounter several different identifiers relating to the same payment.
+
+For example, a single payment journey might include:
+
+- An `EndToEndId` supplied by the initiating party
+- A `PaymentId` used by ClearBank
+- A `TransactionId` used within ClearBank processing
+- A scheme identifier such as an `FPID` or `UETR`
+- An `EventId` in the webhook itself
+
+Although these identifiers might refer to the same payment journey, they serve different purposes and should not be treated as interchangeable.
+
+For definitions of individual identifiers, see the [Technical Reference](/eu/docs/api/technical-reference).
+
+## Which identifier should I use?
+
+| I want to... | Use |
+|--------------|-----|
+| Reference an account | `AccountId` |
+| Reference a customer | `CustomerId` |
+| Reference a payment | `PaymentId` |
+| Reference a transaction | `TransactionId` |
+| Reference a Direct Debit mandate | `MandateId` or `DirectDebitMandateId` |
+| Reference an earlier transaction | `OriginalTransactionId` |
+| Match a payment to my own records | `EndToEndId` |
+| Trace an API request | `X-Request-Id` |
+| Trace related API activity | `X-Correlation-Id` |
+| Reference a Faster Payment | `FPID` |
+| Trace a payment carried over SWIFT | `UETR` |
+| Identify a Bacs Service User | `Service User Number (SUN)` |
+
+## Identifier categories
+
+Identifiers generally fall into five categories.
+
+### Tracking identifiers
+
+Tracking identifiers help trace requests and events.
+
+| Identifier | Purpose |
+|------------|---------|
+| `X-Request-Id` | Identifies an API request |
+| `X-Correlation-Id` | Helps trace related API activity |
+| `EventId` | Identifies a webhook event |
+
+### Entity identifiers
+
+Entity identifiers identify ClearBank resources and entities.
+
+| Identifier | Identifies |
+|------------|------------|
+| `AccountId` | An account |
+| `CustomerId` | A customer |
+| `PaymentId` | A payment |
+| `TransactionId` | A transaction |
+| `MandateId` | A mandate |
+| `DirectDebitMandateId` | A Direct Debit mandate |
+| `OriginalTransactionId` | An earlier transaction |
+
+### Client-provided references
+
+These identifiers are supplied by the initiating party.
+
+| Identifier |
+|------------|
+| `EndToEndId` |
+| `EndToEndTransactionId` |
+| `EndToEndTransactionIdentification` |
+
+These identifiers are commonly used to reconcile ClearBank activity with internal systems and records.
+
+### Scheme identifiers
+
+These identifiers originate from payment schemes.
+
+#### UK and EU
+
+| Identifier |
+|------------|
+| `ActualEndToEndTransactionId` |
+| `UETR` |
+
+### Security identifiers
+
+| Identifier |
+|------------|
+| `Nonce` |
+
+Security identifiers are used within applicable verification and security processes.
+
+## Understanding payment identifiers
+
+Several identifiers might exist for the same payment journey.
+
+Each identifier serves a different purpose.
+
+### Client references
+
+The initiating party supplies identifiers such as:
+
+```text
+EndToEndId
+EndToEndTransactionId
+EndToEndTransactionIdentification
+```
+
+These identifiers can be used to correlate a payment with your own internal systems and records.
+
+### ClearBank identifiers
+
+ClearBank might reference the payment using:
+
+```text
+PaymentId
+TransactionId
+AccountId
+CustomerId
+```
+
+These identifiers identify ClearBank resources and activities.
+
+### Scheme identifiers
+
+A payment scheme might reference the payment using:
+
+```text
+FPID
+UETR
+ActualEndToEndTransactionId
+```
+
+These identifiers originate from the payment scheme involved.
+
+## Payment journey example
+
+The following example illustrates how identifiers can appear throughout the lifecycle of a payment.
+
+```text
+You initiate a payment
+│
+├─ EndToEndId
+│
+▼
+
+ClearBank receives the payment
+│
+├─ PaymentId
+│
+▼
+
+Transaction processing
+│
+├─ TransactionId
+│
+▼
+
+Payment scheme processing
+│
+├─ FPID
+├─ UETR
+├─ ActualEndToEndTransactionId
+│
+▼
+
+Webhook generated
+│
+├─ EventId
+├─ PaymentId
+├─ TransactionId
+├─ EndToEndId
+│
+▼
+
+Reconciliation
+```
+
+Not every payment flow contains every identifier.
+
+The identifiers available depend on the payment type, payment scheme and webhook event.
+
+## Common points of confusion
+
+### PaymentId and TransactionId
+
+These identifiers represent different concepts.
+
+| PaymentId | TransactionId |
+|------------|--------------|
+| Identifies a payment | Identifies a transaction |
+| Used in payment-related activity | Used in transaction-related activity |
+
+A payment journey might contain both identifiers.
+
+### EndToEndId and PaymentId
+
+These identifiers originate from different sources.
+
+| `EndToEndId` | `PaymentId` |
+|------------|-----------|
+| Supplied by the initiating party | Used by ClearBank |
+| Client reference | ClearBank reference |
+
+Many organisations use `EndToEndId` to reconcile payments with internal systems and `PaymentId` when working with ClearBank APIs and webhook data.
+
+### X-Request-Id and X-Correlation-Id
+
+These identifiers are used for tracing and troubleshooting.
+
+| X-Request-Id | X-Correlation-Id |
+|--------------|------------------|
+| Identifies a request | Helps trace related API activity |
+| Supplied by the client | Returned by ClearBank |
+
+### EndToEndId and UETR
+
+These identifiers have similar names but serve different purposes.
+
+| EndToEndId | UETR |
+|------------|------|
+| Supplied by the initiating party | Used to trace applicable SWIFT payments |
+| Client reference | Scheme reference |
+
+## Working with webhook data
+
+Webhook payloads frequently contain multiple identifiers.
+
+For example:
+
+```json
+{
+  "eventId": "...",
+  "paymentId": "...",
+  "transactionId": "...",
+  "endToEndId": "..."
+}
+```
+
+Each identifier represents a different aspect of the payment journey.
+
+| Identifier | Purpose |
+|------------|---------|
+| `EventId` | Identifies the webhook event |
+| `PaymentId` | Identifies the payment |
+| `TransactionId` | Identifies the transaction |
+| `EndToEndId` | Identifies the initiating party's payment reference |
+
+## Reconciliation example
+
+A common reconciliation approach is:
+
+1. Submit a payment using your own `EndToEndId`.
+2. Store the `EndToEndId` in your internal system.
+3. Receive webhook events.
+4. Match the `EndToEndId` from the webhook to the payment in your records
