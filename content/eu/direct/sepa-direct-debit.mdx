@@ -89,7 +89,7 @@ On settlement, the debit is applied to the account and reflected in transaction 
 
 ### Inbound SDD message flow diagram
 
-![A message flow diagram showing which responses and webhooks you will receive after requesting to simulate an inbound direct debit.](/assets/images/sepa-dd/sepa-dd-flow.svg)
+![A message flow diagram showing which responses and webhooks you will receive after requesting to simulate an inbound direct debit.](/assets/images/diagrams/eu/sepa-direct-debit/sepa-dd-flow.svg)
 
 ### Associated webhooks with collections
 
@@ -212,13 +212,16 @@ ClearBank executes refund requests submitted via the API and forwards them to th
 - **[SEPA DD Debit Payment Refund Completed](#sepa-dd-debit-payment-refund-completed-webhook)**: sent when a refund request has been successfully processed after settlement.
 - **[SEPA DD Debit Payment Refund Failed](#sepa-dd-debit-payment-refund-failed-webhook)**: sent when a refund request cannot be successfully processed, for example due to timing constraints or validation failures.
 
-### Reversal (not exposed via API)
+### Reversal
 
 A reversal is initiated by the creditor PSP after settlement to reverse a previously settled debit, typically to correct errors such as duplicate collections.
 
-Reversals occur within a short scheme-defined timeframe following settlement (up to 5 business days) and result in the original debit being reversed and funds credited back to your account.
+Reversals occur within a short scheme-defined timeframe following settlement (up to 5 business days) and result in the original debit being reversed and funds credited back to the debtor account.
 
-You will be notified of reversals directly by ClearBank Client Services: reversals are not currently surfaced via webhooks.
+#### Associated Reversal webhooks
+
+- **[SEPA DD Debit Payment Reversal Completed](#sepa-dd-debit-payment-reversal-completed-webhook)**: sent when a reversal instruction has been successfully processed after settlement. This webhook confirms that the reversal instruction has been accepted and applied, resulting in the previously settled debit being reversed. Once received, the reversal is considered finalised and the corresponding funds have been credited back to the debtor account.
+- **[SEPA DD Debit Payment Reversal Failed](#sepa-dd-debit-payment-reversal-failed-webhook)**: sent when a reversal instruction cannot be successfully processed. This indicates that the reversal instruction has failed. In such cases, the original settled debit remains unchanged, and no funds are returned to the debtor account.
 
 ## SEPA Direct Debit webhooks
 
@@ -286,6 +289,10 @@ ClearBank uses these webhooks to notify you of inbound SEPA Core Direct Debit ac
 <WebhookPlaceholder render='sepa-dd-debit-refusal-completed-v1' />
 
 <WebhookPlaceholder render='sepa-dd-debit-refusal-failed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-reversal-completed-v1' />
+
+<WebhookPlaceholder render='sepa-dd-debit-payment-reversal-failed-v1' />
 
 ## Simulating SEPA Direct Debits
 

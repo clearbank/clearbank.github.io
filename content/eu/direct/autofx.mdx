@@ -57,11 +57,11 @@ In general, AutoFX is available Monday to Friday, from 9:30am CET to 3:30pm CET.
 
 ### Request a payment
 
-Payment requests should be submitted to our **POST /payments/cross-border/v1/fx-payments/** endpoint. We'll respond to a valid request synchronously with a **200 - OK** response, with a payload confirming details of the requested payment. The payment is only proposed at this stage; we will not proceed with sending the payment until you accept it.
+Payment requests should be submitted to our **POST /payments/cross-border/v2/fx-payments/** endpoint. We'll respond to a valid request synchronously with a **200 - OK** response, with a payload confirming details of the requested payment. The payment is only proposed at this stage; we will not proceed with sending the payment until you accept it.
 
 ### Accept a payment
 
-To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v1/fx-payments/accept** endpoint using the UETR of your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
+To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v2/fx-payments/accept** endpoint using the `paymentId` returned in the **200 - OK** response to your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
 
 We'll respond with a **202 - Accepted** response.
 
@@ -69,14 +69,14 @@ Note: You can request additional payments in parallel without accepting existing
 
 ### Abandon a payment
 
-If you do not want to proceed with a requested payment, no action is required. Requested payments will expire after **60 seconds** (when the `expiryDateTime` has passed). You won't be notified when a payment request expires; if you try to accept a requested payment after the `expiryDateTime` has passed, you'll receive a **400 - Bad Request** error.
+If you do not want to proceed with a requested payment, no action is required. Requested payments will expire after **60 seconds** (when the `expiryDateTime` has passed). You won't be notified when a payment request expires; if you try to accept a requested payment after the `expiryDateTime` has passed, you'll receive a **422 - Unprocessable Entity** error.
 
 ### Ensure settlement amount
 
 You can 'fix' either side of the currency pair in an AutoFX payment.
 
-* To fix the amount of EUR you'll pay, use the `instructedAmount` object to declare a payment amount in EUR, including fees. The amount the creditor will receive will be confirmed in the **200 - OK** response body, under the property `interbankSettlementAmount`.
-* To fix the amount of target currency - for example, GBP - use the `interbankSettlementAmount` object to declare the settlement amount in GBP after transaction fees. The amount of EUR you'll pay will be confirmed in the **200 - OK** response body, under the property `instructedAmount`.
+* To fix the amount of EUR you'll pay, use the `instructedAmount` object to declare a payment amount in EUR, including fees. The amount the creditor will receive will be confirmed in the **200 - OK** response body, under the property `equivalentAmount`.
+* To fix the amount of target currency - for example, GBP - use the `equivalentAmount` object to declare the settlement amount in GBP after transaction fees. The amount of EUR you'll pay will be confirmed in the **200 - OK** response body, under the property `instructedAmount`.
 
 ### Receive payment updates
 
@@ -88,7 +88,7 @@ We'll update you about payments' statuses via webhook. AutoFX has three such web
 
 ### Message flow diagram
 
-![Message flow diagram showing the endpoint calls and webhooks involved in making an AutoFX payment. An outbound payment request is made, ClearBank responds with 200 - OK. Within 60 seconds, the requester accepts the proposed payment using the accept an AutoFX payment endpoint. ClearBank responds with 202 - Accepted. Clearbank then follows up with 1-2 webhooks depending on the outcome of the payment: outbound payment accepted, then outbound payment completed, or outbound payment failed.](/assets/images/mccy-eu-payment.svg)
+![Message flow diagram showing the endpoint calls and webhooks involved in making an AutoFX payment. An outbound payment request is made, ClearBank responds with 200 - OK. Within 60 seconds, the requester accepts the proposed payment using the accept an AutoFX payment endpoint. ClearBank responds with 202 - Accepted. Clearbank then follows up with 1-2 webhooks depending on the outcome of the payment: outbound payment accepted, then outbound payment completed, or outbound payment failed.](/assets/images/diagrams/eu/auto-fx/mccy-eu-payment.svg)
 
 ## Endpoints
 
@@ -97,8 +97,8 @@ We'll update you about payments' statuses via webhook. AutoFX has three such web
   title="Request an AutoFX payment"
   endpoints={[
     {
-      path: "/payments/cross-border/v1/fx-payments/",
-      version: "1.0MCCYEU",
+      path: "/payments/cross-border/v2/fx-payments",
+      version: "2.0MCCYEU",
       webhooks: [
       ]
     }
@@ -110,8 +110,8 @@ We'll update you about payments' statuses via webhook. AutoFX has three such web
   title="Accept an AutoFX payment"
   endpoints={[
     {
-      path: "/payments/cross-border/v1/fx-payments/accept",
-      version: "1.0MCCYEU",
+      path: "/payments/cross-border/v2/fx-payments/accept",
+      version: "2.0MCCYEU",
       webhooks: [
         'mccy-eu-accepted-v1',
         'mccy-eu-completed-v1',
