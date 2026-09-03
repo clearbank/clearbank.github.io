@@ -39,20 +39,35 @@ Our Authentication Service and API both use mTLS. Your client must have a valid 
 
 Our requirements for a valid mTLS certificate include:
 
-* The certificate must be signed using a [root certificate approved by us](#approved-root-certificates).
+* The certificate must be either [self-signed](#self-signed-certificates) or signed using a [root certificate approved by us](#approved-root-certificates).
 * The certificate must be valid.
 * The certificate must not have expired.
 * The certificate must specify `Client Authentication` in its Enhanced Key Usage field.
 
+> **Note:** you cannot reuse the same mTLS certificate across ClearBank environments. A different leaf mTLS certificate is required for each environment.
+
 Your mTLS certificate can be used for authentication with our services for 1 year from registration or until its expiry date, whichever is sooner.
 
-Once you've appropriately configured and signed this certification, you can upload its public thumbprint to the ClearBank Portal as a Privacy Enhanced Mail (PEM) file.
+> **Note:** You do not need to create a new API client when replacing or rotating its mTLS certificate. The existing API client remains in place.
+
+Once you've appropriately configured and signed this certificate, you can upload its public thumbprint to the ClearBank Portal as a Privacy Enhanced Mail (PEM) file.
 
 In the ClearBank Portal, go to **Institution** > **API Management** > **Create New Client** to upload the PEM file.
 
 From this page you can also configure this API client's permissions and give it an identifiable name. You should take note of the `ClientId` as this will be used later to generate access tokens.
 
+### Self-signed certificates
+
+Self-signed certificates are supported and are the simplest way to onboard with us. A self-signed mTLS certificate must meet the following requirements:
+
+* It must be provided in a PEM format
+* It must have a valid X.509 certificate
+* It must specify `Client Authentication` in its Enhanced Key Usage field
+* It must have a minimum of RSA 2048 bits
+
 ### Approved root certificates
+
+Alternatively, you can use a certificate signed by one of our approved public certificate authority (CA) providers. This support is dependent on those providers continuing to issue certificates that meet our requirements, including the `Client Authentication` Enhanced Key Usage requirement.
 
 Below is a list of current approved root certificates:
 
@@ -60,8 +75,6 @@ Below is a list of current approved root certificates:
 * DigiCert Client RSA4096 Root G5
 * DigiCert Global Root G2
 * Sectigo User Trust RSA Root
-
-> TODO: self-signing guidance?
 
 ## Create a Public / Private key pair
 
