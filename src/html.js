@@ -5,7 +5,7 @@ import config from '../config'
 export default class HTML extends React.Component {
   render () {
     return (
-      <html {...this.props.htmlAttributes} lang='en'>
+      <html {...this.props.htmlAttributes} lang='en' data-theme='light'>
         <head>
           <meta charSet='utf-8' />
           <meta httpEquiv='x-ua-compatible' content='ie=edge' />
