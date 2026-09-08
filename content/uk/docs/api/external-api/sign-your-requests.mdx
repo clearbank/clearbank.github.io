@@ -1,0 +1,147 @@
+---
+title: "Sign your requests"
+order: 3
+metaTitle: "Sign your requests"
+metaDescription: "How to sign requests to the External API, including required headers, digital signatures, and request examples."
+showPageMenu: true
+---
+
+import Callout from "src/components/callout";
+
+## Overview
+
+We use digital signatures to maintain the integrity of HTTP requests, responses, and webhooks.
+
+Requests without a verifiable digital signature will be rejected. You should also [verify the signature of our responses](./verify-our-responses).
+
+We use the [FAPI 2.0 Message Signing standard](https://openid.net/specs/fapi-2_0-message-signing.html). This standard is based off [RFC 9421 HTTP Message Signature](https://datatracker.ietf.org/doc/rfc9421/).
+
+## Generating a digital signature
+
+To generate a digital signature, you must:
+
+1. Have already generated a public/private key pair and uploaded the public key to ClearBank's systems (see [Register your API client](./register-your-api-client))
+2. Create your signature base, which must then be signed with the private key
+
+When ClearBank receives a request, we re-generate the signature base using the `signature-input` header you have provided. We then validate the signature using your public key as defined in the `keyid` of the **signature input** header.
+
+### Creating the signature base
+
+The signature consists of several HTTP header parameters:
+
+- **Signature input** header - Describes how the signature base is formed
+- **Content digest** header - Included if the request has a body
+- **Signature** header - A signed copy of the signature base, as defined by the **signature input** header
+
+#### Signature input header
+
+**Required.** Describes how the signature base is formed to create your digital signature. Validated by your previously-provided public key.
+
+_Format:_ `{signature-id}=({list-of-components});keyid="{key-id}";created={timestamp};tag="fapi-2-request"`
+_Example:_ `sig=("@method" "@target-uri" "authorization" "x-fapi-interaction-id");keyid="207236b3-b69a-4192-baa7-3dd2992874f8";created=1713800893;tag="fapi-2-request"`
+
+#### Signature input components
+
+For requests, there are two allowable types of digital signature components:
+
+1. HTTP fields, including `authorization` and `content-digest` (when a message body is present).
+2. Derived components, such as `@method` and `@target-uri`. These are the only derived components we support.
+
+A third form, *request components* (suffixed with `;req`), is used only when signing responses to webhooks. See [Webhooks](./webhooks#digital-signatures).
+
+**List of components**
+
+- `{signature-id}` - An id/key that must match the `signature-id` provided in your `signature` header. This is used to link the two headers.
+- `{key-id}` - The identifier of the key that can be used to verify the signature. This ID must match the ID of the public key you registered (see [Register your API client](./register-your-api-client)).
+- `{timestamp}` - A Unix timestamp in Seconds. This must be the time that the request is made. This value will be rejected if it is not received by our API in a timely manner. We expect this value to be within 60 seconds of the time the request is received.
+- `{list-of-components}` - A space separated list of double-quoted components to be used when calculating the Signature Base
+  - `@method` **Required.** The HTTP method being used, e.g. GET or POST.
+  - `@target-uri` **Required.** The full URL of the resource being requested.
+  - `authorization` **Required.** The value of the HTTP header present.
+  - `x-fapi-interaction-id` **Required.** The Interaction ID provided.
+  - `content-digest` **Required if the header is present.** The value of the HTTP header.
+
+**Note:** These components can be included in any order in the `signature-input` header, but the signature base must follow that same order.
+
+#### Content digest
+
+**These are required only when the request contains body content.** A hash of the message body (when present) as per RFC 9530 - Digest Fields.
+
+_Format:_ `{hash-algorithm}=:{hash-of-body}:`
+_Example:_ `sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:`
+
+##### Content digest components
+
+- `{hash-algorithm}` - `SHA-256` algorithm.
+- `{hash-of-body}` - The hash of the message body using the declared algorithm, encoded as Base64.
+
+#### Constructing the signature base
+
+The signature base is created by concatenating, in order:
+
+1. Each component listed in the `signature-input` header, **in the exact order they appear in the `signature-input` component list**
+2. Followed by the signature parameters as `@signature-params` - which is the value of the signature input header.
+
+Each line is separated by a newline (`\n`) character.
+
+Example signature base:
+
+```text
+"@method":GET\n
+"@target-uri":https://api.example.com/apis/v1/test\n
+"authorization":Bearer eyJ...\n
+"x-fapi-interaction-id":abc-123\n
+"@signature-params":sig=("@method" "@target-uri" "authorization" "x-fapi-interaction-id");keyid="207236b3-b69a-4192-baa7-3dd2992874f8";created=1713800893;tag="fapi-2-request"
+```
+
+### Signature header
+
+The signature base is created from the **signature input**. Once generated, the signature base can then be signed with your previously provided private key to generate the **signature**.
+
+This must then be Base64 encoded before being used within the **signature** HTTP header.
+
+_Format:_ `{signature-id}=:{signature}:`
+_Example:_ `sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:`
+
+#### Signature header structure
+
+- `{signature-id}` - An id/key that must match the `signature-id` provided in your `signature input` header. This is used to link the two headers.
+- `{signature}` - The signature created by signing your `signature base` with your private key, encoded as Base64. Currently only the ECDSA Using Curve P-256 DSS and SHA-256 algorithm is supported.
+
+## Worked example
+
+The following example brings the three headers together for a `POST` request that has a body. The steps are:
+
+1. Calculate the `content-digest` of the request body (SHA-256, Base64 encoded).
+2. Build the `signature-input` listing the components you are signing, in order.
+3. Construct the signature base from those components.
+4. Sign the signature base with your private key and Base64 encode it to produce the `signature`.
+
+The resulting request headers look like this:
+
+```http
+POST https://mtls.api-sim.clearbank.co.uk/apis/v1/test HTTP/1.1
+Authorization: Bearer eyJ...
+x-fapi-interaction-id: 7a1f49ac-1e46-479c-be28-44b384115a5b
+Content-Digest: sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:
+Signature-Input: sig=("@method" "@target-uri" "authorization" "x-fapi-interaction-id" "content-digest");keyid="207236b3-b69a-4192-baa7-3dd2992874f8";created=1713800893;tag="fapi-2-request"
+Signature: sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:
+Content-Type: application/json
+
+{ "institutionId": "example" }
+```
+
+The signature base that was signed to produce the `signature` header above is:
+
+```text
+"@method": POST
+"@target-uri": https://mtls.api-sim.clearbank.co.uk/apis/v1/test
+"authorization": Bearer eyJ...
+"x-fapi-interaction-id": 7a1f49ac-1e46-479c-be28-44b384115a5b
+"content-digest": sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:
+"@signature-params": ("@method" "@target-uri" "authorization" "x-fapi-interaction-id" "content-digest");keyid="207236b3-b69a-4192-baa7-3dd2992874f8";created=1713800893;tag="fapi-2-request"
+```
+
+<Callout colour="blue">
+  The <code>content-digest</code>, <code>signature-input</code>, and <code>signature</code> components must be byte-for-byte identical between the values you send in the headers and the values you use to build the signature base. Any difference &mdash; including added or removed whitespace &mdash; will cause signature verification to fail.
+</Callout>
