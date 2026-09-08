@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkclearbank_api_documentation=self.webpackChunkclearbank_api_documentation||[]).push([[691],{7200:function(n,u,e){e.r(u);var a=e(7294),c=e(1082);u.default=function(){return(0,a.useEffect)((function(){(0,c.c4)("/uk")}),[]),null}}}]);
+//# sourceMappingURL=component---src-pages-index-tsx-fd206b437aa6001c4ff1.js.map
