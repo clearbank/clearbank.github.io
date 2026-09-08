@@ -6,15 +6,46 @@ showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
-import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 
 ## Bacs
 
-Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**. Bacs does not operate on weekends or bank holidays.
+Bacs is the UK's high volume, low value payment service offering two schemes: Bacs Direct Credit and Bacs Direct Debit. Bacs Direct Debit is the only UK payment scheme offering debit payments, whereby creditors (the payment recipients) can retrieve funds from debtors' accounts.
+
+### Bacs three-day cycle
+
+Bacs operates on a three-day cycle: the **input day**, the **processing day**, and the **entry day**.
+
+* **Input day**: a file of credit and debit payments is sent by debitors (the account holders initiating debit payments) to the Bacs scheme.
+* **Processing day**: ClearBank receives details of debit payments to be made from the Bacs scheme.
+* **Entry day**: Payment instructions are applied ('cleared') to the destination account. Settlement typically happens around 09:30 UK time on this day for direct Bacs participants.
 
 ![Image showing 3-day Bacs payment cycle](/assets/images/diagrams/uk/bacs/BacsOverview-Days.svg "Bacs payment cycle")
+
+A full list of direct Bacs participants can be found on <ExternalLink href="https://www.wearepay.uk/what-we-do/payment-systems/bacs-payment-system/payment-system-participant-list/">pay.uk's website</ExternalLink>.
+
+#### Non-working days
+
+Bacs does not operate on weekends or bank holidays; the aforementioned three-day cycle may cross over into the next working week if a payment is initiated in the lead-up to a weekend or bank holiday, potentially taking five full calendar days on a typical weekend.
+
+#### Notifying you of upcoming debits
+
+When we receive a debit instruction for one of your accounts on day 2 of the Bacs cycle, we'll notify you via the [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) webhook, and by displaying the pending payment in the ClearBank Portal. This is not a guarantee that payment will be taken since our validation has yet to be applied. However, this early notification allows you to notify the account owner of the pending debit and, if necessary, take remedial action before the payment is cleared on entry day.
+
+#### Notifying you of upcoming credits
+
+Similarly to debits, when we receive a credit instruction to one of your accounts on day 2 of the Bacs cycle, we'll notify you via the [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) webhook, and again by displaying the pending payment in the ClearBank Portal.
+
+**Note:** Bacs credit payments can be recalled by the service user (end customer) or their Payment Services Provider (PSP) until 4pm on day 2 of the Bacs cycle. We'll notify you if this happens via the [Bacs Direct Credit Inbound Payment Recalled](#bacs-direct-credit-inbound-payment-recalled-webhook) webhook.
+
+#### Applying credits and debits
+
+On day 3 of the Bacs cycle, credit and debit payments are validated and, if validation succeeds, applied to your accounts.
+
+Credits are applied first, starting from 01:00 UTC, followed by debits, which are started from 03:00 UTC. Applying credits first helps ensure funds are available for any subsequently applied debits.
+
+Credits and debits that pass our validation checks will be applied to your accounts and you'll be notified via our [Transaction Settled](#transaction-settled-webhook) webhooks.
 
 As inbound Bacs payments can either be credit or debit payments, the successful payment scenario can result in money moving either to or from the end-customer's account.
 When a payment is successfully applied to an account, this message flow occurs:
