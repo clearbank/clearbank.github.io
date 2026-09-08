@@ -11,14 +11,15 @@ import ExternalLink from 'src/components/external-link';
 
 ## Get connected
 Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
+
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
 
 <br/>
 
 <Callout colour="blue">
   <strong>Security notice: Protecting your credentials</strong><br/><br/>
-  To access the ClearBank API you will use sensitive credentials including API tokens, private keys and digital certificates. These credentials grant direct access to your data and must be protected at all times. You must store, transmit and manage these credentials securely.<br/><br/>
-  Credentials must never be shared and may expire periodically, you are responsible for renewing them promptly. Any suspected compromise must be reported to ClearBank immediately, as exposure of credentials could allow unauthorised access to your ClearBank services.
+  To access the ClearBank API, use sensitive credentials including API tokens, private keys and digital certificates. These credentials grant direct access to your data and must be protected at all times. You must store, transmit and manage these credentials securely.<br/><br/>
+  Credentials must never be shared and may expire periodically. You are responsible for renewing them promptly. Any suspected compromise must be reported to ClearBank immediately, as exposure of credentials could allow unauthorised access to your ClearBank services.
 </Callout>
 
 | Environment | ClearBank Portal URL                                                                                                  | What you need for access                                                                                                                                                                                                                                               |
@@ -34,7 +35,7 @@ Your ClearBank authentication profile links your institution to your public key.
 Your authentication profile is a combination of:
 
 - A key pair (public/private)
-- A certificate signing request (CSR) in PKCS #10 format*
+- A [certificate signing request](/uk/docs/api/technical-reference#certificate-signing-request) (CSR) in [PKCS](/uk/docs/api/technical-reference#public-key-cryptography-standards) #10 format*
 - A token
 
 
@@ -67,7 +68,7 @@ Congratulations! You have successfully created your authentication profile.
 
 ### Create your digital signature
 
-We use a digital signature to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a digital signature, as it is specific to the body of each request.
+We use a [digital signature](/uk/docs/api/technical-reference#digital-signature) to ensure that the integrity of a request body (sent to us) is maintained. The whole HTTP request body (in its original format) is used to create a digital signature, as it is specific to the body of each request.
 
 We use the following specifications to create a digital signature:
 - Raw message encoding: UTF-8
@@ -150,7 +151,7 @@ The response shows results from the test call
 ```
 
 To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank (if you are subscribed to it).
-We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
+We use [webhooks](/uk/docs/api/technical-reference#webhook) to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
 
 <EndpointBlock
   type="get"
