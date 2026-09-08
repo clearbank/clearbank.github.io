@@ -220,7 +220,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'banking',
     definition:
-      `Banking as a Service (BaaS) is a model in which a licensed bank and payment service provider (PSP) provides banking infrastructure, enabling businesses without a banking licence to embed accounts, payments and other financial services within their own products and platforms. For example, ClearBank provides access to accounts, payment schemes and banking infrastructure through APIs, allowing clients to offer financial services to their customers.`,
+      `Banking as a Service (BaaS) is a model in which a licensed bank that also acts as a payment service provider (PSP) provides banking infrastructure, enabling businesses without a banking licence to embed accounts, payments and other financial services within their own products and platforms. For example, ClearBank provides access to accounts, payment schemes and banking infrastructure through APIs, allowing clients to offer financial services to their customers.`,
     seoTitle:
       'What is Banking as a Service (BaaS)?',
     seoDescription:
@@ -659,7 +659,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'compliance',
     definition:
-      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
+      'The Financial Services Compensation Scheme (FSCS) is the United Kingdom’s statutory compensation scheme for customers of authorised financial services firms that fail. Eligible deposits are protected up to £120,000 per person, per authorised firm.',
     seoTitle:
       'What is the Financial Services Compensation Scheme (FSCS)?',
     seoDescription:
@@ -837,7 +837,7 @@ const glossaryTerms = [
     seoTitle:
       'What is an Institution Account?',
     seoDescription:
-      `Learn what an Institution Account is and  how it provides access to an institution's financial accounts with ClearBank.`,
+      `Learn what an Institution Account is and how it provides access to an institution's financial accounts with ClearBank.`,
     relatedTerms: [
       'hub-account',
       'mandated-minimum-balance-account',
@@ -917,7 +917,7 @@ const glossaryTerms = [
     definition:
       'A Virtual International Bank Account Number (vIBAN) is a virtual account identifier that routes payments to a designated underlying bank account through the IBAN infrastructure. To the sender, a vIBAN functions in the same way as a standard IBAN, while allowing incoming payments to be distinguished and managed separately from other transactions received into the underlying account.',
     seoTitle:
-      'What is a virtual International Bank Account Number (IBAN)?',
+      'What is a virtual International Bank Account Number (vIBAN)?',
     seoDescription:
       'Learn what a vIBAN is and how the standardised identifier represents a bank account for applicable payments.',
     relatedTerms: [
@@ -994,7 +994,7 @@ const glossaryTerms = [
     regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
-      'Know Your Customer (KYC) refers to checks used to verify a customer’s identity and assess relevant financial-crime risk before and during a business relationship.',
+      'Know Your Customer (KYC) checks confirm that a customer is who they say they are, and are a mandatory part of onboarding. ClearBank also offers KYC as a standalone product: an embedded banking service that lets non-regulated clients run these checks on their own retail customers, with the checks carried out by a third party.',
     seoTitle:
       'What is Know Your Customer (KYC)?',
     seoDescription:
@@ -1077,8 +1077,7 @@ const glossaryTerms = [
       'institution-account',
       'intraday-liquidity-pool',
       'operating-account',
-      'settlement',
-      'reserve-account',
+      'settlement'
     ],
     editorialReview: true,
   },
@@ -1204,8 +1203,7 @@ const glossaryTerms = [
     'segregated-account',
     'general-safeguarded-account',
     'designated-safeguarded-account',
-    'client-assets-sourcebook',
-    'operating-account',
+    'operating-account'
   ],
   editorialReview: true,
 },
@@ -1228,8 +1226,7 @@ const glossaryTerms = [
     'safeguarded-account',
     'designated-safeguarded-account',
     'general-segregated-account',
-    'pooled-account',
-    'virtual-account',
+    'virtual-account'
   ],
   editorialReview: true,
 },
@@ -1272,7 +1269,6 @@ const glossaryTerms = [
   seoDescription:
     `Learn what a Client Money Account is and how it separates money held for customers from a financial institution's own funds under the CASS rules.`,
   relatedTerms: [
-    'client-assets-sourcebook',
     'general-client-account',
     'designated-client-account',
     'operating-account',
@@ -1296,7 +1292,6 @@ const glossaryTerms = [
   relatedTerms: [
     'client-money-account',
     'designated-client-account',
-    'pooled-account',
     'virtual-account',
   ],
   editorialReview: true,
@@ -1318,8 +1313,7 @@ const glossaryTerms = [
   relatedTerms: [
     'client-money-account',
     'general-client-account',
-    'designated-segregated-account',
-    'client-assets-sourcebook',
+    'designated-segregated-account'
   ],
   editorialReview: true,
 },
@@ -1339,7 +1333,6 @@ const glossaryTerms = [
   seoDescription:
     `Learn what a Repair Suspense Account is and what happens when funds cannot be applied to the intended creditor account.`,
   relatedTerms: [
-    'suspense-account',
     'bacs-suspense-account',
     'creditor',
   ],
@@ -1862,6 +1855,126 @@ const glossaryTerms = [
   ],
 
   editorialReview: true,
+},
+
+{
+  id: 'autofx',
+  term: 'AutoFX',
+  acronym: null,
+  aliases: ['auto fx', 'automatic fx conversion'],
+  regions: ['eu'],
+  category: 'foreign-exchange',
+  definition:
+    'AutoFX is a ClearBank Europe service that automatically converts euros into a target currency for outbound cross-border payments, so clients can pay in another currency from a euro account without arranging a separate FX trade.',
+  seoTitle: 'What is AutoFX?',
+  seoDescription:
+    'Learn how AutoFX automatically converts euros into a target currency for ClearBank Europe cross-border payments.',
+  relatedTerms: ['foreign-exchange', 'fx-trade', 'multicurrency', 'cross-border-payment'],
+},
+
+{
+  id: 'flexible-cash-isa',
+  term: 'Flexible Cash ISA',
+  acronym: 'ISA',
+  aliases: ['cash isa', 'individual savings account', 'flexible cash isas'],
+  regions: ['uk'],
+  category: 'accounts',
+  definition:
+    'A Flexible Cash ISA is an embedded banking product that lets clients offer their customers an FSCS-protected savings account with tax-free interest, at either a variable or fixed rate, in line with UK ISA rules.',
+  seoTitle: 'What is a Flexible Cash ISA?',
+  seoDescription:
+    'Learn what a Flexible Cash ISA is and how it lets clients offer FSCS-protected, tax-free savings accounts.',
+  relatedTerms: ['financial-services-compensation-scheme', 'hub-account', 'retail-customer'],
+},
+
+{
+  id: 'sole-trader',
+  term: 'Sole Trader',
+  acronym: null,
+  aliases: ['sole traders'],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    'A sole trader is an individual who runs a business in their own name. Embedded banking partners must register a sole trader, combining personal and business details, before creating accounts for them.',
+  seoTitle: 'What is a Sole Trader?',
+  seoDescription:
+    'Learn what a sole trader is and what information ClearBank requires to register one for embedded banking.',
+  relatedTerms: ['legal-entity', 'retail-customer', 'know-your-customer', 'know-your-business'],
+},
+
+{
+  id: 'retail-customer',
+  term: 'Retail Customer',
+  acronym: null,
+  aliases: ['retail customers'],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    'A retail customer is an individual consumer of financial services in a personal capacity. Embedded banking partners must register a retail customer before opening a bank account for them.',
+  seoTitle: 'What is a Retail Customer?',
+  seoDescription:
+    'Learn what a retail customer is in the context of ClearBank embedded banking.',
+  relatedTerms: ['know-your-customer', 'legal-entity', 'sole-trader'],
+},
+
+{
+  id: 'clients-and-customers',
+  term: 'Clients and Customers',
+  acronym: null,
+  aliases: ['client', 'customer', 'end customer', 'end user'],
+  regions: ['uk', 'eu'],
+  category: 'general',
+  definition:
+    `ClearBank uses Clients and Customers to mean different things. A Client is one of ClearBank's direct customers — typically another financial institution. A Customer is the end user of a Client's product, such as a Client's own retail or business account holder.`,
+  seoTitle: 'What is the difference between a Client and a Customer?',
+  seoDescription:
+    'Learn how ClearBank distinguishes between Clients (financial institutions) and Customers (end users).',
+  relatedTerms: ['retail-customer', 'legal-entity', 'embedded-banking'],
+},
+
+{
+  id: 'politically-exposed-person',
+  term: 'Politically Exposed Person',
+  acronym: 'PEP',
+  aliases: ['pep'],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    `A Politically Exposed Person (PEP) is someone who holds, or has held, a prominent public role and is therefore considered higher risk for bribery or corruption. Clients must flag PEP status when registering a customer's KYC and anti-money laundering outcomes.`,
+  seoTitle: 'What is a Politically Exposed Person (PEP)?',
+  seoDescription:
+    'Learn what a PEP is and why clients must flag PEP status during KYC and AML checks.',
+  relatedTerms: ['know-your-customer', 'relative-or-close-associate'],
+},
+
+{
+  id: 'relative-or-close-associate',
+  term: 'Relative or Close Associate',
+  acronym: 'RCA',
+  aliases: ['rca'],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    'A Relative or Close Associate (RCA) is someone closely connected to a Politically Exposed Person, such as a family member or business partner. Clients must flag RCA status alongside PEP checks during onboarding.',
+  seoTitle: 'What is a Relative or Close Associate (RCA)?',
+  seoDescription:
+    'Learn what an RCA is and how it relates to Politically Exposed Person checks.',
+  relatedTerms: ['politically-exposed-person', 'know-your-customer'],
+},
+
+{
+  id: 'customer-risk-assessment',
+  term: 'Customer Risk Assessment',
+  acronym: 'CRA',
+  aliases: ['cra rating'],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    `A Customer Risk Assessment (CRA) rating is the risk tier — Low, Medium, High, or Very High - a client assigns to a customer based on their KYC and anti-money laundering checks.`,
+  seoTitle: 'What is a Customer Risk Assessment (CRA) rating?',
+  seoDescription:
+    'Learn what a CRA rating is and how clients use it to record customer risk during onboarding.',
+  relatedTerms: ['know-your-customer', 'politically-exposed-person'],
 },
 
 ];
