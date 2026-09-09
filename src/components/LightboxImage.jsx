@@ -4,8 +4,9 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import * as Styles from './mdxComponents/mdx-components.styles'
 
 import 'yet-another-react-lightbox/styles.css'
+import './styles.css'
 
-const LightboxImage = (props) => {
+const LightboxImage = props => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -17,28 +18,34 @@ const LightboxImage = (props) => {
       />
 
       <Lightbox
+        className='docs-lightbox'
         open={open}
         close={() => setOpen(false)}
         plugins={[Zoom]}
         zoom={{
           maxZoomPixelRatio: 50,
-          zoomInMultiplier: 2
+          zoomInMultiplier: 2,
+          doubleClickMaxStops: 0,
+          scrollToZoom: true
         }}
         slides={[
           {
-            src: props.src
+            src: props.src,
+            alt: props.alt
           }
         ]}
+        render={{
+          buttonPrev: () => null,
+          buttonNext: () => null
+        }}
         styles={{
           container: {
-            backgroundColor: props.src?.toLowerCase().endsWith('.svg')
-              ? '#ffffff'
-              : 'rgba(0, 0, 0, 0.95)'
+            backgroundColor: '#ffffff'
           },
           button: {
             color: '#8E8E8E'
           },
-        icon: {
+          icon: {
             color: '#8E8E8E'
           }
         }}
