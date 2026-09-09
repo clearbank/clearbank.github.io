@@ -10,8 +10,6 @@ import defaultMDXComponents from '../mdxComponents/'
 
 import '../styles.css'
 
-import LightboxImage from '../LightboxImage'
-
 export default {
   ...defaultMDXComponents,
   h1: (props) => (
@@ -68,5 +66,5 @@ export default {
   ul: props => <Styles.List className='list' {...props} />,
   ol: props => <Styles.List as='ol' className='list' {...props} />,
   li: props => <Styles.ListItem {...props} />,
-  img: props => <LightboxImage {...props} />
+  img: props => <Styles.Img {...props} />
 }
