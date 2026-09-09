@@ -43,15 +43,57 @@ Bacs credit payments can be recalled by the service user (end customer) or their
   Note: You may receive spurious Direct Credit and Debit notifications for accounts that have been closed, never existed, or for Direct Debits that have been cancelled. You should expect these to be resolved by our validation process on entry day before your accounts are credited or debited.
 </Callout>
 
+#### Payment validation and notification
+
+On day 3 of the Bacs cycle, credit and debit payments are validated.
+
+If validation is successful, the payments are applied to your accounts. You'll be notified of this via our [Transaction Settled](#transaction-settled-webhook) webhooks.
+
+Credits are applied first, starting from 01:00 UTC, followed by debits, which are started from 03:00 UTC. Bacs participants apply credits first to help ensure funds are available for any subsequently applied debits.
+
+<Callout colour="blue">
+  <strong>Note:</strong> If a direct debit is being applied to a virtual account, it is your institution's responsibility to ensure that the virtual account and its underlying real account have sufficient funds to cover the debit.
+</Callout>
 
 
-#### Applying credits and debits
 
-On day 3 of the Bacs cycle, credit and debit payments are validated and, if validation succeeds, applied to your accounts.
+If validation fails, the payments are not applied to your accounts, and the transaction will be posted to the Bacs Suspense account we've created for you. Failed payments each create their own webhook notifications:
 
-Credits are applied first, starting from 01:00 UTC, followed by debits, which are started from 03:00 UTC. Applying credits first helps ensure funds are available for any subsequently applied debits.
+For failed credits:
+* [Bacs Direct Credit Failed](#bacs-direct-credit-failed-webhook)
+* [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook)
 
-Credits and debits that pass our validation checks will be applied to your accounts and you'll be notified via our [Transaction Settled](#transaction-settled-webhook) webhooks.
+For failed debits:
+* [Bacs Direct Debit Failed](#bacs-direct-debit-failed-webhook)
+* [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook)
+
+Returned transactions are sent on their own new three day cycle. After three working days, returned funds are finally debited from or credited back to the suspense account. You'll receive a [Transaction Settled](#transaction-settled-webhook) webhook for each returned transaction accordingly.
+
+### Returning credits and debits
+
+#### Credit returns
+
+You can issue a credit return using the our [Direct Credit Returns API](#direct-credit-returns-api). When you request a credit return, we'll transfer the funds from the customer's account to your Bacs Suspense account and raise the credit return with the Bacs Direct Credit scheme.
+
+#### Debit returns
+
+You can issue a debit return using the our [Direct Debit Returns API](#direct-debit-returns-api). When you request a debit return, we'll transfer the funds from your Bacs Suspense account to the customer's account and raise the debit return with the Bacs Direct Debit scheme.
+
+We'll debit or credit the Bacs Suspense account as appropriate two working days later.
+
+>Define bacs suspense account
+
+### Direct Debit refunds and indemnity claims
+
+If your customer notifies you they've been debited in error, they may be entitled to a refund under the Direct Debit Guarantee.
+
+Your institution should verify the reason for the payment error with your customer. If your institution agrees an error has taken place (more specifically, a deviation from the Bacs Direct Debit Rules), you should refund the customer from your own funds.
+
+If your institution believes the error was made by the billing company (also called Service User - the entity that requested the debit) you can contact ClearBank to raise an indemnity claim against the service user. If ClearBank agrees with your analysis, we'll raise a claim to the Bacs Direct Debit scheme on your behalf, which will return the funds to your refund account(?) 14 business days later.
+
+The billing company may challenge your indemnity claim. If so, you'll need to examine the merits of the claim and decide whether to accept or reject their challenge. If you accept (or do nothing) then the challenge will succeed and the claim will be cancelled. It is then for you to decide if the error was yours, or if there was no error (in this case, customer error == no error). You then would have the right to reverse the refund you gave to your customer [how should this be done?].
+
+---
 
 As inbound Bacs payments can either be credit or debit payments, the successful payment scenario can result in money moving either to or from the end-customer's account.
 When a payment is successfully applied to an account, this message flow occurs:
