@@ -66,7 +66,8 @@ export const ListItem = styled.li`
 
 export const Img = styled.img`
   display: block;
-  margin: 24px auto;  
+  margin: 24px auto;
+  width: 100%;
   max-width: 100%;
   height: auto;
   cursor: zoom-in;

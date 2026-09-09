@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
+import * as Styles from './mdxComponents/mdx-components.styles'
 
 import 'yet-another-react-lightbox/styles.css'
 
@@ -9,7 +10,7 @@ const LightboxImage = (props) => {
 
   return (
     <>
-      <img
+      <Styles.Img
         {...props}
         onClick={() => setOpen(true)}
         style={{ cursor: 'zoom-in' }}
@@ -19,6 +20,10 @@ const LightboxImage = (props) => {
         open={open}
         close={() => setOpen(false)}
         plugins={[Zoom]}
+        zoom={{
+          maxZoomPixelRatio: 50,
+          zoomInMultiplier: 2
+        }}
         slides={[
           {
             src: props.src
