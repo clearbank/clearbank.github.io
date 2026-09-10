@@ -23,7 +23,7 @@ const LightboxImage = props => {
         close={() => setOpen(false)}
         plugins={[Zoom]}
         zoom={{
-          maxZoomPixelRatio: 50,
+          maxZoomPixelRatio: 2,
           zoomInMultiplier: 2,
           doubleClickMaxStops: 0,
           scrollToZoom: true
