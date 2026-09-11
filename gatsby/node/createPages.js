@@ -3,6 +3,7 @@ const Helpers = require('./helpers')
 const redirects = require('./static-data/redirects.json')
 const euHomeContent = require('./static-data/eu-home-content.json')
 const ukHomeContent = require('./static-data/uk-home-content.json')
+const { buildSearchIndex } = require('./search-index/build-index')
 
 const ALL_PAGES_SCHEMA = `
   query {
@@ -14,6 +15,7 @@ const ALL_PAGES_SCHEMA = `
     ) {
       edges {
         node {
+          fileAbsolutePath
           fields {
             id
             order
@@ -46,7 +48,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
     return
   }
 
-  const { allMdx } = result.data;
+  const { allMdx } = result.data
   const rootLevelPages = allMdx.edges
     .filter(edge => Helpers.isRootLevelDocContainer(edge.node.fields.slug))
   const ukMenu = rootLevelPages.filter(edge => edge.node.fields.slug.startsWith('/uk'))
@@ -81,7 +83,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
     },
   })
 
-  // Create blog posts pages.
+    // Create blog posts pages.
   allMdx.edges.forEach(({ node }) => {
     const { slug, id } = node.fields
 
@@ -93,8 +95,29 @@ module.exports = async ({ graphql, actions, reporter }) => {
         slug,
         menuItems: slug.startsWith('/uk') ? ukMenuItems : euMenuItems,
         regexFilter: slug,
-      }
+      },
     })
-
   })
+
+  // Build and write the static search index. Wrapped in try/catch so a bug
+  // here (e.g. an unreadable file) only logs a warning — it must never fail
+  // the whole site build, since search is additive, not load-bearing.
+  try {
+    const searchNodes = allMdx.edges.map(({ node }) => ({
+      slug: node.fields.slug,
+      title: node.fields.title,
+      order: node.fields.order,
+      absolutePath: node.fileAbsolutePath,
+    }))
+
+    const searchIndex = buildSearchIndex(searchNodes)
+
+    await Helpers.writefile(
+      './static/search-index.json',
+      searchIndex,
+      `Wrote search index with ${searchIndex.length} entries.`
+    )
+  } catch (error) {
+    reporter.warn(`Failed to build search index: ${error.message}`)
+  }
 }
