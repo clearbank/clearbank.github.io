@@ -59,8 +59,10 @@ const Search: React.FunctionComponent<SearchProps> = ({ isOpen, onClose, region 
   // Keep the active selection in range whenever the result set changes size
   // (e.g. the user keeps typing and the list shrinks).
   useEffect(() => {
+  if (isOpen) {
     setActiveIndex(0)
-  }, [query])
+  }
+}, [query, isOpen])
 
   const handleSelect = useCallback((result: SearchResult) => {
     const destination = result.anchor ? `${result.path}#${result.anchor}` : result.path
@@ -132,31 +134,31 @@ const Search: React.FunctionComponent<SearchProps> = ({ isOpen, onClose, region 
 
         <Styles.ResultsList id='search-results-list' role='listbox' data-cy='search-results'>
           {results.map((result, resultIndex) => {
-  const breadcrumb = formatBreadcrumb(result.breadcrumb)
-
-  return (
-    <Styles.ResultItem
-      key={result.id}
-      id={`search-result-${result.id}`}
-      role='option'
-      aria-selected={resultIndex === activeIndex}
-      isActive={resultIndex === activeIndex}
-      onMouseEnter={() => setActiveIndex(resultIndex)}
-      onClick={() => handleSelect(result)}
-      data-cy='search-result-item'
-    >
-      {breadcrumb && (
-        <Styles.ResultBreadcrumb>{breadcrumb}</Styles.ResultBreadcrumb>
-      )}
-      <Styles.ResultTitle>{result.heading || result.title}</Styles.ResultTitle>
-      <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
-    </Styles.ResultItem>
-  )
-})}
-        </Styles.ResultsList>
-      </Styles.Panel>
-    </Styles.Overlay>
-  )
-}
+              const breadcrumb = formatBreadcrumb(result.breadcrumb)
+              
+              return (
+                <Styles.ResultItem
+                  key={result.id}
+                  id={`search-result-${result.id}`}
+                  role='option'
+                  aria-selected={resultIndex === activeIndex}
+                  isActive={resultIndex === activeIndex}
+                  onMouseEnter={() => setActiveIndex(resultIndex)}
+                  onClick={() => handleSelect(result)}
+                  data-cy='search-result-item'
+                >
+                  {breadcrumb && (
+                    <Styles.ResultBreadcrumb>{breadcrumb}</Styles.ResultBreadcrumb>
+                    )}
+                    <Styles.ResultTitle>{result.heading || result.title}</Styles.ResultTitle>
+                    <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
+                  </Styles.ResultItem>
+                )
+              })}
+            </Styles.ResultsList>
+            </Styles.Panel>
+            </Styles.Overlay>
+            )
+          }
 
 export default Search
