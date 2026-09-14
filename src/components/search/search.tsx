@@ -5,6 +5,22 @@ import * as Styles from './search.styles'
 import { SearchProps } from './search.types'
 import { filterAndRankResults, SearchResult, SearchIndexItem } from './search.utils'
 
+const formatBreadcrumb = (breadcrumb?: string | string[]) => {
+  const rawBreadcrumb = Array.isArray(breadcrumb)
+    ? breadcrumb.join(' ')
+    : breadcrumb || ''
+
+  const cleanedBreadcrumb = rawBreadcrumb
+    .replace(/^(UK|EU)\s+/i, '')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\bApi\b/g, 'API')
+    .replace(/\bGbp\b/g, 'GBP')
+    .replace(/\bEur\b/g, 'EUR')
+    .trim()
+
+  return cleanedBreadcrumb.toLowerCase() === 'api' ? '' : cleanedBreadcrumb
+}
+
 const Search: React.FunctionComponent<SearchProps> = ({ isOpen, onClose, region }) => {
   const [query, setQuery] = useState('')
   const [index, setIndex] = useState<SearchIndexItem[] | null>(null)
@@ -115,22 +131,28 @@ const Search: React.FunctionComponent<SearchProps> = ({ isOpen, onClose, region 
         )}
 
         <Styles.ResultsList id='search-results-list' role='listbox' data-cy='search-results'>
-          {results.map((result, resultIndex) => (
-            <Styles.ResultItem
-              key={result.id}
-              id={`search-result-${result.id}`}
-              role='option'
-              aria-selected={resultIndex === activeIndex}
-              isActive={resultIndex === activeIndex}
-              onMouseEnter={() => setActiveIndex(resultIndex)}
-              onClick={() => handleSelect(result)}
-              data-cy='search-result-item'
-            >
-              <Styles.ResultBreadcrumb>{result.breadcrumb}</Styles.ResultBreadcrumb>
-              <Styles.ResultTitle>{result.heading || result.title}</Styles.ResultTitle>
-              <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
-            </Styles.ResultItem>
-          ))}
+          {results.map((result, resultIndex) => {
+  const breadcrumb = formatBreadcrumb(result.breadcrumb)
+
+  return (
+    <Styles.ResultItem
+      key={result.id}
+      id={`search-result-${result.id}`}
+      role='option'
+      aria-selected={resultIndex === activeIndex}
+      isActive={resultIndex === activeIndex}
+      onMouseEnter={() => setActiveIndex(resultIndex)}
+      onClick={() => handleSelect(result)}
+      data-cy='search-result-item'
+    >
+      {breadcrumb && (
+        <Styles.ResultBreadcrumb>{breadcrumb}</Styles.ResultBreadcrumb>
+      )}
+      <Styles.ResultTitle>{result.heading || result.title}</Styles.ResultTitle>
+      <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
+    </Styles.ResultItem>
+  )
+})}
         </Styles.ResultsList>
       </Styles.Panel>
     </Styles.Overlay>
