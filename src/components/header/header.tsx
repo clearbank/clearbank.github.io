@@ -18,8 +18,21 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ( { location } ) => {
   const isEu = location?.pathname?.includes('/eu')
   const region = isEu ? 'eu' : 'uk'
 
-  const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform)
-  const shortcutHint = isMac ? 'Cmd K' : 'Ctrl K'
+  const [shortcutHint, setShortcutHint] = useState('Ctrl K')
+
+useEffect(() => {
+  const isAppleDevice =
+    typeof navigator !== 'undefined' &&
+    (
+      /Mac|iPod|iPhone|iPad/.test(navigator.platform) ||
+      /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ||
+      navigator.maxTouchPoints > 1 && navigator.platform === 'MacIntel'
+    )
+
+  if (isAppleDevice) {
+    setShortcutHint('Cmd K')
+  }
+}, [])
 
   const toggleMobileNav = () => {
     const newShowMobileNav = !showMobileNav

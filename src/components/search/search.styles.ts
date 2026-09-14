@@ -15,19 +15,14 @@ export const Overlay = styled.div`
 `
 
 export const Panel = styled.div`
+  position: relative;
+  z-index: 1;
+  width: min(960px, calc(100vw - 32px));
+  max-height: min(720px, calc(100vh - 80px));
   background: ${colors.brandLight};
   border-radius: ${borderRadius.global}px;
-  box-shadow: ${shadows.global};
-  width: 90%;
-  max-width: 640px;
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-
-  @media (min-width: ${themeBreakpoints.medium}) {
-    width: 640px;
-  }
 `
 
 export const InputWrapper = styled.div`
@@ -55,12 +50,27 @@ export const ResultsList = styled.ul`
   margin: 0;
   padding: 8px 0;
   overflow-y: auto;
+  background: ${colors.brandLight};
 `
 
 export const ResultItem = styled.li<{ isActive: boolean }>`
-  padding: 10px 20px;
+  background: ${({ isActive }) => isActive ? '#EDF4F6' : colors.brandLight};
+  padding: 14px 30px;
   cursor: pointer;
-  background: ${({ isActive }) => (isActive ? colors.brandGrayLighter : 'transparent')};
+
+  a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &:hover {
+    background: #EDF4F6;
+  }
+
+  @media (max-width: ${themeBreakpoints.medium}) {
+    padding: 14px 20px;
+  }
 `
 
 export const ResultTitle = styled.div`
