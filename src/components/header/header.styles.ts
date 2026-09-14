@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import Link from '../link'
 import { widths, colors, themeBreakpoints, breakpoints, borderRadius } from 'src/components/theme'
+import * as Types from './header.types'
 
 
 export const Container = styled.div`
@@ -64,6 +65,18 @@ export const Button = styled.button`
 `
 
 export const SwitchContainer = styled.div`
+  margin-right: 0;}
+`
+
+// Groups the search trigger and region switch together so Container's
+// justify-content: space-between only has to position 3 things (logo,
+// burger, this group) - keeping the search bar a fixed distance from the
+// region switch at every viewport width, instead of drifting as space is
+// redistributed between 4 separately-spaced siblings.
+export const RightGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
   margin-left: auto;
   margin-right: 30px;
 
@@ -78,15 +91,15 @@ export const SwitchContainer = styled.div`
   @media screen and (min-width: ${breakpoints.xLarge}) {
     margin-right: 60px;
   }
+
+  @media (max-width: ${themeBreakpoints.medium}) {
+    gap: 16px;
+    margin-right: 14px;
+  }
 `
 
-// A pill-shaped button styled to look like a search field (Stripe/Twilio-docs
-// style), sitting centred in the header. It only opens the Search modal on
-// click - the actual typing happens inside that modal, not here - so this
-// stays a simple trigger rather than a second input to keep in sync.
 export const SearchTrigger = styled.button`
   display: flex;
-  margin-right: 140px;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
@@ -106,25 +119,28 @@ export const SearchTrigger = styled.button`
   }
 
   @media (max-width: ${themeBreakpoints.large}) {
-    display: none;
+    min-width: 220px;
+    max-width: 260px;
+    padding: 8px 12px;
   }
-`
 
-// Groups the search trigger and region switch together so Container's
-// justify-content: space-between only has to position 3 things (logo,
-// burger, this group) - keeping the search bar a fixed distance from the
-// region switch at every viewport width, instead of drifting as space is
-// redistributed between 4 separately-spaced siblings.
-export const RightGroup = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: auto;
+  @media (max-width: ${themeBreakpoints.medium}) {
+    min-width: auto;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    padding: 0;
+  }
 `
 
 export const SearchTriggerLabel = styled.span`
   flex: 1;
   text-align: left;
   color: ${colors.brandGrayDark};
+
+  @media (max-width: ${themeBreakpoints.medium}) {
+    display: none;
+  }
 `
 
 export const SearchTriggerHint = styled.kbd`
@@ -133,4 +149,8 @@ export const SearchTriggerHint = styled.kbd`
   border-radius: 3px;
   padding: 1px 6px;
   color: ${colors.brandGrayDark};
+
+  @media (max-width: ${themeBreakpoints.medium}) {
+    display: none;
+  }
 `
