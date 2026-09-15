@@ -23,6 +23,7 @@ export type FontSizes = { [option in FontSizeOption]: number }
 export type WidthOption =
   | 'container'
   | 'gutter'
+  | 'sidebarLeft'
   | 'sidebarRight'
   | 'logo'
   | 'content'

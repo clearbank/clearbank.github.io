@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles.css'
 
 import * as Styles from './header.styles'
@@ -8,98 +8,133 @@ import IconClose from 'src/assets/svgs/close.inline.svg'
 import IconMenu from 'src/assets/svgs/menu.inline.svg'
 
 import Logo from 'src/components/logo'
-import RegionSwitch from 'src/components/region-switch';
+import RegionSwitch from 'src/components/region-switch'
 import Search from 'src/components/search'
 
-const Header: React.FunctionComponent<Types.HeaderProps> = ( { location } ) => {
-  const [showMobileNav, setShowMobileNav] = useState(false)
+const Header: React.FunctionComponent<Types.HeaderProps> = ({
+  location,
+  isMobileNavigationOpen = false,
+  onMobileNavigationToggle,
+  mobileNavigationId,
+}) => {
   const [showSearch, setShowSearch] = useState(false)
+  const [shortcutHint, setShortcutHint] = useState('Ctrl K')
 
   const isEu = location?.pathname?.includes('/eu')
   const region = isEu ? 'eu' : 'uk'
 
-  const [shortcutHint, setShortcutHint] = useState('Ctrl K')
-
-useEffect(() => {
-  const isAppleDevice =
-    typeof navigator !== 'undefined' &&
-    (
-      /Mac|iPod|iPhone|iPad/.test(navigator.platform) ||
-      /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ||
-      navigator.maxTouchPoints > 1 && navigator.platform === 'MacIntel'
-    )
-
-  if (isAppleDevice) {
-    setShortcutHint('Cmd K')
-  }
-}, [])
-
-  const toggleMobileNav = () => {
-    const newShowMobileNav = !showMobileNav
-
-    setShowMobileNav(newShowMobileNav)
-  }
-
-  // Ctrl+K (Windows/Linux) or Cmd+K (macOS) opens the search modal from
-  // anywhere on the page. preventDefault() stops the browser's own
-  // Ctrl+K/Cmd+K shortcuts (e.g. address bar focus) from also firing.
   useEffect(() => {
+    const isAppleDevice =
+      typeof navigator !== 'undefined' &&
+      (
+        /Mac|iPod|iPhone|iPad/.test(navigator.platform) ||
+        /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ||
+        (navigator.maxTouchPoints > 1 &&
+          navigator.platform === 'MacIntel')
+      )
+
+    if (isAppleDevice) {
+      setShortcutHint('Cmd K')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === 'k'
+      ) {
         event.preventDefault()
         setShowSearch(true)
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [])
 
   return (
-    <div className='header'>
-      <Styles.Container>
-        <Styles.LogoWrapper to={location?.pathname?.includes('/eu') ? '/eu' : '/uk'}>
-          <Logo inverted />
-        </Styles.LogoWrapper>
-        <Styles.BurgerIconWrapper isMenuOpen={showMobileNav} data-cy='burger-menu'>
-          <Styles.Button onClick={toggleMobileNav}>
-            {showMobileNav
-              ? <IconClose />
-              : <IconMenu />
-            }
-          </Styles.Button>
-        </Styles.BurgerIconWrapper>
-                <Styles.RightGroup>
-          <Styles.SearchTrigger
-            onClick={() => setShowSearch(true)}
-            data-cy='search-trigger'
-            aria-label='Search documentation'
+    <>
+      <div className="header">
+        <Styles.Container>
+          <Styles.LogoWrapper to={isEu ? '/eu' : '/uk'}>
+            <Logo inverted />
+          </Styles.LogoWrapper>
+
+          <Styles.BurgerIconWrapper
+            isMenuOpen={isMobileNavigationOpen}
+            data-cy="burger-menu"
           >
-            {/* Inline SVG magnifying-glass icon - avoids adding a new
-                search.inline.svg asset file just for one small icon. */}
-            <svg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path
-                d='M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35'
-                stroke='currentColor'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-            <Styles.SearchTriggerLabel>Search docs…</Styles.SearchTriggerLabel>
-            <Styles.SearchTriggerHint>{shortcutHint}</Styles.SearchTriggerHint>
-          </Styles.SearchTrigger>
-          <Styles.SwitchContainer>
+            <Styles.Button
+              type="button"
+              onClick={onMobileNavigationToggle}
+              aria-expanded={isMobileNavigationOpen}
+              aria-controls={mobileNavigationId || undefined}
+              aria-label={
+                isMobileNavigationOpen
+                  ? 'Close documentation navigation'
+                  : 'Open documentation navigation'
+              }
+            >
+              {isMobileNavigationOpen ? (
+                <IconClose />
+              ) : (
+                <IconMenu />
+              )}
+            </Styles.Button>
+          </Styles.BurgerIconWrapper>
+
+          <Styles.RightGroup>
+            <Styles.SearchTrigger
+              type="button"
+              onClick={() => setShowSearch(true)}
+              data-cy="search-trigger"
+              aria-label="Search documentation"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+
+              <Styles.SearchTriggerLabel>
+                Search docs…
+              </Styles.SearchTriggerLabel>
+
+              <Styles.SearchTriggerHint>
+                {shortcutHint}
+              </Styles.SearchTriggerHint>
+            </Styles.SearchTrigger>
+
             <RegionSwitch location={location} />
-          </Styles.SwitchContainer>
-        </Styles.RightGroup>
-      </Styles.Container>
-      <Search
-        isOpen={showSearch}
-        onClose={() => setShowSearch(false)}
-        region={region}
-      />
-    </div>
+          </Styles.RightGroup>
+        </Styles.Container>
+      </div>
+
+      {showSearch && (
+        <Search
+          region={region}
+          onClose={() => setShowSearch(false)}
+        />
+      )}
+    </>
   )
 }
 
