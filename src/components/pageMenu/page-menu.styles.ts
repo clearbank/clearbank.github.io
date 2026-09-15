@@ -42,8 +42,8 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
   cursor: pointer;
   color: ${props => props.isActive ? colors.wedgewoodapprox : colors.brandDark};
   font-weight: ${props => props.isActive ? 600 : 400};
-  line-height: 1em;
-  font-size: 20px;
+  line-height: 1.3;
+  font-size: 15px;
 
   &:hover {
     color: ${colors.wedgewoodapprox};
@@ -51,13 +51,17 @@ export const BaseLink = styled.a<{ isActive?: boolean }>`
 `
 
 export const LinkWrapper = styled.p<{ level?: number }>`
-  margin-left: ${props => (props.level ?? 1) * 25 + 30}px;
+  position: relative;
+  margin: 0 0 10px ${props => (props.level ?? 1) * 16 + 18}px;
 
   &:before {
-    margin-left: -30px;
-    margin-right: 11px;
-    content: url(/assets/images/arrow-icon.png);
-    vertical-align: middle;
+    content: '→';
+    position: absolute;
+    left: -18px;
+    top: 0.75em;
+    font-size: 12px;
+    line-height: 1;
+    color: ${colors.brandGrayDarker};
   }
 `
 
@@ -71,9 +75,9 @@ export const FirstLevelLink = styled(BaseLink)`
 `
 
 export const ThirdLevelLink = styled(BaseLink)`
-  font-size: 16px;
+  font-size: 14px;
 `
 
 export const FourthLevelLink = styled(ThirdLevelLink)`
-  font-size: 14px;
+  font-size: 13px;
 `
