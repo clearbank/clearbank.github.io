@@ -1,28 +1,6 @@
-export interface ILeafMenuItem {
-  fields: {
-    title: string
-    slug: string
-    id: string
-  }
-}
+import { ILeafMenuItem, IMenu, IMenuItem } from 'src/components/menu/menu.types'
 
-export interface IMenuItem {
-  fields: {
-    title: string
-    slug: string
-    id: string
-  }
-  
-  leafMenuItems: ILeafMenuItem[]
-}
-
-export interface IMenu {
-  menuItem: {
-    title: string
-    slug: string
-  }
-  subMenuItems: IMenuItem[]
-}
+export { ILeafMenuItem, IMenu, IMenuItem }
 
 export interface IHeaderMenuProps {
   items: IMenu[]

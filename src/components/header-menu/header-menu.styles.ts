@@ -16,12 +16,12 @@ export const LinkBase = styled(Link)`
 export const MenuContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 0px 75px;
-  background-color: #f8f8f8;
+  padding: 0 56px;
+  background-color: ${colors.brandGrayLight};
 `
 
 export const Container = styled.div`
-  padding: 25px 0px;
+  padding: 16px 0;
   position: relative;
   min-width: 140px;
 
@@ -43,8 +43,8 @@ export const Underline = styled.div`
 `
 
 export const Title = styled.h2<{ isActive?: boolean }>`
-  line-height: 38px;
-  font-size: 25px;
+  line-height: 28px;
+  font-size: 20px;
   margin: 0;
   cursor: default;
   font-weight: ${props => props.isActive ? 600 : 400};
