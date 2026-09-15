@@ -1,10 +1,12 @@
 const SwaggerParser = require('swagger-parser')
 const $RefParser = require('@apidevtools/json-schema-ref-parser')
 const { writefile, getFiles } = require('./helpers')
+const buildScopes = require('./scopes/build-scopes')
 
 module.exports = async () => {
   await createEndpointFile()
   await createWebhooksFile()
+  await createScopesFile()
 
   // Merge all the endpoints into one file
   // Use SwaggerParser to dereference all the $ref locations
@@ -58,6 +60,21 @@ module.exports = async () => {
       './data/webhooks.json',
       formatted,
       'Webhooks Manifest File, Saved ⚡️'
+    )
+  }
+
+  // Merge the External Gateway auth + reverse-proxy config into the scopes
+  // manifest consumed by the site. See gatsby/node/scopes/build-scopes.js.
+  async function createScopesFile () {
+    const authSettings = require('../../data/scopes/auth-settings.json')
+    const reverseProxy = require('../../data/scopes/reverse-proxy.json')
+
+    const scopes = buildScopes({ authSettings, reverseProxy })
+
+    return writefile(
+      './data/scopes.json',
+      scopes,
+      'Scopes Manifest File, Saved ⚡️'
     )
   }
 }

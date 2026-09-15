@@ -2,6 +2,15 @@ import { ReactElement } from 'react'
 import { BoxProps } from 'rebass'
 import { CodeblockType } from 'src/global.types'
 
+export interface EndpointDefinition {
+  path: string
+  version: string
+  webhooks?: string[]
+  codeblocks?: CodeblockType[]
+  exGateway?: boolean
+  scopeRefs?: string[]
+}
+
 export interface EndpointProps {
   path: string
   title: string
@@ -12,7 +21,7 @@ export interface EndpointProps {
   codeblocks?: CodeblockType[]
   children?: (any) => ReactElement
   description?: ReactElement
-  endpoints?: any[]
+  endpoints?: EndpointDefinition[]
   webhooks?: string[]
 }
 

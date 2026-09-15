@@ -1,0 +1,114 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "System": "Information",
+      "Microsoft": "Warning",
+      "Azure": "Warning",
+      "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware": "None"
+    },
+    "Console": {
+      "FormatterOptions": {
+        "AppName": "External.Gateway"
+      }
+    }
+  },
+  "AllowedHosts": "*",
+  "CosmosDbSettings": {
+    "Endpoint": "Populated from Terraform Kubernetes definition",
+    "DatabaseName": "digital-signature-database",
+    "ContainerName": "client-public-keys"
+  },
+  "FiExternalSettings": {
+    "ApiKey": "Populated from Terraform Kubernetes definition"
+  },
+  "AuthSettings": {
+    "AuthHost": "Populated from Terraform Kubernetes definition",
+    "Policies": [
+      {
+        "Name": "fraudprevention-riskyevents",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "external-events:fraud-prevention:create"
+          ]
+        }
+      },
+      {
+        "Name": "apis-test-read",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "apis:test:read"
+          ]
+        },
+        "ClaimRequirements": {
+          "Requires": "All",
+          "Values": [
+            "client_institution_id"
+          ]
+        }
+      },
+      {
+        "Name": "webhooks-test-create",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "webhooks:test:create"
+          ]
+        },
+        "ClaimRequirements": {
+          "Requires": "All",
+          "Values": [
+            "client_institution_id"
+          ]
+        }
+      },
+      {
+        "Name": "webhooks-signature-keys-read",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "webhooks:signature-keys:read"
+          ]
+        },
+        "ClaimRequirements": {
+          "Requires": "All",
+          "Values": [
+            "client_institution_id"
+          ]
+        }
+      },
+      {
+        "Name": "webhooks-signature-keys-create",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "webhooks:signature-keys:create"
+          ]
+        },
+        "ClaimRequirements": {
+          "Requires": "All",
+          "Values": [
+            "client_institution_id"
+          ]
+        }
+      },
+      {
+        "Name": "payments-fps-create",
+        "ScopeRequirements": {
+          "Requires": "All",
+          "Values": [
+            "payments:fps:create"
+          ]
+        },
+        "ClaimRequirements": {
+          "Requires": "All",
+          "Values": [
+            "client_institution_id"
+          ]
+        }
+      }
+    ]
+  }
+}

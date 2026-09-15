@@ -1,0 +1,294 @@
+{
+  "ReverseProxy": {
+    "Routes": {
+      "fraudPreventionRiskyEventCredentialUpdated": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "fraudprevention-riskyevents",
+        "Match": {
+          "Path": "/fraud-prevention/{version}/customers/{customerId}/credential-updated",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fraud-external-api"
+          }
+        ]
+      },
+      "fraudPreventionRiskyEventAuthenticationAttempted": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "fraudprevention-riskyevents",
+        "Match": {
+          "Path": "/fraud-prevention/{version}/customers/{customerId}/authentication-attempted",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fraud-external-api"
+          }
+        ]
+      },
+      "webhooksTestGet": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "apis-test-read",
+        "Match": {
+          "Path": "/apis/v1/test/",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/apis/v1"
+          },
+          {
+            "PathPrefix": "/webhooks-test/v2"
+          }
+        ]
+      },
+      "webhooksTestPostPut": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "webhooks-test-create",
+        "Match": {
+          "Path": "/webhooks/v1/test/",
+          "Methods": [
+            "POST",
+            "PUT"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/webhooks/v1"
+          },
+          {
+            "PathPrefix": "/webhooks-test/v2"
+          }
+        ]
+      },
+      "GetWebhookSignatureKeys": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "webhooks-signature-keys-read",
+        "Match": {
+          "Path": "/webhooks/v1/signature-keys",
+          "Methods": [
+            "Get"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/webhooks"
+          },
+          {
+            "PathPrefix": "/webhooksapi"
+          }
+        ]
+      },
+      "GetWebhookSignatureKey": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "webhooks-signature-keys-read",
+        "Match": {
+          "Path": "/webhooks/v1/signature-keys/{keyId}",
+          "Methods": [
+            "Get"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/webhooks"
+          },
+          {
+            "PathPrefix": "/webhooksapi"
+          }
+        ]
+      },
+      "CreateWebhookSignatureKey": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "webhooks-signature-keys-create",
+        "Match": {
+          "Path": "/webhooks/v1/signature-keys/{keyId}",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/webhooks"
+          },
+          {
+            "PathPrefix": "/webhooksapi"
+          }
+        ]
+      },
+      "DeleteWebhookSignatureKey": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "webhooks-signature-keys-delete",
+        "Match": {
+          "Path": "/webhooks/v1/signature-keys/{keyId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/webhooks"
+          },
+          {
+            "PathPrefix": "/webhooksapi"
+          }
+        ]
+      },
+      "clientServicesCaseManagementRoute": {
+        "ClusterId": "clientservicescasemanagementapi",
+        "AuthorizationPolicy": "clientservices-casemanagement",
+        "Match": {
+          "Path": "/api/{version}/swiftmessage/freeformat"
+        },
+        "MetaData": {
+          "VerifyInteractionId": false,
+          "VerifyDigitalSignature": false,
+          "SignResponse": false
+        }
+      },
+      "clientServicesFraudInquiryRoute": {
+        "ClusterId": "apimnocontext",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/{version}/fraudinquiry/{**remainder}"
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fraud-inquiries/"
+          }
+        ],
+        "MetaData": {
+          "VerifyInteractionId": false,
+          "VerifyDigitalSignature": false,
+          "SignResponse": false
+        }
+      },
+      "clientServicesFraudInquiryRouteSigning": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/fraud-inquiries/{**remainder}"
+        }
+      },
+      "clientServicesCreditPaymentRecoveryRoute": {
+        "ClusterId": "apimnocontext",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/cpr/{**remainder}"
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/credit-payment-recovery/"
+          }
+        ],
+        "MetaData": {
+          "VerifyInteractionId": false,
+          "VerifyDigitalSignature": false,
+          "SignResponse": false
+        }
+      },
+      "clientServicesCreditPaymentRecoveryRouteSigning": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/credit-payment-recovery/{**remainder}"
+        }
+      },
+      "clientServicesAutoAccountSuspensionRoute": {
+        "ClusterId": "apimnocontext",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/accountsuspension/{**remainder}"
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/auto-account-suspension/"
+          }
+        ],
+        "MetaData": {
+          "VerifyInteractionId": false,
+          "VerifyDigitalSignature": false,
+          "SignResponse": false
+        }
+      },
+      "clientServicesAutoAccountSuspensionRouteSigning": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "clientservices-dynamics",
+        "Match": {
+          "Path": "/auto-account-suspension/{**remainder}"
+        }
+      },
+      "clientServicesInstitutionOnboardingCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "clientservices-institutiononboarding",
+        "Match": {
+          "Path": "client-services/onboarding/v1/institutions",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathSet": "/institutiononboarding/v1/institutions/onboarding"
+          }
+        ]
+      },
+      "authenticationManagementClientSignatureKey": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "owning-client-bypass",
+        "Match": {
+          "Path": "/authentication/v1/clients/{clientId}/signature-keys/{**remainder}",
+          "Methods": [
+            "GET",
+            "POST",
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "fasterPaymentsInitiate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-fps-create",
+        "Match": {
+          "Path": "/v3/payments/fps",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fps-initiation-api"
+          }
+        ]
+      },
+      "fasterPaymentsReturn": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-fps-create",
+        "Match": {
+          "Path": "/v3/payments/fps/return",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fps-initiation-api"
+          }
+        ]
+      }
+    }
+  }
+}

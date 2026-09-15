@@ -7,12 +7,14 @@ import EndpointBlockModel from './components/endpoint-block-model'
 import EndpointBlockRespsonse from './components/endpoint-block-response'
 import EndpointBlockParameters from './components/endpoint-block-parameters'
 import EndpointBlockWebhooks from './components/endpoint-block-webhooks'
+import EndpointBlockScopes from './components/endpoint-block-scopes'
 import CodeSnippet from 'src/components/code-snippet'
 
 import * as Types from './endpoint-block.types'
 import * as Styles from './endpoint-block.styles'
 import * as Helpers from './endpoint-block.helpers'
 import { getAllWebhooks } from 'src/hooks/allWebhooks'
+import { resolveScopeRefs } from 'src/helpers/scopes'
 
 import APIFiles from '../../../data/endpoints.json'
 import kebabCase from 'lodash.kebabcase'
@@ -103,7 +105,9 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
     path,
     codeblocks,
     version,
-    webhooks
+    webhooks,
+    exGateway,
+    scopeRefs
   } = currentEndpoint
 
   const {
@@ -125,6 +129,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
 
   const titleTransformed = kebabCase(title.toLowerCase())
   const relatedWebhooks = getRelatedWebhooks(webhooks)
+  const resolvedScopes = exGateway ? resolveScopeRefs(scopeRefs) : []
 
   if (hasCustomContent) {
     return children(APIFiles[version].paths[path][type])
@@ -174,6 +179,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
             apiData={APIFiles[version]}
             codeblocks={getCodeBlocks('response', codeblocks, responses)}
           />
+          {exGateway && <EndpointBlockScopes scopes={resolvedScopes} />}
           <EndpointBlockWebhooks webhooks={relatedWebhooks} />
         </Styles.EndpointWrapper>
       </Styles.FlexContainer>
