@@ -30,6 +30,8 @@ For more information about currencies supported by ClearBank multi-currency acco
         {
       path: "/mccy/v2/Accounts",
       version: "2.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
         'mccy-account-created-webhook-v1'
       ]
@@ -53,7 +55,9 @@ For more information about currencies supported by ClearBank multi-currency acco
   endpoints={[
     {
       path: "/mccy/v1/Accounts",
-      version: "1.0.MCCY-Transactions"
+      version: "1.0.MCCY-Transactions",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -64,7 +68,9 @@ For more information about currencies supported by ClearBank multi-currency acco
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}",
-      version: "1.0.MCCY-Transactions"
+      version: "1.0.MCCY-Transactions",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -76,6 +82,8 @@ For more information about currencies supported by ClearBank multi-currency acco
     {
       path: "/mccy/v1/Accounts/{accountId}",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]
@@ -92,6 +100,9 @@ For more information about currencies supported by ClearBank multi-currency acco
     {
       path: "/mccy/v1/Accounts/{accountId}/status",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]
@@ -105,7 +116,9 @@ For more information about currencies supported by ClearBank multi-currency acco
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/currencies",
-      version: "1.0.MCCY-ACC"
+      version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:currencies:create"],
     }
   ]}
 />
@@ -116,7 +129,9 @@ For more information about currencies supported by ClearBank multi-currency acco
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/balances",
-      version: "1.0.MCCY-ACC"
+      version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:balances:read"],
     }
   ]}
 />
@@ -128,6 +143,8 @@ For more information about currencies supported by ClearBank multi-currency acco
     {
       path: "/mccy/v1/Accounts/{accountId}",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:delete"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]
@@ -152,6 +169,8 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
     {
       path: "/mccy/v1/VirtualAccounts",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:virtual:create"],
       webhooks: [
         'mccy-virtual-account-created-webhook-v1'
       ]
@@ -167,7 +186,9 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
   endpoints={[
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
-      version: "1.0.MCCY-ACC"
+      version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:virtual:read"],
     }
   ]}
 />
@@ -179,6 +200,9 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:properties:update", "accounts:virtual:update"],
       webhooks: [
         'mccy-virtual-account-updated-webhook-v1'
       ]
@@ -195,6 +219,9 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/status",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:properties:update", "accounts:virtual:update"],
       webhooks: [
         'mccy-virtual-account-updated-webhook-v1'
       ]
@@ -209,6 +236,8 @@ To comply with the Funds Transfer Regulation, it is important that the naming of
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}",
       version: "1.0.MCCY-ACC",
+      exGateway: true,
+      scopeRefs: ["accounts:virtual:delete"],
       webhooks: [
         'mccy-virtual-account-updated-webhook-v1'
       ]

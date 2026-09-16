@@ -107,7 +107,8 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
     version,
     webhooks,
     exGateway,
-    scopeRefs
+    scopeRefs,
+    scopeMatch
   } = currentEndpoint
 
   const {
@@ -179,7 +180,9 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
             apiData={APIFiles[version]}
             codeblocks={getCodeBlocks('response', codeblocks, responses)}
           />
-          {exGateway && <EndpointBlockScopes scopes={resolvedScopes} />}
+          {exGateway && (
+            <EndpointBlockScopes scopes={resolvedScopes} requires={scopeMatch} />
+          )}
           <EndpointBlockWebhooks webhooks={relatedWebhooks} />
         </Styles.EndpointWrapper>
       </Styles.FlexContainer>

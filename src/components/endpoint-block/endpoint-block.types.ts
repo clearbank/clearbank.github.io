@@ -9,6 +9,7 @@ export interface EndpointDefinition {
   codeblocks?: CodeblockType[]
   exGateway?: boolean
   scopeRefs?: string[]
+  scopeMatch?: 'any' | 'all'
 }
 
 export interface EndpointProps {

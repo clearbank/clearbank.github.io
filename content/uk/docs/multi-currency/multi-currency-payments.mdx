@@ -57,7 +57,9 @@ If you would prefer not to have the rescheduled payment processed, you can cance
   endpoints={[
     {
       path: "/v1/mccy/inboundpayment/{accountUniqueId}",
-      version: "1.0.JPM"
+      version: "1.0.JPM",
+      exGateway: true,
+      scopeRefs: ["payments:cross-border:create"],
     }
   ]}
 />
@@ -69,6 +71,8 @@ If you would prefer not to have the rescheduled payment processed, you can cance
     {
       path: "/v1/mccy/payments",
       version: "1.0.Dec21",
+      exGateway: true,
+      scopeRefs: ["payments:cross-border:create"],
       webhooks: [
         'mccy-create-trx-webhook-v1',
         'mccy-settle-trx-webhook-v1',
@@ -92,7 +96,9 @@ If you would prefer not to have the rescheduled payment processed, you can cance
   endpoints={[
     {
       path: "/v1/mccy/payments/{batchId}",
-      version: "1.0.Dec21"
+      version: "1.0.Dec21",
+      exGateway: true,
+      scopeRefs: ["payments:cross-border:return"],
     }
   ]}
 />
@@ -103,7 +109,9 @@ If you would prefer not to have the rescheduled payment processed, you can cance
   endpoints={[
     {
       path: "/v1/mccy/payments/{batchId}/{endToEndId}",
-      version: "1.0.Dec21"
+      version: "1.0.Dec21",
+      exGateway: true,
+      scopeRefs: ["payments:cross-border:return"],
     }
   ]}
 />
@@ -128,6 +136,8 @@ You can initiate payments between two ClearBank multi-currency accounts that you
     {
       path: "/v1/mccy/internaltransfers",
       version: "1.0.Internal-Transfers",
+      exGateway: true,
+      scopeRefs: ["payments:cross-border:create"],
       webhooks: [
         'mccy-internal-transfer-settled-v1',
         'mccy-internal-transfer-cancelled-v1'

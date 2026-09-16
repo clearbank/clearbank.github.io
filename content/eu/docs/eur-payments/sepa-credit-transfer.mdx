@@ -69,6 +69,8 @@ To comply with the SEPA scheme rulebook, if the payment originates from outside 
     {
       path: "/payments/sepa-ct/v1/customer-payments",
       version: "1.0-SEPA-CT",
+      exGateway: true,
+      scopeRefs: ["payments:sepa-ct:create"],
       webhooks: [
         'sepa-ct-outbound-payment-completed-v1',
         'sepa-ct-outbound-payment-failed-v1',
@@ -250,6 +252,8 @@ Recalls can be requested using the following reason codes:
     {
       path: "/payments/sepa-ct/v1/recall",
       version: "1.0-SEPA-CT",
+      exGateway: true,
+      scopeRefs: ["payments:sepa-ct:return"],
       webhooks: [
         'sepa-ct-outbound-payment-return-completed-v1',
         'eu-customer-accounts-transaction-completed-v1',
@@ -323,6 +327,8 @@ If you accept the recall, a pacs.004 payment will be automatically initiated.  Y
     {
       path: "/payments/sepa-ct/v1/recall-response",
       version: "1.0-SEPA-CT",
+      exGateway: true,
+      scopeRefs: ["payments:sepa-ct:return"],
       webhooks:
       [
         'sepa-ct-inbound-payment-recalled-v1'
@@ -352,6 +358,8 @@ Once the return has been processed, you will either receive the [SEPA CT Inbound
     {
       path: "/payments/sepa-ct/v1/payment-returns",
       version: "1.0-SEPA-CT",
+      exGateway: true,
+      scopeRefs: ["payments:sepa-ct:return"],
       webhooks: [
         'sepa-ct-inbound-payment-return-completed-v1',
         'sepa-ct-inbound-payment-return-failed-v1',
@@ -381,6 +389,8 @@ The following will allow you to test SCT payment scenarios in the ClearBank simu
     {
       path: "/v1/payments/sepa-ct/emulator/inbound/payment",
       version: "1.0-SEPA-CT-Emulator",
+      exGateway: true,
+      scopeRefs: ["payments:sepa-ct:create"],
             webhooks: [
         'sepa-ct-outbound-payment-completed-v1',
         'eu-customer-accounts-transaction-completed-v1'

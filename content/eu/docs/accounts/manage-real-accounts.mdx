@@ -31,6 +31,8 @@ GBP payments to and from a European account are not allowed and would be rejecte
         {
       path: "/mccy/v2/Accounts",
       version: "2.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
         'mccy-account-created-webhook-v1'
       ]
@@ -46,7 +48,9 @@ GBP payments to and from a European account are not allowed and would be rejecte
   endpoints={[
     {
       path: "/mccy/v1/Accounts",
-      version: "1.0.MCCY-ACC-EU"
+      version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -57,7 +61,9 @@ GBP payments to and from a European account are not allowed and would be rejecte
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}",
-      version: "1.0.MCCY-ACC-EU"
+      version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -69,6 +75,8 @@ GBP payments to and from a European account are not allowed and would be rejecte
     {
       path: "/mccy/v1/Accounts/{accountId}",
       version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]
@@ -85,6 +93,9 @@ GBP payments to and from a European account are not allowed and would be rejecte
     {
       path: "/mccy/v1/Accounts/{accountId}/status",
       version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]
@@ -98,7 +109,9 @@ GBP payments to and from a European account are not allowed and would be rejecte
   endpoints={[
     {
       path: "/mccy/v1/Accounts/{accountId}/balances",
-      version: "1.0.MCCY-ACC-EU"
+      version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:balances:read"],
     }
   ]}
 />
@@ -110,6 +123,8 @@ GBP payments to and from a European account are not allowed and would be rejecte
     {
       path: "/mccy/v1/Accounts/{accountId}",
       version: "1.0.MCCY-ACC-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:delete"],
       webhooks: [
         'mccy-account-updated-webhook-v1'
       ]

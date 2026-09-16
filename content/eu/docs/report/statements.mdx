@@ -27,6 +27,8 @@ The only currency we support in Europe is euro. Set currency to EUR for all stat
     {
       path: "/mccy/v1/StatementRequests",
       version: "1.0.MCCY-Statements-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:create"],
       webhooks: [
         'mccy-institution-statement-webhook-v1'
       ]
@@ -43,6 +45,8 @@ The only currency we support in Europe is euro. Set currency to EUR for all stat
     {
       path: "/mccy/v1/StatementRequests/account/{iban}",
       version: "1.0.MCCY-Statements-EU",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:create"],
       webhooks: [
         'mccy-account-statement-webhook-v1'
       ]
@@ -146,6 +150,8 @@ We'll respond to the GET statement call with a **200 OK** response containing an
     {
       path: "/v1/statementrequests",
       version: "1.0_camt053_eu",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:create"],
       webhooks: [
         'statement-ready-for-download-webhook-v1'
       ]
@@ -161,7 +167,9 @@ We'll respond to the GET statement call with a **200 OK** response containing an
   endpoints={[
     {
       path: "/v1/statements/{messageId}",
-      version: "1.0_camt053_eu"
+      version: "1.0_camt053_eu",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:read"],
     }
   ]}
 />

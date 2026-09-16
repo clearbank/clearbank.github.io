@@ -166,6 +166,8 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v1/isas",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
        webhooks: [
         'account-created-webhook-v1'
       ]
@@ -182,6 +184,8 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v1/accounts/{accountId}/nominated-account",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
     }
   ]}
 />
@@ -193,6 +197,8 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v1/accounts/{accountId}/nominated-account",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -204,6 +210,8 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v1/isas/{accountId}",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -214,7 +222,9 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
-      version: "1.0.Sterling"
+      version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
     }
   ]}
 />
@@ -226,6 +236,8 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v3/Accounts",
       version: "3.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -237,6 +249,9 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
     {
       path: "/v1/isas/{accountId}/declaration",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
     }
   ]}
 />
@@ -252,6 +267,8 @@ endpoints={[
   {
     path: "/v3/payments/fps",
     version: "3.0.FPS-payment",
+    exGateway: true,
+    scopeRefs: ["payments:fps:create"],
     webhooks: [
       'transaction-settled-webhook-v6',
       'payment-message-assessment-failed-webhook-v1',
@@ -278,6 +295,8 @@ endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:delete"],
       webhooks: [
         'account-closure-completed-webhook-v1',
         'account-closure-failed-webhook-v1'
@@ -296,6 +315,8 @@ endpoints={[
     {
       path: "/v1/isas/{accountId}/cancellation",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:delete"],
       webhooks: [
         'account-closure-completed-webhook-v1',
         'account-closure-failed-webhook-v1'
@@ -311,6 +332,8 @@ endpoints={[
     {
       path: "/v1/accounts/{accountId}/closure",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -360,6 +383,8 @@ To transfer in a cash ISA:
     {
       path: "/v1/isas/{accountId}/transfer-in",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
        'transaction-settled-webhook-v6'
       ]
@@ -376,6 +401,9 @@ To transfer in a cash ISA:
     {
       path: "/v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
     }
   ]}
 />
@@ -387,6 +415,8 @@ To transfer in a cash ISA:
     {
       path: "/v1/isas/{accountId}/transfer-in/{transferInId}",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -398,6 +428,9 @@ To transfer in a cash ISA:
     {
       path: "/v1/isas/{accountId}/transfer-in/{transferInId}/rejection",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
     }
   ]}
 />
@@ -429,7 +462,9 @@ The process is shown in this message flow diagram:
   endpoints={[
     {
       path: "/v1/isas/{accountId}/transfer-outs",
-      version: "1.0.Sterling"
+      version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
     }
   ]}
 />
@@ -441,6 +476,9 @@ The process is shown in this message flow diagram:
     {
       path: "/v1/isas/{accountId}/transfer-outs/rejection",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:update", "accounts:properties:update"],
     }
   ]}
 />
@@ -474,6 +512,8 @@ To complete an automated transfer in:
     {
       path: "/v1/isas/{accountId}/automated-transfer-in",
       version: "1.0.SterlingAutomatedTransfer",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
         'tisa-transfer-request-webhook-v1',
         'tisa-transfer-accepted-webhook-v1',
@@ -495,6 +535,8 @@ To complete an automated transfer in:
     {
       path: "/v1/isas/{accountId}/automated-transfer-in/{urn}",
       version: "1.0.SterlingAutomatedTransfer",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
         'tisa-transfer-request-webhook-v1',
         'tisa-transfer-accepted-webhook-v1',
@@ -512,6 +554,8 @@ To complete an automated transfer in:
     {
       path: "/v1/isas/{accountId}/automated-transfer-in/{urn}",
       version: "1.0.SterlingAutomatedTransfer",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
         'tisa-transfer-request-webhook-v1',
         'tisa-transfer-accepted-webhook-v1',
@@ -569,6 +613,8 @@ To complete an automated transfer out:
     {
       path: "/v1/isas/{accountId}/automated-transfer-out/{urn}",
       version: "1.0.SterlingAutomatedTransfer",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
         'tisa-transfer-request-webhook-v1',
         'tisa-transfer-accepted-webhook-v1',
@@ -613,6 +659,8 @@ As part of your simulation onboarding process, you'll be required to simulate se
     {
       path: "/v1/isas/automated-transfers/injector/transfer-out",
       version: "1.0.isaMIT",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
       webhooks: [
       ]
     }
@@ -626,6 +674,8 @@ As part of your simulation onboarding process, you'll be required to simulate se
     {
       path: "/v1/isas/automated-transfers/injector/{urn}/update-state",
       version: "1.0.isaMIT",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
       ]
     }
@@ -639,6 +689,8 @@ As part of your simulation onboarding process, you'll be required to simulate se
     {
       path: "/v1/isas/automated-transfers/injector/{urn}/accept",
       version: "1.0.isaMIT",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
       webhooks: [
       ]
     }

@@ -6,15 +6,21 @@ import * as Types from './endpoint-block-scopes.types'
 import * as Styles from './endpoint-block-scopes.styles'
 
 const EndpointBlockScopes: React.FunctionComponent<Types.EndpointBlockScopesProps> = ({
-  scopes
+  scopes,
+  requires = 'all'
 }): ReactElement => {
   if (!scopes || scopes.length < 1) {
     return <></>
   }
 
+  const title =
+    scopes.length > 1 && requires === 'any'
+      ? 'Required API scopes (any one of)'
+      : 'Required API scopes'
+
   return (
     <>
-      <Styles.Title>Required API scopes</Styles.Title>
+      <Styles.Title>{title}</Styles.Title>
       <Styles.GatewayBadge>External Gateway</Styles.GatewayBadge>
       <Styles.Summary>
         {scopes.map((scope: ScopeDefinition) => (

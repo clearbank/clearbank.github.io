@@ -29,6 +29,9 @@ For camt.053 statements containing all payment activity across your ClearBank ac
     {
       path: "/mccy/v1/Accounts/{accountId}/transactions",
       version: "1.0.MCCY-Transactions",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:funding:read", "accounts:transactions:read"],
     }
   ]}
 />
@@ -40,6 +43,9 @@ For camt.053 statements containing all payment activity across your ClearBank ac
     {
       path: "/mccy/v1/VirtualAccounts/{virtualAccountId}/transactions",
       version: "1.0.MCCY-Transactions",
+      exGateway: true,
+      scopeMatch: "any",
+      scopeRefs: ["accounts:transactions:read", "accounts:virtual:read"],
     }
   ]}
 />
@@ -72,6 +78,8 @@ For camt.053 statements containing all payment activity across your ClearBank ac
     {
       path: "/mccy/v1/StatementRequests",
       version: "1.0.MCCY-Statements",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:create"],
       webhooks: [
         'mccy-institution-statement-webhook-v1'
       ]
@@ -88,6 +96,8 @@ For camt.053 statements containing all payment activity across your ClearBank ac
     {
       path: "/mccy/v1/StatementRequests/account/{iban}",
       version: "1.0.MCCY-Statements",
+      exGateway: true,
+      scopeRefs: ["accounts:statements:create"],
       webhooks: [
         'mccy-account-statement-webhook-v1'
       ]

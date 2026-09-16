@@ -149,6 +149,8 @@ While joint accounts will typically have two customers, we can support any numbe
         {
       path: "/v2/savings",
       version: "2.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
        webhooks: [
         'account-created-webhook-v1'
       ]
@@ -156,6 +158,8 @@ While joint accounts will typically have two customers, we can support any numbe
     {
       path: "/v1/savings",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
        webhooks: [
         'account-created-webhook-v1'
       ]
@@ -228,6 +232,8 @@ The second legacy method uses just `nominated-account` endpoints:
     {
       path: "/v1/accounts/{accountId}/nominated-account",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:create"],
     }
   ]}
 />
@@ -239,6 +245,8 @@ The second legacy method uses just `nominated-account` endpoints:
     {
       path: "/v1/accounts/{accountId}/nominated-account",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -269,7 +277,9 @@ To retrieve end of day balances for a savings account, use the [camt.053 endpoin
   endpoints={[
     {
       path: "/v3/Accounts",
-      version: "3.0.Sterling"
+      version: "3.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -280,7 +290,9 @@ To retrieve end of day balances for a savings account, use the [camt.053 endpoin
   endpoints={[
     {
       path: "/v3/Accounts/{accountId}",
-      version: "3.0.Sterling"
+      version: "3.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
@@ -297,7 +309,9 @@ This is the same endpoint used to amend information for real GBP accounts.
   endpoints={[
     {
       path: "/v1/accounts/{accountId}",
-      version: "1.0.Sterling"
+      version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:update"],
     }
   ]}
 />
@@ -355,6 +369,8 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     {
       path: "/v1/accounts/{accountId}/closure",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:delete"],
          webhooks: [
         'account-closure-completed-webhook-v1',
         'account-closure-failed-webhook-v1'
@@ -370,6 +386,8 @@ If account closure fails and hasn't been resolved by the end of the month, then 
     {
       path: "/v1/accounts/{accountId}/closure",
       version: "1.0.Sterling",
+      exGateway: true,
+      scopeRefs: ["accounts:funding:read"],
     }
   ]}
 />
