@@ -1,4 +1,4 @@
-{
+﻿{
   "ReverseProxy": {
     "Routes": {
       "fraudPreventionRiskyEventCredentialUpdated": {
@@ -259,35 +259,2651 @@
           }
         ]
       },
-      "fasterPaymentsInitiate": {
+      "authenticationManagementClientSecretPost": {
         "ClusterId": "apim",
+        "AuthorizationPolicy": "owning-client-bypass",
+        "Match": {
+          "Path": "/authentication/v1/clients/{clientId}/secrets",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementPatch": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "apis-clients-update",
+        "Match": {
+          "Path": "/authentication/v1/clients/{**remainder}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementPost": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "apis-clients-create",
+        "Match": {
+          "Path": "/authentication/v1/clients/{**remainder}",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementClientsGet": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "apis-clients-read",
+        "Match": {
+          "Path": "/authentication/v1/clients",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementClientDelete": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "apis-clients-delete",
+        "Match": {
+          "Path": "/authentication/v1/clients/{clientId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementClientGet": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "owning-client-bypass",
+        "Match": {
+          "Path": "/authentication/v1/clients/{clientId}/{**remainder}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "authenticationManagementClientSecretDelete": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "owning-client-bypass",
+        "Match": {
+          "Path": "/authentication/v1/clients/{clientId}/secrets/{id}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/authentication"
+          },
+          {
+            "PathPrefix": "/authentication-management"
+          }
+        ]
+      },
+      "chapsSimulationCustomerPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v1/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsSimulationCustomerPaymentCreateV3": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v3/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsSimulationsInstitutionPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v1/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsSimulationsInstitutionPaymentCreateV3": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v3/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsPaymentReturn": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-return",
+        "Match": {
+          "Path": "/payments/chaps/v5/return-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsPaymentReturnV6": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-return",
+        "Match": {
+          "Path": "/payments/chaps/v6/return-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chequesPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cheques-create",
+        "Match": {
+          "Path": "/payments/cheques/v1/submit-deposit",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyOrchestratorCancelBatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-return",
+        "Match": {
+          "Path": "/v1/mccy/payments/{batchId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "mccyOrchestratorCancelPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-return",
+        "Match": {
+          "Path": "/v1/mccy/payments/{batchId}/{endToEndId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "mccyInboundPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/v1/mccy/inboundpayment/{accountId}",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyInternalTransferCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/v1/mccy/internaltransfers",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/v1/mccy/payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "crossBorderMccyOutboundPaymentInitiate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/payments/cross-border/v2/payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "crossBorderMccyInboundSimulationPaymentInitiate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/payments/cross-border/v2/inbound/payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "crossBorderFxMccyOutboundPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/payments/cross-border/v2/fx-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "crossBorderFxMccyOutboundPaymentAccept": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/payments/cross-border/v2/fx-payments/accept",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "gbpCrossBorderPaymentCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-cross-border-create",
+        "Match": {
+          "Path": "/payments/cross-border-sterling/v3/payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "fpsDomestic": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-fps-create",
+        "Match": {
+          "Path": "/payments/fps/v1/domestic",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-fps-api"
+          }
+        ]
+      },
+      "fpsOverseas": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-fps-create",
+        "Match": {
+          "Path": "/payments/fps/v1/overseas",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-fps-api"
+          }
+        ]
+      },
+      "fpsReturn": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-fps-return",
+        "Match": {
+          "Path": "/payments/fps/v1/return",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-fps-api"
+          }
+        ]
+      },
+      "t2rtgsCustomerPayment": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-t2rtgs-create",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-t2-rtgs-api"
+          }
+        ]
+      },
+      "t2rtgsReturnCustomerPayment": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-t2rtgs-return",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/payment-returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-t2-rtgs-api"
+          }
+        ]
+      },
+      "t2rtgsInstitutionPayment": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-t2rtgs-create",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/payments-t2-rtgs-api"
+          }
+        ]
+      },
+      "t2rtgsReturnCustomerPaymentSimulation": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "payments-t2rtgs-return",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/inbound/payment-returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/t2-rtgs/v1"
+          },
+          {
+            "PathPrefix": "/t2external/v1/payments"
+          }
+        ]
+      },
+      "t2rtgsCustomerPaymentSimulation": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "payments-t2rtgs-create",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/inbound/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/t2-rtgs/v1"
+          },
+          {
+            "PathPrefix": "/t2external/v1/payments"
+          }
+        ]
+      },
+      "t2rtgsInstitutionPaymentSimulation": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "payments-t2rtgs-create",
+        "Match": {
+          "Path": "/payments/t2-rtgs/v1/inbound/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/t2-rtgs/v1"
+          },
+          {
+            "PathPrefix": "/t2external/v1/payments"
+          }
+        ]
+      },
+      "chapsrtgsExternalCreateInboundReturnPaymentSimulation": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-return",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v1/return-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "chapsrtgsExternalCreateInboundReturnPaymentSimulationV3": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-return",
+        "Match": {
+          "Path": "/inbound-payment-simulation/chaps/v3/return-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createOutboundChapsCustomerPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/payments/chaps/v5/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createOutboundChapsCustomerPaymentV6": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/payments/chaps/v6/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createOutboundChapsInstitutionPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/payments/chaps/v5/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createOutboundChapsInstitutionPaymentV6": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-chaps-create",
+        "Match": {
+          "Path": "/payments/chaps/v6/institution-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "cardsCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-cards-create",
+        "Match": {
+          "Path": "/cards/v1/cards",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/cards"
+          },
+          {
+            "PathPrefix": "/cards/management"
+          }
+        ]
+      },
+      "digitalAssetsTransactionsCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "digitalassets-transactions-create",
+        "Match": {
+          "Path": "/digital-assets/stable-coins/v1/transfers",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/scaas-gateway-external-api"
+          }
+        ]
+      },
+      "digitalAssetsTransactionsRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "digitalassets-transactions-read",
+        "Match": {
+          "Path": "/digital-assets/stable-coins/v1/accounts/{accountName}/transactions/{transactionId?}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/scaas-gateway-external-api"
+          }
+        ]
+      },
+      "digitalAssetsBalancesRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "digitalassets-balances-read",
+        "Match": {
+          "Path": "/digital-assets/stable-coins/v1/accounts/{accountName}/balance",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/scaas-gateway-external-api"
+          }
+        ]
+      },
+      "accountsFundingRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountFundingRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{id}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountFundingCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/accounts/sterling/v1",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountFundingUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/v1/accounts/{id}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountFundingDelete": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-delete",
+        "Match": {
+          "Path": "/v1/accounts/{id}/closure",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountMandateCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-create",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/mandates",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandateUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-update",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/mandates/{mandateId}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandateReturn": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-create",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/mandates/{mandateId}/returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandateCancel": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-delete",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/mandates/{mandateId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandateCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-create",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}/mandates",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandateUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-update",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}/mandates/{mandateId}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandateReturn": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-create",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}/mandates/{mandateId}/returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandateCancel": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-delete",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}/mandates/{mandateId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandatesRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-real-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/mandates",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandateTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-real-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/mandates/{mandateId}/collections",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountMandatesUnpaidTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-real-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/mandates/unpaid",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandatesRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-virtual-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/virtual/{virtualAccountId}/mandates",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandateTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-virtual-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/virtual/{virtualAccountId}/mandates/{mandateId}/collections",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountVirtualMandatesUnpaidTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-mandates-virtual-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/virtual/{virtualAccountId}/mandates/unpaid",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "unappliedDirectCreditTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/v1/transactions/{sortCode}/directcredit/unapplied",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "unpaidDirectDebitTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/v1/transactions/{sortCode}/directdebit/unpaid",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountBACSPaymentReturn": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "payments-bacs-return",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/transactions/returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "VirtualAccountBACSPaymentReturn": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "payments-bacs-return",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}/transactions/returns",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapibacs"
+          }
+        ]
+      },
+      "accountIsaCancel": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-delete",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/cancellation",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaDiscontinue": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-delete",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/discontinue",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaTransferIn": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-in",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaTransferOut": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-outs",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaDeclaration": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/declaration",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaTransferInRejection": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-in/{transferInId}/rejection",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaTransferOutRejection": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-outs/rejection",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountIsaTransferHistoryForm": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-in/{transferInId}/transfer-history-form",
+          "Methods": [
+            "PUT"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountStatementCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-statements-create",
+        "Match": {
+          "Path": "/v1/statementrequests",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "accountStatementRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-statements-read",
+        "Match": {
+          "Path": "/v1/statements/{messageId}",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },      
+      "accountTransactionRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/v2/accounts/{accountId}/transactions/{transactionId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "institutionTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/v2/transactions",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "accountVirtualCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-virtual-create",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{id}/virtual-accounts",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountsVirtualInstitutionRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/virtual-accounts",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountsVirtualRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{id}/virtual-accounts",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountVirtualRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{id}/virtual-accounts/{virtualAccountId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/accounts-api"
+          }
+        ]
+      },
+      "accountVirtualTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-transactions-read",
+        "Match": {
+          "Path": "/v2/Accounts/{id}/Virtual/{virtualAccountId}/Transactions",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "accountVirtualTransactionRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-transactions-read",
+        "Match": {
+          "Path": "/v2/accounts/{id}/virtual/{virtualAccountId}/transactions/{transactionId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "accountVirtualPatch": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-update",
+        "Match": {
+          "Path": "/v1/Accounts/{accountId}/Virtual/{virtualAccountId}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountVirtualDelete": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-delete",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/virtual/{virtualAccountId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountClosureStatusRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/closure",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "nominatedAccountRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/nominated-account",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "nominatedAccountSet": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/accounts/{accountId}/nominated-account",
+          "Methods": [
+            "PUT"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "savingsAccountCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v2/savings",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "accountInterestConfigurationsRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/interest/v1/accounts/{accountId}/configurations",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "accountInterestConfigurationUpdate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/interest/v1/accounts/{accountId}/configurations",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyAccountCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/mccy/v2/accounts",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyAccountBalancesRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-balances-read",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}/balances",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyAccountsRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/mccy/v1/accounts",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyAccountRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyAccountDelete": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-delete",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "mccyAccountPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "mccyAccountStatusPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-properties-update",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}/status",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "mccyAccountTransactionsRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/mccy/v1/accounts/{accountId}/transactions",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyAccountVirtualCreate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-virtual-create",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyAccountVirtualRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts/{virtualAccountId}",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyAccountVirtualDelete": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-virtual-delete",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts/{virtualAccountId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "mccyAccountVirtualPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-properties-virtual-update",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts/{virtualAccountId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "mccyAccountVirtualStatusPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-properties-virtual-update",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts/{virtualAccountId}/status",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "mccyAccountVirtualTransactionsRead": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-virtual-transactions-read",
+        "Match": {
+          "Path": "/mccy/v1/virtualaccounts/{virtualAccountId}/transactions",
+          "Methods": [
+            "GET"
+          ]
+        }
+      },
+      "mccyInstitutionStatementRequest": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-statements-create",
+        "Match": {
+          "Path": "/mccy/v1/statementrequests",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyAccountStatementRequest": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-statements-create",
+        "Match": {
+          "Path": "/mccy/v1/statementrequests/account/{iban}",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "mccyAccountCurrenciesCreateRequest": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-currencies-create",
+        "Match": {
+          "Path": "/mccy/v1/Accounts/{accountId}/currencies",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "RetailCustomerUpdate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/retail/{customerId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "RetailCustomerUpdateAddress": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/retail/{customerId}/currentaddress",
+          "Methods": [
+            "PUT"
+          ]
+        }
+      },
+      "sepaInstantPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-inst-create",
+        "Match": {
+          "Path": "/v1/payments/sepa-instant",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaPaymentRecall": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-inst-return",
+        "Match": {
+          "Path": "/v1/payments/sepa-instant/{paymentId}/recall",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaPaymentRecallResponse": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-inst-return",
+        "Match": {
+          "Path": "/v1/payments/sepa-instant/{paymentId}/recall-response",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaCtPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-ct-create",
+        "Match": {
+          "Path": "/payments/sepa-ct/v1/customer-payments",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaCtRecallPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-ct-return",
+        "Match": {
+          "Path": "/payments/sepa-ct/v1/recall",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaCtRecallResponse": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-ct-return",
+        "Match": {
+          "Path": "/payments/sepa-ct/v1/recall-response",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaCtPaymentReturns": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-ct-return",
+        "Match": {
+          "Path": "/payments/sepa-ct/v1/payment-returns",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaCtEmulatorInboundPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-ct-create",
+        "Match": {
+          "Path": "/v1/payments/sepa-ct/emulator/inbound/payment",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "sepaInboundPayment": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-inst-create",
+        "Match": {
+          "Path": "/v1/payments/sepa-instant-emulator/inbound-payment",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/v1/payments"
+          },
+          {
+            "PathPrefix": "/v1"
+          }
+        ]
+      },
+      "sepaInboundPaymentRecall": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-sepa-inst-return",
+        "Match": {
+          "Path": "/v1/payments/sepa-instant-emulator/inbound-payment/recall",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/v1/payments"
+          },
+          {
+            "PathPrefix": "/v1"
+          }
+        ]
+      },
+      "verificationOfPayeeAccountDetailsRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "account-verification-integration",
+        "Match": {
+          "Path": "/open-banking/vop/v1/payees/details",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/open-banking"
+          }
+        ]
+      },
+      "verificationOfPayeeVerifyPayeeSingle": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-verification-read",
+        "Match": {
+          "Path": "/open-banking/vop/v1/payees/single",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "accountEndOfDayBalanceRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{accountId}/end-of-day-balance",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "legacyAccountsFundingRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v3/Accounts",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountFundingRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v3/Accounts/{accountId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountFundingCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v3/Accounts",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountTransactionsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-transactions-read",
+        "Match": {
+          "Path": "/v2/Accounts/{accountId}/Transactions",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/ledger-external"
+          }
+        ]
+      },
+      "legacyAccountVirtualCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-create",
+        "Match": {
+          "Path": "/v2/Accounts/{accountId}/Virtual",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountsVirtualInstitutionRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/v1/Accounts/Virtual",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountsVirtualRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/v2/Accounts/{accountId}/Virtual",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyAccountVirtualRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-virtual-read",
+        "Match": {
+          "Path": "/v2/Accounts/{accountId}/Virtual/{virtualAccountId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacySavingsAccountCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/savings",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "legacyFpsDomestic": {
+        "ClusterId": "fiapiexternal",
         "AuthorizationPolicy": "payments-fps-create",
         "Match": {
           "Path": "/v3/payments/fps",
           "Methods": [
             "POST"
           ]
-        },
-        "Transforms": [
-          {
-            "PathPrefix": "/fps-initiation-api"
-          }
-        ]
+        }
       },
-      "fasterPaymentsReturn": {
-        "ClusterId": "apim",
+      "legacyFpsOverseas": {
+        "ClusterId": "fiapiexternal",
         "AuthorizationPolicy": "payments-fps-create",
         "Match": {
+          "Path": "/v2/payments/fps/singlepayment",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "legacyFpsReturn": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "payments-fps-return",
+        "Match": {
           "Path": "/v3/payments/fps/return",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createRetailCustomer": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/v1/customers/retail",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "createSoleTraderCustomer": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/v1/customers/soletrader",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "updateSoleTraderCustomer": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/soletrader/{customerId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "setSoleTraderCustomerCurrentAddress": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/soletrader/{customerId}/currentaddress",
+          "Methods": [
+            "PUT"
+          ]
+        }
+      },
+      "createBusinessCustomer": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/v1/customers/business",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "updateBusinessCustomer": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "setBusinessCustomerCurrentAddress": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/currentaddress",
+          "Methods": [
+            "PUT"
+          ]
+        }
+      },
+      "addBusinessCustomerUbo": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/ubo",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "updateBusinessCustomerUbo": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/ubo/{uboId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "deleteBusinessCustomerUbo": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-delete",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/ubo/{uboId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "addBusinessCustomerDirector": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/director",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "updateBusinessCustomerDirector": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/director/{directorId}",
+          "Methods": [
+            "PATCH"
+          ]
+        }
+      },
+      "deleteBusinessCustomerDirector": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-delete",
+        "Match": {
+          "Path": "/v1/customers/business/{customerId}/director/{directorId}",
+          "Methods": [
+            "DELETE"
+          ]
+        }
+      },
+      "createEmbeddedBankingAccount": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v4/accounts",
           "Methods": [
             "POST"
           ]
         },
         "Transforms": [
           {
-            "PathPrefix": "/fps-initiation-api"
+            "PathPrefix": "/fiapiaccounts"
           }
         ]
+      },
+      "accountCopOptOut": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-confirmation-opt-out",
+        "Match": {
+          "Path": "/v1/cop/opt/accounts/{accountId}",
+          "Methods": [
+            "PUT"
+          ]
+        }
+      },
+      "VirtualAccountCopOptOut": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-confirmation-opt-out",
+        "Match": {
+          "Path": "/v1/cop/opt/accounts/{accountId}/virtual/{virtualAccountId}",
+          "Methods": [
+            "PUT"
+          ]
+        }
+      },
+      "copSrdValidate": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-confirmation-read",
+        "Match": {
+          "Path": "/open-banking/outbound/v1/srd/validate",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "copNameVerification": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-confirmation-read",
+        "Match": {
+          "Path": "/open-banking/outbound/v1/name-verification",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "fxCreateQuote": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "fx-quote-create",
+        "Match": {
+          "Path": "/fx/v1/quote",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "fxCreateOrder": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "fx-trade-create",
+        "Match": {
+          "Path": "/fx/v1/order",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "isaRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v1/isas/{accountId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "isaTransferInRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/transfer-in/{transferInId}",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "HubAccountCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/accounts/sterling/v1/hub-accounts",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "internalInstitutionsRead": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "internal-institutions-read",
+        "Match": {
+          "Path": "/institutions/v1/institutions",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathSet": "/institutions-aks/v1/institutions/institutionIdsByCbuid"
+          }
+        ]
+      },
+      "billingPricelistCreate": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "internal-billing-create",
+        "Match": {
+          "Path": "/billing/v1/pricelists",
+          "Methods": [
+            "POST",
+            "PUT"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathSet": "/billing/api/v1/pricelists"
+          }
+        ]
+      },
+      "billingPricelistDelete": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "internal-billing-delete",
+        "Match": {
+          "Path": "/billing/v1/pricelists/{pricelistId}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/billing"
+          },
+          {
+            "PathPrefix": "/billing/api"
+          }
+        ]
+      },
+      "billingPricelistV2Create": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "internal-billing-create",
+        "Match": {
+          "Path": "/billing/v2/pricelists",
+          "Methods": [
+            "POST",
+            "PUT"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathSet": "/billing/api/v2/pricelists"
+          }
+        ]
+      },
+      "RelatedAccountCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{accountId}/related-accounts",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "RelatedAccountsRead": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-read",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{accountId}/related-accounts",
+          "Methods": [
+            "GET"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "RelatedAccountDelete": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-delete",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{accountId}/related-accounts/{iban}",
+          "Methods": [
+            "DELETE"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "RelatedAccountUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/accounts/sterling/v1/accounts/{accountId}/related-accounts/{iban}",
+          "Methods": [
+            "PATCH"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "cddLegalEntityOnboard": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-check-legal-entity",
+        "Match": {
+          "Path": "/customer-due-diligence/v1/legal-entity/onboard",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "cddRetailOnboard": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-check-retail",
+        "Match": {
+          "Path": "/customer-due-diligence/v1/retail/onboard",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "cddSoleTraderOnboard": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-check-sole-trader",
+        "Match": {
+          "Path": "/customer-due-diligence/v1/sole-trader/onboard",
+          "Methods": [
+            "POST"
+          ]
+        }
+      },
+      "customersV2CustomerGet": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-read",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}",
+          "Methods": [ "GET" ]
+        }
+      },
+      "customersV2RelatedPartiesGet": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-read",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/related-parties",
+          "Methods": [ "GET" ]
+        }
+      },
+      "customersV2RelatedPartyPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/related-parties",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2CurrentAddressPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/current-addresses",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2RelatedPartyDelete": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-delete",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}",
+          "Methods": [ "DELETE" ]
+        }
+      },
+      "customersV2IdentityDocumentPut": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+          "Methods": [ "PUT" ]
+        }
+      },
+      "customersV2IdentityDocumentDelete": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-delete",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}",
+          "Methods": [ "DELETE" ]
+        }
+      },
+      "customersV2TaxResidencyPut": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+          "Methods": [ "PUT" ]
+        }
+      },
+      "customersV2TaxResidencyDelete": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-delete",
+        "Match": {
+          "Path": "/customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}",
+          "Methods": [ "DELETE" ]
+        }
+      },
+      "customersV2LegalEntityPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/legal-entities",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2LegalEntityPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/legal-entities/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "customersV2NonAccountHolderDirectorPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/directors",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2NonAccountHolderUboPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/ubos",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2NonAccountHolderControllingPersonPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/controlling-persons",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2NonAccountHolderDirectorPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/directors/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "customersV2NonAccountHolderUboPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/ubos/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "customersV2NonAccountHolderControllingPersonPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/non-account-holder/controlling-persons/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "customersV2RetailPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/retail",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2RetailPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/retail/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "customersV2SoleTraderPost": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-create",
+        "Match": {
+          "Path": "/customers/v2/sole-traders",
+          "Methods": [ "POST" ]
+        }
+      },
+      "customersV2SoleTraderPatch": {
+        "ClusterId": "fiapiexternal",
+        "AuthorizationPolicy": "accounts-parties-update",
+        "Match": {
+          "Path": "/customers/v2/sole-traders/{customerId}",
+          "Methods": [ "PATCH" ]
+        }
+      },
+      "PaymentAccountCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/accounts/sterling/v1/payment-accounts",
+          "Methods": [
+            "POST"
+          ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaMitCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas/automated-transfers/injector/transfer-out",
+          "Methods": [ "POST" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaMitAccept": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/v1/isas/automated-transfers/injector/{urn}/accept",
+          "Methods": [ "POST" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaMitUpdateState": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/v1/isas/automated-transfers/injector/{urn}/update-state",
+          "Methods": [ "POST" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaTransferInCreate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/automated-transfer-in",
+          "Methods": [ "POST" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaTransferInResubmit": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-create",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/automated-transfer-in/{urn}",
+          "Methods": [ "PUT" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaTransferInUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/automated-transfer-in/{urn}",
+          "Methods": [ "PATCH" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "AutomatedIsaTransferOutUpdate": {
+        "ClusterId": "fiexternal",
+        "AuthorizationPolicy": "accounts-funding-update",
+        "Match": {
+          "Path": "/v1/isas/{accountId}/automated-transfer-out/{urn}",
+          "Methods": [ "PATCH" ]
+        },
+        "Transforms": [
+          {
+            "PathPrefix": "/fiapiaccounts"
+          }
+        ]
+      },
+      "CardAuthorisationSet": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-create",
+        "Match": {
+          "Methods": [
+            "PUT"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations/{externalAuthorisationId}"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      },
+      "CardAuthorisationAdjust": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-update",
+        "Match": {
+          "Methods": [
+            "POST"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations/{externalAuthorisationId}/adjustment"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      },
+      "CardAuthorisationsList": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-read",
+        "Match": {
+          "Methods": [
+            "GET"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      },
+      "CardAuthorisationGet": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-read",
+        "Match": {
+          "Methods": [
+            "GET"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations/{externalAuthorisationId}"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      },
+      "CardAuthorisationDelete": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-delete",
+        "Match": {
+          "Methods": [
+            "DELETE"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations/{externalAuthorisationId}"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      },
+      "CardPaymentSettlement": {
+        "ClusterId": "apim",
+        "AuthorizationPolicy": "payments-card-authorisations-settle",
+        "Match": {
+          "Methods": [
+            "POST"
+          ],
+          "Path": "/payments/cards/v1/card-authorisations/settle"
+        },
+        "Transforms": [
+          {
+            "PathRemovePrefix": "/payments/cards"
+          },
+          {
+            "PathPrefix": "/accounts-sterling-external"
+          }
+        ]
+      }
+    },
+    "Clusters": {
+      "clientservicescasemanagementapi": {
+        "Destinations": {
+          "aks-internal": {
+            "Address": "Populated from Terraform Kubernetes definition"
+          }
+        },
+        "MetaData": {
+          "DisableLogicalExecutionContext": true
+        }
+      },
+      "apim": {
+        "Destinations": {
+          "primary": {
+            "Address": "Populated from Terraform Kubernetes definition"
+          }
+        },
+        "MetaData": {
+          "ApplyApimSubscriptionKeyHeader": "AllApis"
+        }
+      },
+      "apimnocontext": {
+        "Destinations": {
+          "primary": {
+            "Address": "Populated from Terraform Kubernetes definition"
+          }
+        },
+        "MetaData": {
+          "ApplyApimSubscriptionKeyHeader": "AllApis",
+          "DisableLogicalExecutionContext": true
+        }
+      },
+      "fiapiexternal": {
+        "Destinations": {
+          "primary": {
+            "Address": "Populated from Terraform Kubernetes definition"
+          }
+        },
+        "MetaData": {
+          "ApplyApimSubscriptionKeyHeader": "FiApiExternal",
+          "ApplyFiExternalApiKeyHeader": true
+        }
+      },
+      "fiexternal": {
+        "Destinations": {
+          "primary": {
+            "Address": "Populated from Terraform Kubernetes definition"
+          }
+        },
+        "MetaData": {
+          "ApplyApimSubscriptionKeyHeader": "FiExternal",
+          "ApplyFiExternalApiKeyHeader": true
+        }
       }
     }
   }
