@@ -1,22 +1,36 @@
 import styled, { keyframes } from 'styled-components'
-import { colors, easings } from 'src/components/theme'
+import { breakpoints, colors, easings } from 'src/components/theme'
 import { Box } from 'rebass'
 
 export const Container = styled(Box).attrs(() => ({ mt: '140px' }))``
 
 export const MenuContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin: 0 7%;
-  margin-left: 50px;
-  padding: 0 5%;
-  padding-left: 0;
-  border-bottom: 1px solid ${colors.mischkaapprox};
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 24px;
+  margin: 0 20px;
+  padding: 0;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin: 0 7%;
+    margin-left: 50px;
+    padding: 0 5%;
+    padding-left: 0;
+  }
 `
 
 export const ColumnContainer = styled.div`
-  padding: 0px 13px;
+  padding: 0;
   max-width: 226px;
+  flex: 1 1 140px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 0 13px;
+    flex: initial;
+  }
 `
 
 const expandMenu = keyframes`
@@ -99,7 +113,11 @@ export const ListItem = styled.li`
 export const LogoWrapper = styled.div`
   max-width: 170px;
   display: block;
-  margin: 40px 0px 20px 40px; 
+  margin: 40px 0 20px 20px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin: 40px 0 20px 40px;
+  }
 `
 
 export const CopywriteWrapper = styled.div`
@@ -108,10 +126,15 @@ export const CopywriteWrapper = styled.div`
 `
 
 export const Copywrite = styled.p`
-  max-width: 70%;
-  margin-left: 50px;
-  margin-right: auto;
+  max-width: calc(100% - 40px);
+  margin: 0 20px;
   text-align: left;
   font-size: 0.8em;
   color: ${colors.brandPrimary};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    max-width: 70%;
+    margin-left: 50px;
+    margin-right: auto;
+  }
 `
