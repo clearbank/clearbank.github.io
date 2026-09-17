@@ -1,0 +1,3640 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Authentication.Management",
+    "version": "EXAPIAUTHMGMT_1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://mtls.api.clearbank.co.uk"
+    },
+    {
+      "url": "https://mtls.api.eu.clearbank.io"
+    }
+  ],
+  "paths": {
+    "/authentication/v1/clients/{ClientId}": {
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Register a client",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Content-Digest",
+            "in": "header",
+            "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+            "schema": {
+              "type": "string",
+              "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterClientRequestBody"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterClientRequestBody"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterClientRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Client registered",
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Client/Certificate already exists",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:create"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Get a client",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Delete a client",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Client was deleted",
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:delete"
+            ]
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Get all clients",
+        "responses": {
+          "200": {
+            "description": "Query was successful",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientsResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientsResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients/{ClientId}/scopes": {
+      "get": {
+        "tags": [
+          "ClientScopes"
+        ],
+        "summary": "Get client scopes",
+        "description": "Get all scopes for a client",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client Scopes found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientScopesResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientScopesResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientScopesResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "ClientScopes"
+        ],
+        "summary": "Update a client's allowed scopes",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Content-Digest",
+            "in": "header",
+            "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+            "schema": {
+              "type": "string",
+              "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientScopesRequestBody"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientScopesRequestBody"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientScopesRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client scopes updated",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateClientScopesResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateClientScopesResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateClientScopesResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:update"
+            ]
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients/{ClientId}/secrets": {
+      "post": {
+        "tags": [
+          "ClientSecrets"
+        ],
+        "summary": "Register a client secret",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Content-Digest",
+            "in": "header",
+            "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+            "schema": {
+              "type": "string",
+              "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSecretRequestBody"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSecretRequestBody"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSecretRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Client secret registered",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSecretResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSecretResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSecretResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Client secret already exists",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:create"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "ClientSecrets"
+        ],
+        "summary": "Get client secrets",
+        "description": "Get all secrets for a client",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client Secrets found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSecretsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSecretsResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSecretsResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients/{ClientId}/secrets/{SecretId}": {
+      "delete": {
+        "tags": [
+          "ClientSecrets"
+        ],
+        "summary": "Delete a client secret",
+        "parameters": [
+          {
+            "name": "SecretId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:delete"
+            ]
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients/{ClientId}/signature-keys/{KeyId}": {
+      "post": {
+        "tags": [
+          "ClientSignatureKeys"
+        ],
+        "summary": "Register a client signature key",
+        "parameters": [
+          {
+            "name": "KeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Content-Digest",
+            "in": "header",
+            "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+            "schema": {
+              "type": "string",
+              "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSignatureKeyRequestBody"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSignatureKeyRequestBody"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientSignatureKeyRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Client signature key registered",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSignatureKeyResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSignatureKeyResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientSignatureKeyResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Client signature key already exists",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:create"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "ClientSignatureKeys"
+        ],
+        "summary": "Get client signature key",
+        "parameters": [
+          {
+            "name": "KeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client signature key found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "ClientSignatureKeys"
+        ],
+        "summary": "Delete client signature key",
+        "parameters": [
+          {
+            "name": "KeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Client signature key deleted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request was invalid",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:delete"
+            ]
+          }
+        ]
+      }
+    },
+    "/authentication/v1/clients/{ClientId}/signature-keys": {
+      "get": {
+        "tags": [
+          "ClientSignatureKeys"
+        ],
+        "summary": "Get client signature keys",
+        "parameters": [
+          {
+            "name": "ClientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your access token obtained from our authentication service, as a bearer token.",
+            "schema": {
+              "type": "string",
+              "example": "Bearer <<api token>>"
+            }
+          },
+          {
+            "name": "X-fapi-interaction-id",
+            "in": "header",
+            "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "The HTTP Request's digital Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+            }
+          },
+          {
+            "name": "Signature-Input",
+            "in": "header",
+            "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+            "schema": {
+              "type": "string",
+              "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client signature keys found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetClientSignatureKeyResponse"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authorization failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "headers": {
+              "Authorization": {
+                "description": "Your access token obtained from our authentication service, as a bearer token.",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer <<api token>>"
+                }
+              },
+              "X-fapi-interaction-id": {
+                "description": "Universally unique identifier (RFC4122 UID) for the request. Provides request level idempotency and allows request tracing.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+                }
+              },
+              "Signature": {
+                "description": "The HTTP Request's digital Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=:MEUCIQC1d6wC9rc9FCFMa738GbgxbtFFPeWdcRnL0rrfELN2MAIgW8w57eo46Fl29C5CZ6SRAl2ouq9k/jQ79AkiUVI8OsQ=:"
+                }
+              },
+              "Content-Digest": {
+                "description": "The Content Digest contains a hashing algorithm and a hash of the message body, encoded as Base64. The hashing algorithm is always \"sha-256\".",
+                "schema": {
+                  "type": "string",
+                  "example": "sha-256=:5hAiS5m/HigGV8+1dStqZj1zk1LfoegovJ0bx4Njoqs=:"
+                }
+              },
+              "Signature-Input": {
+                "description": "This is a Dictionary Structured Header [RFC8941] containing the metadata for the requests Signature.",
+                "schema": {
+                  "type": "string",
+                  "example": "sig=(\"@method\" \"@target-uri\" \"authorization\" \"x-fapi-interaction-id\" \"content-digest\");keyid=\"207236b3-b69a-4192-baa7-3dd2992874f8\";created=1713800893;tag=\"fapi-2-request\""
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "apis:clients:read"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateClientSecretRequestBody": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "secret": {
+            "$ref": "#/components/schemas/CreateClientSecretRequestBodySecretDetails"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateClientSecretRequestBodySecretDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateClientSecretResponse": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "thumbprint": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateClientSignatureKeyRequestBody": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateClientSignatureKeyResponse": {
+        "required": [
+          "key",
+          "keyId"
+        ],
+        "type": "object",
+        "properties": {
+          "keyId": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "secretType": {
+            "type": "string",
+            "nullable": true
+          },
+          "secrets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetClientResponseSecret"
+            },
+            "nullable": true
+          },
+          "signatureKeys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetClientResponseSignatureKey"
+            },
+            "nullable": true
+          },
+          "allowedScopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientResponseSecret": {
+        "type": "object",
+        "properties": {
+          "thumbprint": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientResponseSignatureKey": {
+        "type": "object",
+        "properties": {
+          "keyId": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientScopesResponse": {
+        "type": "object",
+        "properties": {
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetClientScopesResponseScope"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientScopesResponseScope": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientSecretsResponse": {
+        "type": "object",
+        "properties": {
+          "secrets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetClientSecretsResponseSecret"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientSecretsResponseSecret": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "thumbprint": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientSignatureKeyResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientsResponse": {
+        "type": "object",
+        "properties": {
+          "clients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetClientsResponseClient"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetClientsResponseClient": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "secretType": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "RegisterClientRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "secret": {
+            "$ref": "#/components/schemas/RegisterClientRequestBodySecretDetails"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterClientRequestBodySecretDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateClientScopesRequestBody": {
+        "type": "object",
+        "properties": {
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateClientScopesRequestBodyScope"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateClientScopesRequestBodyScope": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateClientScopesResponse": {
+        "type": "object",
+        "properties": {
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateClientScopesResponseScope"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateClientScopesResponseScope": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Clients"
+    },
+    {
+      "name": "ClientScopes"
+    },
+    {
+      "name": "ClientSecrets"
+    },
+    {
+      "name": "ClientSignatureKeys"
+    }
+  ]
+}
