@@ -92,7 +92,11 @@ export default {
 
   img: props => <LightboxImage {...props} />,
 
-  table: props => <Table.Table {...props} />,
+  table: props => (
+  <Table.TableWrapper>
+    <Table.Table {...props} />
+  </Table.TableWrapper>
+),
 
   thead: props => <Table.Thead {...props} />,
 
