@@ -35,6 +35,8 @@ const plugins = [
     resolve: 'gatsby-source-filesystem',
     options: {
       name: 'webhooks',
+      // Webhook docs are `.mdx` files kept in `data/webhooks/`. See
+      // gatsby/node/onPreBootstrap.js for why there is no webhooks.json manifest.
       path: `${__dirname}/data/webhooks/`
     }
   },
