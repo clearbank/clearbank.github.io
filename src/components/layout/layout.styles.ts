@@ -14,6 +14,13 @@ import * as WebHookPlaceholder from 'src/components/webhook-placeholder/webhook-
 
 const collapsedSidebarWidth = '72px'
 
+// Falls back to the old compact token for the instant before hydration (SSR
+// / first paint), then Layout's ResizeObserver overwrites this custom
+// property with the header's real measured height - so every consumer below
+// stays correct even when tab titles wrap or the breakpoint changes, instead
+// of drifting out of sync with a hardcoded pixel guess.
+const headerHeight = `var(--header-height, ${heights.headerCompact})`
+
 export const Wrapper = styled.div<{
   hasLeftNavigation?: boolean
   isLeftSidebarCollapsed?: boolean
@@ -26,10 +33,10 @@ export const Wrapper = styled.div<{
     'content'
     'footer';
   grid-template-rows:
-    ${heights.header}
+    ${headerHeight}
     1fr
     auto;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);   // was: 1fr
   min-height: 95vh; // 100vh unreliable in mobile browsers
 
   @media screen and (min-width: ${breakpoints.large}) {
@@ -38,41 +45,38 @@ export const Wrapper = styled.div<{
       'content content'
       'footer footer';
     grid-template-rows:
-      ${heights.header}
+      ${headerHeight}
       1fr
       auto;
     -ms-grid-columns: 1fr;
     // prettier-ignore
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);   // was: 1fr
     min-height: 100vh;
   }
 
     @media screen and (min-width: ${breakpoints.xLarge}) {
   grid-template-areas:
     'header header'
-    '${props => props.hasLeftNavigation ? 'sidebarLeft' : 'content'} content'
-    '${props => props.hasLeftNavigation ? 'sidebarLeft' : 'footer'} footer';
-
+    '${props =>
+      props.hasLeftNavigation ? 'sidebarLeft' : 'content'} content'
+    '${props =>
+      props.hasLeftNavigation ? 'sidebarLeft' : 'footer'} footer';
+  grid-template-rows:
+    ${headerHeight}
+    1fr
+    auto;
   -ms-grid-columns: auto 1fr;
   // prettier-ignore
   grid-template-columns:
-    ${props => props.hasLeftNavigation
-      ? props.isLeftSidebarCollapsed ? collapsedSidebarWidth : widths.sidebarLeft
-      : '0'}
+    ${props =>
+      props.hasLeftNavigation
+        ? props.isLeftSidebarCollapsed
+          ? collapsedSidebarWidth
+          : widths.sidebarLeft
+        : '0'}
     minmax(0, 1fr);
-}
-
-  // emulate max-width on content by setting a fixed width and make sidebars fill remaining space predictably
-  @media screen and (min-width: ${breakpoints.xxxLarge}) {
-  -ms-grid-columns: auto 1fr;
-  // prettier-ignore
-  grid-template-columns:
-    ${props => props.hasLeftNavigation
-      ? props.isLeftSidebarCollapsed ? collapsedSidebarWidth : widths.sidebarLeft
-      : '0'}
-    minmax(0, 1fr);
-}
-`
+    }
+    `
 
 export const HeaderWrapper = styled.header`
   grid-area: header;
@@ -98,13 +102,13 @@ export const LeftSidebarWrapper = styled.aside<{ isCollapsed?: boolean }>`
     -ms-grid-column: 1;
     -ms-grid-row: 2;
     position: sticky;
-    top: ${heights.header};
+    top: ${headerHeight};
     align-self: stretch;
-    min-height: calc(100vh - ${heights.header});
-    height: calc(100vh - ${heights.header});
-    max-height: calc(100vh - ${heights.header});
+    min-height: calc(100vh - ${headerHeight});
+    height: calc(100vh - ${headerHeight});
+    max-height: calc(100vh - ${headerHeight});
     overflow: hidden;
-    padding: ${props => props.isCollapsed ? '16px 10px' : '16px 12px 24px 16px'};
+    padding: ${props => props.isCollapsed ? '10px 10px' : '10px 12px 24px 16px'};
     z-index: 0;
   }
 `
@@ -122,9 +126,9 @@ export const RightSidebarWrapper = styled.aside<{ isCollapsed?: boolean }>`
     -ms-grid-column: 3;
     -ms-grid-row: 2;
     position: sticky;
-    top: ${heights.header};
+    top: ${headerHeight};
     align-self: start;
-    max-height: calc(100vh - ${heights.header});
+    max-height: calc(100vh - ${headerHeight});
     overflow-y: auto;
     padding: ${props => props.isCollapsed ? '40px 8px' : '0'};
   }
@@ -192,19 +196,19 @@ export const ContentWrapper = styled.article`
   -ms-grid-row: 2;
   display: flex;
   flex-direction: column;
-  padding: 20px;
   min-width: 0;
+  padding: 24px 20px 20px;
 
   @media screen and (min-width: ${breakpoints.medium}) {
-    padding: 20px 60px;
+    padding: 32px 60px 20px;
   }
 
   @media screen and (min-width: ${breakpoints.large}) {
-    padding: 40px 30px 40px 30px;
+    padding: 32px 30px 40px;
   }
 
   @media screen and (min-width: ${breakpoints.xLarge}) {
-    padding: 24px 60px 40px 60px;
+    padding: 40px 60px 40px;
   }
 
   ${Callout.Container} {
@@ -264,13 +268,15 @@ export const PageHeader = styled.h1`
 
 export const ArticleToolbar = styled.div`
   position: sticky;
-  top: ${heights.header};
+  top: ${headerHeight};
   z-index: 1;
+  align-self: flex-start;
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 16px;
-  margin: -16px 0 24px 0;
-  padding: 16px 0;
+  margin: 0 0 16px;
+  padding: 8px 0;
   background: ${colors.brandLight};
 `
 
@@ -340,5 +346,89 @@ export const OnThisPagePanel = styled.div`
 
   #pageMenu h5 {
     display: none;
+  }
+`
+
+export const MobileNavigationOverlay = styled.div`
+  position: fixed;
+  top: ${headerHeight};
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9;
+  display: flex;
+  align-items: flex-start;
+  background: ${colors.brandGrayLight};
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    display: none;
+  }
+`
+
+export const MobileNavigationDialog = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - ${headerHeight});
+  background: ${colors.brandLight};
+  border-bottom: 1px solid ${colors.brandGray};
+`
+
+export const MobileNavigationHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid ${colors.brandGray};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 0 60px;
+  }
+`
+
+export const MobileNavigationTitle = styled.h2`
+  margin: 0;
+  color: ${colors.brandDark};
+  font-family: ${fonts.body};
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+`
+
+export const MobileNavigationCloseButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: ${colors.brandDark};
+  cursor: pointer;
+  font-family: ${fonts.body};
+  font-size: 28px;
+  line-height: 1;
+
+  &:hover {
+    background: ${colors.brandGrayLight};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.wedgewoodapprox};
+    outline-offset: 2px;
+  }
+`
+
+export const MobileNavigationContent = styled.div`
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 20px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 24px 60px;
   }
 `

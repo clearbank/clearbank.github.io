@@ -62,13 +62,21 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
           const hasSubItems = item.subMenuItems?.length > 0
           const rootPanelId = `docs-nav-sub-${item.menuItem.id}`
           const isRootExpanded = expandedIds.has(item.menuItem.id)
+          // Root category pages (api.mdx, gbp-accounts.mdx, etc.) are
+          // frontmatter-only containers with no real body content - linking
+          // to them directly lands on a blank page. Send the root link to
+          // its first child instead (already sorted by frontmatter order,
+          // so this is whichever page - typically "Overview" - is meant to
+          // be read first), while the root's own title/toggle still expand
+          // its sub-items as before.
+          const rootHref = hasSubItems ? item.subMenuItems[0].fields.slug : item.menuItem.slug
 
           return (
             <li key={item.menuItem.id}>
               <Styles.Row>
                 <Styles.NavLink
                   as={Link}
-                  to={item.menuItem.slug}
+                  to={rootHref}
                   aria-current={isCurrentPage(item.menuItem.slug, currentPath) ? 'page' : undefined}
                 >
                   {item.menuItem.title}
