@@ -1,18 +1,20 @@
 import styled, { css } from 'styled-components'
 import Link from '../link'
-import { widths, colors, themeBreakpoints, breakpoints, borderRadius } from 'src/components/theme'
+import { widths, colors, themeBreakpoints, breakpoints, borderRadius, heights } from 'src/components/theme'
 import * as Types from './header.types'
 
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
-  width: 100%;
-  min-height: 60px;
   align-items: center;
   justify-content: space-between;
-  position: relative;
+  width: 100%;
+  height: 96px;
 
-  @media (min-width: ${themeBreakpoints.large}) {
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    height: auto;
+    min-height: 60px;
     flex-grow: 0;
   }
 `
@@ -39,20 +41,36 @@ export const BurgerIconWrapper: any = styled.div`
       box-shadow: 0 5px 10px 0 rgba(73,151,222,0.2)}
   `}
 
-  @media only screen and (min-width: ${themeBreakpoints.large}) {
+  @media only screen and (min-width: ${themeBreakpoints.xLarge}) {
     display: none;
   }
 `
 
 export const LogoWrapper = styled(Link)`
+  box-sizing: border-box;
   display: flex;
-  height: 100%;
-  padding: 40px 14px 40px 60px;
   align-items: center;
+  height: 96px;
+  padding: 18px 20px;
 
   svg {
     display: block;
-    width: ${widths.logo};
+    width: 130px;
+    max-height: 44px;
+  }
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-left: 40px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    height: auto;
+    padding: 40px 14px 30px 40px;
+
+    svg {
+      width: ${widths.logo};
+      max-height: none;
+    }
   }
 `
 
@@ -65,7 +83,7 @@ export const Button = styled.button`
 `
 
 export const SwitchContainer = styled.div`
-  margin-right: 0;}
+  margin-right: 0;
 `
 
 // Groups the search trigger and region switch together so Container's
@@ -92,7 +110,7 @@ export const RightGroup = styled.div`
     margin-right: 60px;
   }
 
-  @media (max-width: ${themeBreakpoints.medium}) {
+  @media screen and (max-width: ${themeBreakpoints.medium}) {
     gap: 16px;
     margin-right: 14px;
   }
