@@ -55,7 +55,8 @@ export const shadows = {
 export const zIndex = {
   header: 1,
   subMenu: 1,
-  homeBanner: 0
+  homeBanner: 0,
+  searchModal: 10000
 }
 
 export const borderRadius = {
