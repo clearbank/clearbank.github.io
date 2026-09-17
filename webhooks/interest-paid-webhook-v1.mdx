@@ -19,20 +19,26 @@ Note that the `DestinationAccountID` refers to the hub account, savings account,
 }
 ```
 
+#### Payload fields
 
-#### Payload
-| Element                   | Description  |
-|---------------------------|--------------|
-| `TransactionId`           | **Required**<br />Transaction identifier used to uniquely identify the transaction. <br /> Type: `string` <br /> Format: `GUID` <br /> Min. Length: `1` |
-| `EndToEndTransactionID`   | **Optional**<br />Unique internal identifier defined by ClearBank for each payment. <br /> Type: `null`, `string` <br /> Format: `GUID` <br /> Min. Length: `0`<br /> Max. Length: `35` |
-| `Amount`                  | **Required**<br />Amount of interest paid. <br /> Type: `number`<br />  Format: `decimal`<br />   |
-| `CurrencyCode`            | **Optional**<br />Three-letter ISO currency code for the currency of the interest payment. <br /> Type: `null`, `string` <br /> Min. Length: `3`<br /> Max. Length: `4` |
-| `DebitCreditCode`         | **Optional**<br />Indicates whether the transaction is a debit or credit. <br /> Type: `null`, `string` <br /> Options:`Credit`, `Debit` |
-| `Timestamp`               | **Required**<br />Date and time of the interest payment. Time in UTC. <br />Format: `date-time`<br />Min. Length: `1`|
-| `Reference`               | **Required**<br />Transaction reference of the interest payment.<br /> Max. Length: `140` |
-| `DestinationAccountId`    | **Required**<br />Destination account ID for the interest payment. For Embedded Banking Partners, this is the account your interest is paid into (not the account that accrued the interest). <br /> Type: `string` <br /> Format: `GUID` <br /> Min. Length: `1` |
-| `AccrualPeriod`   | **Optional**<br />Start and end date of the interest accrual period. This date is local to the region where the account is held. <br /> Type: `null`, `object` <br /> <br />  `Start` <br /> Start date of the accrual period. <br /> Type: `string` <br /> Format: `date` <br /> Min. Length: `1`<br /> <br /> `End` <br /> End date of the accrual period. <br /> Type: `string` <br /> Format: `date` <br /> Min. Length: `1`  |
+| Field | Type | Format | Required | Min-Max length | Pattern | Description |
+| ----- | ---- | ------ | -------- | -------------- | ------- | ----------- |
+| `TransactionId` | string | uuid | Yes | - | - | Transaction identifier used to uniquely identify the transaction. |
+| `EndToEndTransactionID` | string | uuid | No | 0-35 | - | Unique internal identifier defined by ClearBank for each payment. |
+| `Amount` | decimal | - | Yes | - | - | Amount of interest paid. |
+| `CurrencyCode` | string | - | No | 3-4 | - | Three-letter ISO currency code for the currency of the interest payment. |
+| `DebitCreditCode` | string | - | No | - | `Credit`, `Debit` | Indicates whether the transaction is a debit or credit. |
+| `Timestamp` | string | date-time | Yes | - | - | Date and time of the interest payment. Time in UTC. |
+| `Reference` | string | - | Yes | 0-140 | - | Transaction reference of the interest payment. |
+| `DestinationAccountId` | string | uuid | Yes | - | - | Destination account ID for the interest payment. For Embedded Banking Partners, this is the account your interest is paid into (not the account that accrued the interest). |
+| `AccrualPeriod` | object | - | No | - | - | Start and end date of the interest accrual period. This date is local to the region where the account is held. See the 'AccrualPeriod' table. |
 
+##### AccrualPeriod
+
+| Field | Type | Required | Min-Max length | Pattern | Description |
+| ----- | ---- | -------- | -------------- | ------- | ----------- |
+| `Start` | string | Yes | - | `YYYY-MM-DD` | Start date of the accrual period. |
+| `End` | string | Yes | - | `YYYY-MM-DD` | End date of the accrual period. |
 
 #### Example Interest Paid webhook request body
 

@@ -1821,7 +1821,8 @@
           "countryOfResidence",
           "dateOfBirth",
           "firstName",
-          "surname"
+          "surname",
+          "email"
         ],
         "type": "object",
         "properties": {
@@ -2427,7 +2428,7 @@
             "type": "string",
             "description": "The building name or number of this address. Must not contain postal code.",
             "nullable": true,
-            "example": "322"
+            "example": "42"
           },
           "streetName": {
             "minLength": 1,
@@ -2436,28 +2437,28 @@
             "type": "string",
             "description": "The street name of this address. Must not contain postal code.",
             "nullable": true,
-            "example": "Long Road"
+            "example": "Flower Road"
           },
           "city": {
             "minLength": 1,
             "type": "string",
             "description": "City of this address.",
             "nullable": true,
-            "example": "Cyan City"
+            "example": "Hyacinth City"
           },
           "county": {
             "minLength": 1,
             "type": "string",
             "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
             "nullable": true,
-            "example": "Greenshire"
+            "example": "Mastershire"
           },
           "postalCode": {
             "minLength": 1,
             "type": "string",
             "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB",
+            "example": "NE7 0PM",
             "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
@@ -2468,14 +2469,15 @@
             "description": "Date from which the address is valid.",
             "format": "date",
             "nullable": true,
-            "example": "2016-06-22"
+            "example": "2016-10-03"
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid. Must be more recent than validFrom date. Formatted yyyy-MM-dd.",
+            "description": "Date until which the address was valid. Must be more recent than validFrom date. Formatted yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-22",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -3048,10 +3050,11 @@
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid. Must be more recent than validFrom date. Formatted yyyy-MM-dd.",
+            "description": "Date until which the address was valid. Must be more recent than validFrom date. Formatted yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "nationalIdentificationNumber": {
             "type": "string",

@@ -1,0 +1,53 @@
+---
+title: "SEPA DD Debit Payment Reversal Failed webhook"
+version: 1
+webhook: true
+---
+
+Sent when a reversal instruction cannot be successfully processed.
+
+This webhook indicates that the reversal instruction has failed. In such cases, the original settled debit remains unchanged, and no funds are returned to the debtor account.
+
+#### Request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.ReversalFailed",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                   | Type   | Format | Required | Min-Max length | Pattern                                                                         | Description                                                                                     |
+| ----------------------- | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `PaymentId`             | string | guid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Unique ClearBank identifier for the transaction we will apply on to the advised Debtor Account. |
+| `TransactionId`         | string | guid   | No       | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.        |
+| `Reason`                | string | -      | Yes      | 1-4            | -                                                                               | The reason code associated with this failure.                                                   |
+| `AdditionalInformation` | string | -      | Yes      | 1-105          | -                                                                               | Further details on the reason code.                                                             |
+
+#### Example SEPA DD Debit Payment Reversal Failed webhook request body
+
+```json
+{
+  "Type": "Sepa.DD.DebitPayment.ReversalFailed",
+  "Version": 1,
+  "Payload": {
+    "PaymentId": "118d9c00-a649-4206-9d00-8df4c4878668",
+    "TransactionId": "440fa344-559b-4bcf-9437-0dc43ca427e5",
+    "Reason": "FF01",
+    "AdditionalInformation": "Further details on the reason code"
+  },
+  "Nonce": 134104452
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 134104452
+}
+```

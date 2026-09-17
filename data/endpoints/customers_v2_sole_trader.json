@@ -1260,10 +1260,11 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd.",
+            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "isCurrentAddress": {
             "type": "boolean",
@@ -1336,17 +1337,19 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd.",
+            "description": "The date from which the customer started living at this address, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2021-02-18"
+            "example": "2021-02-18",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "validTo": {
             "type": "string",
-            "description": "The date at which the customer stopped living at this address, formatted: yyyy-MM-dd.",
+            "description": "The date at which the customer stopped living at this address, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "isCurrentAddress": {
             "type": "boolean",
@@ -1793,9 +1796,10 @@
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "Expiry date of the document, formatted: yyyy-MM-dd.",
+            "description": "Expiry date of the document, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
-            "example": "2030-05-21"
+            "example": "2030-05-21",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -1858,7 +1862,8 @@
           "countryOfResidence",
           "dateOfBirth",
           "firstName",
-          "surname"
+          "surname",
+          "email"
         ],
         "type": "object",
         "properties": {
@@ -1906,9 +1911,10 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Cannot precede 1850-01-01.",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd, per the ISO 8601 standard. Cannot precede 1850-01-01.",
             "format": "date",
-            "example": "1988-05-21"
+            "example": "1988-05-21",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "nationalIdentificationNumber": {
             "type": "string",
@@ -2142,10 +2148,11 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid, formatted: yyyy-MM-dd. Defaults to today if unspecified.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd, per the ISO 8601 standard. Defaults to today if unspecified.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -2200,10 +2207,11 @@
           },
           "expiryDate": {
             "type": "string",
-            "description": "The expiry date of the identity document, formatted: yyyy-MM-dd.",
+            "description": "The expiry date of the identity document, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2028-12-15"
+            "example": "2028-12-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "countryOfIssue": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2377,10 +2385,11 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "Customer's date of birth, formatted: yyyy-MM-dd.",
+            "description": "Customer's date of birth, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "1988-05-22"
+            "example": "1988-05-22",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "nationalIdentificationNumber": {
             "type": "string",
@@ -2418,10 +2427,11 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "Updated date of birth (if changed), formatted: yyyy-MM-dd.",
+            "description": "Updated date of birth (if changed), formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "1988-05-21"
+            "example": "1988-05-21",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "countryOfResidence": {
             "$ref": "#/components/schemas/CountryCode"
@@ -2472,7 +2482,7 @@
             "type": "string",
             "description": "The building name or number of this address. Must not contain postal code.",
             "nullable": true,
-            "example": "0"
+            "example": "233"
           },
           "streetName": {
             "minLength": 1,
@@ -2502,7 +2512,7 @@
             "type": "string",
             "description": "Postal code of the customer's address. If this address is in the UK, must be a valid UK postcode and conform to the regex pattern.",
             "nullable": true,
-            "example": "PG15 8AB",
+            "example": "BC2 6YM",
             "pattern": "^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$"
           },
           "country": {
@@ -2510,17 +2520,19 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid, formatted: yyyy-MM-dd.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2016-06-22"
+            "example": "2016-06-22",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid, formatted: yyyy-MM-dd. Must be more recent than validFrom date.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd, per the ISO 8601 standard. Must be more recent than validFrom date.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -2911,10 +2923,11 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the customer's new address is valid, formatted: yyyy-MM-dd. Defaults to today if unspecified.",
+            "description": "Date from which the customer's new address is valid, formatted: yyyy-MM-dd, per the ISO 8601 standard. Defaults to today if unspecified.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -2935,9 +2948,10 @@
           },
           "idExpiryDate": {
             "type": "string",
-            "description": "Expiry date of the identity document, formatted: yyyy-MM-dd.",
+            "description": "Expiry date of the identity document, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
-            "example": "2029-02-13"
+            "example": "2029-02-13",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
@@ -2992,10 +3006,11 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "description": "The customer's date of birth, formatted: yyyy-MM-dd. Null value is ignored. Cannot precede 1850-01-01.",
+            "description": "The customer's date of birth, formatted: yyyy-MM-dd, per the ISO 8601 standard. Null value is ignored. Cannot precede 1850-01-01.",
             "format": "date",
             "nullable": true,
-            "example": "1988-05-21"
+            "example": "1988-05-21",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "email": {
             "type": "string",
@@ -3073,17 +3088,19 @@
           },
           "validFrom": {
             "type": "string",
-            "description": "Date from which the address is valid, formatted: yyyy-MM-dd.",
+            "description": "Date from which the address is valid, formatted: yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "nullable": true,
-            "example": "2016-06-22"
+            "example": "2016-06-22",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           },
           "validTo": {
             "type": "string",
-            "description": "Date until which the address was valid, formatted: yyyy-MM-dd. Must be more recent than validFrom date.",
+            "description": "Date until which the address was valid, formatted: yyyy-MM-dd, per the ISO 8601 standard. Must be more recent than validFrom date.",
             "format": "date",
             "nullable": true,
-            "example": "2022-05-15"
+            "example": "2022-05-15",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false,
