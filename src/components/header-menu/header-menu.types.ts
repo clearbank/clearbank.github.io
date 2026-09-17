@@ -10,6 +10,8 @@ export interface IHeaderMenuProps {
 export interface IHeaderSubMenuProps {
   item: IMenu
   isActive?: boolean
+  isOpen?: boolean
+  onOpenChange?: (isOpen: boolean) => void
 }
 
 export interface IHeaderLeafMenuProps {
