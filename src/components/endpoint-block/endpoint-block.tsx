@@ -1,4 +1,5 @@
 import React, { ReactElement, useState } from 'react'
+import { useLocation } from '@reach/router'
 
 import { SelectDropdown, SelectOption } from 'src/components/select-dropdown'
 import { SectionType } from 'src/global.types'
@@ -13,6 +14,12 @@ import CodeSnippet from 'src/components/code-snippet'
 import * as Types from './endpoint-block.types'
 import * as Styles from './endpoint-block.styles'
 import * as Helpers from './endpoint-block.helpers'
+import {
+  ApiVariant,
+  API_VARIANT_LABELS,
+  getInjectedHeaders,
+  stripStandardHeaders
+} from './endpoint-block.headers'
 import { getAllWebhooks } from 'src/hooks/allWebhooks'
 import { resolveScopeRefs } from 'src/helpers/scopes'
 
@@ -68,6 +75,26 @@ const renderVersionDropdown = (
   </SelectDropdown>
 )
 
+const renderApiVariantTabs = (
+  apiVariant: ApiVariant,
+  setApiVariant: (variant: ApiVariant) => void
+) => (
+  <Styles.ApiVariantTabs role='tablist' aria-label='API variant'>
+    {Object.values(ApiVariant).map((variant: ApiVariant) => (
+      <Styles.ApiVariantTab
+        key={variant}
+        type='button'
+        role='tab'
+        aria-selected={apiVariant === variant}
+        active={apiVariant === variant}
+        onClick={() => setApiVariant(variant)}
+      >
+        {API_VARIANT_LABELS[variant]}
+      </Styles.ApiVariantTab>
+    ))}
+  </Styles.ApiVariantTabs>
+)
+
 const getRelatedWebhooks = (webhooks: string[] = []) => {
   const allWebhooks: any = getAllWebhooks()
 
@@ -94,6 +121,9 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   description: descriptionProps
 }): ReactElement => {
   const [currentVersion, setCurrentVersion] = useState(0)
+  const [apiVariant, setApiVariant] = useState(ApiVariant.FinancialInstitution)
+  const location = useLocation()
+  const isEu = !!location?.pathname?.includes('/eu')
   const hasCustomContent = !!children
   const currentEndpoint = endpoints[currentVersion]
 
@@ -132,6 +162,11 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   const relatedWebhooks = getRelatedWebhooks(webhooks)
   const resolvedScopes = exGateway ? resolveScopeRefs(scopeRefs) : []
 
+  const injectedParameters = [
+    ...getInjectedHeaders(apiVariant, type, isEu, !!requestBody),
+    ...stripStandardHeaders(parameters)
+  ]
+
   if (hasCustomContent) {
     return children(APIFiles[version].paths[path][type])
   }
@@ -155,6 +190,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
           className='endpoint-block-code'
         />
         {renderVersionDropdown(endpoints, setCurrentVersion, currentVersion)}
+        {renderApiVariantTabs(apiVariant, setApiVariant)}
       </Styles.DropdownWrapper>
       <Styles.Description>{message}</Styles.Description>
 
@@ -165,7 +201,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
       <Styles.FlexContainer>
         <Styles.EndpointWrapper>
           <EndpointBlockParameters
-            parameters={parameters}
+            parameters={injectedParameters}
             codeblocks={getCodeBlocks('parameters', codeblocks)}
           />
           <EndpointBlockModel
