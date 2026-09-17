@@ -37,7 +37,9 @@ export type MaxWidthOption =
 
 export type MaxWidths = { [option in MaxWidthOption]: string }
 
-export type HeightOption = 'header'
+export type HeightOption =
+  | 'header'
+  | 'headerCompact'
 
 export type Heights = { [option in HeightOption]: string }
 
