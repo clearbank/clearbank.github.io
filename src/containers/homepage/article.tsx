@@ -11,7 +11,7 @@ const Article: React.FC<Types.IArticleProps> = ({ title, subtitle, width, iconSr
       {iconSrc && (<img src={iconSrc} height={72} width={72} alt="preview"/>)}
       <Styles.Title>{title}</Styles.Title>
       {subtitle && (<Styles.SubTitle>{subtitle}</Styles.SubTitle>)}
-      <Styles.Link variant={variant} href={href}>Learn more <Styles.LinkIcon src={arrowRight} alt="arrow right"/></Styles.Link>
+      <Styles.Link variant={variant} href={href} aria-label={`Learn more: ${title}`}>Learn more <Styles.LinkIcon src={arrowRight} alt="" aria-hidden='true'/></Styles.Link>
     </Styles.Article> 
   )
 }
