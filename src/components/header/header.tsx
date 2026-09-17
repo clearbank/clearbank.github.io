@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import '../styles.css'
 
 import * as Styles from './header.styles'
@@ -13,6 +14,7 @@ import Search from 'src/components/search'
 
 const Header: React.FunctionComponent<Types.HeaderProps> = ({
   location,
+  hasDocumentationNavigation,
   isMobileNavigationOpen = false,
   onMobileNavigationToggle,
   mobileNavigationId,
@@ -26,12 +28,10 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ({
   useEffect(() => {
     const isAppleDevice =
       typeof navigator !== 'undefined' &&
-      (
-        /Mac|iPod|iPhone|iPad/.test(navigator.platform) ||
+      (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ||
         /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ||
         (navigator.maxTouchPoints > 1 &&
-          navigator.platform === 'MacIntel')
-      )
+          navigator.platform === 'MacIntel'))
 
     if (isAppleDevice) {
       setShortcutHint('Cmd K')
@@ -62,55 +62,53 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ({
 
   return (
     <>
-      <div className="header">
+      <div className='header'>
         <Styles.Container>
           <Styles.LogoWrapper to={isEu ? '/eu' : '/uk'}>
             <Logo inverted />
           </Styles.LogoWrapper>
 
+        {hasDocumentationNavigation && (
           <Styles.BurgerIconWrapper
             isMenuOpen={isMobileNavigationOpen}
-            data-cy="burger-menu"
+            data-cy='burger-menu'
           >
             <Styles.Button
-              type="button"
+              type='button'
               onClick={onMobileNavigationToggle}
               aria-expanded={isMobileNavigationOpen}
-              aria-controls={mobileNavigationId || undefined}
+              aria-controls={mobileNavigationId}
               aria-label={
                 isMobileNavigationOpen
                   ? 'Close documentation navigation'
                   : 'Open documentation navigation'
               }
             >
-              {isMobileNavigationOpen ? (
-                <IconClose />
-              ) : (
-                <IconMenu />
-              )}
+              {isMobileNavigationOpen ? <IconClose /> : <IconMenu />}
             </Styles.Button>
           </Styles.BurgerIconWrapper>
+        )}
 
           <Styles.RightGroup>
             <Styles.SearchTrigger
-              type="button"
+              type='button'
               onClick={() => setShowSearch(true)}
-              data-cy="search-trigger"
-              aria-label="Search documentation"
+              data-cy='search-trigger'
+              aria-label='Search documentation'
             >
               <svg
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                focusable="false"
+                viewBox='0 0 20 20'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'
+                aria-hidden='true'
+                focusable='false'
               >
                 <path
-                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  d='M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35'
+                  stroke='currentColor'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
               </svg>
 
@@ -128,12 +126,11 @@ const Header: React.FunctionComponent<Types.HeaderProps> = ({
         </Styles.Container>
       </div>
 
-      {showSearch && (
-        <Search
+      <Search
+          isOpen={showSearch}
           region={region}
           onClose={() => setShowSearch(false)}
-        />
-      )}
+      />
     </>
   )
 }

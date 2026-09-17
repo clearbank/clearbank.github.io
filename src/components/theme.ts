@@ -77,7 +77,8 @@ export const widths: Types.Widths = {
 }
 
 export const heights: Types.Heights = {
-  header: '177px'
+  header: '175px',
+  headerCompact: '160px',
 }
 
 export const maxWidths: Types.MaxWidths = {
