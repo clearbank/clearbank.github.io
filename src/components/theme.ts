@@ -70,18 +70,20 @@ export const easings = {
 export const widths: Types.Widths = {
   logo: '244px',
   gutter: '20px',
+  sidebarLeft: '250px',
   container: '1400px',
-  content: '1200px',
+  content: '1400px',
   dropdown: '270px'
 }
 
 export const heights: Types.Heights = {
-  header: '220px'
+  header: '175px',
+  headerCompact: '160px',
 }
 
 export const maxWidths: Types.MaxWidths = {
-  content: '1200px',
-  sidebarRight: '380px',
+  content: '1400px',
+  sidebarRight: '250px',
 }
 
 export const fonts: Types.Fonts = {
