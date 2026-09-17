@@ -35,7 +35,7 @@ const plugins = [
     resolve: 'gatsby-source-filesystem',
     options: {
       name: 'webhooks',
-      path: `${__dirname}/webhooks/`
+      path: `${__dirname}/data/webhooks/`
     }
   },
   {
