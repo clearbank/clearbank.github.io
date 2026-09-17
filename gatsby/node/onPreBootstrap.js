@@ -3,8 +3,8 @@ const $RefParser = require('@apidevtools/json-schema-ref-parser')
 const { writefile, getFiles } = require('./helpers')
 
 module.exports = async () => {
-  createEndpointFile()
-  createWebhooksFile()
+  await createEndpointFile()
+  await createWebhooksFile()
 
   // Merge all the endpoints into one file
   // Use SwaggerParser to dereference all the $ref locations
@@ -27,7 +27,7 @@ module.exports = async () => {
       return total
     }, {})
 
-    writefile(
+    return writefile(
       './data/endpoints.json',
       formatted,
       'Endpoints Manifest File, Saved ⚡️'
@@ -54,7 +54,7 @@ module.exports = async () => {
       return total
     }, {})
 
-    writefile(
+    return writefile(
       './data/webhooks.json',
       formatted,
       'Webhooks Manifest File, Saved ⚡️'
