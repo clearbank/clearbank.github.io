@@ -34,7 +34,7 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 **Things to note:**
 
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
-- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
+- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided [Business Identifier Code (BIC)](/uk/docs/api/glossary#business-identifier-code) must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
 - Review the [address guidance](#guidance-on-populating-address-information) before submitting outbound payments.
 
@@ -139,7 +139,7 @@ Correctly filling in this field ensures the payment reaches the intended recipie
 In a payment transaction, there are two key parties:
 
 1. **Creditor**: The person or organisation receiving the funds. This could be an individual, a business, or a financial institution (FI).
-2. **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character or 8-character **Business Identifier Code (BIC)**.
+2. **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character or 8-character **BIC**.
 
 To ensure correct population of fields in pacs.008 payment messages, follow these guidelines based on the type of Creditor:
 
