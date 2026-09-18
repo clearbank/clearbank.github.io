@@ -615,8 +615,7 @@ const glossaryTerms = [
       'chaps',
       'confirmation-of-payee',
       'credit-payment-recovery',
-      'faster-payment-identifier',
-      'pound-sterling',
+      'faster-payment-identifier'
     ],
   },
 
@@ -692,7 +691,6 @@ const glossaryTerms = [
       'cross-border-payment',
       'fx-trade',
       'multicurrency',
-      'pound-sterling',
       'request-for-quote',
     ],
   },
@@ -753,7 +751,8 @@ const glossaryTerms = [
       'general segregated account',
       'segregated funds account',
       'gsa',
-      'segregated pooled account'
+      'segregated pooled account',
+      'sepa'
     ],
     regions: ['uk','eu'],
     category: 'accounts',
@@ -857,7 +856,7 @@ const glossaryTerms = [
       'fi account',
       'institutional account',
     ],
-    regions: ['eu','uk'],
+    regions: ['eu'],
     category: 'accounts',
     definition:
       `An Institution Master Account is a representation of a financial institution's account structure with ClearBank and acts as a superset of all its financial accounts. It is not a financial account itself.`,
@@ -1104,7 +1103,6 @@ const glossaryTerms = [
     relatedTerms: [
       'foreign-exchange',
       'fx-trade',
-      'pound-sterling',
       'request-for-quote',
     ],
   },
@@ -1496,7 +1494,7 @@ const glossaryTerms = [
       'euro credit transfer',
       'single euro payments area credit transfer',
     ],
-    regions: ['eu', 'uk'],
+    regions: ['eu'],
     category: 'payments',
     definition:
       'A SEPA Credit Transfer (SCT) is a payment scheme that enables euro credit transfers between eligible accounts within the Single Euro Payments Area (SEPA).',
