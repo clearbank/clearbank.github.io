@@ -240,7 +240,6 @@ const technicalReferenceTerms = [
       'Learn what an EndToEndId is and where it is used.',
     relatedTerms: [
       'end-to-end-transaction-id',
-      'end-to-end-transaction-identification',
       'payment-id',
       'transaction-id',
       'unique-end-to-end-transaction-reference',
@@ -273,8 +272,7 @@ const technicalReferenceTerms = [
     seoDescription:
       'Learn what an EndToEndTransactionId is and where it is used.',
     relatedTerms: [
-      'end-to-end-id',
-      'end-to-end-transaction-identification',
+      'end-to-end-id'
     ],
     relatedGuides: [
       {
@@ -950,7 +948,7 @@ const technicalReferenceTerms = [
   relatedGuides: [
     { title: 'IDs and Identifiers', url: '/reference/ids-and-identifiers' },
   ],
-
+  editorialReview: true,
 },
 
 {
