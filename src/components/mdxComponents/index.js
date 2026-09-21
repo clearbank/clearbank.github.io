@@ -2,7 +2,7 @@ import React from 'react';
 import CodeBlock from './codeBlock';
 import '../styles.css';
 
-import LightboxImage from '../LightboxImage'
+import LightboxImage from '../LightboxImage';
 
 import kebabCase from 'lodash.kebabcase';
 
