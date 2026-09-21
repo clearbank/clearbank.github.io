@@ -14,12 +14,12 @@ import ExternalLink from 'src/components/external-link';
 
 <Callout colour="green">
 <h2>Sole traders V2 is coming soon</h2>
-<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+<p>All information on this page describes a solution that is <strong>not yet live in production and could therefore change</strong>. This includes any endpoint and webhook details. The information is being provided early to help you integrate with our API in the UK simulation environment.</p>
 </Callout>
 
-**Sole traders** are natural persons operating a business in their own name. You can manage your sole traders' data with ClearBank directly as an embedded banking partner. Creating a sole trader is necessary before you can create accounts for them.
+[**Sole traders**](/uk/docs/api/glossary#sole-trader) are natural persons operating a business in their own name. You can manage your sole traders' data with ClearBank directly as an embedded banking partner. Creating a sole trader is necessary before you can create accounts for them.
 
-The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](./retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
+The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](./retail-customers). This is because a sole trader is simultaneously an individual and a business. For example, a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
 
 ### Compatible account types
 
@@ -29,7 +29,7 @@ Sole traders are eligible for certain account types, these include:
 * [Cash ISAs](./flexible-cash-isa)
 * [Payment accounts](./payment-accounts) - Including Current accounts and Transaction accounts.
 
-For more details on available account types, please reach out to your Client Director.
+For more details on available account types, reach out to your Client Director.
 
 ## Create, update and retrieve a sole trader
 
@@ -45,11 +45,11 @@ You can specify the `businessClassification` details of a sole trader. Their `bu
 
 #### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
 
-When you create a sole trader, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+When you create a sole trader, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are as follows:
 * `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
-* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+* `pep` - If your checks identify the customer as a [Politically Exposed Person (PEP)](/uk/docs/api/glossary#politically-exposed-person), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a [Relative or Close Associate (RCA)](/uk/docs/api/glossary#relative-or-close-associate) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a [Customer Risk Assessment](/uk/docs/api/glossary#customer-risk-assessment) rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
 
 If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/sole-traders/{customerId}**](#update-a-sole-trader) endpoint.
 
@@ -92,7 +92,7 @@ When you create a sole trader, you'll also need to provide their current residen
 
 ## Sole trader addresses
 
-When you create a sole trader, you'll need to provide their current residential and/or trading address in the `addressHistory.currentAddresses` array. You can optionally record their previous address history via the `addressHistory.previousAddresses` array.
+When you create a sole trader, you'll need to provide their current residential and/or trading address in the `addressHistory.currentAddresses` array. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
 
 A sole trader can have more than one current address by having both a residential and trading address, but no more than one of each.
 
@@ -149,7 +149,7 @@ When you create a sole trader, you must specify at least one tax residency for t
 
 US citizens are generally considered to be US tax residents regardless of where they live.
 
-To change a sole trader's tax residency from one country to another, follow the below steps:
+To change a sole trader's tax residency from one country to another, follow these steps:
 1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#add-a-tax-residency-to-a-sole-trader) endpoint.
 2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-sole-traders-tax-residency) endpoint.
 

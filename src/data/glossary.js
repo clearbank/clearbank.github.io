@@ -1524,7 +1524,7 @@ const glossaryTerms = [
     regions: ['uk'],
     category: 'payments',
     definition:
-      'The SEPA Credit Transfer UK (SCT UK) service is a payment scheme that enables euro credit transfers between eligible accounts with any participant bank within the Single Euro Payments Area (SEPA) through the SEPA Credit Transfer scheme. Only euro can be sent inside the SEPA zone using SCT UK.',
+      'The SEPA Credit Transfer UK (SCT UK) service is a payment scheme that enables euro credit transfers between eligible accounts with any participant bank within the Single Euro Payments Area (SEPA) through the SEPA Credit Transfer scheme. Only euros can be sent inside the SEPA zone using SCT UK.',
     seoTitle:
       'What is a SEPA Credit Transfer UK (SCT)?',
     seoDescription:
