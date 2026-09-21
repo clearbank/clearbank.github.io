@@ -628,7 +628,7 @@ const glossaryTerms = [
       'uk financial regulator',
       'financial services regulator',
     ],
-    regions: ['uk'],
+    regions: ['uk', 'eu'],
     category: 'compliance',
     definition:
       'The Financial Conduct Authority (FCA) regulates financial services firms and financial markets in the United Kingdom. It works to protect consumers, maintain market integrity, and promote effective competition between financial service providers.',
@@ -1873,7 +1873,6 @@ const glossaryTerms = [
 {
   id: 'flexible-cash-isa',
   term: 'Flexible Cash ISA',
-  acronym: 'ISA',
   aliases: ['cash isa', 'individual savings account', 'flexible cash isas'],
   regions: ['uk'],
   category: 'accounts',

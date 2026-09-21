@@ -12,7 +12,7 @@ import ExternalLink from 'src/components/external-link';
 
 ## Faster Payments overview
 
-The Faster Payment System (FPS) is the most frequently used and fastest payment rail in the UK. It is instant or near-instant, and operates all hours of all days. All ClearBank UK GBP accounts support inbound and outbound Faster Payments.
+The [Faster Payment System (FPS)](/uk/docs/api/glossary#faster-payments) is the most frequently used and fastest payment rail in the UK. It is instant or near-instant, and operates all hours of all days. All ClearBank UK GBP accounts support inbound and outbound Faster Payments.
 
 You can initiate a Faster Payment using the [POST /v3/Payments/FPS](#send-faster-payments) endpoint, and receive confirmation of settlement from the [Transaction Settled webhook](#transaction-settled-webhook). You can send Faster Payments individually or in bulk with a single request.
 
@@ -143,7 +143,7 @@ endpoints={[
 | **AC07**                             | Beneficiary Account closed                                                                 | Contact beneficiary for updated account details                      | Review then retry |
 | **AC09**                             | Account is not in currency quoted                                                          | Confirm currency requirements and resend in supported currency       | Review then retry |
 | **AG01**                             | Terms and Conditions of Account do not permit crediting of these funds                     | Contact beneficiary for alternative payment method or account        | Do not retry      |
-| **BE08**                             | Error stems from participant error or unavailability                                       | Please retry payment; if it continues to fail, wait and then retry   | Retry             |
+| **BE08**                             | Error stems from participant error or unavailability                                       | Retry payment; if it continues to fail, wait and then retry   | Retry             |
 | **CB_AccountHoldersBankrupt**        | Payment cannot be applied because of Beneficiary sensitivities – e.g. possible bankruptcy  | Do not retry; escalate and seek legal/compliance guidance            | Do not retry      |
 | **CB_AccountNameAndNumberMismatch**  | The payment has been rejected by the receiving bank because the beneficiary account name does not match the beneficiary account number | Validate account name against account number (e.g. via CoP) before retrying | Review then retry |
 | **CB_AccountSwitched**               | Account transferred                                                                        | Use account switching data (e.g. CASS redirection) or request updated details. Follow account switching/redirection guidance or obtain updated details  | Do not retry |
