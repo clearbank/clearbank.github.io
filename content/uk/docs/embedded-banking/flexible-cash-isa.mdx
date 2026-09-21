@@ -14,25 +14,29 @@ import ExternalLink from 'src/components/external-link';
 
 ## Flexible cash ISAs overview
 
-A cash ISA (Individual Savings Account) is a real savings deposit account held with ClearBank that's subject to certain tax benefits <ExternalLink href="https://www.gov.uk/individual-savings-accounts">defined by the UK government</ExternalLink>. It is eligible for [FSCS protection](/uk/docs/api/glossary#financial-services-compensation-scheme), and can be used to send and/or receive payments once a **nominated account** has been defined.
+A cash ISA (Individual Savings Account) is a real savings deposit account held with ClearBank that is subject to certain tax benefits <ExternalLink href="https://www.gov.uk/individual-savings-accounts">defined by the UK government</ExternalLink>. It is eligible for [FSCS protection](/uk/docs/api/glossary#financial-services-compensation-scheme), and can be used to send or receive payments once a [nominated account](#nominated-accounts) has been defined.
 
 <Callout colour="blue">
   <strong>Note:</strong> Deposits held in ClearBank cash ISAs may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
-A **nominated account** is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the cash ISA.
+### Nominated accounts
 
-The balance of a cash ISA is held by ClearBank and can only be viewed via our API. Cash ISAs are reconciled for you by ClearBank. To open a cash ISA, your customer must provide you with their national insurance number and confirm they are a UK resident.
+A nominated account is the account that you transfer funds from. Upon closure of a cash ISA, remaining funds and interest are transferred into it.
+
+The balance of a cash ISA is held by ClearBank and can only be viewed using our API. Cash ISAs are reconciled for you by ClearBank. 
+
+To open a cash ISA, your customer must provide you with their national insurance (NI) number and confirm that they are a resident of the UK.
 
 <Callout colour="blue">
-Funds can be transferred in from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is your responsibility.
+Funds can be transferred from either the nominated account or another ClearBank account held by your organisation. Name matching between ClearBank accounts is <strong>your</strong> responsibility.
 </Callout>
 
-Because cash ISAs are structured differently to other GBP account types, you must use the endpoints defined on this page to interact with them. Do not use the endpoints listed on the [Manage sterling accounts page](/uk/docs/gbp-accounts/manage-accounts).
+As cash ISAs are structured differently to other GBP account types, you must use the endpoints defined here to interact with them. Do **not** use the endpoints described in [Manage sterling accounts](/uk/docs/gbp-accounts/manage-accounts).
 
-You can create and manage customers with cash ISAs using the endpoints listed on the [Retail customers page](/uk/docs/embedded-banking/retail-customers).
+You can create and manage customers with cash ISAs using the endpoints listed in [Retail customers](/uk/docs/embedded-banking/retail-customers).
 
-The sections below explain how to:
+The following sections explain how to:
 - [Set up a cash ISA](#set-up-a-cash-isa)
 - [Close or cancel a cash ISA](#end-of-life-for-a-cash-isa)
 - [Manually transfer in a cash ISA](#transfer-a-cash-isa-in-manually)
@@ -42,26 +46,28 @@ The sections below explain how to:
 
 ### Set up a cash ISA
 
-When creating a new cash ISA, you need to first create the account, then set up the nominated account.
+To create a new cash ISA, you need to create an account, then set up the nominated account.
 
 <Callout colour="blue">
-If the customer does not already exist, you need to first create a retail customer using the <a href="../embedded-banking/retail-customers#create-a-retail-customer">POST /v1/customers/retail</a> endpoint.
+If the customer does not already exist, create a retail customer first using the <a href="../embedded-banking/retail-customers#create-a-retail-customer">POST /v1/customers/retail</a> endpoint.
 </Callout>
 
 To set up a cash ISA:
 
-1. Use the [POST /v1/isas](#create-a-cash-isa) endpoint to create the account
+1. Use the [POST /v1/isas](#create-a-cash-isa) endpoint to create the account.
 > You cannot deposit funds into the cash ISA before the nominated account has been defined. 
-2. After receiving the Account Created webhook, use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint to define the nominated account for the cash ISA
+2. After receiving the Account Created webhook, use the [PUT /v1/accounts/{accountId}/nominated-account](#set-a-nominated-account) endpoint to define the nominated account for the cash ISA.
 > You can now deposit funds into the cash ISA.
 
 The process is shown in this message flow diagram:
 
 ![Submit the POST /v1/isas endpoint. Once you receive a 201 response, submit the PUT /v1/accounts/{accountId}/nominated-account to set a nominated account. Once you receive a 200 response, funds can now be added to the cash ISA.](/assets/images/diagrams/uk/cash-isa/cash-isa-open.svg)
 
-The account is now open and fully operational. You can retrieve information on all ISAs by using the [GET /v3/accounts](#get-all-accounts-real) endpoint and filtering for ISAs. You can also retrieve details on a specific cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
+At this point, the account is open and fully operational. 
 
-You can amend the details or the status of a cash ISA using the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) endpoint.
+You can retrieve information on all ISAs using the [GET /v3/accounts](#get-all-accounts-real) endpoint and filtering for ISAs. You can also retrieve details on a specific cash ISA using the [GET /v1/isas/{accountId}](#get-cash-isa-details) endpoint.
+
+To amend the details or status of a cash ISA, use the [PATCH /v1/accounts/{accountId}](#amend-cash-isa-details-or-status) endpoint.
 
 To retrieve end of day balances for a cash ISA, use the [camt.053 endpoints](../gbp-accounts/account-reporting#statements).
 
@@ -71,40 +77,43 @@ The endpoints for retrieving all ISAs and amending cash ISA details or status ar
 
 ### End of life for a cash ISA
 
-There are several ways you can close a cash ISA. You need to choose the appropriate one based on what's happened in the account journey so far and what the customer wants to do with the account next.
+There are several ways to close a cash ISA. Choose the appropriate method based on what has happened in the account journey and what the customer wants to do with the account next.
 
 | Action                        | What this does                                                                                                                                                  |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Close](#close)               | Closes the account.                                                                                                                                             |
-| [Cancel](#cancel)             | Cancels and closes the account without registering the account with the UK government. The account must be under 14 days old and must have had funds deposited. |
+| [Cancel](#cancel)             | Cancels and closes the account without registering the account with the UK government. The account must be **under 14 days old** and must have had funds deposited. |
 | [Transfer out](#transfer-out) | Allows you to transfer the account to another provider. Once transfer out has been successful, you then need to close the account.                              |
 
-You can use this diagram to validate if the account should be closed, cancelled or transferred out:
+Use the following diagram to validate if the account should be closed, cancelled or transferred out:
 
 <img src="/assets/images/diagrams/uk/cash-isa/cash-isa-life-cycle.svg" alt="A decision tree diagram explaining the life cycle of a cash ISA." width="100%"/>
 
-The sections below explain how to:
+The following sections explain how to:
 - [Close a cash ISA](#close)
 - [Cancel a cash ISA](#cancel)
 - [Transfer out a cash ISA](#transfer-out)
 
 #### Close
-When closing a cash ISA, you must first withdraw funds before closing the account.
+When closing a cash ISA, you must withdraw funds before closing the account.
 
 <Callout colour="blue">
-If the cash ISA is under 14 days old and has had money deposited, use the <a href="#cancel-a-cash-isa">cancel a cash ISA</a> endpoint instead.
+If the cash ISA is under 14 days old and has had money deposited, use the <a href="#cancel-a-cash-isa">cancel a cash ISA</a> endpoint.
 </Callout>
 
 Before an account closure can be requested, the account balance must be zero. Funds can be withdrawn to a nominated account or another ClearBank account. If any interest has been accrued, it will be paid to the nominated account.
 
-If the account balance is not zero, the request will be rejected. **Account closure requests cannot be undone.**
+If the account balance is not zero, the request will be rejected. 
+
+<Callout colour="red">⚠️ <strong>Account closure requests cannot be undone</strong>.</Callout>
 
 To close a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure. 
 > This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has accrued interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
-3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#get-cash-isa-closure-status) endpoint to check whether the account has been closed.
-4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+3. (Optional) Use the [GET /v1/accounts/{accountId}/closure](#get-cash-isa-closure-status) endpoint to check whether the account has been closed.
+
+Once the account closure process is complete, you will receive either the `Account Closure Completed` or `Account Closure Failed` webhook.
 
 If the account closure fails, re-request the closure.
 
@@ -113,18 +122,19 @@ The process is shown in this message flow diagram:
 ![Submit the POST /v1/isas/{accountId}/cancellation endpoint. Once you receive a 202 response. As the process is asynchronous, you can check on the closure status using the GET /v1/accounts/{accountId}/closure endpoint. Once the closure is confirmed, you will receive either the Account Closure Completed or Account Closure Failed webhook.](/assets/images/diagrams/uk/cash-isa/cash-isa-close.svg)
 
 #### Cancel
-When cancelling a cash ISA, the account must be under fourteen days old. This endpoint also closes the account.
+When cancelling a cash ISA, the account must be less than 14 days old. This endpoint also closes the account.
 
 The cancellation period is based on the acceptance date field. For example, an account with the acceptance date of the 1st of the month can be cancelled up to 23:59 on the 14th day of the month.
 
-Money must have already been deposited into the cash ISA. If no money has been deposited, or the account is over 14 days old, use the <a href="#close-a-cash-isa">POST /v1/accounts/{accountId}/closure</a> endpoint instead.
+Money must have already been deposited into the cash ISA. If no money has been deposited, or the account is over 14 days old, use the <a href="#close-a-cash-isa">POST /v1/accounts/{accountId}/closure</a> endpoint.
 
 To cancel a cash ISA:
 1. Withdraw all funds from the cash ISA.
 2. Use the [POST /v1/isas/{accountId}/cancellation](#cancel-a-cash-isa) to request the cancellation.
 > This process is asynchronous. The cash ISA is now frozen. Once the request is accepted, the account closure is pending until, if the account has accrued interest, the last interest payment is calculated and paid. This interest payment will be made to the nominated account. Once the payment has completed, the account will be closed.
-3. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been cancelled.
-4. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account cancellation process has completed.
+3. (Optional) Use the [GET /v1/accounts/{accountId}/closure](#check-cash-isa-closure-status) endpoint to check whether the account has been cancelled.
+
+Once the cancellation process is complete, you will receive either the `Account Closure Completed` or `Account Closure Failed` webhook.
 
 The process is shown in this message flow diagram:
 
@@ -133,21 +143,21 @@ The process is shown in this message flow diagram:
 ### Manage customer ISA eligibility
 
 Customers can be made ineligible for cash ISAs. While a customer is ineligible, they cannot pay funds into their cash ISA.  
-Ineligible customers should still be able to withdraw funds from their cash ISA.
+Ineligible customers can still withdraw funds from their cash ISA.
 
 Customers can be made ineligible for cash ISA subscriptions for these reasons:
 
-* You notified us that the customer's address is now outside the UK
-* You notified us that the customer's place of residence is now outside the UK
-* You provided us an invalid date of birth for the customer
-* You provided us an invalid National Insurance (NI) number for the customer
+* You notify us that the customer's address is now outside the UK.
+* You notify us that the customer's place of residence is now outside the UK.
+* You provide us with an invalid date of birth for the customer.
+* You provide us with an invalid National Insurance (NI) number for the customer.
 
 **When a customer moves their address out of the UK, they can continue making subscriptions until the current tax year ends.**  
-You should notify us of customer address changes via the [**PUT /v1/customers/retail/{customerId}/currentaddress**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-address) endpoint.  
+You should notify us of customer address changes using the [**PUT /v1/customers/retail/{customerId}/currentaddress**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-address) endpoint.  
 If the customer's address returns to the UK in the next tax year, you should submit a new declaration of ISA eligibility.
 
 **When a customer moves their place of residence out of the UK, no further subscriptions can be made.**  
-You should notify us of customer country of residence changes via the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
+You should notify us of customer country of residence changes using the [**PATCH /v1/customers/retail/{customerId}**](/uk/docs/embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) endpoint.  
 If the customer's place of residence returns to the UK, you should notify us of this then submit a new declaration of ISA eligibility.
 
 **When a customer's date of birth or NI number is found to be invalid, no further subscriptions can be made.**  
@@ -319,10 +329,10 @@ endpoints={[
 
 ClearBank offers two methods of transferring a cash ISA in or out:
 
-**Manual transfer:** Transfers are initiated and managed manually via ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF). <br/>
+**Manual transfer:** Transfers are initiated and managed manually through ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF). <br/>
 **Timeline:** Governed by HMRC’s SLA (Service Level Agreement) of **15 working days**.
 
-**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests. <br/>
+**Automated transfer:** Transfers are initiated and tracked through ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes `POST`, `PUT`, and `PATCH` endpoints for initiating, resubmitting, and updating transfer requests. <br/>
 **Timeline:** Voluntary SLA under Pay.UK of **7 working days**.
 
 <Callout colour="blue">
@@ -404,11 +414,11 @@ To transfer in a cash ISA:
 
 ## Manually transfer a cash ISA out
 
-You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you'll need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
+You can also transfer a cash ISA to another provider. Once the transfer out is successful and the waiting period has completed, you need to close the account using the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint.
 
-During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 working day waiting period before you can close the account. For example: if you requested a transfer out on Tuesday in week 1, the waiting period would end at 00:00 on Wednesday morning in week 4 (assuming there are no bank holidays). After that, you can close the account.
+During the transfer out process, you move funds to a transfer out hub account created during onboarding. The cash ISA is then frozen. If the transfer out is successful, you can then move the funds from the transfer out hub to the new provider's account. There is a mandatory 15 working day waiting period before you can close the account. For example, if you requested a transfer out on Tuesday in week 1, the waiting period would end at 00:00 on Wednesday morning in week 4 (assuming there are no bank holidays). After that, the account can be closed.
 
-If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#reject-a-transfer-out) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will now continue to exist.
+If the transfer out fails, the new provider will provide you a reason the transfer failed and they will return funds to the transfer out hub. Use the [POST /v1/isas/{accountId}/transfer-outs/rejection](#reject-a-transfer-out) endpoint to let ClearBank know the transfer out was unsuccessful and to unfreeze the account and return the account to the state it was before you requested the transfer out. Once the account is unfrozen, transfer the funds back into the cash ISA. The cash ISA will continue to exist.
 
 To transfer out a cash ISA:
 1. Use the [POST /v1/isas/{accountId}/transfer-outs](#transfer-out-a-cash-isa).
@@ -416,8 +426,9 @@ To transfer out a cash ISA:
 2. Once the account has been credited the final interest payment, withdraw the full balance of the account to the transfer out hub account created during onboarding. From there, you can send the funds to the new provider.
 3. Wait at least the remainder of the 15 working day waiting period to ensure the transfer out has been successful.
 4. Once the transfer has successfully completed, use the [POST /v1/accounts/{accountId}/closure](#close-a-cash-isa) endpoint to request the account closure.
-5. OPTIONAL Use the [GET /v1/accounts/{accountId}/closure](#get-cash-isa-closure-status) endpoint to check whether the account has been closed.
-6. You will receive either the Account Closure Completed or Account Closure Failed webhook once the account closure process has completed.
+5. (Optional) Use the [GET /v1/accounts/{accountId}/closure](#get-cash-isa-closure-status) endpoint to check whether the account has been closed.
+
+Once the account closure process is complete, you will receive either the `Account Closure Completed` or `Account Closure Failed` webhook.
 
 The process is shown in this message flow diagram:
 
@@ -447,11 +458,11 @@ The process is shown in this message flow diagram:
 
 ## Automated cash ISA transfer in
 
-An automated transfer in occurs when a customer approaches you to transfer their ISA from another ISA Manager (the ceding party) to ClearBank via Pay.UK's ISA transfer service.
+An automated transfer in happens when a customer approaches you to transfer their ISA from another ISA Manager (the ceding party) to ClearBank using Pay.UK's ISA transfer service.
 
 To complete an automated transfer in: 
-1. The customer requests you to transfer the cash ISA from the current institution holding the account (the ceding party).
-2. You call the **POST /v1/isas/{accountId}/automated-transfer-in** endpoint providing the necessary details.
+1. The customer makes a request that you to transfer the cash ISA from the current institution holding the account (the ceding party).
+2. Call the **POST /v1/isas/{accountId}/automated-transfer-in** endpoint providing the necessary details.
 3. The transfer request is validated and submitted to the Pay.UK transfer service for further validation.
 4. You receive the **Transfer Request webhook** confirming the transfer request has been sent.
 5. The ceding party receives a **Transfer Request message**, validates the details and responds with a **Transfer Acceptance message**.
@@ -538,8 +549,8 @@ Following the referral, the ceding party can:
 
 If the transfer is rejected, the customer should decide how they wish to proceed, either:
 
-- **Resubmit the transfer request** - you can do this by calling the [**PUT /v1/isas/{accountId}/automated-transfer-in/{urn}**](#resubmit-an-automated-cash-isa-transfer-in) and providing the URN of the existing transfer, or
-- **Abandon the transfer request** - you can update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and update the `State` to `Abandoned`.
+- **Resubmit the transfer request**: Call the [**PUT /v1/isas/{accountId}/automated-transfer-in/{urn}**](#resubmit-an-automated-cash-isa-transfer-in) and provide the URN of the existing transfer.
+- **Abandon the transfer request**: Update the existing transfer request to abandoned by calling the **PATCH /v1/isas/{accountId}/automated-transfer-in/{urn}**, providing the URN of the existing transfer, and updating the `State` to `Abandoned`.
 
 ## Automated cash ISA transfer out
 
@@ -585,7 +596,7 @@ When the Transfer Request message is received from the acquiring party, the prov
 
 **Referred:**
 - Fuzzy match check on the customer's given name, surname, address, date of birth, National Insurance number, and account details returns a close but not exact match.
-- Balance of the ISA is £50,000.00 or more .
+- Balance of the ISA is £50,000.00 or more.
 
 If the transfer is referred, a Transfer Referral message is sent to the acquiring party. Once referred:
 
@@ -604,7 +615,7 @@ If the transfer is rejected, a Transfer Rejected message is sent to the acquirin
 
 ## Simulating ISA transfer scenarios
 
-As part of your simulation onboarding process, you'll be required to simulate several scenarios to prove your system's capability before graduating to our production environment.
+As part of your simulation onboarding process, you are required to simulate several scenarios to prove your system's capability before graduating to the production environment.
 
 <EndpointBlock
   type="post"
