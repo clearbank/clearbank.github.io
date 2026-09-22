@@ -16,7 +16,7 @@ import ExternalLink from 'src/components/external-link';
 <p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
 - <strong>POST /payments/cross-border-sterling/v3/payments</strong><br /></p>
 
-<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
@@ -25,7 +25,7 @@ There is no limit to the amount that can be sent using this service.
 
 You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) endpoint. 
 
-Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
+Settlement details are provided to you by the [Transaction Settled](#transaction-settled-webhook) webhook. 
 
 <Callout colour="blue">
   It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
@@ -42,7 +42,7 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 If you receive a Transaction Rejected webhook outside of <a href="https://www.bankofengland.co.uk/payment-and-settlement/chaps">industry opening hours</a>, retry the payment during the next open window.
 </Callout>
 
-The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
+The GBP Cross-Border endpoint supports the new [ISO 20022](/uk/docs/api/technical-reference#iso-20022) payment message formats, specifically [pacs.008](/uk/docs/api/technical-reference#pacs-008).
 
 ### What's changed in version 4
 
@@ -79,7 +79,7 @@ In line with the Bank of England's ISO 20022 data enhancement requirements, you 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.
 
 #### Legal Entity Identifier (LEI)
-The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
+The LEI is a 20-character, alpha-numeric code based on the [ISO 17442](/uk/docs/api/technical-reference#iso-17442) standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for [pacs.008](/uk/docs/api/technical-reference#pacs-008) where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
 The Purpose Code captures the nature of the payment and should be transported end to end. The Purpose Code is 4 characters used to abbreviate the purpose, for example, IVPT - Invoice Payment.

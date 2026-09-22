@@ -10,7 +10,8 @@ import Callout from "src/components/callout";
 import ExternalLink from 'src/components/external-link';
 
 ## Get connected
-Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
+
+Before you can integrate with [the ClearBank API](/uk/docs/api/overview), you need to onboard with us as a customer and must have a valid authentication profile.
 
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
 
@@ -79,22 +80,22 @@ We use the following specifications to create a digital signature:
 
 **To create a digital signature:**
 
-1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature)
-2. Hash the encoded value using SHA-256
-3. Request a digital signature for that hash value from your hardware security module (HSM)
+1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature).
+2. Hash the encoded value using SHA-256.
+3. Request a digital signature for that hash value from your hardware security module (HSM).
 > (In the simulation environment, this can be done using open source solutions.)
 
-4. The output is the message digital signature
-5. Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all requests that have a request body
+4. The output is the message digital signature.
+5. Send the Base64 encoded string representation of the digital signature in the HTTP header [**DigitalSignature**](/uk/docs/api/technical-reference#digital-signature) for all requests that have a request body.
 
-For additional help with creating your authentication profile and digital signature, please refer to the following examples on the ClearBank GitHub repository:
+For additional help with creating your authentication profile and digital signature, refer to the following examples on the ClearBank GitHub repository:
 - <ExternalLink href="https://github.com/clearbank/fi-api-101">C# example for ClearBank API and Webhooks</ExternalLink> 
 - <ExternalLink href="https://github.com/clearbank/fi-api-postman">Postman Collections for invoking the ClearBank API</ExternalLink> 
 - <ExternalLink href="https://github.com/clearbank/fi-api-signtool">C# example for signing ClearBank API requests</ExternalLink> 
 - <ExternalLink href="https://github.com/clearbank/fi-api-signtool-python">Python example for signing ClearBank API requests</ExternalLink> 
 - <ExternalLink href="https://github.com/clearbank/fi-api-signtool-java">Java example for signing ClearBank API requests</ExternalLink> 
 
-Please note that the code in these examples is not production ready and has been simplified for brevity.
+Note that the code in these examples is not production ready and has been simplified for brevity.
 
 ## Use endpoints
 
@@ -131,7 +132,7 @@ The base URL for your environment is either:
 - Simulation `https://institution-api-sim.clearbank.co.uk/`
 - Production `https://institution-api.clearbank.co.uk/`
 
-Your API token should be included in your HTTP `Authorization` header. Please refer to [Header parameters](#header-parameters) for more information.
+Your API token should be included in your HTTP `Authorization` header. Refer to [Header parameters](#header-parameters) for more information.
 
 This example request shows the API token in the `Authorization` , `DigitalSignature` and `X-Request-Id` header.
 
@@ -151,7 +152,7 @@ The response shows results from the test call
 ```
 
 To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank (if you are subscribed to it).
-We use [webhooks](/uk/docs/api/technical-reference#webhook) to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
+We use [webhooks](/uk/docs/api/technical-reference#webhook) to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
 
 <EndpointBlock
   type="get"
@@ -218,7 +219,7 @@ Responses with a `2XX` status code indicate the request was successfully receive
 Responses with a `4XX` status code indicate the request was received but was unable to be actioned, details of the error can be found in the `title` field of the response in a human readable format. 4XX errors are typically caused by an issue with the request (for example, incorrect formatting or missing data) or issues validating the request (for example, missing or invalid credentials). Due to the wide variety scenarios, we are unable to list every potential variation of error, however, the combination of status code and `title` should allow you to identify and resolve the issue.
 
 #### Common 4XX responses
-See the below examples of some common 4XX responses and their meaning which may assist you in troubleshooting.
+See the following examples of some common 4XX responses and their meaning which may assist you in troubleshooting.
 
 **Missing X-Request-Id**
 
@@ -251,9 +252,9 @@ See the below examples of some common 4XX responses and their meaning which may 
 #### 5XX status codes
 Responses with a `5XX` status code indicate a service error. If received, you should retry your request with exactly the same **X-Request-Id** header and payload to prevent duplication.
 
-In exceptional circumstances where the initial request was effectively processed despite returning a `5XX` status, your second request would make that clear either in the response or via an appropriate webhook. 
+In exceptional circumstances where the initial request was effectively processed despite returning a `5XX` status, your second request would make that clear either in the response or through an appropriate webhook. 
 
-In the event a `5XX` response is caused by a planned or unexpected system outage on our part, we will communicate this via email.
+In the event a `5XX` response is caused by a planned or unexpected system outage on our part, we will communicate this by email.
 
 You may receive a `503 - Service unavailable` response containing a **Retry-After** header. The value of this header denotes a duration in seconds expressed as an integer. If you receive a `503` with this header, you should reattempt the request after the specified number of seconds pass.
 
@@ -280,7 +281,7 @@ You may receive a `503 - Service unavailable` response containing a **Retry-Afte
 }
 ```
 ### Rate limiting
-We use rate limiting to protect our systems from excessive load and to ensure a consistent level of availability and performance to all our clients.
+We use [rate limiting](/uk/docs/api/technical-reference#rate-limit) to protect our systems from excessive load and to ensure a consistent level of availability and performance to all our clients.
 
 <Callout colour="blue">
 Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to be able to handle rate limits and react accordingly. 
@@ -414,7 +415,7 @@ Webhooks are asynchronous events and can be delivered in any order. We provide a
 
 ##### Retry reason table
 
-Refer to the below table for definitions of the retry reasons that may be included in the `x-retry-reason` header for reattempted webhook.
+Refer to the following table for definitions of the retry reasons that may be included in the `x-retry-reason` header for reattempted webhook.
 
 | Enum value                    | Reason                                             |
 | ----------------------------- | -------------------------------------------------- |
@@ -481,7 +482,7 @@ We will retry webhooks that we are not able to consider successful every 15 minu
 2. Hash the response body using SHA 256.
 3. Sign the hash with your private key and attach the signed hash as a Base64 encoded string in the `DigitalSignature` response header.
 
-> Your private key needs to correspond to a public key which has been used to create a certificate signing request (CSR). Please refer to [create your authentication profile](#create-your-authentication-profile) for more information.
+> Your private key needs to correspond to a public key which has been used to create a certificate signing request (CSR). Refer to [create your authentication profile](#create-your-authentication-profile) for more information.
 
 ##### Example HTTP request:
 ```
@@ -515,7 +516,7 @@ We use at-least-once delivery when sending webhooks. This means to ensure you ha
 
 Duplicate webhooks can generally be identified by looking at the EventType, Timestamp and Id within the payload. If the values are the same, the webhook is a duplicate.
 
-You must be able to handle duplicate webhooks idempotently. This means you should always respond in the appropriate format even if you have detected a duplicated or retried webhook. If you don't, we won't be able to verify the webhook was successfully received and will therefore retry delivery.
+You must be able to handle duplicate webhooks [idempotently](/uk/docs/api/technical-reference#idempotency). This means you should always respond in the appropriate format even if you have detected a duplicated or retried webhook. If you don't, we won't be able to verify the webhook was successfully received and will therefore retry delivery.
 
 ### Set up and test webhook listener URLs
 
