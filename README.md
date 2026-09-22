@@ -191,7 +191,7 @@ beforeEach(() => {
 ```
 
 #### Rerendering
-In order to see the effects of props changes components can be rerendered by calling `rerender` on the rendered component and passing the updated props.
+To see the effects of props changes components can be rerendered by calling `rerender` on the rendered component and passing the updated props.
 
 ```javascript
 component.rerender(<Component {...newProps} />)
