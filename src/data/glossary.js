@@ -1760,7 +1760,7 @@ const glossaryTerms = [
       'true owner',
       'ultimate owner',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'compliance',
     definition:
       'An Ultimate Beneficial Owner (UBO) is an individual who ultimately owns or controls a legal entity, either directly or indirectly through one or more other entities.',
