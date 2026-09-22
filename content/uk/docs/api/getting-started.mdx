@@ -45,11 +45,11 @@ Your authentication profile is a combination of:
 **To create a valid authentication profile:**
 
 1. Generate your public key and private key pair in PKCS #8 format.
-> In the simulation environment, you can utilise open source tools to store your private key. In the production environment, you must use a physical or virtual HSM solution to store your private key (see HSM requirements above).
+> In the simulation environment, you can utilise open source tools to store your private key. In the production environment, you must use a physical or virtual HSM solution to store your private key (see HSM requirements).
 
 2. Generate your certificate signing request (CSR) in PKCS #10 format which contains your certificate and public key.
 3. Save your CSR as a .csr file.
-4. Sign in to the ClearBank Portal using the URL from the table above.
+4. Sign in to the ClearBank Portal using the URL from the table.
 5. From the menu, select **Institution > Certificates and Tokens**.
 6. Select **Generate API Token**.
 > ![alt text](/assets/images/diagrams/shared/getting-started/GenerateToken_1.png "Certificates and Tokens page")
@@ -80,7 +80,7 @@ We use the following specifications to create a digital signature:
 
 **To create a digital signature:**
 
-1. UTF-8 encode the exact request body that will be sent to our API (any differences including the addition or removal of spaces will result in a totally different digital signature).
+1. UTF-8 encode the exact request body that will be sent to the ClearBank API (any differences including the addition or removal of spaces will result in a totally different digital signature).
 2. Hash the encoded value using SHA-256.
 3. Request a digital signature for that hash value from your hardware security module (HSM).
 > (In the simulation environment, this can be done using open source solutions.)
@@ -99,11 +99,11 @@ Note that the code in these examples is not production ready and has been simpli
 
 ## Use endpoints
 
-Once you have set up your connection to our simulation environment, you are ready to send requests using our API endpoints. The information here allows you to use the GET /v1/Test and POST /v1/Test endpoints.
+Once you have set up your connection to our simulation environment, you are ready to send requests using the ClearBank API endpoints. The information here allows you to use the GET /v1/Test and POST /v1/Test endpoints.
 
 ### Header parameters
 
-We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header, together with an [HTTP status code](#http-status-codes).
+We utilise HTTP-request headers for the ClearBank API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header, together with an [HTTP status code](#http-status-codes).
 
 Different request types require different headers as shown in this table:
 
@@ -291,7 +291,7 @@ Rate limits result in a `429` status code response from our platform. Upon recei
 
 ### HAL Links
 
-We use HAL (Hypertext Application Language) to hyperlink between resources in our API.
+We use HAL (Hypertext Application Language) to hyperlink between resources in the ClearBank API.
 
 Each HAL hyperlink contains:
 
@@ -299,7 +299,7 @@ Each HAL hyperlink contains:
 | ----------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `name`      | `string`  | Required | The named link type                                                                                                       |
 | `href`      | `string`  | Required | URI to be used                                                                                                            |
-| `templated` | `boolean` |          | Specified as `true` if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to `false` |
+| `templated` | `boolean` |          | Specified as `true` if href is a URI template with parameters. Otherwise, this property is absent or set to `false` |
 
 #### Example HAL Links
 ```json

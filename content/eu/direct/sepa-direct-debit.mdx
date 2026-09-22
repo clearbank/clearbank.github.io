@@ -15,10 +15,10 @@ import ExternalLink from 'src/components/external-link';
 
 <Callout colour="green">
 <h3>SEPA Direct Debit is coming soon</h3>
-<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our EU simulation environment.</p>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with the ClearBank API in our EU simulation environment.</p>
 </Callout>
 
-SEPA Direct Debit (SDD) is a pan-European payment scheme that enables organisations to collect euro-denominated payments from a payer’s account, provided the payer has authorised the collection in advance. The scheme is defined and maintained by the <ExternalLink href="https://www.europeanpaymentscouncil.eu/what-we-do/sepa-direct-debit">European Payments Council (EPC)</ExternalLink> and is available across SEPA-participating countries.
+[SEPA Direct Debit (SDD)](/eu/docs/api/glossary#sepa-direct-debit) is a pan-European payment scheme that enables organisations to collect euro-denominated payments from a payer’s account, provided the payer has authorised the collection in advance. The scheme is defined and maintained by the <ExternalLink href="https://www.europeanpaymentscouncil.eu/what-we-do/sepa-direct-debit">European Payments Council (EPC)</ExternalLink> and is available across SEPA-participating countries.
 
 This page describes **SEPA Core Direct Debit only**, where ClearBank acts as the **debtor bank**. In this model, ClearBank receives direct debit instructions from the scheme and processes the resulting payment.
 
@@ -26,7 +26,7 @@ SEPA Direct Debits are initiated by the payee (creditor) rather than the payer. 
 
 ### SEPA Direct Debit mandates
 
-An SDD mandate is the payer’s authorisation for a creditor to initiate direct debit collections against the payer’s account. A mandate provides a legal basis for each collection submitted under the scheme.
+An [SDD mandate](/eu/docs/api/glossary#direct-debit-mandate) is the payer’s authorisation for a creditor to initiate direct debit collections against the payer’s account. A mandate provides a legal basis for each collection submitted under the scheme.
 
 From an integration perspective, mandates are **referenced rather than transmitted** as part of the payment flow: ClearBank receives mandate details from the scheme but does **not** create, store, validate, or manage mandates directly.
 
@@ -61,7 +61,7 @@ At a high level, a SEPA Core Direct Debit follows these stages:
    Before settlement, inbound instructions are validated in line with scheme rules and may be stopped before settlement as a result of pre-settlement intervention.
 
 3. **Settlement**  
-   If successfully processed, the debit is applied to the debtor account and funds are settled to the creditor via the scheme.
+   If successfully processed, the debit is applied to the debtor account and funds are settled to the creditor by the scheme.
 
 4. **Post-settlement outcomes**  
    Depending on scheme rules and reason codes, a settled collection may later be subject to reversals, returns, or refunds.
@@ -200,7 +200,7 @@ There are two refund types:
 - **Authorised refund (MD06)**: The original debit was valid and supported by a mandate, but the debtor has requested a reversal of the transaction (within 8 weeks of settlement).
 - **Unauthorised refund (MD01)**: The original debit was not supported by a valid mandate and should not have been processed. The debtor can request a refund for up to 13 months after settlement.
 
-ClearBank executes refund requests submitted via the API and forwards them to the scheme. ClearBank does not assess or determine the validity of the underlying dispute.
+ClearBank executes refund requests submitted through the API and forwards them to the scheme. ClearBank does not assess or determine the validity of the underlying dispute.
 
 #### Refund reason code table
 
@@ -369,7 +369,7 @@ To emulate an inbound SDD collection, call the [POST /payments/sepa-dd/v1/emulat
 
 #### Simulate a SEPA DD Refusal
 
-Before simulating a refusal, an inbound SDD must first be created via the [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request) endpoint with a future-dated `requestedCollectionDate` (see [Simulate an inbound SDD payment request](#simulate-an-inbound-sdd-payment-request)).
+Before simulating a refusal, an inbound SDD must first be created using the [POST /payments/sepa-dd/v1/emulator/inbound-direct-debits](#simulate-an-inbound-sdd-payment-request) endpoint with a future-dated `requestedCollectionDate` (see [Simulate an inbound SDD payment request](#simulate-an-inbound-sdd-payment-request)).
 
 To simulate a SEPA DD refusal, call the [POST /payments/sepa-dd/v1/r-message-instructions](#manage-a-sepa-direct-debit-collection-endpoint) endpoint.
 

@@ -29,7 +29,7 @@ const config = {
   },
   siteMetadata: {
     title: 'ClearBank Developer Portal',
-    description: 'ClearBank Developer Portal - our API documentation',
+    description: 'ClearBank Developer Portal - the ClearBank API documentation',
     ogImage: null,
     docsLocation: 'https://github.com/clearbank/clearbank.github.io/tree/main/content',
     favicon: '/assets/images/favicon-32x32.png'

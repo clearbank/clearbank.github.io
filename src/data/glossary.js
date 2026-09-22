@@ -39,7 +39,7 @@ const glossaryTerms = [
       'authorized push payment scam',
       'payment scam',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'compliance',
     definition:
       `An Authorised Push Payment Scam (APP Scam) is a type of fraud where an individual or business is tricked into authorising the transfer of funds to a criminal's account.`,
@@ -360,6 +360,33 @@ const glossaryTerms = [
   },
 
   {
+    id: 'verification-of-payee',
+    term: 'Verification of Payee',
+    acronym: 'VoP',
+    aliases: [
+      'vop',
+      'name checking',
+      'account name check',
+      'payee verification',
+      'beneficiary name check',
+    ],
+    regions: ['eu'],
+    category: 'payments',
+    definition:
+      'Verification of Payee (VoP) is a real-time name-checking service that confirms whether the details entered by a payer correspond to the intended recipient before a payment is made, ensuring payments are sent to the intended recipient.',
+    seoTitle:
+      'What is Verification of Payee (VoP)?',
+    seoDescription:
+      'Learn what Verification of Payee is and how name checking helps identify potentially incorrect recipient details.',
+    relatedTerms: [
+      'app-scam',
+      'beneficiary',
+      'credit-payment-recovery',
+      'faster-payments',
+    ],
+  },
+
+  {
     id: 'credit-payment-recovery',
     term: 'Credit Payment Recovery',
     acronym: 'CPR',
@@ -465,11 +492,38 @@ const glossaryTerms = [
       'direct debit collection',
       'automated collection',
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'direct-debits',
     definition:
       `A Direct Debit is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
     seoTitle: 'What is a Direct Debit?',
+    seoDescription:
+      'Learn what a Direct Debit is and how an organisation can collect payments under a payer’s authority.',
+    relatedTerms: [
+      'addacs',
+      'arudd',
+      'auddis',
+      'bacs',
+      'direct-debit-indemnity-claim',
+      'direct-debit-instruction',
+      'direct-debit-mandate',
+    ],
+  },
+
+  {
+    id: 'sepa-direct-debit',
+    term: 'SEPA Direct Debit',
+    acronym: 'SDD',
+    aliases: [
+      'sepa direct debit payment',
+      'sepa direct debit collection',
+      'automated collection',
+    ],
+    regions: ['eu'],
+    category: 'direct-debits',
+    definition:
+      `A SEPA Direct Debit (SDD) is an automated payment method that allows an organisation to collect funds from a payer's account under the authority of a valid Direct Debit Instruction (DDI) or mandate.`,
+    seoTitle: 'What is a SEPA Direct Debit?',
     seoDescription:
       'Learn what a Direct Debit is and how an organisation can collect payments under a payer’s authority.',
     relatedTerms: [
@@ -679,7 +733,7 @@ const glossaryTerms = [
       'foreign currency exchange',
       'forex'
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'foreign-exchange',
     definition:
       'Foreign Exchange (FX) is the conversion of one currency into another.',
@@ -706,7 +760,7 @@ const glossaryTerms = [
       'fx transaction',
       'forex trading'
     ],
-    regions: ['uk', 'eu'],
+    regions: ['uk'],
     category: 'foreign-exchange',
     definition:
       'An FX trade is a transaction in which an agreed amount of one currency is exchanged for an agreed amount of another currency at an agreed exchange rate.',
@@ -745,7 +799,7 @@ const glossaryTerms = [
   {
     id: 'general-segregated-account',
     term: 'General Segregated Account',
-    acronym: 'GSA',
+    acronym: '',
     aliases: [
       'segregation account',
       'general segregated account',
@@ -757,7 +811,7 @@ const glossaryTerms = [
     regions: ['uk','eu'],
     category: 'accounts',
     definition:
-      `A General Segregated Account (GSA) is a ClearBank account type that holds funds for one or more customers separately from an institution's operational funds. Also known as a Segregated Pooled account.`,
+      `A General Segregated Account is a ClearBank account type that holds funds for one or more customers separately from an institution's operational funds. Also known as a Segregated Pooled account.`,
     seoTitle:
       'What is a General Segregated Account?',
     seoDescription:
