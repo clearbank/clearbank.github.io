@@ -2961,7 +2961,7 @@
               "type": "string"
             },
             "description": "Currencies used for the account.",
-            "example": "GBP"
+            "example": [ "GBP" ]
           },
           "balances": {
             "uniqueItems": false,
@@ -3216,7 +3216,7 @@
               "ZWL"
             ],
             "type": "string",
-            "description": "Set to 'GBP' as other currencies are not supported.",
+            "description": "The three-letter ISO 4217 currency code. Set to 'GBP' as other currencies are not supported.",
             "example": "GBP"
           },
           "status": {
@@ -3542,7 +3542,7 @@
               "ZWL"
             ],
             "type": "string",
-            "description": "Set to 'GBP' as other currencies are not supported and not yet withdrawn on the day the message containing the currency is exchanged.",
+            "description": "The three-letter ISO 4217 currency code. Set to 'GBP' as other currencies are not supported and not yet withdrawn on the day the message containing the currency is exchanged.",
             "example": "GBP"
           }
         },
@@ -3630,17 +3630,13 @@
         "description": "The identifiable information of an account."
       },
       "ClearBank.FI.API.Accounts.Versions.V2.Models.CounterpartAccountGenericIdentification": {
-        "required": [
-          "identification",
-          "schemeName"
-        ],
         "type": "object",
         "properties": {
           "identification": {
-            "maxLength": 34,
-            "minLength": 1,
+            "maxLength": 255,
+            "minLength": 0,
             "type": "string",
-            "description": "Identification assigned by an institution.",
+            "description": "Identification assigned by an institution, or the fallback account descriptor when scheme-specific identifiers are unavailable.",
             "example": "GBR01020312345678"
           },
           "schemeName": {
@@ -4125,7 +4121,7 @@
               "type": "string"
             },
             "description": "Currencies used for the virtual account",
-            "example": "GBP"
+            "example": [ "GBP" ]
           },
           "iban": {
             "type": "string",
@@ -4173,7 +4169,7 @@
         "type": "object",
         "properties": {
           "ownerName": {
-            "maxLength": 140,
+            "maxLength": 128,
             "minLength": 1,
             "pattern": "^[^\\|_\\[\\]<>^`~\\\\$]*$",
             "type": "string",

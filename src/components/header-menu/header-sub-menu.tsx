@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import * as Styles from './header-menu.styles'
-import * as Types from'./header-meny.types'
+import * as Types from'./header-menu.types'
+import HeaderMenuListItem from './header-menu-list-item'
 
 const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) => {
+    const [borderState, setBorderState] = useState("normal");
+
     return (
       <Styles.Container>
         <Styles.TitleContainer>
@@ -16,13 +19,9 @@ const HeaderSubMenu: React.FC<Types.IHeaderSubMenuProps> = ({ item, isActive }) 
             )
           }
         </Styles.TitleContainer>
-        <Styles.List>
-          {item.subMenuItems?.map(subMenuItem => (
-            <li key={subMenuItem.node.fields.id}>
-              <Styles.ListItem to={subMenuItem.node.fields.slug}>
-                {subMenuItem.node.fields.title}
-              </Styles.ListItem>
-            </li>
+        <Styles.List borderState={borderState}>
+          {item.subMenuItems?.map((element, index, array) => (
+            <HeaderMenuListItem item={element} onHover={(state: string) => setBorderState(state)} isLast={index == array.length - 1}/>
           ))}
         </Styles.List>
       </Styles.Container>

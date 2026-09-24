@@ -30,11 +30,37 @@ Inbound SCT payments can be received on Netherlands business days between 02:30 
 
 Outbound SCT payments can be sent on Netherlands business days between 07:00 and 16:00 CET. Transactions submitted after 16:00 or on bank holidays or weekends will be rejected. If a payment is submitted before the cut-off point but cannot be submitted to scheme, it will be placed in a queue until outbound payments reopen.
 
+## SEPA Indirect
+SEPA Indirect allows you to participate in SEPA under **your own BIC and IBANs**, while connecting to ClearBank through the same APIs you already use. ClearBank Europe (ClearBank NL) acts as your sponsoring direct participant, providing scheme access, clearing, and settlement on your behalf.
+
+You retain full ownership of your customers and payment flows. Send and receive SEPA Credit Transfer (SCT) and SEPA Instant Credit Transfer (SCT Inst) payments with minimal change to your existing integration — ClearBank handles the underlying scheme connectivity so you don't need to become a direct participant yourself.
+
+With SEPA Indirect you get:
+- **Your own BIC and IBANs** – maintain your brand identity across all SEPA payments.
+- **Full scheme participation** – access SCT and SCT Inst through ClearBank Europe's connectivity.
+- **Minimal change to existing flows** – integrate with our API and continue operating as you do today.
+- **API-first integration** – connect programmatically with a modern, RESTful interface.
+
+<Callout colour="blue">
+<p><b>To be eligible for SEPA Indirect, you must:</b><br />
+- Be a regulated financial institution (holding a Credit Institution, Electronic Money Institution, or Payment Institution licence).<br />
+- Be licensed to operate in a country where ClearBank passports its licence.<br />
+- Have, or be in the process of obtaining, your own SWIFT BIC.<br />
+- Complete the European Payments Council (EPC) SEPA Adherence process. This is required for both SCT and SCT Inst. </p>
+</Callout>
+
+If are interested in becoming a SEPA Indirect participant, contact your Client Director to confirm eligibility and request prerequisite documentation.
+
 ## Send an SCT payment
 
 To send a payment, use the [POST /payments/sepa-ct/v1/customer-payments](#send-an-sct-outbound-payment) endpoint. You will receive the [SEPA CT Outbound Payment Completed webhook](#sepa-ct-outbound-payment-completed-webhook) and the [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
-![A message flow diagram explaining how to send an SCT payment](/assets/images/sepa-ct-send-payment.svg)
+<Callout colour="blue">
+<p><b>Mandatory originator address for non-EEA payments</b><br />
+To comply with the SEPA scheme rulebook, if the payment originates from outside the <a href="https://european-union.europa.eu/principles-priorities-and-initiatives/eu-countries_en">European Economic Area (EEA)</a> or the beneficiary resides outside the EEA, you must include the originator's <b>town</b> and <b>country</b> address fields in your request. Payments missing these fields will be rejected.</p>
+</Callout>
+
+![A message flow diagram explaining how to send an SCT payment](/assets/images/diagrams/eu/sepa-credit-transfer/sepa-ct-send-payment.svg)
 
 <EndpointBlock
   type="post"
@@ -198,7 +224,7 @@ You can send an SCT recall requests using the [POST /payments/sepa-ct/v1/recall]
 
 * If your recall request has been **rejected**, you will be notified via the [SEPA CT Outbound Payment Recall Rejected](#sepa-ct-outbound-payment-recall-rejected-webhook) webhook.
 
-![A message flow diagram explaining how to an SCT recall request is sent, then accepted or rejected by the original creditor](/assets/images/sepa-ct-recall-request.svg)
+![A message flow diagram explaining how to an SCT recall request is sent, then accepted or rejected by the original creditor](/assets/images/diagrams/eu/sepa-credit-transfer/sepa-ct-recall-request.svg)
 
 #### Recall request reason codes
 
@@ -245,7 +271,7 @@ To respond to the recall request, use the [/v1/payments/sepa/{paymentId}/recall-
 #### Accept recall requests
 You can accept the recall request by setting the `RecallResponseAccepted` boolean to `true`.
 
-![A message flow diagram showing how to accept an inbound SCT recall request](/assets/images/sepa-ct-recall-response-accepted.svg)
+![A message flow diagram showing how to accept an inbound SCT recall request](/assets/images/diagrams/eu/sepa-credit-transfer/sepa-ct-recall-response-accepted.svg)
 
 <Callout colour="blue">
 <p>If <b>RecallResponseAccepted</b> is set to <b>true</b>, a pacs.004 payment will be automatically initiated. You do not need to initiate a payment.</p>
@@ -254,7 +280,7 @@ You can accept the recall request by setting the `RecallResponseAccepted` boolea
 #### Reject recall requests
 If you do not agree with the reason for the recall cited by the requesting party in the `CancellationReasonInformation` field, you can reject the recall request by setting the `RecallResponseAccepted` boolean to `false`. When rejecting a recall request, the 'RejectCode' field must be populated (see [recall response reason codes](#recall-response-reason-codes)).
 
-![A message flow diagram showing how to reject an inbound SCT recall request](/assets/images/sepa-ct-recall-response-rejected.svg)
+![A message flow diagram showing how to reject an inbound SCT recall request](/assets/images/diagrams/eu/sepa-credit-transfer/sepa-ct-recall-response-rejected.svg)
 
 <Callout colour="blue">
 <p>If <b>RecallResponseAccepted</b> is set to <b>false</b>, the <b>rejectionCode</b> field must be populated with a rejection reason code.</p>
@@ -311,7 +337,7 @@ SCT payments can also be returned to the payment originator.
 
 You can return a payment using the [POST /payments/sepa-ct/v1/payment-returns](#return-an-sct-payment) endpoint. You can only return a payment after receiving the [SEPA CT Inbound Payment Completed webhook](#sepa-ct-inbound-payment-completed-webhook). Returns must be sent within three business days of the original payment's settlement date.
 
-![A message flow diagram explaining how to send an SCT return](/assets/images/sepa-ct-return.svg)
+![A message flow diagram explaining how to send an SCT return](/assets/images/diagrams/eu/sepa-credit-transfer/sepa-ct-return.svg)
 
 Once the return has been processed, you will either receive the [SEPA CT Inbound Payment Return Completed](#sepa-ct-inbound-payment-return-completed-webhook) and [Customer Accounts Transaction Completed](#customer-accounts-transaction-completed-webhook) webhooks or the [SEPA CT Inbound Payment Return Failed](#sepa-ct-inbound-payment-return-failed-webhook) webhook.
 

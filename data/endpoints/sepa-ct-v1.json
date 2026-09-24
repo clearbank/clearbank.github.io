@@ -322,7 +322,7 @@
             "format": "double",
             "minimum": "0.01",
             "maximum": "999,999,999.99",
-            "example": "2.99"
+            "example": 2.99
           },
           "currency": {
             "minLength": 1,
@@ -455,7 +455,7 @@
             "example": "NL73ABNA0529451824"
           },
           "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
+            "$ref": "#/components/schemas/DebtorPostalAddress"
           },
           "identification": {
             "$ref": "#/components/schemas/Identification"
@@ -561,7 +561,7 @@
           "buildingNumber": {
             "maxLength": 16,
             "minLength": 1,
-            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "pattern": "(^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$)|(^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]{1,2}$)",
             "type": "string",
             "description": "Number that identifies the position of a building on a street.",
             "nullable": true,
@@ -598,7 +598,69 @@
             "minLength": 1,
             "pattern": "[A-Z]{2,2}",
             "type": "string",
-            "description": "Nation with its own government.",
+            "description": "Nation with its own government. Represented as an ISO 3166-1 alpha-2 country code.",
+            "example": "GB"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DebtorPostalAddress": {
+        "required": [
+          "country",
+          "townName"
+        ],
+        "type": "object",
+        "description": "Postal address of the debtor. townName and country are mandatory if the payment originates from or is destined for a country outside the EEA.",
+        "properties": {
+          "streetName": {
+            "maxLength": 70,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "type": "string",
+            "description": "Name of a street or thoroughfare.",
+            "example": "My Street"
+          },
+          "buildingNumber": {
+            "maxLength": 16,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "type": "string",
+            "description": "Number that identifies the position of a building on a street.",
+            "nullable": true,
+            "example": "1"
+          },
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "type": "string",
+            "description": "Name of a built-up area, with defined boundaries, and a local government. Mandatory if the payment origin or destination country is outside the EEA.",
+            "nullable": true,
+            "example": "London"
+          },
+          "postCode": {
+            "maxLength": 16,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "type": "string",
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "nullable": true,
+            "example": "XX99 9XX"
+          },
+          "countrySubdivision": {
+            "maxLength": 35,
+            "minLength": 1,
+            "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
+            "type": "string",
+            "description": "Identifies a subdivision of a country such as state, region, county.",
+            "nullable": true,
+            "example": "London"
+          },
+          "country": {
+            "minLength": 1,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Nation with its own government. Mandatory if the payment origin or destination country is outside the EEA.",
             "example": "GB"
           }
         },
@@ -668,7 +730,7 @@
         "type": "object",
         "properties": {
           "paymentId": {
-            "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
+            "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
             "maxLength": 36,
             "type": "string",
             "description": "Unique identifier of the Inbound SCT payment to be recalled.",
@@ -678,7 +740,7 @@
           "recallResponseAccepted": {
             "type": "boolean",
             "description": "Accept or reject a request for recall of an SCT inbound payment",
-            "example": "True"
+            "example": true
           },
           "rejectCode": {
             "pattern": "^[A-Z0-9]{1,4}$",
@@ -694,7 +756,6 @@
             "minLength": 1,
             "pattern": "^[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]((?!//)([0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+/ ]))+[0-9a-zA-Z\\-\\?:\\(\\)\\.,'\\+]$",
             "type": "string",
-            "format": "uuid",
             "description": "Additional information",
             "nullable": true,
             "example": "Additional details."
@@ -710,7 +771,7 @@
         "type": "object",
         "properties": {
           "paymentId": {
-            "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
+            "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
             "maxLength": 36,
             "type": "string",
             "description": "Unique identifier of the Outbound SCT payment to be recalled.",
@@ -744,7 +805,7 @@
         "type": "object",
         "properties": {
           "paymentId": {
-            "pattern": "[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}",
+            "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
             "maxLength": 36,
             "type": "string",
             "description": "Unique identifier of the payment to be returned.",

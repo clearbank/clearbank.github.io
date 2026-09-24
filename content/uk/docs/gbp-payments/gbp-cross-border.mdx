@@ -12,12 +12,18 @@ import ExternalLink from 'src/components/external-link';
 
 ## GBP Cross-Border
 
+<Callout colour="blue"><h2>Deprecation notice</h2>
+<p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
+- <strong>POST /payments/cross-border-sterling/v3/payments</strong><br /></p>
+
+<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+
 Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
 
 There is no limit to the amount that can be sent using this service.
 
-You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v3/payments](#send-a-gpb-cross-border-payment) endpoint. 
+You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) endpoint. 
 
 Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
 
@@ -30,6 +36,7 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
 - If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
+- Review the [address guidance](#guidance-on-populating-address-information) before submitting outbound payments.
 
 <Callout colour="blue">
 If you receive a Transaction Rejected webhook outside of <a href="https://www.bankofengland.co.uk/payment-and-settlement/chaps">industry opening hours</a>, retry the payment during the next open window.
@@ -37,7 +44,36 @@ If you receive a Transaction Rejected webhook outside of <a href="https://www.ba
 
 The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
 
-### Version 3 mandatory fields
+### What's changed in version 4
+
+Version 4 of the GBP Cross-Border endpoint introduces the changes required to remove unstructured address types, together with a small number of ClearBank enhancements. If you are migrating from version 3, the key differences are:
+
+- On the `Other` account identification block for `sourceAccount`, `debtorAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
+- The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to more accurately align with ISO 20022 wording.
+- For the Creditor Account, GBP Cross-Border v4 offers `BBAN` and `Other` options in `schemeName`, whereas domestic CHAPS v6 offers `BBAN` and `SortcodeAccountNumber` options. (In both cases, these are alternatives to choosing the `IBAN` value.) The `Other` option in GBP Cross-Border allows you to accommodate non-UK identification formats required for cross-border payments.
+
+### Guidance on populating address information
+
+When sending outbound GBP Cross-Border payments, we strongly recommend that you provide as much address information as possible for both:
+
+- the **remitter** (`Debtor`)
+- the **beneficiary** (`Creditor`)
+
+Different overseas jurisdictions have different requirements for address detail. Providing full address details reduces payment delays and post-submission requests for information.
+
+In [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment), the following `postalAddress` fields are mandatory and must always be provided:
+
+- `townName`
+- `country`
+- `postCode`
+
+The following fields are optional, but strongly recommended where available:
+
+- `buildingNumber`
+- `buildingName`
+- `streetName`
+
+### Version 4 mandatory fields
 In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.
@@ -94,7 +130,7 @@ The following table details common uses of Purpose Codes and Category Purpose Co
 
 ### Populating the Creditor field in pacs.008 messages
 
-The `Creditor` field in [POST /payments/cross-border-sterling/v3/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
+The `Creditor` field in [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) (pacs.008 messages) identifies the party who will receive the funds. This party can be an **individual**, a **business**, or a **financial institution**.
 
 Correctly filling in this field ensures the payment reaches the intended recipient and complies with ISO 20022 formatting rules. If the field is populated incorrectly, the payment may be delayed or rejected.
 
@@ -127,6 +163,16 @@ To ensure correct population of fields in pacs.008 payment messages, follow thes
     type="post"
     title="Send a GBP cross-border payment"
     endpoints={[
+    {
+      path: "/payments/cross-border-sterling/v4/payments",
+        version: "4.0GBPCrossBorder",
+        webhooks: [
+        'transaction-settled-webhook-v6',
+        'payment-message-assessment-failed-webhook-v1',
+        'outbound-held-transaction-v1',
+        'transaction-rejected-v2'
+        ]
+    },
       {
       path: "/payments/cross-border-sterling/v3/payments",
         version: "3.0GBPCrossBorder",

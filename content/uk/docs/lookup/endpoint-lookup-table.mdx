@@ -30,6 +30,10 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v2/Accounts/{accountId}/Mandates/Unpaid](../gbp-accounts/bacs-payment-data#get-all-unpaid-direct-debit-payments-real-account) | Get a list of all unpaid transactions belonging to an account |
 | [GET /v1/accounts/{accountId}/nominated-account](../embedded-banking/flexible-cash-isa#set-up-a-nominated-account) | Get a nominated account for a flexible cash ISA or savings account |
 | [PUT /v1/accounts/{accountId}/nominated-account](../embedded-banking/flexible-cash-isa#set-up-a-nominated-account) | Set a nominated account for a flexible cash ISA or savings account |
+| [POST /v1/accounts/{accountId}/related-accounts](../embedded-banking/hub-accounts#add-an-associated-or-nominated-account) | Create a nominated or associated account for a Hub or Savings Account |
+| [GET /v1/accounts/{accountId}/related-accounts](../embedded-banking/hub-accounts#retrieve-associated-and-nominated-accounts) | Retrieve a nominated or associated accounts with a Hub or Savings Account |
+| [PATCH /v1/accounts/{accountId}/related-accounts/{iban}](../embedded-banking/hub-accounts#amend-an-associated-or-nominated-account) | Update a nominated or associated account for a Hub or Savings Account |
+| [DELETE /v1/accounts/{accountId}/related-accounts/{iban}](../embedded-banking/hub-accounts#remove-an-associated-or-nominated-account) | Remove a nominated or associated account from a Hub or Savings Account |
 | [GET /v2/Accounts/{accountId}/Transactions](../gbp-accounts/transaction-data#get-all-payments-real-account) | Get a summary of all of the transactions from the specified account |
 | [GET /v2/Accounts/{accountId}/Transactions/{transactionId}](../gbp-accounts/transaction-data#get-a-payment-real-account) | Get the details of a specific transaction from the specified account |
 | [POST /v1/Accounts/{accountId}/Transactions/Returns](../gbp-payments/bacs#return-bacs-payment-real-account) | Create a return of one or more Direct Debit or Direct Credit transactions for the account |
@@ -67,13 +71,44 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [PATCH /v1/customers/retail/{customerId}](../embedded-banking/retail-customers#update-an-existing-retail-customers-personal-information) | Update the details of an existing retail customer |
 | [PUT /v1/customers/retail/{customerId}/currentaddress](../embedded-banking/retail-customers#update-an-existing-retail-customers-address) | Update the address of an existing retail customer |
 | [POST /v1/customercheck/retail](../embedded-banking/know-your-customer#kyc-check-and-create-a-new-customer) | Conduct a retail customer KYC check then create a new retail customer if successful |
+| [POST /customers/v2/sole-traders](../embedded-banking/sole-traders-v2#create-a-sole-trader) | Create a Sole Trader customer |
+| [PATCH /customers/v2/sole-traders/{customerId}](../embedded-banking/sole-traders-v2#update-a-sole-trader) | Update an existing Sole Trader customer |
+| [GET /customers/v2/sole-traders/{customerId}](../embedded-banking/sole-traders-v2#retrieve-a-sole-trader) | Retrieve a Sole Trader customer by their ID |
+| [POST /customers/v2/customers/{customerId}/current-addresses](../embedded-banking/sole-traders-v2#update-a-sole-traders-current-addresses) | Update a Sole Trader customer's current address |
+| [PUT /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}](../embedded-banking/sole-traders-v2#update-a-sole-traders-id-document) | Update a Sole Trader customer's ID document |
+| [DELETE /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}](../embedded-banking/sole-traders-v2#delete-a-sole-traders-id-document) | Delete a Sole Trader customer's ID document |
+| [PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/sole-traders-v2#add-a-tax-residency-to-a-sole-trader) | Add a tax residency to a Sole Trader customer |
+| [DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/sole-traders-v2#delete-a-sole-traders-tax-residency) | Remove a Sole Trader customer's tax residency |
+| [POST /customers/v2/customers/{customerId}/related-parties](../embedded-banking/sole-traders-v2#relate-a-sole-trader-and-another-customer) | Relate a Sole Trader to another customer |
+| [GET /customers/v2/customers/{customerId}/related-parties](../embedded-banking/sole-traders-v2#get-all-relations-of-a-sole-trader-customer) | Retrieve all current relations of a Sole Trader customer |
+| [DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}](../embedded-banking/sole-traders-v2#delete-a-relation-between-two-customers) | Remove a relation between a Sole Trader customer and another customer |
+| [POST /customers/v2/legal-entities](../embedded-banking/legal-entities-v2#create-a-legal-entity-customer) | Create a new Legal Entity customer |
+| [GET /customers/v2/customers/{customerId}](../embedded-banking/legal-entities-v2#retrieve-a-legal-entity-customer) | Retrieve a Legal Entity customer by ID |
+| [PATCH /customers/v2/legal-entities/{customerId}](../embedded-banking/legal-entities-v2#update-a-legal-entity-customer) | Update an existing Legal Entity customer |
+| [POST /customers/v2/customers/{customerId}/current-addresses](../embedded-banking/legal-entities-v2#update-a-legal-entitys-current-address) | Update a Legal Entity customer's current address |
+| [PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/legal-entities-v2#add-a-tax-residency-to-a-legal-entity-customer) | Add a new tax residency to a Legal Entity customer |
+| [DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/legal-entities-v2#delete-a-legal-entitys-tax-residency) | Delete a Legal Entity customer's tax residency |
+| [POST /customers/v2/customers/{customerId}/related-parties](../embedded-banking/legal-entities-v2#relate-a-legal-entity-and-another-customer) | Add a new relation between a Legal Entity customer and another customer |
+| [GET /customers/v2/customers/{customerId}/related-parties](../embedded-banking/legal-entities-v2#get-all-relations-of-a-legal-entity) | Retrieve all current relations to a Legal Entity customer |
+| [DELETE /customers/v2/customers/{customerId}/related-parties/{relatedCustomerId}/{relatedPartyType}](../embedded-banking/legal-entities-v2#delete-a-relation-between-two-customers) | Remove a relation between a Legal Entity customer and another customer |
+| [POST /customers/v2/non-account-holder/directors](../embedded-banking/legal-entities-v2#create-a-company-director) | Create a new company director for a Legal Entity customer |
+| [GET /customers/v2/customers/{customerId}](../embedded-banking/legal-entities-v2#retrieve-a-company-director) | Retrieve a company director |
+| [PATCH /customers/v2/non-account-holder/directors/{customerId}](../embedded-banking/legal-entities-v2#update-a-company-director) | Update a company director |
+| [POST /customers/v2/non-account-holder/ubos](../embedded-banking/legal-entities-v2#create-a-ubo) | Create a new Ultimate Beneficial Owner of a Legal Entity |
+| [GET /customers/v2/customers/{customerId}](../embedded-banking/legal-entities-v2#retrieve-a-ubo) | Retrieve an Ultimate Beneficial Owner |
+| [PATCH /customers/v2/non-account-holder/ubos/{customerId}](../embedded-banking/legal-entities-v2#update-a-ubo) | Update an existing Ultimate Beneficial Owner of a Legal Entity |
+| [POST /customers/v2/non-account-holder/controlling-persons](../embedded-banking/legal-entities-v2#create-a-controlling-person) | Create a controlling person for a Legal Entity customer |
+| [GET /customers/v2/customers/{customerId}](../embedded-banking/legal-entities-v2#retrieve-a-controlling-person) | Retrieve a controlling person for a Legal Entity customer |
+| [PATCH /customers/v2/non-account-holder/controlling-persons/{customerId}](../embedded-banking/legal-entities-v2#update-a-controlling-person) | Update the details of a controlling person for a Legal Entity customer |
+| [POST /customers/v2/customers/{customerId}/current-addresses](../embedded-banking/legal-entities-v2#update-a-controlling-persons-current-address) | Update a controlling person's current address |
+| [PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/legal-entities-v2#update-a-controlling-persons-tax-residency) | Update a controlling person's tax residency |
+| [DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}](../embedded-banking/legal-entities-v2#remove-a-controlling-persons-current-tax-residency) | Remove a controlling person's tax residency |
 | [POST /fx/v1/ExecuteQuote](../multi-currency/fx-trade-rfq#execute-a-quote) | Execute a FX trade using the rate received in a quote (must be executed within the held rate period of 45 seconds) |
 | [POST /fx/v1/order](../multi-currency/fx-trade#create-a-foreign-exchange-fx-buy-and-sell-order) | Create a Foreign Exchange (FX) trade with the buy or sell amount specified |
 | [POST /fx/v1/quote](../multi-currency/fx-trade-rfq#request-a-quote) | Request a quote up-front for a FX trade |
-| [POST /inbound-payment-simulation/chaps/v2/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
-| [POST /inbound-payment-simulation/chaps/v2/institution-payments](../gbp-payments/chaps#simulate-a-chaps-bank-to-bank-payment)| Simulate an inbound CHAPS bank-to-bank payment for testing in the sim environment|
-| [POST /inbound-payment-simulation/chaps/v2/return-payments](../gbp-payments/chaps#simulate-a-returned-chaps-payment)| Simulate a returned CHAPS payment for testing in the sim environment|
-| [POST /v2/inbound-payment-simulation/return-payment-simplified](../gbp-payments/chaps#simulate-a-chaps-return-payment-using-a-simplified-request)| Simulate a CHAPS return payment using a simplified request|
+| [POST /inbound-payment-simulation/chaps/v3/customer-payments](../gbp-payments/chaps#simulate-an-inbound-chaps-payment)| Simulate an inbound CHAPS payment for testing in the sim environment|
+| [POST /inbound-payment-simulation/chaps/v3/institution-payments](../gbp-payments/chaps#simulate-a-chaps-bank-to-bank-payment)| Simulate an inbound CHAPS bank-to-bank payment for testing in the sim environment|
+| [POST /inbound-payment-simulation/chaps/v3/return-payments](../gbp-payments/chaps#simulate-a-returned-chaps-payment)| Simulate a returned CHAPS payment for testing in the sim environment|
 | [GET /interest/v1/accounts/{accountId}/configurations](../embedded-banking/interest-configuration#get-an-accounts-interest-configurations) | Get past, current, and future interest configuration IDs for an interest-bearing account |
 | [POST /interest/v1/accounts/{accountId}/configurations](../embedded-banking/interest-configuration#update-interest-configuration) | Update the interest configuration ID of an interest-bearing account |
 | [DELETE /interest/v1/accounts/{accountId}/future-configurations](../embedded-banking/interest-configuration#delete-future-dated-interest-configurations) | Delete all future-dated interest configurations for an interest-bearing account |
@@ -107,6 +142,7 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [POST /v1/mccy/payments](../multi-currency/multi-currency-payments#initiate-a-payment) | Initiate a multi-currency payment |
 | [DELETE /v1/mccy/payments/{batchId}](../multi-currency/multi-currency-payments#cancel-batch-payments) | Cancel a batch of multi-currency payments with a matching batch ID |
 | [DELETE /v1/mccy/payments/{batchId}/{endToEndId}](../multi-currency/multi-currency-payments#cancel-a-single-payment) | Cancel a single multi-currency payment within a batch, with a matching batch ID and end-to-end ID |
+| [POST /payments/cross-border/v2/payments](../multi-currency/sepa-credit-transfer-uk#send-an-sct-payment) | Send an SCT payment from a UK based EUR account |
 | [POST /payments/cross-border/v2/inbound/payments](../multi-currency/sepa-credit-transfer-uk#simulate-an-inbound-payment) | Simulate an inbound cross-border SCT payment |
 | [POST /mccy/v1/StatementRequests](../multi-currency/account-reporting#request-a-statement-for-all-accounts) | Request a statement for all multi-currency accounts associated with your institution (as per the specified currency) |
 | [POST /mccy/v1/StatementRequests/account/{iban}](../multi-currency/account-reporting#request-a-statement-for-an-account) | Request a statement for a specific multi-currency account associated with your institution (as per the specified currency), excluding virtual accounts |
@@ -119,15 +155,17 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /mccy/v1/VirtualAccounts/{virtualAccountId}/transactions](../multi-currency/account-reporting#get-transaction-list-for-a-virtual-account) | Get a list of transactions for a multi-currency virtual account |
 | [POST /open-banking/outbound/v1/name-verification](../gbp-payments/confirmation-of-payee#check-payee-account-name) | Confirm the exact name registered with the payee's account |
 | [POST /open-banking/outbound/v1/srd/validate](../gbp-payments/confirmation-of-payee#check-whether-a-sort-code-account-number-requires-srd) | Confirm whether a given sort code/account number combination requires Secondary Reference Data (SRD) with Confirmation of Payee (CoP) requests |
-| [POST /payments/chaps/v5/customer-payments](../gbp-payments/chaps#send-a-chaps-payment)| Initiate an outbound CHAPS payment (pacs.008)|
-| [POST /payments/chaps/v5/institution-payments](../gbp-payments/chaps#send-a-chaps-bank-to-bank-payment)| Initiate an outbound CHAPS bank-to-bank payment|
-| [POST /payments/chaps/v5/return-payments](../gbp-payments/chaps#return-a-chaps-payment)|Initiate the return of a CHAPS payment|
-| [POST /payments/cheques/v1/submit-deposit](../gbp-payments/cheques#submit-a-cheque)| Initiate a cheque deposit |
-| [POST /payments/cross-border-sterling/v3/payments](../gbp-payments/gbp-cross-border#send-a-gbp-cross-border-payment)|Initiate a cross border GBP payment|
+| [POST /payments/chaps/v6/customer-payments](../gbp-payments/chaps#send-a-chaps-payment)| Initiate an outbound CHAPS payment (pacs.008)|
+| [POST /payments/chaps/v6/institution-payments](../gbp-payments/chaps#send-a-chaps-bank-to-bank-payment)| Initiate an outbound CHAPS bank-to-bank payment|
+| [POST /payments/chaps/v6/return-payments](../gbp-payments/chaps#return-a-chaps-payment)|Initiate the return of a CHAPS payment|
+| [POST /payments/cheques/v1/submit-deposit](../gbp-payments/cheques#submit-a-cheque)| Initiate a synchronous cheque deposit |
+| [POST /payments/cheques/v1/submit-deposit-async](../gbp-payments/cheques#submit-a-cheque)| Initiate a cheque deposit |
+| [POST /payments/cross-border-sterling/v4/payments](../gbp-payments/gbp-cross-border#send-a-gbp-cross-border-payment)| Initiate a GBP cross-border payment|
 | [POST /v3/payments/fps](../gbp-payments/faster-payments#send-faster-payments) | Initiate an FTR compliant payment using the Faster Payments scheme |
 | [POST /v3/payments/fps/return](../gbp-payments/faster-payments#return-an-fps-payment) | Return a single inbound Faster Payment |
 | [POST /v2/payments/fps/singlepayment](../gbp-payments/faster-payments#send-a-faster-payment-originated-overseas) | Initiate an outbound payment originated overseas |
-| [POST /v2/savings](../embedded-banking/savings-accounts#create-a-savings-account) | Create a single or joint savings account |
+| [POST /v1/savings](../embedded-banking/savings-accounts#create-a-savings-account-endpoint) | Create a single or joint savings account (Version 1) |
+| [POST /v2/savings](../embedded-banking/savings-accounts#create-a-savings-account-endpoint) | Create a single or joint savings account (Version 2) |
 | [POST /v1/statementrequests](../gbp-accounts/account-reporting#request-a-statement-for-all-accounts) | Request the generation of a camt.053 statement |
 | [GET /v1/statements/{messageId}](../gbp-accounts/account-reporting#request-statement-pages) | Retrieve a specific page of a camt.053 statement |
 | [GET /v2/Transactions](../gbp-accounts/transaction-data#get-all-payments-institution) | Get a summary of all of the transactions from the institution |
@@ -135,5 +173,6 @@ The rows are ordered alphabetically based on the path, ignoring the version numb
 | [GET /v1/Transactions/{sortCode}/DirectDebit/Unpaid](../gbp-accounts/bacs-payment-data#get-all-unpaid-direct-debit-payments-institution) | Return a list of all unpaid Direct Debit Transactions for a given sort code |
 
 ### Related links
+
 You can find a list of webhooks here:
 - [Webhook lookup table](./webhook-lookup-table)
