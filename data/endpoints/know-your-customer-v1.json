@@ -172,7 +172,17 @@
           "400": {
             "description": "Bad Request",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -183,6 +193,45 @@
                 }
               }
             }
+          },
+          "499": {
+            "description": "Client Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable"
+          },
+          "405": {
+            "description": "Request method is not supported for requested resource."
+          },
+          "415": {
+            "description": "Content type is not supported by the server."
           }
         }
       }
@@ -273,16 +322,38 @@
         },
         "additionalProperties": false
       },
-      "AccountOpeningAuthorityData": {
+      "Association": {
+        "enum": [
+          "Ubo",
+          "Controller",
+          "Director",
+          "AccountOpeningAuthority",
+          "Signatory"
+        ],
+        "type": "string",
+        "description": "A role an individual holds in relation to a business."
+      },
+      "Associate": {
         "required": [
           "address",
+          "association",
           "dateOfBirth",
+          "email",
           "name",
           "nationality",
-          "taxResidency"
+          "uniqueExternalReference"
         ],
         "type": "object",
+        "description": "An individual associated with a business, such as a director, UBO, controller, signatory, or account opening authority. One individual may hold multiple roles.",
         "properties": {
+          "association": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Association"
+            },
+            "description": "The role(s) this individual holds in relation to the business. An individual can hold more than one role, for example both 'Director' and 'Signatory'."
+          },
           "name": {
             "$ref": "#/components/schemas/LegalEntityPersonName"
           },
@@ -293,13 +364,70 @@
             "description": "This person's date of birth, formatted yyyy-MM-dd."
           },
           "nationality": {
-            "$ref": "#/components/schemas/CountryCode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CountryCode"
+              }
+            ],
+            "description": "The associate's nationality. Must not be 'USA'."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "description": "This person's email address.",
+            "example": "my.email@example.com"
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true,
+            "description": "This person's mobile number.",
+            "example": "01234567891"
           },
           "address": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalEntityAddress"
+              }
+            ],
+            "description": "The associate's address. The countryCode must be 'GBR'."
+          },
+          "uniqueExternalReference": {
+            "maxLength": 64,
+            "minLength": 10,
+            "pattern": "^(?=\\S+$)(?=.*[a-zA-Z0-9]).+$",
+            "type": "string",
+            "description": "A unique reference for this individual, used to identify them across requests. Must not contain whitespace."
           },
           "taxResidency": {
-            "$ref": "#/components/schemas/CountryCode"
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country this associate resides in for tax purposes. Required if this associate's association includes 'Controller'."
+          },
+          "uboType": {
+            "$ref": "#/components/schemas/UboType",
+            "description": "Whether this UBO is a natural person or a non-natural entity. Required if this associate's association includes 'Ubo'."
+          },
+          "ownershipPercentage": {
+            "maximum": 100,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "The ownership percentage this associate has of the company. Required if this associate's association includes 'Ubo'.",
+            "example": 100
+          },
+          "tax": {
+            "$ref": "#/components/schemas/ControllerTaxInfo",
+            "description": "Required if this associate's association includes 'Controller'."
+          },
+          "nationalInsuranceNumber": {
+            "maxLength": 10,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "nullable": true,
+            "description": "This person's National Insurance (NI) number. Required if this associate's association includes 'Controller'.",
+            "example": "PD224466D"
           }
         },
         "additionalProperties": false
@@ -512,50 +640,50 @@
         },
         "additionalProperties": { }
       },
-      "DirectorData": {
-        "required": [
-          "address",
-          "dateOfBirth",
-          "name",
-          "nationality"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "$ref": "#/components/schemas/LegalEntityPersonName"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "description": "This person's date of birth, formatted yyyy-MM-dd.",
-            "example": "1995-05-26"
-          },
-          "nationality": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "address": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
-          }
-        },
-        "additionalProperties": false
-      },
       "LegalEntityAddress": {
         "required": [
-          "buildingNameNumber",
           "city",
           "countryCode",
           "postalCode",
           "streetName"
         ],
+        "anyOf": [
+          {
+            "required": [
+              "buildingName"
+            ]
+          },
+          {
+            "required": [
+              "buildingNumber"
+            ]
+          }
+        ],
         "type": "object",
         "properties": {
-          "buildingNameNumber": {
+          "buildingName": {
             "maxLength": 255,
-            "minLength": 1,
             "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
             "type": "string",
-            "example": "255",
-            "description": "The name or number of the building at this address."
+            "nullable": true,
+            "example": null,
+            "description": "The building's name at this address. You must provide either this and/or a buildingNumber."
+          },
+          "buildingNumber": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "270",
+            "description": "The building's number at this address. You must provide either this and/or a buildingName."
+          },
+          "subBuilding": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "Details of the sub-building at this address, such as a suite or floor."
           },
           "streetName": {
             "maxLength": 255,
@@ -601,115 +729,33 @@
         "type": "object",
         "properties": {
           "registeredAddress": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
+            "$ref": "#/components/schemas/LegalEntityAddress",
+            "description": "The business's registered address."
           },
           "tradingAddress": {
-            "$ref": "#/components/schemas/OptionalBusinessAddress"
-          }
-        },
-        "additionalProperties": false
-      },
-      "OptionalBusinessAddress": {
-        "type": "object",
-        "properties": {
-          "buildingNameNumber": {
-            "maxLength": 255,
-            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
-            "type": "string",
-            "nullable": true,
-            "example": "255",
-            "description": "The name or number of the building at this address."
-          },
-          "streetName": {
-            "maxLength": 255,
-            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
-            "type": "string",
-            "nullable": true,
-            "example": "Long Road",
-            "description": "The name of the street this address is on."
-          },
-          "city": {
-            "maxLength": 255,
-            "pattern": "^[a-zA-Z\\-'. ]+$",
-            "type": "string",
-            "nullable": true,
-            "example": "Manchester",
-            "description": "The city of this address."
-          },
-          "county": {
-            "maxLength": 255,
-            "pattern": "^[a-zA-Z'. ]+$",
-            "type": "string",
-            "nullable": true,
-            "example": "Greater Manchester",
-            "description": "The county of this address."
-          },
-          "postalCode": {
-            "maxLength": 8,
-            "minLength": 2,
-            "type": "string",
-            "nullable": true,
-            "example": "M1 1AF",
-            "description": "The postcode of this address."
-          },
-          "countryCode": {
-            "$ref": "#/components/schemas/CountryCode"
+            "$ref": "#/components/schemas/LegalEntityAddress",
+            "description": "The business's trading address, if different from its registered address."
           }
         },
         "additionalProperties": false
       },
       "LegalEntityCheckRequest": {
         "required": [
-          "businessData",
-          "controllerData",
-          "directorData",
-          "uboData"
+          "business",
+          "individuals"
         ],
         "type": "object",
         "properties": {
-          "businessData": {
+          "business": {
             "$ref": "#/components/schemas/LegalEntityData"
           },
-          "uboData": {
-            "maxItems": 10,
+          "individuals": {
             "minItems": 1,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UboData"
+              "$ref": "#/components/schemas/Associate"
             },
-            "description": "The Ultimate Owning Beneficiaries (UBOs) of a company are the natural or non-natural persons with ownership in the company. They may hold ownership either directly or indirectly through a parent entity."
-          },
-          "controllerData": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ControllerData"
-            },
-            "description": "A person who exercises control over a business. Either by the appointment, or influence over the appointment of, the majority of the business' board of directors (or equivalent management body). Or, a person with responsibility for the day to day operation of the business."
-          },
-          "directorData": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DirectorData"
-            },
-            "description": "The registered directors of this business."
-          },
-          "accountOpeningAuthorityData": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AccountOpeningAuthorityData"
-            },
-            "description": "An individual authorised to create, close, or modify this business' account.",
-            "nullable": true
-          },
-          "signatoryData": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SignatoryData"
-            },
-            "description": "A signatory is an individual authorised to instruct the movement of funds, assets, or approve account openings.",
-            "nullable": true
+            "description": "The individuals associated with this business, such as its directors, UBOs, controllers, signatories, and account opening authorities. One individual may hold multiple roles."
           }
         },
         "additionalProperties": false
@@ -722,65 +768,6 @@
             "format": "uuid",
             "description": "The unique identifier for this business' KYB check.",
             "example": "47ca0728-7db3-577f-94f2-80668239f430"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ControllerData": {
-        "required": [
-          "address",
-          "dateOfBirth",
-          "email",
-          "name",
-          "nationalInsuranceNumber",
-          "nationality",
-          "tax",
-          "taxResidency"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "$ref": "#/components/schemas/LegalEntityPersonName"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "description": "This person's date of birth, formatted yyyy-MM-dd.",
-            "example": "1974-04-22"
-          },
-          "nationality": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email",
-            "description": "This person's email address.",
-            "example": "my.email@example.com"
-          },
-          "mobile": {
-            "pattern": "^\\+?\\d+$",
-            "type": "string",
-            "nullable": true,
-            "description": "This person's mobile number.",
-            "example": "01234567891"
-          },
-          "address": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
-          },
-          "taxResidency": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "tax": {
-            "$ref": "#/components/schemas/ControllerTaxInfo"
-          },
-          "nationalInsuranceNumber": {
-            "maxLength": 10,
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9]+$",
-            "type": "string",
-            "description": "This person's National Insurance (NI) number.",
-            "example": "PD224466D"
           }
         },
         "additionalProperties": false
@@ -808,6 +795,9 @@
           "companyRegistrationNumber",
           "countryOfOperations",
           "incorporationDate",
+          "notProhibitedIndustry",
+          "numberOfEmployees",
+          "organisationalLayers",
           "sicCode",
           "sourceOfFunds",
           "tax"
@@ -816,7 +806,11 @@
         "description": "The details of this business, including their address, tax information, and registration details.",
         "properties": {
           "businessType": {
-            "$ref": "#/components/schemas/LegalEntityType"
+            "minLength": 1,
+            "enum": ["Ltd"],
+            "type": "string",
+            "description": "The business' type. Currently only 'Ltd' is supported.",
+            "example": "Ltd"
           },
           "businessName": {
             "$ref": "#/components/schemas/LegalEntityName"
@@ -849,7 +843,7 @@
           },
           "annualRevenue": {
             "maximum": 99999999999.99,
-            "minimum": 0.01,
+            "minimum": 1,
             "type": "number",
             "format": "double",
             "example": 1000000.12,
@@ -866,37 +860,37 @@
           },
           "tax": {
             "$ref": "#/components/schemas/LegalEntityTaxInfo"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SignatoryData": {
-        "required": [
-          "address",
-          "dateOfBirth",
-          "name",
-          "nationality",
-          "taxResidency"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "$ref": "#/components/schemas/LegalEntityPersonName"
           },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "description": "This person's date of birth, formatted yyyy-MM-dd.",
-            "example": "1988-05-25"
+          "notProhibitedIndustry": {
+            "type": "boolean",
+            "description": "Whether this business does not operate in a prohibited industry.",
+            "example": true
           },
-          "nationality": {
-            "$ref": "#/components/schemas/CountryCode"
+          "numberOfEmployees": {
+            "maximum": 9999,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of employees at this business.",
+            "example": 25
           },
-          "address": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
+          "organisationalLayers": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of organisational layers between this business and its ultimate beneficial owners.",
+            "example": 1
           },
-          "taxResidency": {
-            "$ref": "#/components/schemas/CountryCode"
+          "noTradingName": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Set to true if this business has no trading name distinct from its registered name."
+          },
+          "noTradingAddress": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Set to true if this business has no trading address distinct from its registered address."
           }
         },
         "additionalProperties": false
@@ -997,76 +991,6 @@
             "type": "string",
             "example": "GB123456789",
             "description": "This business' VAT registration number."
-          },
-          "taxResidency": {
-            "$ref": "#/components/schemas/CountryCode"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LegalEntityType": {
-        "enum": [
-          "SoleTrader",
-          "GenPartnership",
-          "LtdPartnership",
-          "Ltd"
-        ],
-        "type": "string",
-        "description": "The business' type.",
-        "example": "Ltd"
-      },
-      "UboData": {
-        "required": [
-          "address",
-          "dateOfBirth",
-          "email",
-          "name",
-          "nationality",
-          "ownershipPercentage",
-          "taxResidency",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/UboType"
-          },
-          "ownershipPercentage": {
-            "maximum": 100,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double",
-            "example": 100,
-            "description": "The ownership percentage this UBO has of the company. Expressed as a percentage to two decimal places."
-          },
-          "name": {
-            "$ref": "#/components/schemas/LegalEntityPersonName"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date",
-            "description": "This person's date of birth, formatted yyyy-MM-dd.",
-            "example": "1966-05-29"
-          },
-          "nationality": {
-            "$ref": "#/components/schemas/CountryCode"
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email",
-            "example": "my.examplemail@domain.com",
-            "description": "This person's email address."
-          },
-          "mobile": {
-            "pattern": "^\\+?\\d+$",
-            "type": "string",
-            "nullable": true,
-            "example": "+441234567890",
-            "description": "This person's mobile number. May include the country code."
-          },
-          "address": {
-            "$ref": "#/components/schemas/LegalEntityAddress"
           },
           "taxResidency": {
             "$ref": "#/components/schemas/CountryCode"
