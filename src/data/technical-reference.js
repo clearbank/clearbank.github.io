@@ -989,6 +989,39 @@ const technicalReferenceTerms = [
   editorialReview: true,
 },
 
+{
+    id: 'iso-17442',
+    term: 'ISO 17442',
+    acronym: '',
+    aliases: [
+      'iso17442',
+      'iso 17442',
+    ],
+    category: 'message-standards',
+    regions: ['uk'],
+    definition:
+      'ISO 17442 is an international standard for structured financial messaging.',
+    externalLinks: [
+      {
+        title: 'ISO 17442 official website',
+        url:
+          'https://www.iso.org/standard/78829.html',
+      }
+    ],
+    seoTitle:
+      'What is ISO 17442?',
+    seoDescription:
+      'Learn what ISO 17442 is and how it is used in financial messaging.',
+    relatedTerms: [
+      'pacs-004',
+      'pacs-008',
+      'pacs-009',
+      'unique-end-to-end-transaction-reference',
+    ],
+    relatedGuides: [],
+    editorialReview: true,
+  },
+
 ];
 
 export default technicalReferenceTerms;

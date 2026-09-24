@@ -21,7 +21,7 @@ ClearBank calculates interest accruals on savings account deposits based on pre-
 
 Interest accruals are posted for you as regular payments to your customers' savings accounts. To learn more about interest configurations, refer to [Interest configuration](./interest-configuration).
 
-If you're interested in using savings accounts, please contact your Client Director.
+If you're interested in using savings accounts, contact your Client Director.
 
 ClearBank supports the following savings account types:
 
@@ -31,7 +31,7 @@ ClearBank supports the following savings account types:
 - **Under-16 (U16) savings accounts** – held in the name of a parent or guardian; no child customer record is required.
 
 <Callout colour="blue">
-  <strong>Note:</strong> Deposits held in savings accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+  <strong>Note:</strong> Deposits held in savings accounts may be eligible for [FSCS protection](/uk/docs/api/glossary#financial-services-compensation-scheme). FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
 ### Savings account types
@@ -48,7 +48,7 @@ To create a joint savings account, include multiple customer IDs in the `custome
 
 Savings accounts for customers aged 16–17 are created using the standard `POST /v2/savings` endpoint. The `productId` provided in the request identifies the account as a Junior savings account.
 
-To create a product identification for this account type, please speak to your Client Director.
+To create a product identification for this account type, speak to your Client Director.
 
 #### Under-16 (U16)
 
@@ -56,7 +56,7 @@ Under-16 savings accounts are created using the standard `POST /v2/savings` endp
 
 No customer record or customer ID is required for the child.
 
-To create a product identification for this account type, please speak to your Client Director.
+To create a product identification for this account type, speak to your Client Director.
 
 <br/>
 
@@ -73,7 +73,7 @@ To create a product identification for this account type, please speak to your C
 
 ### Steps to create a savings account
 
-Savings accounts have several interdependencies. When creating a savings account, follow the below steps to ensure you cover them all:
+Savings accounts have several interdependencies. When creating a savings account, follow these steps to ensure you cover them all:
 
 1. Check you've created the **retail** or **business customer** this new savings account will belong to. To create a retail customer, refer to the [Create a retail customer](./retail-customers#create-a-retail-customer) endpoint.
 2. Confirm which **interest configuration** should apply to the account (`interestConfigurationId`).  
@@ -82,7 +82,7 @@ Savings accounts have several interdependencies. When creating a savings account
 4. Specify a **nominated account** to fund or defund the savings account using the [POST /v1/accounts/{accountId}/related-accounts](#add-a-nominated-account) endpoint.  
   **Note:** A <strong>nominated account</strong> is the account that accrued interest, if any, will be transferred into upon closure of the savings account. Name matching between savings and nominated accounts is your responsibility.
 
-Once you've opened a savings account, you can deposit and withdraw payments via Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
+Once you've opened a savings account, you can deposit and withdraw payments using Faster Payments or CHAPS. Savings accounts cannot send or receive Bacs payments.
 
 <Callout colour="blue">
 Always take note of the X-Request-Id when requesting creation of an account. In the event you receive a 500 response, you can resubmit your request using the same X-Request-Id to prevent accidental duplication of the account.
@@ -117,7 +117,7 @@ Both single and joint savings accounts can be created using the [POST /v2/saving
 
 #### Example payload: four customers
 
-While joint accounts will typically have two customers, we can support any number of customers where there is a valid use case. Please contact your Client Director before attempting to create a joint account with more than two customers.
+While joint accounts will typically have two customers, we can support any number of customers where there is a valid use case. Contact your Client Director before attempting to create a joint account with more than two customers.
 
 ```json
 {
@@ -247,7 +247,7 @@ The second legacy method uses just `nominated-account` endpoints:
 
 Guidance on configuring interest payments can be found on [Interest configuration](./interest-configuration).
 
-When an interest payment is made to a savings account, you'll be notified via the [Interest Paid webhook](#interest-paid-webhook).
+When an interest payment is made to a savings account, you'll be notified by the [Interest Paid webhook](#interest-paid-webhook).
 
 <WebhookPlaceholder render='interest-paid-webhook-v1' />
 

@@ -18,18 +18,18 @@ import ExternalLink from 'src/components/external-link';
 - <strong>POST /payments/chaps/v5/return-payments</strong><br />
 - <strong>POST /payments/chaps/v5/institution-payments</strong><br /></p>
 
-<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Version 6 of these endpoints is now available. If you have any questions, reach out to your Client Director.</p> <p>For further information, refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
-ClearBank accounts support inbound and outbound CHAPS payments. As CHAPS is the UK’s high value payment scheme, there is no amount limit associated with inbound or outbound CHAPS payments.
+The [Clearing House Automated Payment System (CHAPS)](/uk/docs/api/glossary#chaps) is the UK's high-value payment system. ClearBank accounts support inbound and outbound CHAPS payments, without an associated amount limit.
 
 You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (excluding UK public holidays).
 
 - CHAPS payments can be sent using the [POST /payments/chaps/v6/customer-payments](#send-a-chaps-payment) endpoint.
-- Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
+- Settlement details are provided to you through the [Transaction Settled](#transaction-settled-webhook) webhook. 
 - If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v6/return-payments](#return-a-chaps-payment) endpoint.
 
 <Callout colour="blue">
-  It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
+  It is important to verify your firewall settings so that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
 </Callout>
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
@@ -85,19 +85,19 @@ Here is an example hybrid address:
 ```
 
 ### Version 6 mandatory fields
-In line with the Bank of England's ISO 20022 data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
+In line with the Bank of England's [ISO 20022](/uk/docs/api/technical-reference#iso-20022) data enhancement requirements, you will be required to provide additional details on the debtor and creditor such as the Legal Entity Identifier (LEI), Purpose Code and Category Purpose Code.
 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: [UK recommended Purpose Code PDF](https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf)  
 
 #### Legal Entity Identifier (LEI)
-The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
+The [LEI](/uk/docs/api/glossary#legal-entity-identifier) is a 20-character, alpha-numeric code based on the [ISO 17442]() standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for [pacs.008](/uk/docs/api/technical-reference#pacs-008) where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
 The Purpose Code captures the nature of the payment and should be transported end to end. The Purpose Code is 4 characters used to abbreviate the purpose, for example, IVPT - Invoice Payment.
 
 The Category Purpose Code is used to identify the broader nature of the payment and is used by agents. There are fewer Category Purpose Codes as this is providing a higher level understanding. In total there are 127 Purpose Codes and 28 Category Purpose Codes.
 
-To help make sense of the various codes, they have been broken down into eight categories in the following table. The categories have been created by ClearBank to support our clients in finding the appropriate codes for their use case when making GBP Cross-Border payments.
+To help make sense of the various codes, they have been broken down into eight categories in the following table. The categories have been created by ClearBank to support our clients in finding the appropriate codes for their use case when making GBP [Cross-Border payments](/uk/docs/api/glossary#cross-border-payment).
 
 <Callout colour="blue">
 ClearBank are mandated to prioritise identifying which payments are linked to Property – therefore if you are looking to complete a property-related payment, ensure that you make use of these Purpose Codes in your payment instruction.
@@ -160,7 +160,7 @@ If you are a Reserve Account Holder (RAH) and use BERTI to set up future-dated o
   
 If no time is specified, the payment defaults to when the Bank of England system opens. After an industry release, this may be before 06:00. In alignment with Bank of England rules, CHAPS BAU (Business as Usual) traffic must not be sent before 06:00.
 
-**Please note:** This only applies to payments initiated by you in the Bank of England system and sent to your ClearBank account (defunding scenario). There is no impact to outbound CHAPS pacs.009 payments sent from ClearBank.
+**Note:** This only applies to payments initiated by you in the Bank of England system and sent to your ClearBank account (defunding scenario). There is no impact to outbound CHAPS pacs.009 payments sent from ClearBank.
 
 
 <EndpointBlock
@@ -266,19 +266,19 @@ The availability of the <strong>POST /payments/chaps/v6/institution-payments</st
 - <strong>POST /v2/inbound-payment-simulation/return-payment-simplified</strong><br />
 - <strong>POST /inbound-payment-simulation/chaps/v2/institution-payments</strong><br /></p>
 
-<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Please reach out to your Client Director with any questions.</p>
+<p>These endpoints will remain available for use until <strong>13 November 2026</strong>. Reach out to your Client Director with any questions.</p>
 
 <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 These endpoints can be used to simulate payments. You can also use them for automated testing.
 
-To support Bank of England changes effective 13 November 2026, version 3 of the simulator endpoints for inbound CHAPS payments is now available. Version 3 removes support for unstructured address types, as well as other Bank of England mandated changes. This aligns with international SWIFT standards.
+To support Bank of England changes effective 13 November 2026, version 3 of the simulator endpoints for inbound CHAPS payments is now available. Version 3 removes support for unstructured address types, as well as other Bank of England mandated changes. This aligns with international [SWIFT](/uk/docs/api/glossary#swift) standards.
 
 <Callout colour="blue">
-    Outbound CHAPS payments sent via ClearBank already use structured address formatting. No changes are required to your outbound integration.
+    Outbound CHAPS payments sent through ClearBank already use structured address formatting. No changes are required to your outbound integration.
 </Callout>
 
-Please update your test integration to ensure continued compatibility with the hybrid address format.
+Update your test integration to ensure continued compatibility with the hybrid address format.
 
 - Simulate an inbound CHAPS payment (pacs.008) through the [POST /inbound-payment-simulation/chaps/v3/customer-payments](#simulate-an-inbound-chaps-payment) endpoint.
 - Simulate a returned CHAPS payment (pacs.004) through the [POST /inbound-payment-simulation/chaps/v3/return-payments](#simulate-a-returned-chaps-payment) endpoint.
@@ -565,7 +565,7 @@ The following table details the CHAPS return reason codes used to populate the `
 | CUST       | RequestedByCustomer                      | Cancellation requested by the Debtor.                                                                      |
 | DNOR       | DebtorBankIsNotRegistered                | Debtor bank is not registered under this BIC in the CSM.                                                   |
 | DS28       | ReturnForTechnicalReason                 | Return following technical problems resulting in erroneous transaction.                                   |
-| DT01       | InvalidDate                              | Invalid date (e.g., wrong settlement date).                                                                |
+| DT01       | InvalidDate                              | Invalid date (for example, wrong settlement date).                                                                |
 | DT02       | ChequeExpired                            | Cheque has been issued but not deposited and is considered expired.                                       |
 | ED01       | CorrespondentBankNotPossible             | Correspondent bank not possible.                                                                          |
 | ED03       | BalanceInfoRequest                       | Balance of payments complementary info is requested.                                                       |
@@ -580,7 +580,7 @@ The following table details the CHAPS return reason codes used to populate the `
 | FOCR       | FollowingCancellationRequest             | Return following a cancellation request.                                                                   |
 | FR01       | Fraud                                    | Returned as a result of fraud.                                                                            |
 | FRTR       | FinalResponseMandateCancelled            | Final response/tracking is recalled as mandate is cancelled.                                              |
-| G004       | CreditPendingFunds                       | In a FIToFI Customer Credit Transfer: Credit to the creditor’s account is pending, status Originator is waiting for funds provided via a cover. Update will follow from the Status Originator. |
+| G004       | CreditPendingFunds                       | In a FIToFI Customer Credit Transfer: Credit to the creditor’s account is pending, status Originator is waiting for funds provided by a cover. Update will follow from the Status Originator. |
 | MD01       | NoMandate                                | No Mandate.                                                                                                |
 | MD02       | MissingMandatoryInformationInMandate     | Mandate related information data required by the scheme is missing.                                       |
 | MD05       | CollectionNotDue                         | Creditor or creditor's agent should not have collected the direct debit.                                  |
@@ -618,7 +618,7 @@ The following table details the CHAPS return reason codes used to populate the `
 | SL14       | MaximumDirectDebitTransactionAmountExceeded | Due to Maximum allowed Direct Debit Transaction amount service offered by the Debtor Agent.             |
 | SP01       | PaymentStopped                           | Payment is stopped by the account holder.                                                                  |
 | SP02       | PreviouslyStopped                        | Previously stopped by means of a stop payment advise.                                                      |
-| SVNR       | ServiceNotRendered                       | The card payment is returned since a cash amount rendered was not correct or goods or a service was not rendered to the customer, e.g., in an e-commerce situation.     |
+| SVNR       | ServiceNotRendered                       | The card payment is returned since a cash amount rendered was not correct or goods or a service was not rendered to the customer, for example, in an e-commerce situation.     |
 | TM01       | CutOffTime                               | Associated message was received after the agreed processing cut-off time.                                  |
 | TRAC       | RemovedFromTracking                      | Return following a direct debit being removed from the tracking process.                                   |
 | UPAY       | UnduePayment                             | Payment is not justified.                                                                                  |

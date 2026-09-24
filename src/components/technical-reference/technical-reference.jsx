@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import technicalReferenceTerms from '../../data/technical-reference';
+import { heights } from 'src/components/theme';
 
 const getDisplayName = item => {
   if (!item.acronym) {
@@ -638,14 +639,14 @@ const styles = {
     fontSize: '26px',
     fontWeight: '600',
     lineHeight: '1.3',
-    scrollMarginTop: '32px',
+    scrollMarginTop: heights.header,
   },
 
   entry: {
     paddingTop: '24px',
     paddingBottom: '24px',
     borderBottom: '1px solid #d8d8d8',
-    scrollMarginTop: '32px',
+    scrollMarginTop: heights.header,
   },
 
   termHeading: {

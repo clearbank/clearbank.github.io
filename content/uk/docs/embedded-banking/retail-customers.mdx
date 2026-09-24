@@ -14,13 +14,13 @@ import ExternalLink from 'src/components/external-link';
 
 <Callout colour="green">
 <h2>Retail customers V2 is coming soon</h2>
-<p>All information in this section describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+<p>All information in this section describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to help you in integrate with the ClearBank API in the UK simulation environment.</p>
 </Callout>
 
-**Retail customers** are individual consumers of financial services in a personal capacity. You can manage your retail customer data with ClearBank directly as an embedded banking partner. Creating a retail customer is necessary before you can create a bank account for them.
+[**Retail customers**](/uk/docs/api/glossary#retail-customer) are individual consumers of financial services in a personal capacity. You can manage your retail customer data with ClearBank directly as an embedded banking partner. Creating a retail customer is necessary before you can create a bank account for them.
 
 <Callout colour="blue">
-  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, please refer to our <a href="/uk/docs/embedded-banking/know-your-customer">Know Your Customer</a> page.
+  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, refer to our <a href="/uk/docs/embedded-banking/know-your-customer">Know Your Customer</a> page.
 </Callout>
 
 Retail customers V1 documentation can be found at [the bottom of this page](#retail-customers-v-1).
@@ -37,11 +37,11 @@ Retail customers are compatible with several account types:
 
 #### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
 
-When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are as follows:
 * `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
-* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+* `pep` - If your checks identify the customer as a [Politically Exposed Person (PEP)](/uk/docs/api/glossary#politically-exposed-person), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a [Relative or Close Associate (RCA)](/uk/docs/api/glossary#relative-or-close-associate) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a [Customer Risk Assessment](/uk/docs/api/glossary#customer-risk-assessment) rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
 
 If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/retail/{customerId}**](#update-a-retail-customer) endpoint.
 
@@ -103,7 +103,7 @@ It is not currently possible to delete a previous address.
 
 You can optionally provide identity document information for your retail customers. For example, you can provide a customer's passport number `idNumber` and its date of expiry `idExpiryDate` in the `identityDocuments` array in the [**POST /customers/v2/retail**](#create-a-retail-customer) endpoint.
 
-If you provide customer identity information, you must always include its `idCountryOfIssue`, `idType`, `idNumber`, and `idExpiryDate`. The combination of `idCountryOfIssue` and `idType` uniquely identifies a customer's identity documents in our APIs. You can therefore only provide one `idCountryOfIssue` and `idType` combination per customer.
+If you provide customer identity information, you must always include its `idCountryOfIssue`, `idType`, `idNumber`, and `idExpiryDate`. The combination of `idCountryOfIssue` and `idType` uniquely identifies a customer's identity documents in the ClearBank APIs. You can therefore only provide one `idCountryOfIssue` and `idType` combination per customer.
 
 To update or delete an existing customer's identity information, use the [**PUT /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#update-a-retail-customers-id-document) or [**DELETE /customers/v2/customers/{customerId}/identity-documents/{idCountryOfIssue}-{idType}**](#delete-a-retail-customers-id-document) endpoint accordingly.
 
@@ -137,7 +137,7 @@ When you create a retail customer, you must specify at least one tax residency f
 
 US citizens are generally considered to be US tax residents regardless of where they live.
 
-To change a customer's tax residency from one country to another, follow the below steps:
+To change a customer's tax residency from one country to another, follow these steps:
 1. Add the new tax residency first. You can do this using the [**PUT /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#update-a-retail-customers-tax-residency) endpoint.
 2. Delete the old tax residency. You can do this using the [**DELETE /customers/v2/customers/{customerId}/tax-residencies/{countryOfTaxResidence}**](#delete-a-customers-tax-residency) endpoint.
 
@@ -214,13 +214,13 @@ To remove a relation between two parties, you can use the [**DELETE /customers/v
 
 ## Retail customers V1
 
-FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-protected deposit is a physical account held with ClearBank and is only available to our embedded banking customers for the purpose of sending and/or receiving payments. The balance of an FSCS-protected deposit is held by ClearBank and can be viewed via the ClearBank Portal and the API. Additionally, FSCS-protected deposits are reconciled for you by ClearBank.
+FSCS-protected deposits are a part of our embedded banking proposition. An FSCS-protected deposit is a physical account held with ClearBank and is only available to our embedded banking customers for the purpose of sending and/or receiving payments. The balance of an FSCS-protected deposit is held by ClearBank and can be viewed in the ClearBank Portal and the API. Additionally, FSCS-protected deposits are reconciled for you by ClearBank.
 
 To close an embedded banking account, call the [PATCH /v1/accounts/{accountId}](#amend-or-update-an-embedded-banking-account) endpoint and set the **Status** field to **Closed**.  
 Embedded banking accounts created using the [POST /v4/Accounts](#create-an-embedded-banking-account) endpoint cannot be reopened once they've been closed.
 
 <Callout colour="blue">
-  <strong>Note:</strong> Deposits held in retail current accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+  <strong>Note:</strong> Deposits held in retail current accounts may be eligible for [FSCS protection](/uk/docs/api/glossary#financial-services-compensation-scheme). FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
 <EndpointBlock

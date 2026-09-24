@@ -10,38 +10,42 @@ import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 
+import Callout from "src/components/callout";
+
 ## Bacs
 
-Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**. Bacs does not operate on weekends or bank holidays.
+[Bankers' Automated Clearing Services (Bacs)](/uk/docs/api/glossary#bacs) is a payment system used to process transactions between accounts, which operates on a three working-day cycle. A file of payments is sent to Bacs on the Input day (day 1). ClearBank receives details of payments to be made on the Processing day (day 2). Payments are finally applied to accounts on the entry day (day 3). 
+
+<Callout colour="blue">Bacs does <strong>not</strong> operate on weekends or bank holidays.</Callout>
 
 ![Image showing 3-day Bacs payment cycle](/assets/images/diagrams/uk/bacs/BacsOverview-Days.svg "Bacs payment cycle")
 
-As inbound Bacs payments can either be credit or debit payments, the successful payment scenario can result in money moving either to or from the end-customer's account.
-When a payment is successfully applied to an account, this message flow occurs:
+Inbound Bacs payments can either be credit or debit payments, so the successful payment scenario can result in money moving either to or from the end-customer's account.
+When a payment is successfully applied to an account, this message flow takes place:
 
 ![Image showing a successful Bacs payment](/assets/images/diagrams/uk/bacs/BacsOverview-PaymentSuccess.svg "Successful Bacs payment")
 
-If you subscribe to the [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) and [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) webhooks, then you can use the information to notify the account owner of a pending payment scheduled to occur on day 3. You can use the Bacs transaction ID to associate the webhooks that describe each payment. Note that credit payments can be recalled up to 4pm on the processing day by the originator; in this case you will be notified by a [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook) and the credit will not appear in the account.
+If you subscribe to the [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) and [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) webhooks, you can use the information to notify the account owner of a pending payment scheduled to occur on day 3. You can use the Bacs transaction ID to associate the webhooks that describe each payment. Note that credit payments can be recalled up to 4pm on the processing day by the originator; in this case you will be notified by a [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook) and the credit will not appear in the account.
 
 Whether a payment is successfully applied to the end-customer's account is determined like this:
 
 ![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-DecisionTree.svg "Inbound Bacs decision tree")
 
-If the payment cannot be applied to the account, ClearBank will automatically raise an ARUCS (Automated Return of Unapplied Credits Service) item  or an ARUDD (Automated Return of Unpaid Direct Debit) item. You will be notified with a [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) webhook. Note that if a Direct Debit is paid from a virtual account, it is your responsibility to ensure that the account has sufficient funds. If it does not, use the returns endpoints below.
+If the payment cannot be applied to the account, ClearBank will automatically raise an[ ARUCS (Automated Return of Unapplied Credits Service)](/uk/docs/api/glossary#arucs) item  or an [ARUDD (Automated Return of Unpaid Direct Debit)](/uk/docs/api/glossary#arudd) item. You will be notified with a [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) webhook. Note that if a Direct Debit is paid from a virtual account, it is your responsibility to ensure that the account has sufficient funds. If it does not, use the following returns endpoints.
 
 ## Returning a Bacs payment
 
-You can choose to return a payment that has been applied. Returns should be initiated straight away, but can be initiated until 15:30 (UTC) the working day after settlement.
+You can choose to return a payment that has been applied. Returns should be initiated straight away, but can be initiated until 15:30 (UTC) the working day after [settlement](/uk/docs/api/glossary#settlement).
 
-**To return a Direct Credit** use the endpoints below and specify the reason for return using a [Direct Credit reason code](#arucs-direct-credit-reason-codes). ClearBank will notify you with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (Day 3 or 4).  The funds will be transferred to your Bacs suspense account on the same day and returned on Day 5 or 6. The message flow is shown here:
+To return a [Direct Credit](/uk/docs/api/glossary#bacs-direct-credit), use the following endpoints and specify the reason for return using a [Direct Credit reason code](#arucs-direct-credit-reason-codes). ClearBank will notify you with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (Day 3 or 4).  The funds will be transferred to your Bacs suspense account on the same day and returned on Day 5 or 6. The message flow is shown here:
 
 ![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDC.svg "Message flow: Return a Direct Credit")
 
-**To return a Direct Debit** use the endpoints below and specify the reason for return using a [Direct Debit reason code](#arudd-direct-debit-reason-codes). ClearBank will notify you with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (Day 3 or 4). The funds will be transferred from your Bacs suspense account to the end-customer's account on the same day and returned on Day 5 or 6. The rest of the message flow is similar to returning a Direct Credit and is shown here:
+To return a [Direct Debit](/uk/docs/api/glossary#bacs-direct-debit), use the following endpoints and specify the reason for return using a [Direct Debit reason code](#arudd-direct-debit-reason-codes). ClearBank will notify you with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (Day 3 or 4). The funds will be transferred from your Bacs suspense account to the end-customer's account on the same day and returned on Day 5 or 6. The rest of the message flow is similar to returning a Direct Credit and is shown here:
 
 ![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDD.svg "Message flow: Return a Direct Debit")
 
-Use the endpoint below to return payments from a real account. To return payments from a virtual account, use: [/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](#return-bacs-payment-virtual-account)
+Use the following endpoint to return payments from a real account. To return payments from a virtual account, use: [/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](#return-bacs-payment-virtual-account)
 
 <EndpointBlock
   type="post"
@@ -188,7 +192,7 @@ The following tables give additional detail on the meanings of the various codes
 </thead>
 <tbody>
 <tr>
-<td>0</td><td>Refer to payer</td><td>A payer’s bank is not in a position to pay the Direct Debit; (for some reason other than the exception below).
+<td>0</td><td>Refer to payer</td><td>A payer’s bank is not in a position to pay the Direct Debit; (for some reason other than the exception).
 Or, the service of a Third Party Debt Order (formerly a Garnishee Order) or Arrestment on the payer’s account, his bankruptcy, liquidation or appointment of receiver</td>
 </tr>
 <tr>

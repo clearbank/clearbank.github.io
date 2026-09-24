@@ -16,7 +16,7 @@ import ExternalLink from 'src/components/external-link';
 <p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
 - <strong>POST /payments/cross-border-sterling/v3/payments</strong><br /></p>
 
-<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
@@ -25,7 +25,7 @@ There is no limit to the amount that can be sent using this service.
 
 You can send GBP cross-border payments using the [POST /payments/cross-border-sterling/v4/payments](#send-a-gbp-cross-border-payment) endpoint. 
 
-Settlement details are provided to you via the [Transaction Settled](#transaction-settled-webhook) webhook. 
+Settlement details are provided to you by the [Transaction Settled](#transaction-settled-webhook) webhook. 
 
 <Callout colour="blue">
   It is important to verify your firewall settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field.
@@ -34,7 +34,7 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 **Things to note:**
 
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
-- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
+- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided [Business Identifier Code (BIC)](/uk/docs/api/glossary#business-identifier-code) must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
 - Review the [address guidance](#guidance-on-populating-address-information) before submitting outbound payments.
 
@@ -42,7 +42,7 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 If you receive a Transaction Rejected webhook outside of <a href="https://www.bankofengland.co.uk/payment-and-settlement/chaps">industry opening hours</a>, retry the payment during the next open window.
 </Callout>
 
-The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
+The GBP Cross-Border endpoint supports the new [ISO 20022](/uk/docs/api/technical-reference#iso-20022) payment message formats, specifically [pacs.008](/uk/docs/api/technical-reference#pacs-008).
 
 ### What's changed in version 4
 
@@ -56,8 +56,8 @@ Version 4 of the GBP Cross-Border endpoint introduces the changes required to re
 
 When sending outbound GBP Cross-Border payments, we strongly recommend that you provide as much address information as possible for both:
 
-- the **remitter** (`Debtor`)
-- the **beneficiary** (`Creditor`)
+- the [**remitter** (`Debtor`)](/uk/docs/api/glossary#debtor)
+- the [**beneficiary** (`Creditor`)](/uk/docs/api/glossary#beneficiary)
 
 Different overseas jurisdictions have different requirements for address detail. Providing full address details reduces payment delays and post-submission requests for information.
 
@@ -79,7 +79,7 @@ In line with the Bank of England's ISO 20022 data enhancement requirements, you 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.
 
 #### Legal Entity Identifier (LEI)
-The LEI is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
+The LEI is a 20-character, alpha-numeric code based on the [ISO 17442](/uk/docs/api/technical-reference#iso-17442) standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for [pacs.008](/uk/docs/api/technical-reference#pacs-008) where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
 The Purpose Code captures the nature of the payment and should be transported end to end. The Purpose Code is 4 characters used to abbreviate the purpose, for example, IVPT - Invoice Payment.
@@ -139,7 +139,7 @@ Correctly filling in this field ensures the payment reaches the intended recipie
 In a payment transaction, there are two key parties:
 
 1. **Creditor**: The person or organisation receiving the funds. This could be an individual, a business, or a financial institution (FI).
-2. **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character or 8-character **Business Identifier Code (BIC)**.
+2. **Creditor Agent**: The financial institution that holds the account into which the funds are credited. This is always a financial institution and must be identified using a valid 11-character or 8-character **BIC**.
 
 To ensure correct population of fields in pacs.008 payment messages, follow these guidelines based on the type of Creditor:
 

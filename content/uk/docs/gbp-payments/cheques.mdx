@@ -9,25 +9,26 @@ import EndpointBlock from "src/components/endpoint-block";
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
 
 ## Cheques
 
-ClearBank accounts can support cheque deposits. If you'd like access to this product, please speak to your relationship manager.
+ClearBank accounts can support [cheque](/uk/docs/api/glossary#cheque) deposits. If you'd like access to this product, speak to your relationship manager.
 
-<Callout colour="blue">This page is for new cheques customers. For cheques customers onboarded before 2026, refer to <a href="../../direct/cheque-sync">Cheque synchronous deposit</a>.
+<Callout colour="blue">This page is for <strong>new</strong> Cheques customers. For Cheques customers onboarded before 2026, refer to <a href="../../direct/cheque-sync">Cheque synchronous deposit</a>.
 </Callout>
 
 You can submit cheques using the [POST /payments/cheques/v1/submit-deposit-async](#submit-a-cheque) endpoint.
 
-The message flow for cheques submitted via the synchronous endpoint is shown here.
+The message flow for cheques submitted using the synchronous endpoint is shown here.
 
-![alt text](/assets/images/diagrams/uk/cheques/cheque_endpoint_async.svg "Message flow diagram explaining how to submit cheques via the endpoint. This is explained in the text below.")
+![alt text](/assets/images/diagrams/uk/cheques/cheque_endpoint_async.svg "Message flow diagram explaining how to submit cheques through the endpoint.")
 
 You can submit a cheque image in TIFF file format. ClearBank will return `202 Accepted` once the request is accepted.
 
 The successful or unsuccessful cheque submission is returned through the [Cheque Process Completed](#cheque-process-completed-webhook) webhook.
 
-Cheques can be submitted any time and may take up to three working days to process. If the cheque passes processing, is submitted to the ICS scheme, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
+Cheques can be submitted any time and may take up to three working days to process. If the cheque passes processing, is submitted to the <ExternalLink href="https://www.wearepay.uk/what-we-do/payment-systems/image-clearing-system/">image clearing scheme (ICS)</ExternalLink>, and approved for payment, you will receive the [Cheque Paid](#cheque-paid-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks. If the cheque cannot be processed automatically, you will receive the [Cheque Reconciled](#cheque-reconciled-webhook) and [Transaction Settled](#transaction-settled-webhook) webhooks.
 
 Scenarios where the cheque wouldn't process successfully include:
 - If the cheque is over the limits you defined during onboarding, you will receive a 400 response when you submit the cheque.
@@ -35,7 +36,7 @@ Scenarios where the cheque wouldn't process successfully include:
 - If the cheque is successfully submitted, but there is missing information, you will receive the transaction rejected report from ClearBank through our ticketing system.
 - If a decision is made by the issuing bank through ICS to not pay the cheque, you will receive the [Cheque Not Paid](#cheque-not-paid-webhook) webhook.
 
-<Callout colour="blue">Upon integrating with our cheque product, we will create a cheque suspense account for you, which is only accessible through the ClearBank Portal. You can find more information on the cheque suspense account on the Knowledge Centre.
+<Callout colour="blue">Once you've integrated with the Cheque product, ClearBank will create a cheque suspense account for you. It is only accessible through the ClearBank Portal. For further information on the cheque suspense account, go to the Knowledge Centre.
 </Callout>
 
 #### Image requirements
@@ -46,14 +47,13 @@ For cheque images to successfully validate, they must satisfy the following requ
 | Bitonal TIFF | Base64 encoded string | 200 DPI    | 90,000 characters           | 67,500 bytes        |
 <br/><br/>
 
-<Callout colour="blue">The front and back images have the same image requirements.
+<Callout colour="blue">Front and back images have the same image requirements.
 </Callout>
 
-Cheque images must be:
-- Clear
-- Uncrumpled
-- Without folded corners and have visible edges
-- Free from shadows
+Cheque images must be clear:
+- Flatten any folds, creases or crumpled areas. The cheque must be uncrumpled.
+- Ensure all edges visible and there are no folded corners.
+- Ensure the image is free from shadows.
 
 <EndpointBlock
   type="post"
