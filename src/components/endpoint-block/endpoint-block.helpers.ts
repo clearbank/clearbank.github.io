@@ -20,8 +20,19 @@ const getCardTitle = (section: SectionType, payload: any):string => {
   return section
 }
 
-const createCodeBlock = (section: SectionType, payload: any):CodeblockType => {
-  const content = sample(payload.content['application/json'].schema)
+const createCodeBlock = (section: SectionType, payload: any, source: string):CodeblockType | null => {
+  const schema = payload?.content?.['application/json']?.schema
+
+  if (!schema) {
+    const found = Object.keys(payload?.content || {}).join(', ') || 'none'
+    console.error(
+      `[endpoint-block] ${source} ${section}${section === SectionTypeEnum.RESPONSE ? ` "${payload?.description}"` : ''}: ` +
+      `no "application/json" schema to build an example from (content types found: ${found}). Check the matching file in data/endpoints/.`
+    )
+    return null
+  }
+
+  const content = sample(schema)
 
   return {
     title: getCardTitle(section, payload),
@@ -32,7 +43,7 @@ const createCodeBlock = (section: SectionType, payload: any):CodeblockType => {
   }
 }
 
-export const generateDefaultCodeblocks = (section:SectionType, content:any):CodeblockType[] => {
+export const generateDefaultCodeblocks = (section:SectionType, content:any, source = 'unknown endpoint'):CodeblockType[] => {
   if (!content) {
     return null
   }
@@ -40,17 +51,17 @@ export const generateDefaultCodeblocks = (section:SectionType, content:any):Code
   const codeblocks:CodeblockType[] = []
 
   if (section === SectionTypeEnum.REQUEST) {
-    codeblocks.push(createCodeBlock(section, content))
+    codeblocks.push(createCodeBlock(section, content, source))
   } else if (section === SectionTypeEnum.RESPONSE) {
     const responseCodes = Object.values(content)
 
     for (const response of responseCodes) {
       if (!response.hasOwnProperty('content')) continue
-      codeblocks.push(createCodeBlock(section, response))
+      codeblocks.push(createCodeBlock(section, response, source))
     }
   }
 
-  return codeblocks
+  return codeblocks.filter(Boolean)
 }
 
 export const getWebhook = (webhooks: any, fileName: string) => {

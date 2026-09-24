@@ -29,7 +29,8 @@ const renderDescription = (descriptionApi: any, descriptionProps: any) => (
 const getCodeBlocks = (
   section: SectionType,
   codeblocks: Types.Codeblock[] = [],
-  content: any
+  content?: any,
+  source?: string
 ) => {
   const customCodeblocksForSection = codeblocks.filter(
     (codeblock: Types.Codeblock) => codeblock.section === section
@@ -39,7 +40,7 @@ const getCodeBlocks = (
     return customCodeblocksForSection
   }
 
-  return Helpers.generateDefaultCodeblocks(section, content)
+  return Helpers.generateDefaultCodeblocks(section, content, source)
 }
 
 const renderVersionDropdown = (
@@ -106,13 +107,30 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
     webhooks
   } = currentEndpoint
 
+  const source = `${type.toUpperCase()} ${path} (version "${version}")`
+  const operation = APIFiles[version]?.paths?.[path]?.[type]
+
+  if (!operation) {
+    const reason = !APIFiles[version]
+      ? `no spec with info.version "${version}" in data/endpoints.json (it may have failed validation - check the gatsby terminal output)`
+      : `spec "${version}" has no "${type}" operation at path "${path}"`
+    console.error(`[endpoint-block] "${title}": ${reason}`)
+
+    return process.env.NODE_ENV === 'production' ? null : (
+      <Styles.Container mt={['40px', '40px']} {...boxProps}>
+        <Styles.Title>{title}</Styles.Title>
+        <Styles.Description>Endpoint definition not found for {source}: {reason}.</Styles.Description>
+      </Styles.Container>
+    )
+  }
+
   const {
     summary,
     description: descriptionApi,
     parameters,
     requestBody,
     responses
-  } = APIFiles[version].paths[path][type]
+  } = operation
 
   const apiURL = (
     <>
@@ -127,7 +145,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
   const relatedWebhooks = getRelatedWebhooks(webhooks)
 
   if (hasCustomContent) {
-    return children(APIFiles[version].paths[path][type])
+    return children(operation)
   }
 
   return (
@@ -166,13 +184,13 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
             path={path}
             type={type}
             apiData={APIFiles[version]}
-            codeblocks={getCodeBlocks('request', codeblocks, requestBody)}
+            codeblocks={getCodeBlocks('request', codeblocks, requestBody, source)}
           />
           <EndpointBlockRespsonse
             path={path}
             type={type}
             apiData={APIFiles[version]}
-            codeblocks={getCodeBlocks('response', codeblocks, responses)}
+            codeblocks={getCodeBlocks('response', codeblocks, responses, source)}
           />
           <EndpointBlockWebhooks webhooks={relatedWebhooks} />
         </Styles.EndpointWrapper>

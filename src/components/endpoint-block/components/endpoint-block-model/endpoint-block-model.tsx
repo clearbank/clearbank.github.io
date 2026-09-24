@@ -16,8 +16,16 @@ const getInitialProperties = (apiData: any, path: string, type: string) => {
     return [false, false]
   }
 
-  const { properties, required } =
-    requestBody.content["application/json"].schema
+  const schema = requestBody.content?.["application/json"]?.schema
+
+  if (!schema) {
+    console.error(
+      `[endpoint-block-model] ${type.toUpperCase()} ${path}: requestBody has no "application/json" schema. Check the matching file in data/endpoints/.`
+    )
+    return [false, false]
+  }
+
+  const { properties, required } = schema
 
   return [properties, required]
 }
