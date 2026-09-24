@@ -1975,6 +1975,114 @@ const glossaryTerms = [
   relatedTerms: ['know-your-customer', 'politically-exposed-person'],
 },
 
+/** Cards definitions
+{
+  id: 'bin',
+  term: 'Bank Identification Number',
+  acronym: 'BIN',
+  aliases: ['IIN', 'Issuer Identification Number'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `A Bank Identifation Number (BIN) is the first six to eight digits (TO VERIFY) of a payment card number that identifies the financial institution that issued the card. For example, 1234 5269 appears on cards issued by ClearBank.`,
+  seoTitle: 'What is a Bank Identification Number (BIN)?',
+  seoDescription:
+    'Learn what a BIN is.',
+  relatedTerms: ['', ''],
+},
+
+{
+  id: 'principal-member',
+  term: 'Principal Member',
+  acronym: '',
+  aliases: ['Scheme Member'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `A principal member, also known as the Scheme member, is a bank that holds a direct membership and contractual relationship with a card scheme, which allows them to issue cards and settle transactions.`,
+  seoTitle: 'What is a principal member?', 'What is a scheme member?',
+  seoDescription:
+    'Learn what a principal member is and how they are able to issue payment cards.',
+  relatedTerms: ['', ''],
+},
+
+{
+  id: 'issuer',
+  term: 'Issuer',
+  acronym: '',
+  aliases: [],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `The issuer is the entity that issues a payment card to the cardholder and is accountable to the card scheme for the card and its associated transactions.`,
+  seoTitle: 'What is an Issuer?',
+  seoDescription:
+    'Learn what an issuer is and its role in card payment programmes.',
+  relatedTerms: ['scheme', 'cardholder', 'processor'],
+},
+
+{
+  id: 'processor',
+  term: 'Processor',
+  acronym: '',
+  aliases: ['Card Processor'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `A processor is a specialist third party that provides the technical infrastructure required to process card transactions on behalf of an issuer, such as authorisation, tokenisation and transaction processing services.`,
+  seoTitle: 'What is a Card Processor?',
+  seoDescription:
+    'Learn what a card processor is and how it supports card transaction processing.',
+  relatedTerms: ['issuer', 'scheme', 'settlement'],
+},
+
+{
+  id: 'scheme',
+  term: 'Scheme',
+  acronym: '',
+  aliases: ['Card Scheme', 'Card Network', 'Visa', 'Mastercard'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `A scheme is a card network that establishes the rules governing how payment cards are issued, accepted and settled, while connecting issuers, acquirers and merchants to facilitate card payments globally.`,
+  seoTitle: 'What is a Card Scheme?',
+  seoDescription:
+    'Learn what a card scheme is and how card networks facilitate payment transactions.',
+  relatedTerms: ['issuer', 'processor', 'settlement'],
+},
+
+{
+  id: 'cardholder',
+  term: 'Cardholder',
+  acronym: '',
+  aliases: ['Customer'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `The cardholder is the individual or organisation that has been issued a payment card and is authorised to use it to make transactions.`,
+  seoTitle: 'What is a Cardholder?',
+  seoDescription:
+    'Learn what a cardholder is and their role in the card payment ecosystem.',
+  relatedTerms: ['issuer', 'programme', 'scheme'],
+},
+
+{
+  id: 'programme',
+  term: 'Programme',
+  acronym: '',
+  aliases: ['Card Programme'],
+  regions: ['uk'],
+  category: 'cards',
+  definition:
+    `A programme is a specific card product or proposition operated by a client under a BIN Sponsorship arrangement, including the card features, target customers and associated services.`,
+  seoTitle: 'What is a Card Programme?',
+  seoDescription:
+    'Learn what a card programme is within a BIN Sponsorship arrangement.',
+  relatedTerms: ['issuer', 'cardholder', 'bin'],
+},
+
+ */
+
 ];
 
 export default glossaryTerms;
