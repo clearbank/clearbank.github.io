@@ -339,11 +339,12 @@
         "properties": {
           "association": {
             "minItems": 1,
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Association"
             },
-            "description": "The role(s) this individual holds in relation to the business. An individual can hold more than one role, for example both 'Director' and 'Ubo'.",
+            "description": "The role(s) this individual holds in relation to the business. An individual can hold more than one role, for example both 'Director' and 'Ubo'. Must not contain duplicate values.",
             "example": ["Director", "Ubo", "Controller"]
           },
           "name": {
@@ -353,7 +354,7 @@
             "type": "string",
             "format": "date",
             "example": "1975-05-22",
-            "description": "This person's date of birth, formatted yyyy-MM-dd."
+            "description": "This person's date of birth, formatted yyyy-MM-dd. Must be in the past and no more than 150 years ago."
           },
           "nationality": {
             "allOf": [
@@ -390,16 +391,16 @@
             "minLength": 10,
             "pattern": "^(?=\\S+$)(?=.*[a-zA-Z0-9]).+$",
             "type": "string",
-            "description": "A unique reference for this individual, used to identify them across requests. Must not contain whitespace.",
+            "description": "A unique reference for this individual, used to identify them across requests. Must not contain whitespace and must contain at least one alphanumeric character. Must be unique across all individuals in the request (case-insensitive).",
             "example": "ASSOCIATE-000123"
           },
           "taxResidency": {
             "$ref": "#/components/schemas/CountryCode",
-            "description": "The country this associate resides in for tax purposes. Required if this associate's association includes 'Controller'."
+            "description": "The country this associate resides in for tax purposes. Required if this associate's association includes 'Ubo' or 'Controller'."
           },
           "uboType": {
             "$ref": "#/components/schemas/UboType",
-            "description": "Whether this UBO is a natural person or a non-natural entity. Required if this associate's association includes 'Ubo'."
+            "description": "Whether this UBO is a natural person or a non-natural entity. Required if this associate's association includes 'Ubo'; should not be provided otherwise."
           },
           "ownershipPercentage": {
             "maximum": 100,
@@ -407,19 +408,19 @@
             "type": "number",
             "format": "double",
             "nullable": true,
-            "description": "The ownership percentage this associate has of the company. Required if this associate's association includes 'Ubo'.",
+            "description": "The ownership percentage this associate has of the company. Required if this associate's association includes 'Ubo'; should not be provided otherwise.",
             "example": 100
           },
           "tax": {
             "$ref": "#/components/schemas/ControllerTaxInfo",
-            "description": "Required if this associate's association includes 'Controller'."
+            "description": "This associate's tax information. Required if this associate's association includes 'Controller'; shouldn't be provided otherwise."
           },
           "nationalInsuranceNumber": {
             "maxLength": 10,
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "string",
             "nullable": true,
-            "description": "This person's National Insurance (NI) number. Required if this associate's association includes 'Controller'.",
+            "description": "This person's National Insurance (NI) number. Required if this associate's association includes 'Controller'; shouldn't be provided otherwise.",
             "example": "PD224466D"
           }
         },
@@ -729,7 +730,7 @@
             "minLength": 2,
             "type": "string",
             "example": "M1 1AF",
-            "description": "The postcode of this address."
+            "description": "The postcode of this address. Must be a valid UK postcode when countryCode is 'GBR'."
           },
           "countryCode": {
             "$ref": "#/components/schemas/CountryCode"
@@ -745,11 +746,11 @@
         "properties": {
           "registeredAddress": {
             "$ref": "#/components/schemas/LegalEntityAddress",
-            "description": "The business's registered address."
+            "description": "The business's registered address. The countryCode must be 'GBR'."
           },
           "tradingAddress": {
             "$ref": "#/components/schemas/LegalEntityAddress",
-            "description": "The business's trading address, if different from its registered address."
+            "description": "The business's trading address, if different from its registered address. If not provided, 'noTradingAddress' must be true."
           }
         },
         "additionalProperties": false
@@ -770,7 +771,7 @@
             "items": {
               "$ref": "#/components/schemas/Associate"
             },
-            "description": "The individuals associated with this business, such as its directors, UBOs, controllers, signatories, and account opening authorities. One individual may hold multiple roles."
+            "description": "The individuals associated with this business, such as its directors, UBOs, controllers, signatories, and account opening authorities. One individual may hold multiple roles. Must include at least one 'Ubo' (maximum 10), at least one 'Controller', and at least one 'Director'. Each uniqueExternalReference must be unique across all individuals (case-insensitive)."
           }
         },
         "additionalProperties": false
@@ -837,15 +838,16 @@
             "minItems": 1,
             "type": "array",
             "items": {
+              "pattern": "^\\d{5}$",
               "type": "string"
             },
-            "description": "The Standard Industrial Classification (SIC) codes applicable to this business.",
+            "description": "The Standard Industrial Classification (SIC) codes applicable to this business. Each code must be exactly 5 digits. SIC codes from restricted industries are rejected.",
             "example": ["07100"]
           },
           "incorporationDate": {
             "type": "string",
             "format": "date",
-            "description": "The date this business was incorporated, formatted yyyy-MM-dd.",
+            "description": "The date this business was incorporated, formatted yyyy-MM-dd. Must be in the past and no more than 200 years ago.",
             "example": "2005-05-22"
           },
           "companyRegistrationNumber": {
@@ -878,7 +880,8 @@
           },
           "notProhibitedIndustry": {
             "type": "boolean",
-            "description": "Whether this business does not operate in a prohibited industry.",
+            "enum": [true],
+            "description": "Whether this business doesn't operate in a prohibited industry.",
             "example": true
           },
           "numberOfEmployees": {
@@ -900,13 +903,13 @@
           "noTradingName": {
             "type": "boolean",
             "nullable": true,
-            "description": "Set to true if this business has no trading name distinct from its registered name.",
+            "description": "Set to true if this business has no trading name distinct from its registered name. Must be true if businessName.tradingName is not provided.",
             "example": false
           },
           "noTradingAddress": {
             "type": "boolean",
             "nullable": true,
-            "description": "Set to true if this business has no trading address distinct from its registered address.",
+            "description": "Set to true if this business has no trading address distinct from its registered address. Must be true if address.tradingAddress is not provided.",
             "example": false
           }
         },
@@ -932,7 +935,7 @@
             "type": "string",
             "nullable": true,
             "example": "Your Company",
-            "description": "This business' trading name."
+            "description": "This business' trading name. If not provided, noTradingName must be true."
           }
         },
         "additionalProperties": false
@@ -1011,7 +1014,8 @@
             "description": "This business' VAT registration number."
           },
           "taxResidency": {
-            "$ref": "#/components/schemas/CountryCode"
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country this business resides in for tax purposes. Only 'GBR' is allowed."
           }
         },
         "additionalProperties": false
