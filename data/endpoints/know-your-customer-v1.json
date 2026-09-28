@@ -94,6 +94,138 @@
           }
         }
       }
+    },
+    "/customer-due-diligence/v1/legal-entity/onboard": {
+      "post": {
+        "description": "Use this endpoint to conduct KYB checks for a new business customer and KYC checks on its key individuals. If the checks pass, the provided details are then used to create a new legal entity customer and its associated individuals.",
+        "tags": [
+          "CustomerCheck"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifer for the request; valid for 24 hours, max length 83..",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalEntityCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalEntityCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "499": {
+            "description": "Client Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable"
+          },
+          "405": {
+            "description": "Request method is not supported for requested resource."
+          },
+          "415": {
+            "description": "Content type is not supported by the server."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -181,10 +313,126 @@
         },
         "additionalProperties": false
       },
+      "Association": {
+        "enum": [
+          "Ubo",
+          "Controller",
+          "Director",
+          "AccountOpeningAuthority",
+          "Signatory"
+        ],
+        "type": "string",
+        "description": "A role an individual holds in relation to a business."
+      },
+      "Associate": {
+        "required": [
+          "address",
+          "association",
+          "dateOfBirth",
+          "email",
+          "name",
+          "nationality",
+          "uniqueExternalReference"
+        ],
+        "type": "object",
+        "description": "An individual associated with a business, such as a director, UBO, controller, signatory, or account opening authority. One individual may hold multiple roles.",
+        "properties": {
+          "association": {
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Association"
+            },
+            "description": "The role(s) this individual holds in relation to the business. An individual can hold more than one role, for example both 'Director' and 'Ubo'. Must not contain duplicate values.",
+            "example": ["Director", "Ubo", "Controller"]
+          },
+          "name": {
+            "$ref": "#/components/schemas/LegalEntityPersonName"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "example": "1975-05-22",
+            "description": "This person's date of birth, formatted yyyy-MM-dd. Must be in the past and no more than 150 years ago."
+          },
+          "nationality": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CountryCode"
+              }
+            ],
+            "description": "The associate's nationality. Must not be 'USA'."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "description": "This person's email address.",
+            "example": "my.email@example.com"
+          },
+          "mobile": {
+            "pattern": "^\\+?\\d+$",
+            "type": "string",
+            "nullable": true,
+            "description": "This person's mobile number.",
+            "example": "01234567891"
+          },
+          "address": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LegalEntityAddress"
+              }
+            ],
+            "description": "The associate's address. The countryCode must be 'GBR'."
+          },
+          "uniqueExternalReference": {
+            "maxLength": 64,
+            "minLength": 10,
+            "pattern": "^(?=\\S+$)(?=.*[a-zA-Z0-9]).+$",
+            "type": "string",
+            "description": "A unique reference for this individual, used to identify them across requests. Must not contain whitespace and must contain at least one alphanumeric character. Must be unique across all individuals in the request (case-insensitive).",
+            "example": "ASSOCIATE-000123"
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country this associate resides in for tax purposes. Required if this associate's association includes 'Ubo' or 'Controller'."
+          },
+          "uboType": {
+            "$ref": "#/components/schemas/UboType",
+            "description": "Whether this UBO is a natural person or a non-natural entity. Required if this associate's association includes 'Ubo'; should not be provided otherwise."
+          },
+          "ownershipPercentage": {
+            "maximum": 100,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "The ownership percentage this associate has of the company. Required if this associate's association includes 'Ubo'; should not be provided otherwise.",
+            "example": 100
+          },
+          "tax": {
+            "$ref": "#/components/schemas/ControllerTaxInfo",
+            "description": "This associate's tax information. Required if this associate's association includes 'Controller'; shouldn't be provided otherwise."
+          },
+          "nationalInsuranceNumber": {
+            "maxLength": 10,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "nullable": true,
+            "description": "This person's National Insurance (NI) number. Required if this associate's association includes 'Controller'; shouldn't be provided otherwise.",
+            "example": "PD224466D"
+          }
+        },
+        "additionalProperties": false
+      },
       "CountryCode": {
         "format": "ISO 3166 Alpha-3 country-code",
         "type": "string",
-        "example": "GBR"
+        "example": "GBR",
+        "minLength": 3,
+        "maxLength": 3,
+        "description": "Given as an ISO 3166 Alpha-3 country-code."
       },
       "CustomerData": {
         "required": [
@@ -257,7 +505,8 @@
           "idvEmailsEnabled": {
             "type": "boolean",
             "default": true,
-            "description": "If set to false, you'll receive Additional Info Required webhooks."
+            "description": "If set to false, you'll receive Additional Info Required webhooks.",
+            "example": true
           }
         },
         "additionalProperties": false
@@ -299,28 +548,33 @@
           "type": {
             "type": "string",
             "nullable": true,
-            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced,  it provides a human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'."
+            "description": "A URI reference [RFC3986] that identifies a problem type. When dereferenced, it provides human-readable documentation for the problem type. When not present, default value is assumed to be 'about:blank'.",
+            "example": "https://httpstatuses.io/400"
           },
           "title": {
             "type": "string",
             "nullable": true,
-            "description": "A short, human-readable summary of the problem type."
+            "description": "A short, human-readable summary of the problem type.",
+            "example": "Bad Request"
           },
           "status": {
             "type": "integer",
             "format": "int32",
             "nullable": true,
-            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem."
+            "description": "The HTTP status code ([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "example": 400
           },
           "detail": {
             "type": "string",
             "nullable": true,
-            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data."
+            "description": "A human-readable explanation of what went wrong. It can include specifics about the issue, missing parameters, or invalid data.",
+            "example": "Descriptive error detail."
           },
           "instance": {
             "type": "string",
             "nullable": true,
-            "description": "A URL reference to a retrieve more information about the error, if available."
+            "description": "A URL reference to retrieve more information about the error, if available.",
+            "example": ""
           }
         },
         "additionalProperties": {}
@@ -354,23 +608,33 @@
         "properties": {
           "type": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provides human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be \"about:blank\".",
+            "example": "https://httpstatuses.io/400"
           },
           "title": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A short, human-readable summary of the problem type.",
+            "example": "Bad Request"
           },
           "status": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "description": "The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.",
+            "nullable": true,
+            "example": 400
           },
           "detail": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "example": "Descriptive error detail."
           },
           "instance": {
             "type": "string",
+            "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+            "example": "",
             "nullable": true
           },
           "errors": {
@@ -381,10 +645,389 @@
                 "type": "string"
               }
             },
+            "description": "The validation errors.",
+            "example": [
+              "'EndToEndId' must not be empty.",
+              "Amount must be greater than zero."
+            ],
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": { },
+        "description": "A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807"
+      },
+      "LegalEntityAddress": {
+        "required": [
+          "city",
+          "countryCode",
+          "postalCode",
+          "streetName"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "buildingName"
+            ]
+          },
+          {
+            "required": [
+              "buildingNumber"
+            ]
+          }
+        ],
+        "type": "object",
+        "properties": {
+          "buildingName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "The building's name at this address. You must provide either this and/or a buildingNumber."
+          },
+          "buildingNumber": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "270",
+            "description": "The building's number at this address. You must provide either this and/or a buildingName."
+          },
+          "subBuilding": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": null,
+            "description": "Details of the sub-building at this address, such as a suite or floor."
+          },
+          "streetName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9\\-',.() ]+$",
+            "type": "string",
+            "example": "Long Road",
+            "description": "The name of the street this address is on."
+          },
+          "city": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Manchester",
+            "description": "The city of this address."
+          },
+          "county": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Greater Manchester",
+            "description": "The county of this address."
+          },
+          "postalCode": {
+            "maxLength": 8,
+            "minLength": 2,
+            "type": "string",
+            "example": "M1 1AF",
+            "description": "The postcode of this address. Must be a valid UK postcode when countryCode is 'GBR'."
+          },
+          "countryCode": {
+            "$ref": "#/components/schemas/CountryCode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityAddressInfo": {
+        "required": [
+          "registeredAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "registeredAddress": {
+            "$ref": "#/components/schemas/LegalEntityAddress",
+            "description": "The business's registered address. The countryCode must be 'GBR'."
+          },
+          "tradingAddress": {
+            "$ref": "#/components/schemas/LegalEntityAddress",
+            "description": "The business's trading address, if different from its registered address. If not provided, 'noTradingAddress' must be true."
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityCheckRequest": {
+        "required": [
+          "business",
+          "individuals"
+        ],
+        "type": "object",
+        "properties": {
+          "business": {
+            "$ref": "#/components/schemas/LegalEntityData"
+          },
+          "individuals": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Associate"
+            },
+            "description": "The individuals associated with this business, such as its directors, UBOs, controllers, signatories, and account opening authorities. One individual may hold multiple roles. Must include at least one 'Ubo' (maximum 10), at least one 'Controller', and at least one 'Director'. Each uniqueExternalReference must be unique across all individuals (case-insensitive)."
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityCheckResponse": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for this business' KYB check.",
+            "example": "47ca0728-7db3-577f-94f2-80668239f430"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControllerTaxInfo": {
+        "required": [
+          "validSelfCertification"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "description": "Whether this tax controller's self certification is valid.",
+            "example": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityData": {
+        "required": [
+          "address",
+          "annualRevenue",
+          "businessName",
+          "businessType",
+          "companyRegistrationNumber",
+          "countryOfOperations",
+          "incorporationDate",
+          "notProhibitedIndustry",
+          "numberOfEmployees",
+          "organisationalLayers",
+          "sicCode",
+          "sourceOfFunds",
+          "tax"
+        ],
+        "type": "object",
+        "description": "The details of this business, including their address, tax information, and registration details.",
+        "properties": {
+          "businessType": {
+            "minLength": 1,
+            "enum": ["Ltd"],
+            "type": "string",
+            "description": "The business' type. Currently only 'Ltd' is supported.",
+            "example": "Ltd"
+          },
+          "businessName": {
+            "$ref": "#/components/schemas/LegalEntityName"
+          },
+          "address": {
+            "$ref": "#/components/schemas/LegalEntityAddressInfo"
+          },
+          "sicCode": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "pattern": "^\\d{5}$",
+              "type": "string"
+            },
+            "description": "The Standard Industrial Classification (SIC) codes applicable to this business. Each code must be exactly 5 digits. SIC codes from restricted industries are rejected.",
+            "example": ["07100"]
+          },
+          "incorporationDate": {
+            "type": "string",
+            "format": "date",
+            "description": "The date this business was incorporated, formatted yyyy-MM-dd. Must be in the past and no more than 200 years ago.",
+            "example": "2005-05-22"
+          },
+          "companyRegistrationNumber": {
+            "maxLength": 10,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "example": "55TORXBS",
+            "description": "This company's registration number."
+          },
+          "annualRevenue": {
+            "maximum": 99999999999.99,
+            "minimum": 1,
+            "type": "number",
+            "format": "double",
+            "example": 1000000.12,
+            "description": "The annual revenue of the business. If this business has not yet operated for an entire year, an estimate will suffice."
+          },
+          "sourceOfFunds": {
+            "minLength": 1,
+            "type": "string",
+            "description": "A freetext description of the source of this business' funds.",
+            "example": "Director's loan"
+          },
+          "countryOfOperations": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "tax": {
+            "$ref": "#/components/schemas/LegalEntityTaxInfo"
+          },
+          "notProhibitedIndustry": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "Whether this business doesn't operate in a prohibited industry.",
+            "example": true
+          },
+          "numberOfEmployees": {
+            "maximum": 9999,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of employees at this business.",
+            "example": 25
+          },
+          "organisationalLayers": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of organisational layers between this business and its ultimate beneficial owners.",
+            "example": 1
+          },
+          "noTradingName": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Set to true if this business has no trading name distinct from its registered name. Must be true if businessName.tradingName is not provided.",
+            "example": false
+          },
+          "noTradingAddress": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Set to true if this business has no trading address distinct from its registered address. Must be true if address.tradingAddress is not provided.",
+            "example": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityName": {
+        "required": [
+          "registeredName"
+        ],
+        "type": "object",
+        "properties": {
+          "registeredName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Your Company Ltd",
+            "description": "This business' registered name."
+          },
+          "tradingName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Your Company",
+            "description": "This business' trading name. If not provided, noTradingName must be true."
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityPersonName": {
+        "required": [
+          "firstName",
+          "surname"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Miles",
+            "description": "This person's first name."
+          },
+          "middleName": {
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "nullable": true,
+            "example": "Middle",
+            "description": "This person's middle name."
+          },
+          "surname": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z.'\\- ]+$",
+            "type": "string",
+            "example": "Gilligan",
+            "description": "This person's last name."
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegalEntityTaxInfo": {
+        "required": [
+          "nameOfSelfCertificationSignee",
+          "positionOfSelfCertificationSignee",
+          "taxResidency",
+          "validSelfCertification",
+          "vatRegistrationNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "validSelfCertification": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether this business' self certification is valid."
+          },
+          "nameOfSelfCertificationSignee": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "John Smith",
+            "description": "The full name of the self certification signee."
+          },
+          "positionOfSelfCertificationSignee": {
+            "maxLength": 255,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z\\-'. ]+$",
+            "type": "string",
+            "example": "Financial Executive",
+            "description": "The title of the self certification signee."
+          },
+          "vatRegistrationNumber": {
+            "maxLength": 15,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9 ]+$",
+            "type": "string",
+            "example": "GB123456789",
+            "description": "This business' VAT registration number."
+          },
+          "taxResidency": {
+            "$ref": "#/components/schemas/CountryCode",
+            "description": "The country this business resides in for tax purposes. Only 'GBR' is allowed."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UboType": {
+        "enum": [
+          "Natural",
+          "NonNatural"
+        ],
+        "type": "string",
+        "example": "Natural",
+        "description": "Used to specify whether the UBO is a natural person or a non-natural entity."
       }
     }
   }
