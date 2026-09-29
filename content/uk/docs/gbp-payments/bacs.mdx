@@ -122,13 +122,13 @@ Debits and credits are returned using the same endpoints:
 
 ### Return a Direct Credit payment
 
-Use the endpoints below and specify the reason for return using a suitable [Direct Credit reason code](#arucs-direct-credit-reason-codes). You'll be notified with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from the customer's account to your Bacs suspense account on the same day. On day 5 or 6, your Bacs suspense account is debited as the funds are returned. The message flow is shown here:
+Use the endpoints below and specify the reason for return using a suitable [Direct Credit reason code](#arucs-direct-credit-reason-codes). You'll be notified with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from the customer's account to your Bacs suspense account on the same day. On day 5 or 6, your Bacs suspense account is debited as the funds are returned.
 
 ![Message flow for returning a Bacs Direct Credit using the returns endpoint](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDC.svg "Message flow: Return a Direct Credit payment")
 
 ### Return a Direct Debit payment
 
-Use the endpoints below and specify the reason for return using a suitable [Direct Debit reason code](#arudd-direct-debit-reason-codes). You'll be notified with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from your Bacs suspense account back to the customer's account on the same day. On day 5 or 6, your Bacs suspense account is credited as the funds are recovered from the service user's bank. The message flow is shown here:
+Use the endpoints below and specify the reason for return using a suitable [Direct Debit reason code](#arudd-direct-debit-reason-codes). You'll be notified with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from your Bacs suspense account back to the customer's account on the same day. On day 5 or 6, your Bacs suspense account is credited as the funds are recovered from the service user's bank.
 
 ![Message flow for returning a Bacs Direct Debit using the returns endpoint](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDD.svg "Message flow: Return a Direct Debit payment")
 
@@ -165,13 +165,17 @@ Use the endpoints below and specify the reason for return using a suitable [Dire
 
 ## Bacs Direct Credit payment webhooks
 
-ClearBank does not sponsor Direct Credits, so there are no outbound Direct Credit payments. The webhooks relating to inbound Direct Credit transactions are not associated with an endpoint, instead they are listed here:
+The following webhooks will notify you about inbound Direct Credit transactions:
 
 - [Bacs Direct Credit Inbound Payment Created webhook](#bacs-direct-credit-inbound-payment-created-webhook)    
 - [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook)
 - [Bacs Direct Credit Inbound Payment Held webhook](#bacs-direct-credit-inbound-payment-held-webhook)
 - [Transaction Settled webhook](#transaction-settled-webhook)
 - [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) (this can occur automatically if ClearBank returns a payment, or in response to the Bacs returns endpoint)
+
+<Callout colour="blue">
+  ClearBank does not offer an outbound Direct Credit service.
+</Callout>
 
 <WebhookPlaceholder render='bacs-direct-credit-inbound-payment-created-webhook-v2' />
 <WebhookPlaceholder render='bacs-direct-credit-recalled-webhook-v1' />
