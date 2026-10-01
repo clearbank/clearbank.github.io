@@ -16,7 +16,7 @@ import ExternalLink from 'src/components/external-link';
 <p>The following endpoints were deprecated on <strong>13 May 2026</strong>:<br />
 - <strong>POST /payments/cross-border-sterling/v3/payments</strong><br /></p>
 
-<p>This endpoint will remain available for use until <strong>13 November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
+<p>This endpoint will remain available for use until <strong>end of November 2026</strong>. Version 4 of this endpoint is now available. Please reach out to your Client Director with any questions.</p> <p>You can refer to our <a href="../api/versioning">versioning policy</a> and <a href="../api/support-life-cycle">support lifecycle information</a>.</p></Callout>
 
 Cross-border payments are financial transactions where the payer and the recipient are based in separate countries. Our GBP Cross-Border payment product enables you to send sterling payments to any sterling account, in any permissible overseas jurisdiction. 
 Payments are guaranteed to settle on the same-day, as long as the instruction is received before 5pm UK time on that working day.
@@ -34,12 +34,12 @@ Settlement details are provided to you via the [Transaction Settled](#transactio
 **Things to note:**
 
 - You can initiate a payment during the sterling availability period, 08:00 to 17:00 (UK time), on business days. Payments sent before or after this window will be rejected with a 400 Bad Request response.
-- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payment-and-settlement/chaps#anchor_1672828379351). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
+- If you use **version 3** of the endpoint and choose to provide the optional Intermediary Agent field, the provided BIC must be a GB BIC belonging to a [CHAPS Direct Participant](https://www.bankofengland.co.uk/payments/chaps). Additionally, there must be a valid payment routing path from the Intermediary Agent to the Creditor Agent. If there is no valid routing path, or you provide a BIC that is not a GB BIC and a CHAPS Direct Participant, the payment will be rejected. If you're unsure, it's best to leave the Intermediary Agent field blank.
 - You can recognise a Transaction Settled webhook that describes a GBP Cross-Border payment by checking the **TransactionSource** is set to **Cross Border GBP**.
 - Review the [address guidance](#guidance-on-populating-address-information) before submitting outbound payments.
 
 <Callout colour="blue">
-If you receive a Transaction Rejected webhook outside of <a href="https://www.bankofengland.co.uk/payment-and-settlement/chaps">industry opening hours</a>, retry the payment during the next open window.
+If you receive a Transaction Rejected webhook outside of <ExternalLink href="https://www.bankofengland.co.uk/payments/chaps">industry opening hours</ExternalLink>, retry the payment during the next open window.
 </Callout>
 
 The GBP Cross-Border endpoint supports the new ISO 20022 payment message formats, specifically pacs.008.
