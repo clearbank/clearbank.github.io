@@ -236,18 +236,6 @@
           "postalCode",
           "streetName"
         ],
-        "anyOf": [
-          {
-            "required": [
-              "buildingName"
-            ]
-          },
-          {
-            "required": [
-              "buildingNumber"
-            ]
-          }
-        ],
         "type": "object",
         "properties": {
           "buildingName": {
@@ -379,11 +367,7 @@
             "example": "01234567891"
           },
           "address": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/LegalEntityAddress"
-              }
-            ],
+            "$ref": "#/components/schemas/LegalEntityAddress",
             "description": "The associate's address. The countryCode must be 'GBR'."
           },
           "uniqueExternalReference": {
@@ -810,6 +794,7 @@
           "businessType",
           "companyRegistrationNumber",
           "countryOfOperations",
+          "email",
           "incorporationDate",
           "notProhibitedIndustry",
           "numberOfEmployees",
@@ -830,6 +815,13 @@
           },
           "businessName": {
             "$ref": "#/components/schemas/LegalEntityName"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email",
+            "description": "The business's email address. Should be a valid email address.",
+            "example": "contact@yourcompany.co.uk"
           },
           "address": {
             "$ref": "#/components/schemas/LegalEntityAddressInfo"
@@ -881,7 +873,7 @@
           "notProhibitedIndustry": {
             "type": "boolean",
             "enum": [true],
-            "description": "Whether this business doesn't operate in a prohibited industry.",
+            "description": "Set to true if this business does not operate in a prohibited industry.",
             "example": true
           },
           "numberOfEmployees": {

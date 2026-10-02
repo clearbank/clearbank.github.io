@@ -22,7 +22,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 Our Know Your Business (KYB) endpoint makes it easy to meet your due diligence requirements when onboarding new Limited Companies. By sharing key company information, you can conduct Know Your Business checks on limited companies and receive the results via webhook.
 
-For convenience, we'll also use the information provided in the KYC check to register the customer as a new Limited Company (a customer of type 'Legal Entity') and its key people if the checks succeed.
+For convenience, we'll also use the information provided in the KYB check to register the customer as a new Limited Company (a customer of type 'Legal Entity') and its key people if the checks succeed.
 
 If you'd like to use this product, please contact your Client Director.
 
@@ -37,7 +37,7 @@ If you'd like to use this product, please contact your Client Director.
 
 #### Initial request
 
-Our KYB endpoint consumes business information and details of key business personnel, such as company directors, for Limited Companies. We use this information to perform KYB checks on the business and KYC checks on each key person.
+Our KYB endpoint consumes Limited Companies' business information and details of key business personnel, such as the company's controllers. We use this information to perform KYB checks on the business and Know Your Customer (KYC) checks on each key person.
 
 When you request a check using our KYB endpoint, we'll validate your request and confirm with a **202 - Accepted** response containing the `applicationId` for this KYB application.
 
@@ -71,7 +71,7 @@ The business customer will not be created, and the application will be terminate
 
 #### Message flow diagram
 
-![A message flow diagram demonstrating a KYB requiring additional information before succeeding or failing. The client requests a check using the POST /customer-due-diligence/v1/legal-entity/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete this check, and emits a Legal Entity Additional Info Required webhook containing the information required from the customer and URLs to provide it. The business customer uploads the information, which is received by ClearBank. KYB checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the checks.](/assets/images/kyb/kyb-flow.svg)
+![A message flow diagram demonstrating a KYB requiring additional information before succeeding or failing. The client requests a check using the POST /customer-due-diligence/v1/legal-entity/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete this check, and emits a Legal Entity Additional Info Required webhook containing the information required from the customer and URLs to provide it. The business customer uploads the information, which is received by ClearBank. KYB checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the checks.](/assets/images/diagrams/uk/kyb/kyb-flow.svg)
 
 <Callout colour="blue">
   <strong>Note:</strong> We will sometimes require additional information from multiple people in the same application. You should expect to receive multiple 'Pending' webhooks (Customer.LegalEntity.AdditionalInfoRequired) for each person on the same KYB application.
