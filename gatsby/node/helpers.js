@@ -2,9 +2,12 @@ const fs = require('fs')
 const fetchData = require('../../src/helpers/fetchData')
 
 function writefile (path, json, successMessage) {
-  fs.writeFile(path, JSON.stringify(json), err => {
-    if (err) throw err
-    console.log(successMessage)
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, JSON.stringify(json), err => {
+      if (err) return reject(err)
+      console.log(successMessage)
+      resolve()
+    })
   })
 }
 
