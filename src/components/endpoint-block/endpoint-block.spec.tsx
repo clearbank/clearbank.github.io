@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
+import { LocationProvider } from '@reach/router'
 import '@testing-library/jest-dom'
 import 'jest-styled-components'
 
@@ -20,7 +21,11 @@ const defaultProps: Types.EndpointProps = {
 }
 
 beforeEach(() => {
-  component = render(<Component {...defaultProps} children='children' />)
+  component = render(
+    <LocationProvider>
+      <Component {...defaultProps} children='children' />
+    </LocationProvider>
+  )
 
   fragment = component.asFragment()
   root = component.container.firstChild
