@@ -6,46 +6,135 @@ showPageMenu: true
 ---
 
 import EndpointBlock from "src/components/endpoint-block";
-import * as DD_CONSTANTS from "./managing-direct-debit-instructions.constants"
 import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
+import Callout from 'src/components/callout'
+import ExternalLink from 'src/components/external-link'
 
 ## Bacs
 
-Bacs operates on a three-day cycle. On the **input day**, a file of payments is sent to Bacs. ClearBank receives details of payments to be made on the **processing day**. Payments are applied to accounts on the **entry day**. Bacs does not operate on weekends or bank holidays.
+Bacs is the UK's high volume, low value payment system, offering two schemes: Bacs Direct Credit and Bacs Direct Debit. Bacs Direct Debit is the only UK payment scheme that supports pull payments, whereby a service user (the organisation collecting the payment) can collect funds from a payer's account under a Direct Debit Instruction.
+
+### Bacs three-day cycle
+
+Bacs operates on a three-day cycle: the **input day**, the **processing day**, and the **entry day**.
+
+* **Day 1 - Input day**: a service user (the organisation originating the payments) submits a file of credit and/or debit payments to Bacs.
+* **Day 2 - Processing day**: Bacs processes the file, and ClearBank receives details of the credits and debits due to be applied to your accounts.
+* **Day 3 - Entry day**: payments are applied to the destination accounts. Settlement typically happens around 09:30 UK time on this day for direct Bacs participants.
 
 ![Image showing 3-day Bacs payment cycle](/assets/images/diagrams/uk/bacs/BacsOverview-Days.svg "Bacs payment cycle")
 
-As inbound Bacs payments can either be credit or debit payments, the successful payment scenario can result in money moving either to or from the end-customer's account.
-When a payment is successfully applied to an account, this message flow occurs:
+A full list of direct Bacs participants can be found on <ExternalLink href="https://www.wearepay.uk/what-we-do/payment-systems/bacs-payment-system/payment-system-participant-list/">pay.uk's website</ExternalLink>.
 
-![Image showing a successful Bacs payment](/assets/images/diagrams/uk/bacs/BacsOverview-PaymentSuccess.svg "Successful Bacs payment")
+#### Non-working days
 
-If you subscribe to the [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) and [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) webhooks, then you can use the information to notify the account owner of a pending payment scheduled to occur on day 3. You can use the Bacs transaction ID to associate the webhooks that describe each payment. Note that credit payments can be recalled up to 4pm on the processing day by the originator; in this case you will be notified by a [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook) and the credit will not appear in the account.
+Bacs does not operate on weekends or UK bank holidays. Only working days count towards the three-day cycle, so a file submitted on a Friday is processed on Monday and applied on Tuesday – five calendar days in total. You should allow for this when setting customer expectations around payment timings.
 
-Whether a payment is successfully applied to the end-customer's account is determined like this:
+#### Notifying you of upcoming debits
 
-![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-DecisionTree.svg "Inbound Bacs decision tree")
+When we receive a debit for one of your accounts on day 2 of the Bacs cycle, we'll notify you via the [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) webhook, and display the pending payment in the ClearBank Portal. This does not guarantee the payment will be taken, as our validation has not yet been applied. However, you may notify the account holder of the pending debit and, if necessary, ensure there are sufficient funds before the payment is applied on entry day.
 
-If the payment cannot be applied to the account, ClearBank will automatically raise an ARUCS (Automated Return of Unapplied Credits Service) item  or an ARUDD (Automated Return of Unpaid Direct Debit) item. You will be notified with a [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) webhook. Note that if a Direct Debit is paid from a virtual account, it is your responsibility to ensure that the account has sufficient funds. If it does not, use the returns endpoints below.
+#### Notifying you of upcoming credits
+
+When we receive a credit for one of your accounts on day 2 of the Bacs cycle, we'll notify you via the [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) webhook, and display the pending payment in the ClearBank Portal.
+
+Bacs Direct Credits can be recalled by the originator until 4pm UK time on day 2 of the Bacs cycle. If this happens, we'll notify you via the [Bacs Direct Credit Recalled](#bacs-direct-credit-recalled-webhook) webhook, and the credit will not be applied to the destination account. Instead, on day 3 the credit is applied to your Bacs suspense account, and you'll receive a [Transaction Settled](#transaction-settled-webhook) webhook for the suspense account. The payment is then returned from the Bacs suspense account, and you'll receive a further Transaction Settled webhook. We recommend waiting until after 4pm UK time on day 2 before telling your customers about upcoming credits.
+
+Before a Direct Credit is settled, it undergoes regulatory screening. If it is flagged for review, you'll receive the [Bacs Direct Credit Inbound Payment Held](#bacs-direct-credit-inbound-payment-held-webhook) webhook, normally followed by a [Transaction Settled](#transaction-settled-webhook) webhook when the payment is released.
+
+<Callout colour="blue">
+  <strong>Note:</strong> You may receive Inbound Payment Created webhooks for accounts that are closed or do not exist, or for Direct Debits whose Direct Debit Instruction has been cancelled. These payments should fail validation on entry day, and so you should not expect them to be applied to the account.
+</Callout>
+
+#### Payment validation and notification
+
+On day 3 of the Bacs cycle, credit and debit payments are validated. For both, we check that the destination account exists and is not locked for that transaction type. For Direct Debits, we also check that a Direct Debit Instruction is in place and that there is a sufficient balance.
+
+If validation is successful, the payments are applied to your accounts and you'll receive a [Transaction Settled](#transaction-settled-webhook) webhook for each payment.
+
+Credits are applied first, from 01:00 UTC, followed by debits, from 03:00 UTC. Applying credits first helps ensure funds are available for any debits applied afterwards.
+
+<Callout colour="blue">
+  <strong>Note:</strong> When a Direct Debit is applied to a virtual account, ClearBank checks the balance of the underlying real account only. It is your responsibility to ensure the virtual account itself has sufficient funds. If it does not, you should return the debit using the <a href="#return-a-bacs-payment-for-a-virtual-account">virtual account returns endpoint</a>.
+</Callout>
+
+If validation fails, the payment is not applied to the destination account. Instead, it is posted to your Bacs suspense account and ClearBank automatically creates a return through ARUCS (for credits) or ARUDD (for debits). You'll receive:
+
+* a [Transaction Settled](#transaction-settled-webhook) webhook for the Bacs suspense account, and
+* a [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) or [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) webhook.
+
+Returned transactions go through their own three-day Bacs cycle. Once complete, the returned funds are debited from or credited to your Bacs suspense account, and you'll receive a further [Transaction Settled](#transaction-settled-webhook) webhook.
+
+You can also return a payment yourself after it has been applied. See [Returning a Bacs payment](#returning-a-bacs-payment).
+
+### Webhook sequence summary
+
+The table below summarises which webhooks to expect, and when, for inbound Bacs payments to your accounts. Use the `BacsTransactionId` to correlate the webhooks for the same payment.
+
+| When | Event | Direct Credit webhook | Direct Debit webhook |
+| ---- | ----- | --------------------- | -------------------- |
+| Day 2 | Payment received from Bacs | [Bacs Direct Credit Inbound Payment Created](#bacs-direct-credit-inbound-payment-created-webhook) | [Bacs Direct Debit Inbound Payment Created](#bacs-direct-debit-inbound-payment-created-webhook) |
+| Day 2 (until 4pm UK time) | Credit recalled by the originator | [Bacs Direct Credit Recalled](#bacs-direct-credit-recalled-webhook) | N/A |
+| Day 3 | Recalled credit applied to your Bacs suspense account, then returned | [Transaction Settled](#transaction-settled-webhook) (suspense account), followed by a further Transaction Settled webhook when returned | N/A |
+| Before settlement | Credit held for regulatory screening | [Bacs Direct Credit Inbound Payment Held](#bacs-direct-credit-inbound-payment-held-webhook) | N/A |
+| Day 3 | Payment applied to the account | [Transaction Settled](#transaction-settled-webhook) | [Transaction Settled](#transaction-settled-webhook) |
+| Day 3 | Payment failed validation and is returned automatically | [Transaction Settled](#transaction-settled-webhook) (suspense account) and [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) | [Transaction Settled](#transaction-settled-webhook) (suspense account) and [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) |
+| Day 3 or 4 | You return the payment using the returns endpoints | [Transaction Settled](#transaction-settled-webhook) (debit to the customer's account), Transaction Settled (credit to your Bacs suspense account), and [Bacs Direct Credit Return Created](#bacs-direct-credit-return-created-webhook) | [Transaction Settled](#transaction-settled-webhook) (credit to the customer's account), Transaction Settled (Bacs suspense account), and [Bacs Direct Debit Return Created](#bacs-direct-debit-return-created-webhook) |
+| Day 5 or 6 | Your return settles | [Transaction Settled](#transaction-settled-webhook) (debit to your Bacs suspense account) | [Transaction Settled](#transaction-settled-webhook) (credit to your Bacs suspense account) |
+
+### Handling Direct Debit refunds and indemnity claims
+
+If your customer notifies you they've been debited in error, they may be entitled to a refund under the <ExternalLink href="https://www.directdebit.co.uk/direct-debit-guarantee/">Direct Debit Guarantee</ExternalLink>.
+
+Your institution should verify the reason for the payment error with your customer. If your institution agrees an error has taken place (more specifically, a deviation from the Bacs Direct Debit Rules), you should refund the customer from your own funds.
+
+If your institution believes the error was made by the billing company (also called Service User - the entity that requested the debit) you can contact ClearBank to raise an indemnity claim against the service user. If ClearBank agrees with your analysis, we'll raise a claim to the Bacs Direct Debit scheme on your behalf, which will return the funds to the debtor's account 14 business days later.
+
+The billing company may challenge your indemnity claim. If so, you'll need to examine the merits of the claim and decide whether to accept or reject their challenge. If you accept (or do nothing) then the challenge will succeed and the claim will be cancelled. It is then for you to decide if the error was yours, or if there was no error (in this case, if your customer has made an error then there is no error for you to resolve). You would then have the right to reverse the refund you gave to your customer.
+
+### Message flows
+
+#### Successful inbound payment
+
+The following diagram shows the message flow when an inbound Bacs Direct Credit or Direct Debit is successfully applied to an account:
+
+![Message flow for a successful inbound Bacs payment, showing the Inbound Payment Created webhook on day 2 and the Transaction Settled webhook on day 3](/assets/images/diagrams/uk/bacs/BacsOverview-PaymentSuccess.svg "Successful Bacs payment")
+
+<Callout colour="blue">
+  You can use the <span style="font-family: monospace;">BacsTransactionId</span> identifier to correlate the webhooks associated with the same payment.
+</Callout>
+
+Whether an inbound payment is applied to the destination account is determined as follows:
+
+![Decision tree for inbound Bacs Direct Credit and Direct Debit payments, showing the recall check on day 2 and the account, Direct Debit Instruction and balance checks on day 3](/assets/images/diagrams/uk/bacs/BacsOverview-DecisionTree.svg "Inbound Bacs decision tree")
+
+If the payment fails validation, we'll automatically raise an ARUCS (Automated Return of Unapplied Credits Service) or ARUDD (Automated Return of Unpaid Direct Debits) item with the Bacs scheme.
 
 ## Returning a Bacs payment
 
-You can choose to return a payment that has been applied. Returns should be initiated straight away, but can be initiated until 15:30 (UTC) the working day after settlement.
+You can return a Direct Credit or Direct Debit after it has been applied. Returns should be initiated as soon as possible, and no later than 15:30 UTC on the working day after settlement.
 
-**To return a Direct Credit** use the endpoints below and specify the reason for return using a [Direct Credit reason code](#arucs-direct-credit-reason-codes). ClearBank will notify you with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (Day 3 or 4).  The funds will be transferred to your Bacs suspense account on the same day and returned on Day 5 or 6. The message flow is shown here:
+Debits and credits are returned using the same endpoints:
 
-![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDC.svg "Message flow: Return a Direct Credit")
+* For virtual accounts: [/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](#return-a-bacs-payment-for-a-virtual-account)
+* For real accounts: [/v1/Accounts/{accountId}/Transactions/Returns](#return-a-bacs-payment-for-a-real-account)
 
-**To return a Direct Debit** use the endpoints below and specify the reason for return using a [Direct Debit reason code](#arudd-direct-debit-reason-codes). ClearBank will notify you with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (Day 3 or 4). The funds will be transferred from your Bacs suspense account to the end-customer's account on the same day and returned on Day 5 or 6. The rest of the message flow is similar to returning a Direct Credit and is shown here:
+### Return a Direct Credit payment
 
-![Image showing a Inbound Bacs decision tree](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDD.svg "Message flow: Return a Direct Debit")
+Use the endpoints below and specify the reason for return using a suitable [Direct Credit reason code](#arucs-direct-credit-reason-codes). You'll be notified with a [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from the customer's account to your Bacs suspense account on the same day. On day 5 or 6, your Bacs suspense account is debited as the funds are returned.
 
-Use the endpoint below to return payments from a real account. To return payments from a virtual account, use: [/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns](#return-bacs-payment-virtual-account)
+![Message flow for returning a Bacs Direct Credit using the returns endpoint](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDC.svg "Message flow: Return a Direct Credit payment")
+
+### Return a Direct Debit payment
+
+Use the endpoints below and specify the reason for return using a suitable [Direct Debit reason code](#arudd-direct-debit-reason-codes). You'll be notified with a [Bacs Direct Debit Return Created webhook](#bacs-direct-debit-return-created-webhook) on the day the return is created (day 3 or 4 of the original Bacs cycle). The funds will be moved from your Bacs suspense account back to the customer's account on the same day. On day 5 or 6, your Bacs suspense account is credited as the funds are recovered from the service user's bank.
+
+![Message flow for returning a Bacs Direct Debit using the returns endpoint](/assets/images/diagrams/uk/bacs/BacsOverview-ReturnsDD.svg "Message flow: Return a Direct Debit payment")
 
 <EndpointBlock
   type="post"
-  title="Return Bacs payment (real account)"
+  title="Return a Bacs payment for a real account"
   endpoints={[
     {
       path: "/v1/Accounts/{accountId}/Transactions/Returns",
@@ -60,7 +149,7 @@ Use the endpoint below to return payments from a real account. To return payment
 />
 <EndpointBlock
   type="post"
-  title="Return Bacs payment (virtual account)"
+  title="Return a Bacs payment for a virtual account"
   endpoints={[
     {
       path:"/v1/Accounts/{accountId}/Virtual/{virtualAccountId}/Transactions/Returns",
@@ -76,13 +165,17 @@ Use the endpoint below to return payments from a real account. To return payment
 
 ## Bacs Direct Credit payment webhooks
 
-ClearBank does not sponsor Direct Credits, so there are no outbound Direct Credit payments. The webhooks relating to inbound Direct Credit transactions are not associated with an endpoint, instead they are listed here:
+The following webhooks will notify you about inbound Direct Credit transactions:
 
 - [Bacs Direct Credit Inbound Payment Created webhook](#bacs-direct-credit-inbound-payment-created-webhook)    
 - [Bacs Direct Credit Recalled webhook](#bacs-direct-credit-recalled-webhook)
 - [Bacs Direct Credit Inbound Payment Held webhook](#bacs-direct-credit-inbound-payment-held-webhook)
 - [Transaction Settled webhook](#transaction-settled-webhook)
 - [Bacs Direct Credit Return Created webhook](#bacs-direct-credit-return-created-webhook) (this can occur automatically if ClearBank returns a payment, or in response to the Bacs returns endpoint)
+
+<Callout colour="blue">
+  ClearBank does not offer an outbound Direct Credit service.
+</Callout>
 
 <WebhookPlaceholder render='bacs-direct-credit-inbound-payment-created-webhook-v2' />
 <WebhookPlaceholder render='bacs-direct-credit-recalled-webhook-v1' />
