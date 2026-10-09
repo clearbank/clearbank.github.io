@@ -1,0 +1,89 @@
+---
+title: "Cross-border wire payments"
+metaTitle: "Cross-border wire payments"
+order: 1
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+import Callout from "src/components/callout";
+
+## Cross-border wire payments
+
+<Callout colour="green">
+<h3>Cross-border wire payments are coming soon</h3>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our EU simulation environment.</p>
+</Callout>
+
+Our cross-border wire payments service lets you send same-currency international payments from your ClearBank EU accounts. For example, you can send a USD payment from a USD account to a USD account held at another bank.
+
+Cross-border wire payments are submitted in a single step. There's no FX quote to accept and no currency conversion.
+
+If you're interested in using this service, please reach out to your Client Director.
+
+## Availability and hours
+
+### Available currencies
+
+<!-- TBC: supported currencies, minimum/maximum amounts and cutoff times. -->
+
+### Hours and holidays
+
+<!-- TBC: operating hours and holiday calendar. -->
+
+## Payment process
+
+### Send a payment
+
+Payment requests should be submitted to our **POST /payments/cross-border/v2/payments** endpoint. We'll respond to a valid request with a **202 - Accepted** response, confirming that the payment has been accepted and queued for processing. No further action is needed from you to send the payment.
+
+The **202 - Accepted** response contains a `paymentIdentification` array that maps the payment you submitted to the `paymentId` we've generated for it. You should retain the `paymentId` for your records.
+
+### Request structure
+
+The request body follows the ISO 20022 PAIN.001 message structure:
+
+* `PaymentRequest` - the top-level message, identified by a `messageIdentification`.
+  * `paymentInformation[]` - details that apply to the debit side of the payment, such as the `debtor`, `debtorAccount` and `requestedExecutionDate`.
+    * `creditTransferTransactionInformation[]` - details of the individual payment, such as the `instructedAmount`, `creditor`, `creditorAccount` and `creditorAgent`.
+
+Each request can contain one payment instruction, with one transaction.
+
+### Duplicate payments
+
+If you submit a payment with the same identifier as an existing payment, we'll respond with a **409 - Conflict** error.
+
+### Receive payment updates
+
+<!-- TBC: webhooks for cross-border wire payments. -->
+
+### Message flow diagram
+
+<Callout colour="blue">
+  A message flow diagram for cross-border wire payments is coming soon.
+</Callout>
+
+## Endpoints
+
+<EndpointBlock
+  type="post"
+  title="Send a cross-border wire payment"
+  endpoints={[
+    {
+      path: "/payments/cross-border/v2/payments",
+      version: "2.0_WIRE",
+      webhooks: [
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<!-- TBC: add WebhookPlaceholder components once the webhooks are confirmed. -->
+
+## Simulating cross-border wire payments
+
+<!-- TBC: simulation environment behaviour. -->
