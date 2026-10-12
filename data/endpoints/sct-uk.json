@@ -366,14 +366,24 @@
           "creditor": {
             "type": "object",
             "description": "The creditor's organisation or private details.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/creditorPartyIdentification"
+            "properties": {
+              "name": {
+                "maxLength": 140,
+                "minLength": 1,
+                "type": "string",
+                "example": "Beam Corporation",
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
               },
-              {
-                "$ref": "#/components/schemas/privatePartyIdentification"
+              "postalAddress": {
+                "$ref": "#/components/schemas/PostalAddress"
+              },
+              "organisationIdentification": {
+                "$ref": "#/components/schemas/OrganisationIdentification"
+              },
+              "privateIdentification": {
+                "$ref": "#/components/schemas/PersonIdentification"
               }
-            ]
+            }
           },
           "creditorAccount": {
             "$ref": "#/components/schemas/CreditorAccount"
@@ -537,19 +547,7 @@
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "maxLength": 140,
-            "minLength": 1,
-            "type": "string",
-            "example": "Pinto Corporation",
-            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
-          },
-          "organisationIdentification": {
-            "$ref": "#/components/schemas/OrganisationIdentification"
-          }
+
         },
         "additionalProperties": false
       },
@@ -571,29 +569,6 @@
           },
           "organisationIdentification": {
             "$ref": "#/components/schemas/OrganisationIdentification"
-          }
-        },
-        "additionalProperties": false
-      },
-      "privatePartyIdentification": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 140,
-            "minLength": 1,
-            "type": "string",
-            "example": "Elias Pinto",
-            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
-            "description": "The name of this person or organisation."
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
-          },
-          "privateIdentification": {
-            "$ref": "#/components/schemas/PersonIdentification"
           }
         },
         "additionalProperties": false
@@ -697,15 +672,25 @@
           },
           "debtor": {
             "type": "object",
-            "description": "The debtor's organisation or private details.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/debtorPartyIdentification"
+            "description": "The debtor's organisation or private details. You may provide either the organisationIdentification or the privateIdentification.",
+            "properties": {
+              "name": {
+                "maxLength": 140,
+                "minLength": 1,
+                "type": "string",
+                "example": "Pinto Corporation",
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
               },
-              {
-                "$ref": "#/components/schemas/privatePartyIdentification"
+              "postalAddress": {
+                "$ref": "#/components/schemas/PostalAddress"
+              },
+              "organisationIdentification": {
+                "$ref": "#/components/schemas/OrganisationIdentification"
+              },
+              "privateIdentification": {
+                "$ref": "#/components/schemas/PersonIdentification"
               }
-            ]
+            }
           },
           "debtorAccount": {
             "description": "The debtor's account details.",
