@@ -136,7 +136,7 @@ const EndpointBlockContent: React.FunctionComponent<
 
                   return (output + " OR " + requirementDescription.join("") + " as shown in the groups below.")
                 },
-                " You need to include EITHER "
+                " You can include either "
               )
             : ""
 
