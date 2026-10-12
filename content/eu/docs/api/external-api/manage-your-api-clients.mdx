@@ -1,0 +1,179 @@
+---
+title: "Manage your API clients"
+order: 7
+metaTitle: "Manage your API clients"
+metaDescription: "Use the Client Management API to register and manage additional API clients, along with their secrets, signature keys, and scopes."
+showPageMenu: true
+---
+
+import Callout from "src/components/callout";
+import EndpointBlock from "src/components/endpoint-block";
+
+## Overview
+
+When you were onboarded, you registered your first API client in the ClearBank Portal (see [Register your API client](./register-your-api-client)). That first client serves as your main, authoritative client.
+
+Once this client is set up, you can use the Client Management API to programmatically register and manage additional API clients - along with their secrets, signature keys, and permitted scopes - without returning to the Portal. This is useful if you need to manage many API clients at scale.
+
+Every request to this API must be authenticated with an access token over mTLS and carry a valid digital signature, exactly like any other External Gateway API call. See [Using the API](./using-the-api) for access tokens and headers, and [Sign your requests](./sign-your-requests) for signing. Each operation also requires your client to have the appropriate permissions.
+
+## Manage clients
+
+Register new clients, retrieve their details, and remove clients you no longer need.
+
+<EndpointBlock
+  type="post"
+  title="Register a client"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get a client"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get all clients"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a client"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+## Manage client secrets
+
+<Callout colour="blue">
+  <strong>Note:</strong> The exact meaning and format of a client secret is still being confirmed. For now, refer to the request and response schemas in the endpoints below for the available fields.
+</Callout>
+
+<EndpointBlock
+  type="post"
+  title="Register a client secret"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/secrets",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get client secrets"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/secrets",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a client secret"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/secrets/{SecretId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+## Manage client signature keys
+
+Signature keys are the public keys we use to verify the digital signatures on requests from a client. See [Sign your requests](./sign-your-requests) for how signatures are created and verified.
+
+<EndpointBlock
+  type="post"
+  title="Register a client signature key"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/signature-keys/{KeyId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get a client signature key"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/signature-keys/{KeyId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="get"
+  title="Get client signature keys"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/signature-keys",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="delete"
+  title="Delete a client signature key"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/signature-keys/{KeyId}",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+## Manage client scopes
+
+Scopes control which operations a client's access tokens can be granted. Retrieve a client's scopes, or update which scopes are enabled.
+
+<EndpointBlock
+  type="get"
+  title="Get client scopes"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/scopes",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
+
+<EndpointBlock
+  type="patch"
+  title="Update a client's allowed scopes"
+  endpoints={[
+    {
+      path: "/authentication/v1/clients/{ClientId}/scopes",
+      version: "EXAPIAUTHMGMT_1.0.0"
+    }
+  ]}
+/>
