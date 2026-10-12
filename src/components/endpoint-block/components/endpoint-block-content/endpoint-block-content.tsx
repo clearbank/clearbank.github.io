@@ -134,9 +134,9 @@ const EndpointBlockContent: React.FunctionComponent<
                     return output + ", " + requirementDescription.join("")
                   }
 
-                  return (output + "; OR " + requirementDescription.join("") + " as per each field's numbered group below.")
+                  return (output + "; OR " + requirementDescription.join("") + ", per each field's group number below.")
                 },
-                " You can include either: "
+                " You can provide either: "
               )
             : ""
 
