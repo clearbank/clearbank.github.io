@@ -4,7 +4,7 @@ version: 1
 webhook: true
 ---
 
-Sent when an outbound AutoFX payment has been returned and the funds credited back to your account.
+Sent when an outbound AutoFX payment has been returned by the original payment recipient and the funds have been credited back to your account.
 
 #### Request body
 
@@ -19,29 +19,29 @@ Sent when an outbound AutoFX payment has been returned and the funds credited ba
 
 #### Payload fields
 
-| Field                    | Type   | Format | Required | Min-Max length | Pattern                                                                         | Description                                                                                                         |
-| ------------------------ | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `OriginalPaymentId`      | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier assigned by ClearBank referencing the payment instruction for the original outbound payment.    |
-| `OriginalTransactionId`  | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier assigned by ClearBank referencing the debit transaction that relates to the original outbound payment. |
-| `TransactionId`          | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier assigned by ClearBank referencing the credit transaction that relates to the returned payment.  |
-| `ReturnId`               | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier assigned by ClearBank referencing the return message.                                           |
-| `TransactionInformation` | object | -      | Yes      | -              | -                                                                               | Information concerning the original transaction, to which the return refers. See `PaymentTransaction`.              |
+| Field                    | Type   | Format | Required | Min-Max length | Pattern                                                                       | Description                                                                                                                |
+| ------------------------ | ------ | ------ | -------- | -------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `OriginalPaymentId`      | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank referencing the payment instruction for the original outbound payment.           |
+| `OriginalTransactionId`  | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank referencing the debit transaction that relates to the original outbound payment. |
+| `TransactionId`          | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank referencing the credit transaction that relates to the returned payment.         |
+| `ReturnId`               | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank referencing the return message.                                                  |
+| `TransactionInformation` | object | -      | Yes      | -              | -                                                                             | Information concerning the original transaction, to which the return refers. See `PaymentTransaction`.                     |
 
 ##### PaymentTransaction (TransactionInformation)
 
-| Field                               | Type   | Format | Required | Min-Max length | Pattern                                                                         | Description                                                                                                                                                       |
-| ----------------------------------- | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OriginalUETR`                      | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Universally unique identifier to provide the original end-to-end reference of a payment transaction.                                                              |
-| `OriginalEndToEndIdentification`    | string | -      | Yes      | 1-35           | -                                                                               | Unique identification, as assigned by the original initiating party, to unambiguously identify the original transaction.                                          |
-| `ReturnedInterbankSettlementAmount` | object | -      | Yes      | -              | -                                                                               | Amount of money to be moved between the instructing agent and the instructed agent in the returned instruction. See `ActiveOrHistoricCurrencyAndAmount`.          |
-| `ReturnReasonInformation`           | array  | -      | No       | -              | -                                                                               | Provides detailed information on the return reason. Up to 10 entries. Can be `null`. See `PaymentReturnReason`.                                                   |
+| Field                               | Type   | Format | Required | Min-Max length | Pattern                                                                       | Description                                                                                                                                              |
+| ----------------------------------- | ------ | ------ | -------- | -------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OriginalUETR`                      | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | Universally unique identifier to provide the original end-to-end reference of a payment transaction.                                                     |
+| `OriginalEndToEndIdentification`    | string | -      | Yes      | 1-35           | -                                                                             | Unique identification, as assigned by the original initiating party, to unambiguously identify the original transaction.                                 |
+| `ReturnedInterbankSettlementAmount` | object | -      | Yes      | -              | -                                                                             | Amount of money to be moved between the instructing agent and the instructed agent in the returned instruction. See `ActiveOrHistoricCurrencyAndAmount`. |
+| `ReturnReasonInformation`           | array  | -      | No       | -              | -                                                                             | Provides detailed information on the return reason. Up to 10 entries. Can be `null`. See `PaymentReturnReason`.                                          |
 
 ##### ActiveOrHistoricCurrencyAndAmount (ReturnedInterbankSettlementAmount)
 
-| Field      | Type    | Required | Constraints          | Pattern      | Description                                                                     |
-| ---------- | ------- | -------- | -------------------- | ------------ | ------------------------------------------------------------------------------- |
-| `Amount`   | decimal | Yes      | -                    | -            | Amount of money.                                                                |
-| `Currency` | string  | Yes      | Exactly 3 characters | `^[A-Z]{3}$` | The currency of money, represented as a three-letter ISO 4217 currency code.   |
+| Field      | Type    | Required | Constraints             | Pattern      | Description                                                                  |
+| ---------- | ------- | -------- | ----------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `Amount`   | decimal | Yes      | Precision of up to 0.01 | -            | The amount of money being returned.                                          |
+| `Currency` | string  | Yes      | Exactly 3 characters    | `^[A-Z]{3}$` | The currency of money, represented as a three-letter ISO 4217 currency code. |
 
 ##### PaymentReturnReason (ReturnReasonInformation)
 
@@ -49,20 +49,20 @@ Sent when an outbound AutoFX payment has been returned and the funds credited ba
 | ----------------------- | --------------- | -------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `ReasonCode`            | string          | No       | 1-4               | Specifies the reason for the return, as published in the External Reason Code Set, available at www.iso20022.org. Can be `null`.     |
 | `Originator`            | object          | No       | -                 | Party that issues the return. Can be `null`. See `PartyIdentification`.                                                              |
-| `AdditionalInformation` | array of string | No       | 1-105 (per item)  | Further details on the return reason. Up to 10 items. Can be `null`.                                                                 |
+| `AdditionalInformation` | array of string | No       | 1-105 characters  | Further details on the return reason. Up to 10 items. Can be `null`.                                                                 |
 
 ##### PartyIdentification (Originator)
 
-| Field            | Type   | Required | Min-Max length | Description                                                                      |
-| ---------------- | ------ | -------- | -------------- | -------------------------------------------------------------------------------- |
-| `Name`           | string | No       | 1-140          | Unique and unambiguous identification of a party. Can be `null`.                 |
-| `Identification` | object | No       | -              | Unique and unambiguous identification of a party. Can be `null`. See `Party`.    |
+| Field            | Type   | Required | Min-Max length | Description                                                                   |
+| ---------------- | ------ | -------- | -------------- | ----------------------------------------------------------------------------- |
+| `Name`           | string | No       | 1-140          | The name of the originating party. Can be `null`.                             |
+| `Identification` | object | No       | -              | Unique and unambiguous identification of a party. Can be `null`. See `Party`. |
 
 ##### Party (Identification)
 
-| Field                        | Type   | Required | Description                                                                                             |
-| ---------------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------- |
-| `OrganisationIdentification` | object | No       | Unique and unambiguous way to identify an organisation. Can be `null`. See `OrganisationIdentification`. |
+| Field                        | Type   | Required | Description                                                                                                |
+| ---------------------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------- |
+| `OrganisationIdentification` | object | No       | An object containing organisation identification details. Can be `null`. See `OrganisationIdentification`. |
 
 ##### OrganisationIdentification
 
