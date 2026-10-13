@@ -368,14 +368,15 @@
             "required": [
               "name"
             ],
-            "description": "The creditor's organisation or private details. You can provide either the organisationIdentification or the privateIdentification object, not both.",
+            "description": "The creditor's organisation or private individual details. You can provide either the organisationIdentification or the privateIdentification object, not both.",
             "properties": {
               "name": {
                 "maxLength": 140,
                 "minLength": 1,
                 "type": "string",
-                "example": "Beam Corporation",
-                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
+                "example": "Sea Beam Corporation",
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+                "description": "The name of the creditor."
               },
               "postalAddress": {
                 "$ref": "#/components/schemas/PostalAddress"
@@ -675,14 +676,19 @@
           },
           "debtor": {
             "type": "object",
-            "description": "The debtor's organisation or private details. You may provide either the organisationIdentification or the privateIdentification, but not both.",
+            "required": [
+              "name",
+              "postalAddress"
+            ],
+            "description": "The debtor's organisation or private individual details. You may provide either the organisationIdentification or the privateIdentification object, but not both.",
             "properties": {
               "name": {
                 "maxLength": 140,
                 "minLength": 1,
                 "type": "string",
                 "example": "Pinto Corporation",
-                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+                "description": "The name of the debtor."
               },
               "postalAddress": {
                 "$ref": "#/components/schemas/PostalAddress"
@@ -786,7 +792,7 @@
           "countryOfBirth"
         ],
         "type": "object",
-        "description": "Contains identification information for this person.",
+        "description": "Contains identification information for this person. Fields within are only required when you provide this object.",
         "properties": {
           "birthDate": {
             "minLength": 1,
