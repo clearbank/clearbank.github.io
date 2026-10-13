@@ -1,0 +1,84 @@
+---
+title: "Customer Accounts Transaction Completed webhook"
+version: 1
+webhook: true
+---
+
+Sent when an inbound or outbound transaction has completed for an account. A transaction represents a ledger update for an account, and includes the minimum data necessary to support balance reconciliation.
+
+#### Request body
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                    | Type   | Format    | Required | Min-Max length | Pattern                                                                         | Description                                                                                                                                                                                                                                                    |
+| ------------------------ | ------ | --------- | -------- | -------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`          | string | uuid      | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Unique identification, assigned by ClearBank, to unambiguously identify the transaction.                                                                                                                                                                      |
+| `EndToEndIdentification` | string | -         | Yes      | -              | -                                                                               | The end-to-end identification can be used for reconciliation or to link tasks relating to the transaction.                                                                                                                                                     |
+| `CreatedDateTime`        | string | date-time | Yes      | -              | -                                                                               | The date time in which the transaction was created in ClearBank's system.                                                                                                                                                                                      |
+| `CompletedDateTime`      | string | date-time | Yes      | -              | -                                                                               | The date time on which the amount of money ceases to be available or becomes available to the account in ClearBank's system.                                                                                                                                   |
+| `ClearingChannel`        | string | -         | No       | -              | -                                                                               | The clearing channel used to process the transaction. For AutoFX payments, this is `cross-border-fx`.                                                                                                                                                          |
+| `DebitCreditCode`        | string | -         | Yes      | -              | -                                                                               | Movement of transaction.                                                                                                                                                                                                                                       |
+| `Amount`                 | number | decimal   | Yes      | -              | -                                                                               | Amount of money to be moved between the debtor and creditor.                                                                                                                                                                                                   |
+| `Currency`               | string | -         | Yes      | -              | -                                                                               | Unit of currency is explicit and compliant with ISO 4217.                                                                                                                                                                                                      |
+| `RemittanceInformation`  | string | -         | No       | -              | -                                                                               | Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system. Provided as unstructured data, or as a flattened version of the structured data. |
+| `DebtorAccount`          | object | -         | Yes      | -              | -                                                                               | Unambiguous identification of the account of the debtor to which a debit entry is posted. See `PartyAccount`.                                                                                                                                                  |
+| `CreditorAccount`        | object | -         | Yes      | -              | -                                                                               | Unambiguous identification of the account of the creditor to which a credit entry is posted. See `PartyAccount`.                                                                                                                                               |
+
+##### PartyAccount (DebtorAccount and CreditorAccount)
+
+| Field        | Type   | Format | Required | Min-Max length | Pattern                                                                         | Description                                                                |
+| ------------ | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `AccountId`  | string | uuid   | No       | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | Represents the account ID used within ClearBank's systems. Can be `null`.  |
+| `Iban`       | string | -      | No       | 0-34           | -                                                                               | The IBAN for the account. Can be `null`.                                   |
+| `Bban`       | string | -      | No       | 0-30           | -                                                                               | The BBAN for the account. Can be `null`.                                   |
+| `Descriptor` | string | -      | No       | -              | -                                                                               | Represents an arbitrary account descriptor. Can be `null`.                 |
+
+#### Example Customer Accounts Transaction Completed webhook request body for an outbound AutoFX payment
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "357443b5-dad9-48e7-bc6b-24efb1fcd6e8",
+    "EndToEndIdentification": "21738798393486",
+    "CreatedDateTime": "2026-09-23T09:39:19.05Z",
+    "CompletedDateTime": "2026-09-23T09:39:26.1033333Z",
+    "ClearingChannel": "cross-border-fx",
+    "DebitCreditCode": "Debit",
+    "Amount": 1000.12,
+    "Currency": "EUR",
+    "RemittanceInformation": "21738798393486",
+    "DebtorAccount": {
+      "AccountId": "5602a737-675f-4c85-bbc1-d5d4b4478e64",
+      "Iban": "NL25CLRB0066110527",
+      "Bban": null,
+      "Descriptor": null
+    },
+    "CreditorAccount": {
+      "AccountId": null,
+      "Iban": "FR7630006000011234567890189",
+      "Bban": null,
+      "Descriptor": null
+    }
+  },
+  "Nonce": 1679483085
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 1679483085
+}
+```
