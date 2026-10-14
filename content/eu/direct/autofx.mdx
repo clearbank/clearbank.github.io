@@ -51,7 +51,7 @@ AutoFX supports the following target currencies:
 ### Hours and holidays
 
 Each currency's availability is subject to different national holidays and respective cutoff times.
-In general, AutoFX is available Monday to Friday, from 9:30am CET to 3:30pm CET.
+In general, AutoFX is available Monday to Friday, from 09:30 to 15:30 CET.
 
 ## Payment process
 
@@ -61,7 +61,7 @@ Payment requests should be submitted to our **POST /payments/cross-border/v2/fx-
 
 ### Accept a payment
 
-To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v2/fx-payments/accept** endpoint using the `paymentId` returned in the **200 - OK** response to your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response's `paymentValueDate`, the payment request will automatically expire. For clarity, an explicit `expiryDateTime` property is also included in the **200 - OK** response.
+To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v2/fx-payments/accept** endpoint using the `paymentId` returned in the **200 - OK** response to your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response, the payment request will automatically expire. The exact expiry time is given in the `expiryDateTime` property of the **200 - OK** response.
 
 We'll respond with a **202 - Accepted** response.
 
@@ -82,10 +82,10 @@ You can 'fix' either side of the currency pair in an AutoFX payment.
 
 We'll update you about payments' statuses via webhook. AutoFX uses the following webhooks:
 
-* [Cross-border FX Outbound Payment Completed webhook](#cross-border-fx-outbound-payment-completed-webhook)
-* [Cross-border FX Outbound Payment Failed webhook](#cross-border-fx-outbound-payment-failed-webhook)
-* [Cross-border FX Outbound Payment Return Completed webhook](#cross-border-fx-outbound-payment-return-completed-webhook)
-* [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook)
+* [Cross-border FX Outbound Payment Completed webhook](#cross-border-fx-outbound-payment-completed-webhook) - To notify you when an outbound AutoFX payment has been successfully completed.
+* [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook) - To notify you about the payment's update to your account's transactions.
+* [Cross-border FX Outbound Payment Failed webhook](#cross-border-fx-outbound-payment-failed-webhook) - To notify you when an outbound AutoFX payment has failed.
+* [Cross-border FX Outbound Payment Return Completed webhook](#cross-border-fx-outbound-payment-return-completed-webhook) - To notify you when an outbound AutoFX payment has been returned by the recipient's bank and the funds have been credited back to your account.
 
 ### Message flow diagram
 
@@ -126,6 +126,6 @@ We'll update you about payments' statuses via webhook. AutoFX uses the following
 ## Webhooks
 
 <WebhookPlaceholder render='mccy-eu-completed-v1' />
+<WebhookPlaceholder render='mccy-eu-customer-accounts-transaction-completed-v1' />
 <WebhookPlaceholder render='mccy-eu-failed-v1' />
 <WebhookPlaceholder render='mccy-eu-return-completed-v1' />
-<WebhookPlaceholder render='mccy-eu-customer-accounts-transaction-completed-v1' />
