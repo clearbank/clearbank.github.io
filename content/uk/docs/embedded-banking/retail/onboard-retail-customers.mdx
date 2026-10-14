@@ -1,0 +1,65 @@
+---
+title: "Onboard new Retail Customers"
+metaTitle: "Onboard new Retail Customers"
+order: 1
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Retail customer onboarding
+
+Our retail customer onboarding endpoint lets you onboard new individuals as retail customers in a single request. Share key information about the customer, and we'll handle the rest. When onboarding is complete, you'll receive a `CustomerId` that you can use to give the customer access to our products, such as [accounts](/uk/docs/embedded-banking/retail/retail-customers#compatible-account-types).
+
+Every onboarding application includes our Know Your Customer (KYC) due diligence checks. These checks can pass or fail, and we'll tell you the outcome by webhook. If the checks pass, we'll create the retail customer for you. If they fail, no customer is created. We may also need more information from the customer before we can complete our checks.
+
+If you'd like access to this product, please speak to your Client Director.
+
+<Callout colour="blue">
+  We can only onboard customers who:<br /><br />
+  • Currently live in the UK<br />
+  • Have tax residency in the UK<br />
+  • Do not have dual tax residency with another country<br />
+  • Are not US nationals
+</Callout>
+
+### Message flow diagrams
+
+![A message flow diagram demonstrating a successful retail customer onboarding application. The client submits an application using the POST /customer-due-diligence/v1/retail/onboard endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs its due diligence checks, which pass, and creates a new retail customer. ClearBank then emits a Retail Customer Application Successful webhook to the client, which includes a customer ID and an application ID.](/assets/images/diagrams/uk/onboarding/retail-onboarding-success.svg)
+![A message flow diagram demonstrating a retail customer onboarding application that required additional information before succeeding or failing. The client submits an application using the POST /customer-due-diligence/v1/retail/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete its due diligence checks, and emits one or two Retail Customer Additional Info Required webhooks containing the required actions of the client's customer. The retail customer uploads the information, which is received by ClearBank. Due diligence checks then proceed, and an application declined or application successful webhook is sent - depending on the outcome of the checks.](/assets/images/diagrams/uk/onboarding/retail-onboarding-pending.svg)
+![A message flow diagram demonstrating a declined retail customer onboarding application. The client submits an application using the POST /customer-due-diligence/v1/retail/onboard endpoint, which is acknowledged by ClearBank with a 202 Accepted response. ClearBank performs its due diligence checks, which fail. ClearBank then emits a Retail Customer Application Declined webhook to the client, which includes the original application ID.](/assets/images/diagrams/uk/onboarding/retail-onboarding-declined.svg)
+
+<EndpointBlock
+  type="post"
+  title="Onboard a new retail customer"
+  endpoints={[
+    {
+      path: "/customer-due-diligence/v1/retail/onboard",
+      version: "1.0customer-onboarding",
+      webhooks: [
+        'kyc-application-successful-v1',
+        'kyc-application-declined-v1',
+        'kyc-application-pending-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<WebhookPlaceholder render='kyc-application-successful-v1' />
+<WebhookPlaceholder render='kyc-application-pending-v1' />
+<WebhookPlaceholder render='kyc-application-declined-v1' />
+
+## Simulating onboarding webhooks
+
+You can simulate successful, declined and additional information onboarding outcomes - as well as additional information emails - in our simulation environment.  
+To do this, call the [**POST /customer-due-diligence/v1/retail/onboard**](#onboard-a-new-retail-customer) endpoint with the `customerData.name.surname` property set to:
+
+* `"pass"` to simulate checks passing, and receive a Retail Customer Application Successful webhook.
+* `"fail"` to simulate checks failing, and receive a Retail Customer Application Declined webhook.
+* `"info"` to simulate checks requiring additional information. To receive a Retail Customer Additional Info Required webhook instead of an email, ensure the `customerData.idvEmailsEnabled` property is set to `false`.

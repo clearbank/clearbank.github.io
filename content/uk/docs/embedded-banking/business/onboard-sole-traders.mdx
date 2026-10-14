@@ -1,0 +1,62 @@
+---
+title: "Onboard new Sole Traders"
+metaTitle: "Onboard new Sole Traders"
+order: 3
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Sole trader onboarding
+
+<Callout colour="green">
+<h2>Sole trader onboarding is coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+Our sole trader onboarding endpoint lets you onboard new sole traders as business customers in a single request. Share information about the sole trader and their business, and we'll handle the rest. When onboarding is complete, you'll receive a `CustomerId` that you can use to give the customer access to our products, such as [accounts](/uk/docs/embedded-banking/business/sole-traders-v2#compatible-account-types).
+
+Every onboarding application includes our Know Your Business (KYB) due diligence checks. These checks can pass or fail, and we'll tell you the outcome by webhook. If the checks pass, we'll create the sole trader customer for you. If they fail, no customer is created. We may also need more information from the sole trader before we can complete our checks.
+
+To retrieve and manage a sole trader's details after onboarding, use the `CustomerId` with our [sole trader endpoints](/uk/docs/embedded-banking/business/sole-traders-v2).
+
+If you'd like to use this product, please speak with your Client Director.
+
+### Message flow diagrams
+
+![A message flow diagram demonstrating a sole trader onboarding application that requires additional information before succeeding or failing. The client submits an application using the POST /customer-due-diligence/v1/sole-trader/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete its due diligence checks, and emits a Sole Trader Additional Info Required webhook containing the required actions and URLs to complete them. This webhook may be re-sent once if further information is needed. The sole trader uploads the required documents and completes biometric and document verification. Due diligence checks then proceed, and a Sole Trader Application Declined or Sole Trader Application Successful webhook is sent - depending on the outcome of the checks.](/assets/images/diagrams/uk/onboarding/sole-trader-onboarding-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Onboard a new sole trader customer"
+  endpoints={[
+    {
+      path: "/customer-due-diligence/v1/sole-trader/onboard",
+      version: "1.0sole-trader-onboarding",
+      webhooks: [
+        'sole-trader-application-successful-v1',
+        'sole-trader-application-declined-v1',
+        'sole-trader-application-pending-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<WebhookPlaceholder render='sole-trader-application-successful-v1' />
+<WebhookPlaceholder render='sole-trader-application-pending-v1' />
+<WebhookPlaceholder render='sole-trader-application-declined-v1' />
+
+## Simulating onboarding webhooks
+
+You can simulate successful, declined and additional information onboarding webhooks in our simulation environment.  
+To do this, call the [**POST /customer-due-diligence/v1/sole-trader/onboard**](#onboard-a-new-sole-trader-customer) endpoint with the `soleTraderData.name.surname` property set to:
+
+* `"pass"` to simulate checks passing, and receive a Sole Trader Application Successful webhook.
+* `"fail"` to simulate checks failing, and receive a Sole Trader Application Declined webhook.
+* `"info"` to simulate checks requiring additional information, and receive a Sole Trader Additional Info Required webhook.
