@@ -269,10 +269,39 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
                   </Styles.OnThisPageButton>
 
                   {isPageMenuOpen && (
-                    <Styles.OnThisPagePanel id="on-this-page-panel">
-                      <PageMenu />
-                    </Styles.OnThisPagePanel>
-                  )}
+  <Styles.OnThisPagePanel
+    id="on-this-page-panel"
+    onClick={(event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return
+      }
+
+      const target = event.target
+
+      if (!(target instanceof Element)) {
+        return
+      }
+
+      const link = target.closest('a[href^="#"]')
+
+      if (!link) {
+        return
+      }
+
+      setIsPageMenuOpen(false)
+      pageMenuButtonRef.current?.focus({ preventScroll: true })
+    }}
+  >
+    <PageMenu />
+  </Styles.OnThisPagePanel>
+)}
                 </Styles.OnThisPageDisclosure>
               </Styles.ArticleToolbar>
             )}

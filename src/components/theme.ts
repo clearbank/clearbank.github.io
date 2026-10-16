@@ -70,7 +70,7 @@ export const easings = {
 export const widths: Types.Widths = {
   logo: '244px',
   gutter: '20px',
-  sidebarLeft: '250px',
+  sidebarLeft: '300px',
   container: '1400px',
   content: '1400px',
   dropdown: '270px'
