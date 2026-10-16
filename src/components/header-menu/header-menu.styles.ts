@@ -37,6 +37,11 @@ export const MenuContainer = styled.div`
     gap: 0;
     padding: 0 56px;
   }
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    justify-content: flex-start;
+    column-gap: 24px;
+  }
 `
 
 export const Container = styled.div`
@@ -130,9 +135,14 @@ export const List = styled.ul<{ borderState?: string; isOpen?: boolean }>`
   width: max-content;
   min-width: 220px;
   max-width: calc(100vw - 40px);
+  margin: 8px 0 0;
+  padding: 8px 0;
   margin-top: 15px;
   position: absolute;
   background: ${colors.brandGrayLight};
+  border: 1px solid ${colors.brandGray};
+  border-top: none;
+  box-sizing: border-box;
   border-radius: ${(props) => {
     switch (props.borderState) {
       case 'leaf-bottom-right':
@@ -146,6 +156,8 @@ export const List = styled.ul<{ borderState?: string; isOpen?: boolean }>`
   list-style: none;
 
   @media screen and (min-width: ${breakpoints.small}) {
+    top: 100%;
+    margin: 0;
     width: 100%;
     max-width: none;
   }
@@ -170,6 +182,8 @@ export const List = styled.ul<{ borderState?: string; isOpen?: boolean }>`
 export const ListItem = styled(LinkBase)`
   padding: 15px;
   color: ${colors.brandDark};
+  padding: 12px 16px;
+  text-align: left;
 
   &:hover {
     color: ${colors.wedgewoodapprox};
