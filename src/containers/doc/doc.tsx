@@ -23,7 +23,7 @@ export default function Doc(props: any) {
 
   return (
     <Layout {...props}>
-      <Styles.Page className='page' id={pageId} key={pageId}>
+      <Styles.Page className='page' id={`doc-page-${pageId}`} key={pageId}>
         <Styles.Title id='pageTitle' className="page-menu-entry">
           {pageTitle}
         </Styles.Title>
