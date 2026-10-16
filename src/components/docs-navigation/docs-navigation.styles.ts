@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors, fonts } from 'src/components/theme'
+import { colors, fonts, httpMethodColors } from 'src/components/theme'
 
 export const Nav = styled.nav`
   font-family: ${fonts.body};
@@ -59,4 +59,68 @@ export const DisclosureButton = styled.button`
     outline: 2px solid ${colors.wedgewoodapprox};
     outline-offset: 2px;
   }
+`
+
+const methodColors: Record<string, string> = httpMethodColors
+
+export const OperationList = styled.ul`
+  list-style: none;
+  margin: 4px 0 12px;
+  padding-left: 12px;
+`
+
+export const OperationLink = styled.a`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  color: ${colors.brandDark};
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.5;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.wedgewoodapprox};
+    outline-offset: 2px;
+  }
+`
+
+export const MethodBadge = styled.span<{ $method: string }>`
+  flex: 0 0 auto;
+  min-width: 52px;
+  box-sizing: border-box;
+  padding: 2px 4px;
+  border: 1px solid ${colors.brandGray};
+  border-left: 3px solid
+    ${props =>
+      methodColors[props.$method.toLowerCase()] || httpMethodColors.default};
+  border-radius: 3px;
+  background: ${colors.brandLight};
+  color: ${colors.brandDark};
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+`
+
+export const NavTitle = styled.h2`
+  margin: 0 0 12px;
+  padding-left: 6px;
+  color: ${colors.brandDark};
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+`
+
+export const OperationLabel = styled.p`
+  margin: 12px 0 4px;
+  padding-left: 12px;
+  color: ${colors.brandDark};
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
 `
