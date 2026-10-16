@@ -10,7 +10,9 @@ export const Header = styled(Text)`
   padding-right: 50px; // preserve space for share button
   font-family: ${fonts.heading};
   font-weight: 600;
-  scroll-margin-top: ${heights.header};
+  scroll-margin-top: calc(
+  var(--header-height, ${heights.header}) + 80px
+);
   color: ${colors.businessBlue};
 `
 
@@ -31,7 +33,6 @@ export const H2 = styled(Header)`
   line-height: 40px;
   color: ${colors.businessBlue};
   margin-top: 0;
-
   &:not(:first-of-type) {
     margin-top: 60px;
   }
@@ -50,7 +51,6 @@ export const H3 = styled(Header)`
   line-height: 34px;
   margin-bottom: 15px;
   margin-top: 40px;
-  scroll-margin-top: ${heights.header};
 `
 
 export const List = styled.ul`
