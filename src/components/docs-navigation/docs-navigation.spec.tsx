@@ -63,3 +63,44 @@ test('keyboard/mouse toggling a disclosure button expands and collapses its bran
   expect(rootToggle).toHaveAttribute('aria-expanded', 'true')
   expect(getByText('Overview')).toBeVisible()
 })
+
+test('shows current-page operations and removes them when navigating to a guide', () => {
+  const renderPage = (currentPath: string, showOperation: boolean) => (
+    <>
+      <section className='page'>
+        {showOperation && (
+          <h3
+            id='create-a-new-account-real'
+            className='endpoint-block-title page-menu-entry'
+            data-http-method='POST'
+          >
+            Create a new account (real)
+          </h3>
+        )}
+      </section>
+
+      <Component {...buildProps(currentPath)} />
+    </>
+  )
+
+  const { getByRole, queryByRole, rerender } = render(
+    renderPage('/uk/docs/api/overview', true)
+  )
+
+  expect(
+    getByRole('link', {
+      name: /POST\s+Create a new account \(real\)/i
+    })
+  ).toHaveAttribute('href', '#create-a-new-account-real')
+
+  rerender(renderPage('/uk/docs/api', false))
+
+  expect(
+    queryByRole('link', {
+      name: /Create a new account \(real\)/i
+    })
+  ).not.toBeInTheDocument()
+
+  expect(queryByRole('list', { name: 'API operations' }))
+    .not.toBeInTheDocument()
+})
