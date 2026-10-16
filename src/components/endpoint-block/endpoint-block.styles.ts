@@ -6,7 +6,7 @@ import { breakpoints, fonts, heights } from 'src/components/theme'
 export const Title: any = styled.h3`
   margin: 0;
   font-family: ${fonts.heading};
-  scroll-margin-top: ${heights.header};
+  scroll-margin-top: calc( var(--header-height, ${heights.header}) + 80px );
   font-size: 30px;
   font-weight: 700;
   line-height: 34px;

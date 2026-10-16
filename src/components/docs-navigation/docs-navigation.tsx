@@ -1,9 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Link from 'src/components/link'
 
 import * as Styles from './docs-navigation.styles'
 import * as Types from './docs-navigation.types'
+
+interface OperationLink {
+  id: string
+  title: string
+  method: string
+}
 
 const normalize = (path: string) => path.replace(/\/$/, '')
 
@@ -36,10 +42,32 @@ const getInitialExpandedIds = (
   return expanded
 }
 
-const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPath }) => {
+const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({
+  items,
+  currentPath
+}) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() =>
     getInitialExpandedIds(items, currentPath)
   )
+
+  const [operations, setOperations] = useState<OperationLink[]>([])
+
+  useEffect(() => {
+    const headings = document.querySelectorAll<HTMLElement>(
+      '.page .endpoint-block-title[data-http-method]'
+    )
+
+    const nextOperations = Array.from(headings)
+      .filter(heading => heading.id !== '')
+      .map(heading => ({
+        id: heading.id,
+        title: heading.textContent?.trim() || '',
+        method: heading.dataset.httpMethod || ''
+      }))
+      .filter(operation => operation.title !== '' && operation.method !== '')
+
+    setOperations(nextOperations)
+  }, [currentPath])
 
   const toggle = (id: string) => {
     setExpandedIds(previous => {
@@ -55,21 +83,44 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
     })
   }
 
+  const renderOperations = (slug: string) => {
+  if (!isCurrentPage(slug, currentPath) || operations.length === 0) {
+    return null
+  }
+
+  return (
+    <>
+      <Styles.OperationLabel>API operations</Styles.OperationLabel>
+
+      <Styles.OperationList aria-label='API operations'>
+        {operations.map(operation => (
+          <li key={operation.id}>
+            <Styles.OperationLink href={`#${operation.id}`}>
+              <Styles.MethodBadge $method={operation.method}>
+                {operation.method}
+              </Styles.MethodBadge>
+              <span>{operation.title}</span>
+            </Styles.OperationLink>
+          </li>
+        ))}
+      </Styles.OperationList>
+    </>
+  )
+}
+
   return (
     <Styles.Nav aria-label='Documentation navigation'>
+      <Styles.NavTitle>Documentation</Styles.NavTitle>
       <Styles.List>
         {items.map(item => {
           const hasSubItems = item.subMenuItems?.length > 0
           const rootPanelId = `docs-nav-sub-${item.menuItem.id}`
           const isRootExpanded = expandedIds.has(item.menuItem.id)
-          // Root category pages (api.mdx, gbp-accounts.mdx, etc.) are
-          // frontmatter-only containers with no real body content - linking
-          // to them directly lands on a blank page. Send the root link to
-          // its first child instead (already sorted by frontmatter order,
-          // so this is whichever page - typically "Overview" - is meant to
-          // be read first), while the root's own title/toggle still expand
-          // its sub-items as before.
-          const rootHref = hasSubItems ? item.subMenuItems[0].fields.slug : item.menuItem.slug
+
+          // Root category pages are empty containers; link to their first child.
+          const rootHref = hasSubItems
+            ? item.subMenuItems[0].fields.slug
+            : item.menuItem.slug
 
           return (
             <li key={item.menuItem.id}>
@@ -77,10 +128,15 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
                 <Styles.NavLink
                   as={Link}
                   to={rootHref}
-                  aria-current={isCurrentPage(item.menuItem.slug, currentPath) ? 'page' : undefined}
+                  aria-current={
+                    isCurrentPage(item.menuItem.slug, currentPath)
+                      ? 'page'
+                      : undefined
+                  }
                 >
                   {item.menuItem.title}
                 </Styles.NavLink>
+
                 {hasSubItems && (
                   <Styles.DisclosureButton
                     type='button'
@@ -92,6 +148,7 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
                   </Styles.DisclosureButton>
                 )}
               </Styles.Row>
+
               {hasSubItems && (
                 <Styles.SubList id={rootPanelId} hidden={!isRootExpanded}>
                   {item.subMenuItems.map(subItem => {
@@ -105,10 +162,15 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
                           <Styles.NavLink
                             as={Link}
                             to={subItem.fields.slug}
-                            aria-current={isCurrentPage(subItem.fields.slug, currentPath) ? 'page' : undefined}
+                            aria-current={
+                              isCurrentPage(subItem.fields.slug, currentPath)
+                                ? 'page'
+                                : undefined
+                            }
                           >
                             {subItem.fields.title}
                           </Styles.NavLink>
+
                           {hasLeafItems && (
                             <Styles.DisclosureButton
                               type='button'
@@ -120,17 +182,29 @@ const DocsNavigation: React.FC<Types.DocsNavigationProps> = ({ items, currentPat
                             </Styles.DisclosureButton>
                           )}
                         </Styles.Row>
+
+                        {renderOperations(subItem.fields.slug)}
+
                         {hasLeafItems && (
-                          <Styles.LeafList id={leafPanelId} hidden={!isSubExpanded}>
+                          <Styles.LeafList
+                            id={leafPanelId}
+                            hidden={!isSubExpanded}
+                          >
                             {subItem.leafMenuItems.map(leaf => (
                               <li key={leaf.fields.id}>
                                 <Styles.NavLink
                                   as={Link}
                                   to={leaf.fields.slug}
-                                  aria-current={isCurrentPage(leaf.fields.slug, currentPath) ? 'page' : undefined}
+                                  aria-current={
+                                    isCurrentPage(leaf.fields.slug, currentPath)
+                                      ? 'page'
+                                      : undefined
+                                  }
                                 >
                                   {leaf.fields.title}
                                 </Styles.NavLink>
+
+                                {renderOperations(leaf.fields.slug)}
                               </li>
                             ))}
                           </Styles.LeafList>
