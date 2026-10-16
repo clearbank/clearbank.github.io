@@ -4,6 +4,9 @@
 
 const kebabCase = require('lodash.kebabcase')
 
+const mdx = require('@mdx-js/mdx')
+const { parseExpression } = require('@babel/parser')
+
 /**
  * Removes a leading YAML frontmatter block (--- ... ---) from raw MDX source.
  * Frontmatter is metadata (title, order, etc.), not page content, so it must
@@ -133,6 +136,107 @@ function splitIntoSections (source) {
     .filter(section => section.text.length > 0)
 }
 
+function extractOperations (source) {
+  const compiler = mdx.createMdxAstCompiler({
+    remarkPlugins: []
+  })
+  const tree = compiler.parse(source)
+  const operations = []
+
+  const readStringAttribute = (openingElement, name) => {
+    const attribute = openingElement.attributes.find(attribute =>
+      attribute.type === 'JSXAttribute' &&
+      attribute.name.name === name
+    )
+
+    const value = attribute && attribute.value
+
+    if (value && value.type === 'StringLiteral') {
+      return value.value
+    }
+
+    if (
+      value &&
+      value.type === 'JSXExpressionContainer' &&
+      value.expression.type === 'StringLiteral'
+    ) {
+      return value.expression.value
+    }
+
+    throw new Error(
+      `Cannot index EndpointBlock: "${name}" must be a static string.`
+    )
+  }
+
+  const visitJsx = node => {
+    if (node.type === 'JSXElement') {
+      const opening = node.openingElement
+
+      if (
+        opening.name.type === 'JSXIdentifier' &&
+        opening.name.name === 'EndpointBlock'
+      ) {
+        // EndpointBlock's render-prop form bypasses its standard heading.
+        if (!opening.selfClosing) {
+          return
+        }
+
+        if (opening.attributes.some(attribute =>
+          attribute.type === 'JSXSpreadAttribute'
+        )) {
+          throw new Error(
+            'Cannot index EndpointBlock with spread props.'
+          )
+        }
+
+        const title = readStringAttribute(opening, 'title')
+        const method = readStringAttribute(opening, 'type').toUpperCase()
+
+        if (!title.trim() || !method.trim()) {
+          throw new Error(
+            'Cannot index EndpointBlock with an empty title or method.'
+          )
+        }
+
+        operations.push({
+          heading: title,
+          anchor: kebabCase(title.toLowerCase()),
+          method,
+          text: `${method} ${title}`
+        })
+
+        return
+      }
+    }
+
+    if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
+      node.children.forEach(visitJsx)
+    }
+  }
+
+  const visitMdx = node => {
+    if (
+      node.type === 'jsx' &&
+      /<EndpointBlock(?:\s|\/|>)/.test(node.value)
+    ) {
+      const expression = parseExpression(
+        `<>${node.value}</>`,
+        { plugins: ['jsx'] }
+      )
+
+      visitJsx(expression)
+    }
+
+    if (node.children) {
+      node.children.forEach(visitMdx)
+    }
+  }
+
+  visitMdx(tree)
+
+  return operations
+}
+
 /**
  * Turns raw MDX source (frontmatter, imports, JSX, markdown and all) into
  * clean, heading-anchored sections ready for the search index. This is the
@@ -143,6 +247,7 @@ function splitIntoSections (source) {
 function extractSections (rawMdxSource) {
   const withoutFrontmatter = stripFrontmatter(rawMdxSource)
   const withoutImports = stripImports(withoutFrontmatter)
+  const operations = extractOperations(withoutImports)
   const { withPlaceholders, fences } = extractCodeFences(withoutImports)
   const withoutTags = stripTags(withPlaceholders)
 
@@ -152,13 +257,14 @@ function extractSections (rawMdxSource) {
   // markdown syntax within each section afterward, avoids that conflict.
   const rawSections = splitIntoSections(withoutTags)
 
-  return rawSections
+  const sections = rawSections
     .map(section => {
       const withoutMarkdown = stripMarkdownSyntax(section.text)
       const withCodeRestored = restoreCodeFences(withoutMarkdown, fences)
       return { ...section, text: normaliseWhitespace(withCodeRestored) }
     })
     .filter(section => section.text.length > 0)
+  return [...sections, ...operations]
 }
 
 module.exports = {
