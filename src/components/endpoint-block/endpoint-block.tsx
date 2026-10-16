@@ -139,6 +139,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
       <Styles.Title
         className='endpoint-block-title page-menu-entry'
         id={titleTransformed}
+        data-http-method={type.toUpperCase()}
       >
         {title}
       </Styles.Title>
