@@ -33,10 +33,6 @@ export const H2 = styled(Header)`
   line-height: 40px;
   color: ${colors.businessBlue};
   margin-top: 0;
-  scroll-margin-top: calc(
-  var(--header-height, ${heights.header}) + 80px
-);
-
   &:not(:first-of-type) {
     margin-top: 60px;
   }
