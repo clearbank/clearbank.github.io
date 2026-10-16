@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors, zIndex, themeBreakpoints, borderRadius, shadows } from 'src/components/theme'
+import { colors, zIndex, themeBreakpoints, borderRadius, shadows, httpMethodColors } from 'src/components/theme'
 
 // Full-screen dimmed backdrop. Clicking it closes the modal (handled in
 // search.tsx), same convention as most modal patterns.
@@ -106,4 +106,37 @@ export const KeyboardHint = styled.kbd`
   border-radius: 3px;
   padding: 1px 6px;
   margin-left: 8px;
+`
+
+const methodColors: Record<string, string> = httpMethodColors
+
+export const OperationTitleRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+`
+
+export const MethodBadge = styled.span<{ $method: string }>`
+  flex: 0 0 auto;
+  min-width: 52px;
+  box-sizing: border-box;
+  padding: 2px 4px;
+  border: 1px solid ${colors.brandGray};
+  border-left: 3px solid
+    ${props =>
+      methodColors[props.$method.toLowerCase()] || httpMethodColors.default};
+  border-radius: 3px;
+  background: ${colors.brandLight};
+  color: ${colors.brandDark};
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+`
+
+export const ParentPage = styled.div`
+  margin-top: 4px;
+  color: ${colors.brandGrayDarker};
+  font-size: 13px;
+  line-height: 1.5;
 `
