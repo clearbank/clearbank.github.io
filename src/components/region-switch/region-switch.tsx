@@ -12,22 +12,19 @@ export default function RegionSwitch({ location }) {
     setTimeout(() => navigate(!activeOption ? '/eu' : '/uk'), 300);
   };
 
-  let region;
-  if (activeOption){
-    region = 'Europe API';
-  } else{
-    region = 'UK API'
-  }
-
   return (
-    <label>
-      <span className="react-toggle-label"><strong>{region}</strong></span>
-      <Toggle
-        icons={false}
-        defaultChecked={activeOption}
-        onChange={handleSwitchClick}
-      />
-      <br/>UK &nbsp;&nbsp;&nbsp;&nbsp; EU
+    <label className='region-switch'>
+      <span className='region-switch-row'>
+        <span className="react-toggle-label"><strong>API Region</strong></span>
+        <span className='region-switch-toggle-wrapper'>
+          <Toggle
+            icons={false}
+            defaultChecked={activeOption}
+            onChange={handleSwitchClick}
+          />
+          <span className='region-switch-caption'>UK &nbsp;&nbsp;&nbsp;&nbsp; EU</span>
+        </span>
+      </span>
     </label>
   );
 }
