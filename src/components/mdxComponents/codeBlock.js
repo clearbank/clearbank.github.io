@@ -4,6 +4,8 @@ import prismTheme from 'prism-react-renderer/themes/vsDark'
 import Loadable from 'react-loadable'
 import LoadingProvider from './loading'
 import '../styles.css'
+import CopyCodeButton from '../copy-code-button/copy-code-button'
+
 
 /** Removes the last token from a code example if it's empty. */
 function cleanTokens (tokens) {
@@ -30,6 +32,11 @@ const CodeBlock = ({ children: exampleCode, ...props }) => {
     return <LoadableComponent code={exampleCode} />
   } else {
     return (
+      <div className='code-block'>
+        <div className='code-block-actions'>
+         <CopyCodeButton text={exampleCode} />
+      </div>
+
       <Highlight
         {...defaultProps}
         code={exampleCode}
@@ -146,8 +153,24 @@ const CodeBlock = ({ children: exampleCode, ...props }) => {
           </pre>
         )}
       </Highlight>
+    </div>
     )
   }
+}
+
+export const MdxPre = ({ children, ...props }) => {
+  const elements = React.Children.toArray(children)
+  const codeElement = elements[0]
+
+  if (
+    elements.length === 1 &&
+    React.isValidElement(codeElement) &&
+    typeof codeElement.props.children === 'string'
+  ) {
+    return <CodeBlock {...codeElement.props} />
+  }
+
+  return <pre {...props}>{children}</pre>
 }
 
 export default CodeBlock
