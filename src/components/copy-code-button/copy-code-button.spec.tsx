@@ -25,43 +25,62 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-test('copies the exact code, including indentation and newlines', () => {
+test('copies the exact code and shows the copied state', () => {
   const code = '{\n  "account": "example"\n}\n'
 
   render(<CopyCodeButton text={code} />)
-  fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
 
+  const button = screen.getByRole('button', { name: 'Copy code' })
+
+  expect(button).toHaveAttribute('data-state', 'idle')
+  expect(button).toHaveAttribute('title', 'Copy code')
+
+  fireEvent.click(button)
+
+  expect(mockCopy).toHaveBeenCalledTimes(1)
   expect(mockCopy.mock.calls[0][0]).toBe(code)
   expect(screen.getByRole('status')).toHaveTextContent('Code copied')
+  expect(button).toHaveAttribute('data-state', 'copied')
+  expect(button).toHaveAttribute('title', 'Copied!')
 })
 
 test('reports a failed copy without displaying success', () => {
   mockCopy.mockReturnValue(false)
 
   render(<CopyCodeButton text='example' />)
-  fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
+
+  const button = screen.getByRole('button', { name: 'Copy code' })
+
+  fireEvent.click(button)
 
   expect(screen.getByRole('status')).toHaveTextContent(
     'Copy failed. Select and copy the code manually.'
   )
   expect(screen.getByRole('status')).not.toHaveTextContent('Code copied')
+  expect(button).toHaveAttribute('data-state', 'idle')
 })
 
-test('clears feedback after 2.5 seconds', () => {
+test('clears feedback and returns to idle after 2.5 seconds', () => {
   render(<CopyCodeButton text='example' />)
-  fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
+
+  const button = screen.getByRole('button', { name: 'Copy code' })
+
+  fireEvent.click(button)
 
   act(() => {
     jest.advanceTimersByTime(2499)
   })
 
   expect(screen.getByRole('status')).toHaveTextContent('Code copied')
+  expect(button).toHaveAttribute('data-state', 'copied')
 
   act(() => {
     jest.advanceTimersByTime(1)
   })
 
   expect(screen.getByRole('status')).toBeEmptyDOMElement()
+  expect(button).toHaveAttribute('data-state', 'idle')
+  expect(button).toHaveAttribute('title', 'Copy code')
 })
 
 test('copies updated text and clears feedback when the text changes', () => {
@@ -71,9 +90,14 @@ test('copies updated text and clears feedback when the text changes', () => {
 
   rerender(<CopyCodeButton text='updated' />)
 
+  const button = screen.getByRole('button', { name: 'Copy code' })
+
   expect(screen.getByRole('status')).toBeEmptyDOMElement()
+  expect(button).toHaveAttribute('data-state', 'idle')
 
-  fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))
+  fireEvent.click(button)
 
+  expect(mockCopy).toHaveBeenCalledTimes(2)
   expect(mockCopy.mock.calls[1][0]).toBe('updated')
+  expect(button).toHaveAttribute('data-state', 'copied')
 })

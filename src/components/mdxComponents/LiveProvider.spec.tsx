@@ -47,3 +47,20 @@ test('copies edited code instead of the original example', () => {
 
   expect(mockCopy.mock.calls[0][0]).toBe('const value = 2;')
 })
+
+test('hides copying when explicitly disabled', () => {
+  render(
+    <ReactLiveProvider
+      code='const value = 1;'
+      copyCode={false}
+    />
+  )
+
+  expect(
+    screen.queryByRole('button', { name: 'Copy code' })
+  ).not.toBeInTheDocument()
+
+  expect(
+    screen.getByRole('textbox', { name: 'Code editor' })
+  ).toBeInTheDocument()
+})

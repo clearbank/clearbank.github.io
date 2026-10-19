@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live'
+
 import CopyCodeButton from '../copy-code-button/copy-code-button'
 
-const ReactLiveProvider = ({ code }) => {
+const ReactLiveProvider = ({ code, copyCode = true }) => {
   const [currentCode, setCurrentCode] = React.useState(code)
 
   React.useEffect(() => {
@@ -11,10 +12,12 @@ const ReactLiveProvider = ({ code }) => {
 
   return (
     <LiveProvider code={currentCode}>
-      <div className='code-block-actions'>
-        <CopyCodeButton text={currentCode} />
+      <div className='code-block'>
+        {copyCode && (
+          <CopyCodeButton text={currentCode} overlay />
+        )}
+        <LiveEditor onChange={setCurrentCode} />
       </div>
-      <LiveEditor onChange={setCurrentCode} />
       <LiveError />
       <LivePreview />
     </LiveProvider>
