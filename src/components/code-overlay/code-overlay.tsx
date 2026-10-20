@@ -8,7 +8,7 @@ const CodeOverlay: React.FunctionComponent<Types.CodeOverlayProps> = ({
   message,
   showCodeOverlay
 }: Types.CodeOverlayProps) => (
-  <Styles.Container>
+  <Styles.Container data-markdown-exclude='true'>
     <Transition in={showCodeOverlay} enter={false} timeout={0}>
       {(state: string) => (
         <Styles.Message state={state}>{message}</Styles.Message>
