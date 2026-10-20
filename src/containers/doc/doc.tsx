@@ -27,7 +27,7 @@ export default function Doc(props: any) {
     }
 
     try {
-      const markdown = htmlToMarkdown(article)
+      const markdown = htmlToMarkdown(article, window.location.href)
       await navigator.clipboard.writeText(markdown)
       setCopyStatus('Page copied as Markdown')
     } catch {
@@ -87,7 +87,7 @@ export default function Doc(props: any) {
             return (
               <React.Fragment key={node.id}>
                 <MDXRenderer>{node.body}</MDXRenderer>
-                <Styles.ShareContainer isFirstEntry={index === 0}>
+                <Styles.ShareContainer isFirstEntry={index === 0} data-markdown-exclude='true'>
                   <GithubConnector filePath={filePath} />
                 </Styles.ShareContainer>
               </React.Fragment>

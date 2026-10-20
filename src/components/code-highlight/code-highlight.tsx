@@ -9,7 +9,8 @@ const CodeHighlight: React.FunctionComponent<Types.CodeHighlightProps> = ({
 }: Types.CodeHighlightProps) => (
   <Highlight {...defaultProps} code={code} language={language} theme={vsDark}>
     {({ className, style, tokens, getLineProps, getTokenProps }) => (
-      <pre className={className} style={style}>
+      <pre className={className} style={style} data-markdown-code={code}
+  data-markdown-language={language}>
         {tokens.map((line, i) => (
           <div key={i} {...getLineProps({ line, key: i })}>
             {line.map((token, key) => (
