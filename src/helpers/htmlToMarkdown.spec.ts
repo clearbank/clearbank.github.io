@@ -50,3 +50,81 @@ test('does not modify the rendered article', () => {
 
   expect(article.querySelector('button')).not.toBeNull()
 })
+
+test('preserves original code instead of flattening highlighted lines', () => {
+  const article = createArticle(`
+    <pre data-markdown-language="json">
+      <div>{</div>
+      <div>  "account": "example"</div>
+      <div>}</div>
+    </pre>
+  `)
+
+  const code = '{\n  "account": "example"\n}'
+  article.querySelector('pre')!.setAttribute('data-markdown-code', code)
+
+  expect(htmlToMarkdown(article)).toBe(
+    '```json\n' + code + '\n```'
+  )
+})
+
+test('preserves highlighted line boundaries without original code metadata', () => {
+  const article = createArticle(
+    '<pre><div>first line</div><div>second line</div></pre>'
+  )
+
+  expect(htmlToMarkdown(article)).toBe(
+    '```\nfirst line\nsecond line\n```'
+  )
+})
+
+test('removes UI labels but preserves nested documentation', () => {
+  const article = createArticle(`
+    <div data-markdown-exclude="true">Code copied</div>
+    <div data-markdown-exclude="true">Edit this section on GitHub</div>
+    <div class="el-collapse-item__header">Show children</div>
+    <div><p>Customer first name</p></div>
+  `)
+
+  const markdown = htmlToMarkdown(article)
+
+  expect(markdown).toBe('Customer first name')
+})
+
+test('resolves links and images against the page URL', () => {
+  const article = createArticle(`
+    <p><a href="./savings-accounts">Savings accounts</a></p>
+    <p><a href="#requirements">Requirements</a></p>
+    <img src="/assets/diagram.png" alt="Diagram">
+  `)
+
+  const pageUrl =
+    'https://docs.example.com/uk/docs/embedded-banking/retail-customers'
+
+  const markdown = htmlToMarkdown(article, pageUrl)
+
+  expect(markdown).toContain(
+    '[Savings accounts](https://docs.example.com/uk/docs/embedded-banking/savings-accounts)'
+  )
+  expect(markdown).toContain(
+    `[Requirements](${pageUrl}#requirements)`
+  )
+  expect(markdown).toContain(
+    '![Diagram](https://docs.example.com/assets/diagram.png)'
+  )
+})
+
+test('uses matching fences longer than backticks inside the code', () => {
+  const article = createArticle('<pre></pre>')
+  const code = 'before\n```\nafter'
+  const pre = article.querySelector('pre')!
+
+  pre.textContent = code
+  pre.setAttribute('data-markdown-code', code)
+
+  const fence = '`'.repeat(4)
+
+  expect(htmlToMarkdown(article)).toBe(
+    `${fence}\n${code}\n${fence}`
+  )
+})
