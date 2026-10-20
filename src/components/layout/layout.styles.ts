@@ -459,3 +459,20 @@ export const MobileNavigationContent = styled.div`
     padding: 24px 60px;
   }
 `
+
+export const ArticleBreadcrumb = styled.nav`
+  flex: 0 0 100%;
+  color: rgba(71, 142, 150, 0.5);
+  font-family: ${fonts.body};
+  font-size: 14px;
+  line-height: 1.4;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`
