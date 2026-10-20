@@ -304,18 +304,18 @@ export const OnThisPageDisclosure = styled.div`
 
 export const OnThisPageButton = styled.button`
   display: inline-grid;
-  grid-template-columns: auto 16px;
+  grid-template-columns: auto 12px;
   align-items: center;
-  column-gap: 10px;
+  column-gap: 8px;
   min-height: 44px;
-  padding: 0 18px;
+  padding: 0 14px;
   border: 2px solid ${colors.brandPrimaryDark};
-  border-radius: 10px;
+  border-radius: 8px;
   background: ${colors.brandGrayLight};
   color: ${colors.brandDark};
   cursor: pointer;
   font-family: ${fonts.body};
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1;
   list-style: none;
