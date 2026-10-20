@@ -73,46 +73,38 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   }
 
   useEffect(() => {
-    if (!isPageMenuOpen || !hasWindow()) {
-      return
-    }
+  if (!isPageMenuOpen || !hasWindow()) {
+    return
+  }
 
-    const isInsideDisclosure = (target: EventTarget | null) => {
-      return (
-        target instanceof Node &&
-        !!pageMenuDisclosureRef.current?.contains(target)
-      )
-    }
+  const handleOutsidePointerDown = (event: PointerEvent) => {
+    const disclosure = pageMenuDisclosureRef.current
+    const target = event.target
 
-    const handleOutsidePointerDown = (event: PointerEvent) => {
-      if (!isInsideDisclosure(event.target)) {
-        setIsPageMenuOpen(false)
-      }
+    if (
+      disclosure &&
+      target instanceof Node &&
+      !disclosure.contains(target)
+    ) {
+      setIsPageMenuOpen(false)
     }
+  }
 
-    const handleScroll = (event: Event) => {
-      if (!isInsideDisclosure(event.target)) {
-        setIsPageMenuOpen(false)
-      }
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsPageMenuOpen(false)
+      pageMenuButtonRef.current?.focus()
     }
+  }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsPageMenuOpen(false)
-        pageMenuButtonRef.current?.focus()
-      }
-    }
+  document.addEventListener('pointerdown', handleOutsidePointerDown)
+  window.addEventListener('keydown', handleKeyDown)
 
-    document.addEventListener('pointerdown', handleOutsidePointerDown)
-    document.addEventListener('scroll', handleScroll, true)
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('pointerdown', handleOutsidePointerDown)
-      document.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isPageMenuOpen])
+  return () => {
+    document.removeEventListener('pointerdown', handleOutsidePointerDown)
+    window.removeEventListener('keydown', handleKeyDown)
+  }
+}, [isPageMenuOpen])
 
   useEffect(() => {
     if (!isMobileNavigationOpen || !hasWindow()) {
