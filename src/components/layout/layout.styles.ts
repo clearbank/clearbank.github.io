@@ -138,26 +138,28 @@ const SidebarToggleBase = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  min-width: 48px;
-  height: 38px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
   border: none;
-  border-radius: 8px;
-  background: ${colors.brandGrayDark};
-  color: ${colors.brandLight};
+  border-radius: 6px;
+  background: transparent;
+  color: ${colors.brandGrayDarker};
   cursor: pointer;
   font-family: ${fonts.body};
-  font-size: 18px;
+  font-size: 28px;
   line-height: 1;
   box-shadow: none;
 
   &:hover {
-    background: ${colors.wedgewoodapprox};
+    background: ${colors.brandGray};
+    color: ${colors.wedgewoodapprox};
   }
 
   &:focus-visible {
     outline: 2px solid ${colors.wedgewoodapprox};
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 `
 
