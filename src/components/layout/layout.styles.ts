@@ -307,7 +307,7 @@ export const OnThisPageButton = styled.button`
   grid-template-columns: auto 12px;
   align-items: center;
   column-gap: 8px;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 14px;
   border: 2px solid ${colors.brandPrimaryDark};
   border-radius: 8px;
@@ -315,7 +315,7 @@ export const OnThisPageButton = styled.button`
   color: ${colors.brandDark};
   cursor: pointer;
   font-family: ${fonts.body};
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1;
   list-style: none;
