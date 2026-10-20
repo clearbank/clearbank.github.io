@@ -9,6 +9,20 @@ const turndown = new TurndownService({
 
 turndown.use(gfm)
 
+turndown.addRule('articleTableCell', {
+  filter: ['th', 'td'],
+  replacement: (content, node) => {
+    const cellContent = content
+      .trim()
+      .replace(/\\?\|/g, '\\|')
+      .replace(/[ \t]*\r?\n(?:[ \t]*\r?\n)*[ \t]*/g, '<br>')
+
+    const prefix = node.previousElementSibling ? ' ' : '| '
+
+    return `${prefix}${cellContent} |`
+  }
+})
+
 function getCode(pre: HTMLElement): string {
   const originalCode = pre.getAttribute('data-markdown-code')
 
