@@ -231,11 +231,15 @@ export const ContentWrapper = styled.article`
     }
   }
 
-  .page .page-menu-entry[id] {
-  scroll-margin-top: calc(
-    ${headerHeight} + var(--article-toolbar-height, 0px) + 16px
-  );
-}
+    .page .page-menu-entry[id] {
+    scroll-margin-top: calc(${headerHeight} + 16px);
+
+    @media screen and (min-width: ${breakpoints.medium}) {
+      scroll-margin-top: calc(
+        ${headerHeight} + var(--article-toolbar-height, 0px) + 16px
+      );
+    }
+  }
 `
 
 export const InnerContentWrapper = styled.main`
@@ -275,8 +279,12 @@ export const PageHeader = styled.h1`
 `
 
 export const ArticleToolbar = styled.div`
-  position: sticky;
-  top: ${headerHeight};
+  position: static;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    position: sticky;
+    top: ${headerHeight};
+  }
   z-index: 1;
   align-self: flex-start;
   display: flex;
