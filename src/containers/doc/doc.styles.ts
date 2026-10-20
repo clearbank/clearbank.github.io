@@ -55,7 +55,13 @@ export const PageActions = styled.div`
 export const CopyMarkdownButton = styled(OnThisPageButton)`
   display: inline-flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
 
   &::after {
     content: none;
