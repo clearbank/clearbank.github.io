@@ -78,7 +78,12 @@ export const IntroductionTitle = styled.h2`
 
 export const Page = styled.section`
   position: relative;
+  padding-top: 24px;
   scroll-margin-top: ${heights.header};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-top: 32px;
+  }
 
   & + & {
     margin-top: 60px;
