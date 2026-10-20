@@ -158,23 +158,15 @@ Take care to update the `RequestedExecutionDate` field to today's date, and to u
 
 If an outbound SCT UK payment is returned, you'll receive a [Cross-border Outbound Payment Return Completed webhook](#cross-border-outbound-payment-return-completed-webhook). This includes a `ReasonCode` in the `ReturnReasonInformation` array specifying why the payment was returned. The return reason codes include, but are not limited to:
 
-| Reason code | Description                                                                                                    |
-| ----------- | -------------------------------------------------------------------------------------------------------------- |
-| AC01        | Account identifier incorrect. The IBAN is invalid or does not exist.                                           |
-| AC04        | Closed account number. The beneficiary account has been closed.                                                |
-| AC06        | Blocked account. The account is frozen or blocked for financial transactions.                                  |
-| AG01        | Transaction forbidden. Credit transfers are not allowed on this specific account type.                         |
-| AM04        | Insufficient funds. Used if the debtor account lacks funds to settle the transfer.                             |
-| AM05        | Duplication. The payment instruction matches a previously processed transfer.                                  |
-| AM09        | Wrong amount. The transfer amount is incorrect or invalid.                                                     |
-| BE04        | Missing creditor address. The beneficiary address is required but missing (common for non-EEA SEPA countries). |
-| MS02        | Refusal by the beneficiary. The receiver refused to accept the funds.                                          |
-| MS03        | Reason not specified. A generic fallback code, often used due to privacy laws or data protection rules.        |
-| RC01        | Bank identifier incorrect. The BIC / SWIFT code is invalid or wrong.                                           |
-| RR01        | Regulatory reason. The payment was returned due to regulatory or compliance issues.                            |
-| RR02        | Regulatory reason. Missing mandatory information for regulatory compliance.                                    |
-| RR03        | Regulatory reason. Missing debtor name or address where legally required.                                      |
-| RR04        | Regulatory reason. Specific legal or formatting requirements were not met.                                     |
+| Reason code | Description                             |
+| ----------- | --------------------------------------- |
+| AC01        | Account identifier invalid or incorrect |
+| AC04        | Account not active / closed             |
+| AC06        | Blocked account                         |
+| AM04        | Insufficient funds                      |
+| CNOR        | Creditor bank is not registered         |
+| CUST        | Requested by customer                   |
+| RR04        | Regulatory reason                       |
 
 External code sets can be downloaded from <ExternalLink href="https://www.iso20022.org">iso20022.org</ExternalLink>.
 
@@ -215,7 +207,7 @@ To simulate the return of an outbound SCT UK payment in the simulation environme
 
 Receipt of the [Cross-border Outbound Payment Return Completed webhook](#cross-border-outbound-payment-return-completed-webhook) confirms the return payment.
 
-**Note**: The return reason in Simulation will always be `AC01` (Account identifier incorrect). See [Return reason codes](#return-reason-codes).
+**Note**: The return reason in Simulation will always be `AC01` (Account identifier invalid or incorrect). See [Return reason codes](#return-reason-codes).
 
 ```json
 "remittanceInformation": {
