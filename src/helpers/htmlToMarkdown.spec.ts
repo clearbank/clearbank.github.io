@@ -128,3 +128,30 @@ test('uses matching fences longer than backticks inside the code', () => {
     `${fence}\n${code}\n${fence}`
   )
 })
+
+test('keeps multiline table cells on one row and preserves inline formatting', () => {
+  const article = createArticle(`
+    <table>
+      <thead>
+        <tr><th>Element</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>AccountId</code></td>
+          <td>
+            <p>Identifier with A | B.</p>
+            <p>Type: <code>string</code><br>See <a href="https://example.com">guide</a>.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  `)
+
+  expect(htmlToMarkdown(article)).toBe(
+    [
+      '| Element | Description |',
+      '| --- | --- |',
+      '| `AccountId` | Identifier with A \\| B.<br>Type: `string`<br>See [guide](https://example.com). |'
+    ].join('\n')
+  )
+})
