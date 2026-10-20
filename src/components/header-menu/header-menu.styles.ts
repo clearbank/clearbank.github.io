@@ -62,7 +62,7 @@ export const Title = styled.h2<{ isActive?: boolean }>`
 }
 
   @media screen and (min-width: ${breakpoints.xLarge}) {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 32px;
   }
 `
