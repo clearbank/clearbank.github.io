@@ -15,4 +15,5 @@ export interface LayoutProps {
   pageContext: any
   hideFooterNavigation?: boolean
   articleActions?: ReactNode
+  articleBreadcrumb?: ReactNode
 }

@@ -54,10 +54,24 @@ export default function Doc(props: any) {
   const pageTitle = data.mdx.fields.title
   const pageId = kebabCase(pageTitle.toLowerCase())
 
+  const region =
+  props.location?.pathname?.split('/').filter(Boolean)[0] === 'eu'
+    ? 'eu'
+    : 'uk'
+  const homePath = `/${region}`
+
   return (
     <Layout
-      {...props}
-      articleActions={
+  {...props}
+  articleBreadcrumb={
+    <Styles.ArticleBreadcrumb aria-label='Breadcrumb'>
+      <a href={homePath}>Home</a>
+      <span aria-hidden='true'> / </span>
+      <span aria-current='page'>{pageTitle}</span>
+    </Styles.ArticleBreadcrumb>
+  }
+  
+  articleActions={
         <Styles.PageActions>
           <Styles.CopyMarkdownButton
             type='button'

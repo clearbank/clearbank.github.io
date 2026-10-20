@@ -82,3 +82,20 @@ export const CopyMarkdownStatus = styled.span`
   font-size: 12px;
   line-height: 16px;
 `
+
+export const ArticleBreadcrumb = styled.nav`
+  flex: 0 0 100%;
+  color: rgba(71, 142, 150, 0.75);
+  font-family: ${fonts.body};
+  font-size: 12px;
+  line-height: 1;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`

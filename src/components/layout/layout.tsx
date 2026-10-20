@@ -23,13 +23,14 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
   children,
   pageContext,
   hideFooterNavigation,
-  articleActions
+  articleActions,
+  articleBreadcrumb
 }): JSX.Element => {
   const { menuItems } = pageContext
   const currentPath = location?.pathname || ''
   const hasLeftNavigation = /^\/(uk|eu)\/docs(\/|$)/.test(currentPath)
   const hasRightNavigation = !!data?.mdx?.frontmatter?.showPageMenu
-  const hasArticleToolbar = hasRightNavigation || !!articleActions
+  const hasArticleToolbar = hasRightNavigation || !!articleActions || !!articleBreadcrumb
 
   const mobileNavigationId = 'docs-navigation-modal'
   const leftNavigationId = 'docs-navigation-panel'
@@ -313,68 +314,68 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
           )}
 
           <Styles.ContentWrapper ref={contentWrapperRef}>
-            {hasArticleToolbar && (
-              <Styles.ArticleToolbar ref={articleToolbarRef}>
-                {hasRightNavigation && (
-                  <Styles.OnThisPageDisclosure ref={pageMenuDisclosureRef}>
-                    <Styles.OnThisPageButton
-                      ref={pageMenuButtonRef}
-                      type='button'
-                      aria-expanded={isPageMenuOpen}
-                      aria-controls='on-this-page-panel'
-                      onClick={() => setIsPageMenuOpen(isOpen => !isOpen)}
-                    >
-                      On this page
-                    </Styles.OnThisPageButton>
+  {hasArticleToolbar && (
+    <Styles.ArticleToolbar ref={articleToolbarRef}>
+      {articleBreadcrumb}
 
-                    {isPageMenuOpen && (
-                      <Styles.OnThisPagePanel
-                        id='on-this-page-panel'
-                        onClick={event => {
-                          if (
-                            event.defaultPrevented ||
-                            event.button !== 0 ||
-                            event.ctrlKey ||
-                            event.metaKey ||
-                            event.shiftKey ||
-                            event.altKey
-                          ) {
-                            return
-                          }
+      {hasRightNavigation && (
+        <Styles.OnThisPageDisclosure ref={pageMenuDisclosureRef}>
+          <Styles.OnThisPageButton
+            ref={pageMenuButtonRef}
+            type='button'
+            aria-expanded={isPageMenuOpen}
+            aria-controls='on-this-page-panel'
+            onClick={() => setIsPageMenuOpen(isOpen => !isOpen)}
+          >
+            On this page
+          </Styles.OnThisPageButton>
 
-                          const target = event.target
+          {isPageMenuOpen && (
+            <Styles.OnThisPagePanel
+              id='on-this-page-panel'
+              onClick={event => {
+                if (
+                  event.defaultPrevented ||
+                  event.button !== 0 ||
+                  event.ctrlKey ||
+                  event.metaKey ||
+                  event.shiftKey ||
+                  event.altKey
+                ) {
+                  return
+                }
 
-                          if (!(target instanceof Element)) {
-                            return
-                          }
+                const target = event.target
 
-                          const link = target.closest('a[href^="#"]')
+                if (!(target instanceof Element)) {
+                  return
+                }
 
-                          if (!link) {
-                            return
-                          }
+                const link = target.closest('a[href^="#"]')
 
-                          setIsPageMenuOpen(false)
-                          pageMenuButtonRef.current?.focus({
-                            preventScroll: true
-                          })
-                        }}
-                      >
-                        <PageMenu />
-                      </Styles.OnThisPagePanel>
-                    )}
-                  </Styles.OnThisPageDisclosure>
-                )}
+                if (!link) {
+                  return
+                }
 
-                {articleActions}
-              </Styles.ArticleToolbar>
-            )}
+                setIsPageMenuOpen(false)
+                pageMenuButtonRef.current?.focus({ preventScroll: true })
+              }}
+            >
+              <PageMenu />
+            </Styles.OnThisPagePanel>
+          )}
+        </Styles.OnThisPageDisclosure>
+      )}
 
-            <Styles.InnerContentWrapper>
-              {children}
-              <Pagination menuItems={menuItems} />
-            </Styles.InnerContentWrapper>
-          </Styles.ContentWrapper>
+      {articleActions}
+    </Styles.ArticleToolbar>
+  )}
+
+  <Styles.InnerContentWrapper>
+    {children}
+    <Pagination menuItems={menuItems} />
+  </Styles.InnerContentWrapper>
+</Styles.ContentWrapper>
 
           <Styles.FooterWrapper>
             <Footer
