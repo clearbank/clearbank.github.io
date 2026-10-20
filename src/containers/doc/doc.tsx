@@ -13,6 +13,8 @@ import * as Styles from './doc.styles'
 
 import 'src/components/styles.css'
 
+import { IMenu } from 'src/components/menu/menu.types'
+
 export default function Doc(props: any) {
   const articleRef = React.useRef<HTMLDivElement>(null)
   const [copyStatus, setCopyStatus] = React.useState('')
@@ -54,23 +56,55 @@ export default function Doc(props: any) {
   const pageTitle = data.mdx.fields.title
   const pageId = kebabCase(pageTitle.toLowerCase())
 
-  const region =
-  props.location?.pathname?.split('/').filter(Boolean)[0] === 'eu'
-    ? 'eu'
-    : 'uk'
-  const homePath = `/${region}`
+  const currentPath = (
+  props.pageContext.slug || props.location?.pathname || ''
+).replace(/\/+$/, '')
+
+const region = currentPath.split('/').filter(Boolean)[0] === 'eu'
+  ? 'eu'
+  : 'uk'
+
+const homePath = `/${region}`
+const menuItems: IMenu[] = props.pageContext.menuItems || []
+
+const parentCategory = menuItems.find(({ menuItem }) => {
+  const categoryPath = menuItem.slug.replace(/\/+$/, '')
+
+  return (
+    categoryPath !== '' &&
+    categoryPath !== currentPath &&
+    currentPath.startsWith(`${categoryPath}/`)
+  )
+})
+
+// Category landing pages are empty, so use their first documentation page,
+// matching the existing documentation sidebar.
+const parentCategoryPath = parentCategory
+  ? parentCategory.subMenuItems?.[0]?.fields.slug ||
+    parentCategory.menuItem.slug
+  : ''
 
   return (
     <Layout
   {...props}
   articleBreadcrumb={
-    <Styles.ArticleBreadcrumb aria-label='Breadcrumb'>
-      <a href={homePath}>Home</a>
-      <span aria-hidden='true'> / </span>
-      <span aria-current='page'>{pageTitle}</span>
-    </Styles.ArticleBreadcrumb>
-  }
-  
+  <Styles.ArticleBreadcrumb aria-label='Breadcrumb'>
+    <a href={homePath}>Home</a>
+
+    {parentCategory && (
+      <>
+        <span aria-hidden='true'> / </span>
+        <a href={parentCategoryPath}>
+          {parentCategory.menuItem.title}
+        </a>
+      </>
+    )}
+
+    <span aria-hidden='true'> / </span>
+    <span aria-current='page'>{pageTitle}</span>
+  </Styles.ArticleBreadcrumb>
+}
+
   articleActions={
         <Styles.PageActions>
           <Styles.CopyMarkdownButton
