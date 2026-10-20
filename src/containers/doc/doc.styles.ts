@@ -86,7 +86,7 @@ export const CopyMarkdownStatus = styled.span`
 
 export const ArticleBreadcrumb = styled.nav`
   flex: 0 0 100%;
-  color: rgba(71, 142, 150, 0.75);
+  color: #356b70;
   font-family: ${fonts.body};
   font-size: 12px;
   line-height: 1;
