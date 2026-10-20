@@ -1,10 +1,12 @@
 import React from 'react'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import kebabCase from 'lodash.kebabcase'
+import { Check, Copy } from 'react-feather'
 
 import { Layout } from 'src/components'
 import GithubConnector from 'src/components/github-connector'
 import { rawContentUrl } from 'src/helpers/githubSource'
+import { htmlToMarkdown } from 'src/helpers/htmlToMarkdown'
 
 import config from '../../../config'
 
@@ -13,33 +15,86 @@ import * as Styles from './doc.styles'
 import 'src/components/styles.css'
 
 export default function Doc(props: any) {
-  const { data } = props;
-  
+  const articleRef = React.useRef<HTMLDivElement>(null)
+  const [copyStatus, setCopyStatus] = React.useState('')
+  const { data } = props
+
+  const handleCopyMarkdown = async () => {
+    const article = articleRef.current
+
+    if (!article) {
+      setCopyStatus('Could not find page content to copy.')
+      return
+    }
+
+    try {
+      const markdown = htmlToMarkdown(article)
+      await navigator.clipboard.writeText(markdown)
+      setCopyStatus('Page copied as Markdown')
+    } catch {
+      setCopyStatus(
+        'Copy failed. Please select and copy the page content manually.'
+      )
+    }
+  }
+
+  React.useEffect(() => {
+    if (!copyStatus) return
+
+    const timeoutId = window.setTimeout(() => {
+      setCopyStatus('')
+    }, 4000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [copyStatus])
+
   if (!data) {
     return null
   }
 
   const pageTitle = data.mdx.fields.title
-  const pageId = kebabCase(data.mdx.fields.title.toLowerCase())
+  const pageId = kebabCase(pageTitle.toLowerCase())
 
   return (
-    <Layout {...props}>
+    <Layout
+      {...props}
+      articleActions={
+        <Styles.PageActions>
+          <Styles.CopyMarkdownButton
+            type='button'
+            onClick={handleCopyMarkdown}
+          >
+            {copyStatus === 'Page copied as Markdown'
+              ? <Check size={16} aria-hidden='true' />
+              : <Copy size={16} aria-hidden='true' />}
+            <span>Copy as Markdown</span>
+          </Styles.CopyMarkdownButton>
+
+          <Styles.CopyMarkdownStatus role='status' aria-live='polite'>
+            {copyStatus}
+          </Styles.CopyMarkdownStatus>
+        </Styles.PageActions>
+      }
+    >
       <Styles.Page className='page' id={`doc-page-${pageId}`} key={pageId}>
-        <Styles.Title id='pageTitle' className="page-menu-entry">
+        <Styles.Title id='pageTitle' className='page-menu-entry'>
           {pageTitle}
         </Styles.Title>
-        {data.pageContent.edges.map(({ node }, index: number) => {
-          const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
 
-          return (
-            <>
-              <MDXRenderer key={node.id}>{node.body}</MDXRenderer>
-              <Styles.ShareContainer isFirstEntry={index === 0}>
-                <GithubConnector filePath={filePath} />
-              </Styles.ShareContainer>
-            </>
-          )
-        })}
+        <div ref={articleRef}>
+          {data.pageContent.edges.map(({ node }, index: number) => {
+            const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
+
+            return (
+              <React.Fragment key={node.id}>
+                <MDXRenderer>{node.body}</MDXRenderer>
+                <Styles.ShareContainer isFirstEntry={index === 0}>
+                  <GithubConnector filePath={filePath} />
+                </Styles.ShareContainer>
+              </React.Fragment>
+            )
+          })}
+        </div>
       </Styles.Page>
     </Layout>
   )
