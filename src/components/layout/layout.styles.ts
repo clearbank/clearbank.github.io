@@ -197,19 +197,19 @@ export const ContentWrapper = styled.article`
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 24px 20px 20px;
+  padding: 0 20px 20px;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
-    padding: 32px 60px 20px;
-  }
+@media screen and (min-width: ${breakpoints.medium}) {
+  padding: 0 60px 20px;
+}
 
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: 32px 30px 40px;
-  }
+@media screen and (min-width: ${breakpoints.large}) {
+  padding: 0 30px 40px;
+}
 
-  @media screen and (min-width: ${breakpoints.xLarge}) {
-    padding: 40px 60px 40px;
-  }
+@media screen and (min-width: ${breakpoints.xLarge}) {
+  padding: 0 60px 40px;
+}
 
   ${Callout.Container} {
     margin-bottom: 30px;
@@ -228,6 +228,12 @@ export const ContentWrapper = styled.article`
       margin-top: 50px;
     }
   }
+
+  .page .page-menu-entry[id] {
+  scroll-margin-top: calc(
+    ${headerHeight} + var(--article-toolbar-height, 0px) + 16px
+  );
+}
 `
 
 export const InnerContentWrapper = styled.main`
@@ -272,12 +278,21 @@ export const ArticleToolbar = styled.div`
   z-index: 1;
   align-self: flex-start;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   width: 100%;
   gap: 16px;
-  margin: 0 0 16px;
-  padding: 8px 0;
+  margin: 0 0 8px;
+  padding: 16px 0 24px;
   background: ${colors.brandLight};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-top: 20px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    padding-top: 24px;
+  }
 `
 
 export const OnThisPageDisclosure = styled.div`
@@ -292,6 +307,7 @@ export const OnThisPageButton = styled.button`
   column-gap: 10px;
   min-height: 44px;
   padding: 0 18px;
+  border: 2px solid ${colors.brandPrimaryDark};
   border-radius: 10px;
   background: ${colors.brandGrayLight};
   color: ${colors.brandDark};

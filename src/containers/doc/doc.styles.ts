@@ -2,6 +2,8 @@ import styled from 'styled-components'
 
 import { breakpoints, fonts, colors, heights } from 'src/components/theme'
 
+import { OnThisPageButton } from 'src/components/layout/layout.styles'
+
 export const Title = styled.h1`
   margin-top: 40px;
   font-family: ${fonts.body};
@@ -44,4 +46,33 @@ export const ShareContainer = styled.div<{ isFirstEntry?: boolean }>`
   right: 0;
   // first headline has larger margin top
   top: ${({ isFirstEntry }) => (isFirstEntry ? '15px' : '3px;')};
+`
+
+export const PageActions = styled.div`
+  position: relative;
+`
+
+export const CopyMarkdownButton = styled(OnThisPageButton)`
+  display: inline-flex;
+  justify-content: center;
+  gap: 10px;
+
+  &::after {
+    content: none;
+  }
+
+  &[aria-expanded='true']::after {
+    content: none;
+  }
+`
+
+export const CopyMarkdownStatus = styled.span`
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  color: ${colors.brandGrayDarker};
+  font-family: ${fonts.body};
+  font-size: 12px;
+  line-height: 16px;
 `
