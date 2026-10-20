@@ -344,11 +344,19 @@ export const OnThisPagePanel = styled.div`
   z-index: 3;
   min-width: 320px;
   max-width: 420px;
-  max-height: 60vh;
+  box-sizing: border-box;
+  max-height: min(
+    60vh,
+    calc(
+      100vh - ${headerHeight} -
+        var(--article-toolbar-height, 120px) - 24px
+    )
+  );
   overflow-y: auto;
   border-radius: 0 0 12px 12px;
   background: ${colors.brandLight};
-  border: 1px solid ${colors.brandLight};
+  border: 0.5px solid ${colors.brandGrayLighter};
+  border-top: none;
   box-shadow: none;
 
   #pageMenu {
@@ -356,6 +364,7 @@ export const OnThisPagePanel = styled.div`
     top: auto;
     max-height: none;
     height: auto;
+    overflow: visible;
     padding: 18px 22px;
     border-left: none;
   }
