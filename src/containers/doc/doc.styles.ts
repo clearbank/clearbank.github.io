@@ -56,10 +56,11 @@ export const CopyMarkdownButton = styled(OnThisPageButton)`
   display: inline-flex;
   justify-content: center;
   gap: 8px;
+  padding: 0 14px;
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
   }
 
@@ -79,7 +80,7 @@ export const CopyMarkdownStatus = styled.span`
   width: 100%;
   color: ${colors.brandGrayDarker};
   font-family: ${fonts.body};
-  font-size: 12px;
+  font-size: 10px;
   line-height: 16px;
 `
 
