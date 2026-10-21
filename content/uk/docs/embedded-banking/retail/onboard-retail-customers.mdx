@@ -13,9 +13,18 @@ import WebhookSummary from 'src/components/webhook-summary';
 
 ## Retail customer onboarding
 
-Our retail customer onboarding endpoint lets you onboard new individuals as retail customers in a single request. Share key information about the customer, and we'll handle the rest. When onboarding is complete, you'll receive a `CustomerId` that you can use to give the customer access to our products, such as [accounts](/uk/docs/embedded-banking/retail/retail-customers#compatible-account-types).
+Every retail customer needs a `CustomerId` before they can be given access to our products, such as [accounts](/uk/docs/embedded-banking/retail/retail-customers#compatible-account-types). How you get one depends on who carries out the customer's due diligence checks:
 
-Every onboarding application includes our Know Your Customer (KYC) due diligence checks. These checks can pass or fail, and we'll tell you the outcome by webhook. If the checks pass, we'll create the retail customer for you. If they fail, no customer is created. We may also need more information from the customer before we can complete our checks.
+* **ClearBank carries out the checks.** Use our customer due diligence endpoint and webhooks to [onboard the customer with our Know Your Customer (KYC) checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer if they pass.
+* **You carry out the checks.** Record the outcomes yourself and [create the retail customer directly](#create-a-retail-customer-with-your-own-due-diligence). No ClearBank checks are performed.
+
+Once a retail customer exists, you can retrieve and manage their details on our [Manage existing Retail Customers](/uk/docs/embedded-banking/retail/retail-customers) page.
+
+## Onboard with ClearBank's due diligence
+
+Our retail customer onboarding endpoint lets you onboard new individuals as retail customers in a single request. Share key information about the customer, and we'll handle the rest. When onboarding is complete, you'll receive a `CustomerId` for them.
+
+Every onboarding application includes our KYC due diligence checks. These checks can pass or fail, and we'll tell you the outcome by webhook. If the checks pass, we'll create the retail customer for you. If they fail, no customer is created. We may also need more information from the customer before we can complete our checks.
 
 If you'd like access to this product, please speak to your Client Director.
 
@@ -49,13 +58,13 @@ If you'd like access to this product, please speak to your Client Director.
   ]}
 />
 
-## Webhooks
+### Webhooks
 
 <WebhookPlaceholder render='kyc-application-successful-v1' />
 <WebhookPlaceholder render='kyc-application-pending-v1' />
 <WebhookPlaceholder render='kyc-application-declined-v1' />
 
-## Simulating onboarding webhooks
+### Simulating onboarding webhooks
 
 You can simulate successful, declined and additional information onboarding outcomes - as well as additional information emails - in our simulation environment.  
 To do this, call the [**POST /customer-due-diligence/v1/retail/onboard**](#onboard-a-new-retail-customer) endpoint with the `customerData.name.surname` property set to:
@@ -63,3 +72,51 @@ To do this, call the [**POST /customer-due-diligence/v1/retail/onboard**](#onboa
 * `"pass"` to simulate checks passing, and receive a Retail Customer Application Successful webhook.
 * `"fail"` to simulate checks failing, and receive a Retail Customer Application Declined webhook.
 * `"info"` to simulate checks requiring additional information. To receive a Retail Customer Additional Info Required webhook instead of an email, ensure the `customerData.idvEmailsEnabled` property is set to `false`.
+
+## Create a retail customer with your own due diligence
+
+If you conduct your own KYC and Anti-Money Laundering (AML) checks, you can create a retail customer directly. No ClearBank due diligence checks are performed, so you're responsible for recording the outcome of your own checks on the customer.
+
+<Callout colour="green">
+<h2>Retail customers V2 is coming soon</h2>
+<p>All information in this section describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+#### KYC and AML fields
+
+When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+* `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
+* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+
+If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/retail/{customerId}**](/uk/docs/embedded-banking/retail/retail-customers#update-a-retail-customer) endpoint.
+
+#### Addresses
+
+When you create a retail customer, you'll also need to provide their current address in the `addressHistory.currentAddress` object. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
+
+<EndpointBlock
+  type="post"
+  title="Create a retail customer"
+  endpoints={[
+    {
+      path: "/customers/v2/retail",
+      version: "2.0-customers-retail"
+    }
+  ]}
+/>
+
+If you're still using our V1 retail customer endpoint, you can create a retail customer with it below. Once you've created a retail customer, you can [create a new FSCS-protected embedded banking account](/uk/docs/embedded-banking/retail/retail-customers#create-an-embedded-banking-account) using their unique ID.
+
+<EndpointBlock
+  type="post"
+  title="Create a retail customer V1"
+  endpoints={[
+    {
+      path: "/v1/customers/retail",
+      version: "1.0.Retail"
+    }
+  ]}
+/>
+
