@@ -22,7 +22,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 Every sole trader needs a `CustomerId` before they can be given access to our products, such as [accounts](/uk/docs/embedded-banking/business/sole-traders-v2#compatible-account-types). How you get one depends on who carries out the due diligence checks:
 
 * **ClearBank carries out the checks.** Use our customer due diligence endpoint and webhooks to [onboard the sole trader with our due diligence checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer if the checks pass.
-* **You carry out the checks.** Record the outcomes yourself and [create the sole trader directly](#create-a-sole-trader-with-your-own-due-diligence). No ClearBank checks are performed.
+* **You carry out the checks.** You can then [create the sole trader directly](#create-a-sole-trader-with-your-own-due-diligence), your request should include the outcomes of your checks. No ClearBank checks are performed.
 
 To retrieve and manage a sole trader's details once they exist, use their `CustomerId` with our [sole trader endpoints](/uk/docs/embedded-banking/business/sole-traders-v2).
 
@@ -71,13 +71,7 @@ To do this, call the [**POST /customer-due-diligence/v1/sole-trader/onboard**](#
 
 ## Create a sole trader with your own due diligence
 
-If you conduct your own due diligence checks on a sole trader, you can create them directly. No ClearBank due diligence checks are performed, so you're responsible for recording the outcome of your own checks.
-
-<Callout colour="green">
-<h2>Sole traders V2 is coming soon</h2>
-<p>All information in this section describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
-</Callout>
-
+If you conduct your own due diligence checks on a sole trader, you can create them directly. No ClearBank due diligence checks are performed, so you must supply the outcomes of your own checks in the request. The `kycAml` object, `taxDetails` (including at least one tax residency), `personalDetails`, `businessDetails`, `businessClassification` and `addressHistory` are all required.
 The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](/uk/docs/embedded-banking/retail/onboard-retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
 
 #### Business information

@@ -16,7 +16,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 Every retail customer needs a `CustomerId` before they can be given access to our products, such as [accounts](/uk/docs/embedded-banking/retail/retail-customers#compatible-account-types). How you get one depends on who carries out the customer's due diligence checks:
 
 * **ClearBank carries out the checks.** Use our customer due diligence endpoint and webhooks to [onboard the customer with our Know Your Customer (KYC) checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer if they pass.
-* **You carry out the checks.** Record the outcomes yourself and [create the retail customer directly](#create-a-retail-customer-with-your-own-due-diligence). No ClearBank checks are performed.
+* **You carry out the checks.** You can then [create the retail customer directly](#create-a-retail-customer-with-your-own-due-diligence), your request should include the outcomes of your checks. No ClearBank checks are performed.
 
 Once a retail customer exists, you can retrieve and manage their details on our [Manage existing Retail Customers](/uk/docs/embedded-banking/retail/retail-customers) page.
 
@@ -75,7 +75,7 @@ To do this, call the [**POST /customer-due-diligence/v1/retail/onboard**](#onboa
 
 ## Create a retail customer with your own due diligence
 
-If you conduct your own KYC and Anti-Money Laundering (AML) checks, you can create a retail customer directly. No ClearBank due diligence checks are performed, so you're responsible for recording the outcome of your own checks on the customer.
+If you conduct your own KYC and Anti-Money Laundering (AML) checks, you can create a retail customer directly. No ClearBank due diligence checks are performed, so you must supply the outcomes of your own checks in the request. The `kycAml` object, `taxDetails` (including at least one tax residency), `personalDetails` and `addressHistory` are all required.
 
 <Callout colour="green">
 <h2>Retail customers V2 is coming soon</h2>
