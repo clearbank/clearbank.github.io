@@ -29,7 +29,7 @@ const renderDescription = (descriptionApi: any, descriptionProps: any) => (
 const getCodeBlocks = (
   section: SectionType,
   codeblocks: Types.Codeblock[] = [],
-  content: any
+  content?: any
 ) => {
   const customCodeblocksForSection = codeblocks.filter(
     (codeblock: Types.Codeblock) => codeblock.section === section
@@ -149,13 +149,21 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
           code={apiURL}
           className='endpoint-block-code'
         />
-        {renderVersionDropdown(endpoints, setCurrentVersion, currentVersion)}
+                <div data-markdown-exclude='true'>
+          {renderVersionDropdown(
+            endpoints,
+            setCurrentVersion,
+            currentVersion
+          )}
+        </div>
       </Styles.DropdownWrapper>
+
+      <p hidden>API Version {version}</p>
       <Styles.Description>{message}</Styles.Description>
 
       {summary && <Styles.SubTitle>{summary}</Styles.SubTitle>}
 
-      {renderDescription(descriptionApi, descriptionProps)}
+     {renderDescription(descriptionApi, descriptionProps)}
 
       <Styles.FlexContainer>
         <Styles.EndpointWrapper>
