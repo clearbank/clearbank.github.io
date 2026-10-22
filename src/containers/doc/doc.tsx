@@ -128,7 +128,7 @@ const parentCategoryPath = parentCategory
           {pageTitle}
         </Styles.Title>
 
-        <div ref={articleRef}>
+        <div ref={articleRef} data-markdown-article>
           {data.pageContent.edges.map(({ node }, index: number) => {
             const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
 
