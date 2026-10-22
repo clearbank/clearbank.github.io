@@ -4,7 +4,7 @@ import { SelectDropdown, SelectOption } from 'src/components/select-dropdown'
 import { SectionType } from 'src/global.types'
 
 import EndpointBlockModel from './components/endpoint-block-model'
-import EndpointBlockRespsonse from './components/endpoint-block-response'
+import EndpointBlockResponse from './components/endpoint-block-response'
 import EndpointBlockParameters from './components/endpoint-block-parameters'
 import EndpointBlockWebhooks from './components/endpoint-block-webhooks'
 import CodeSnippet from 'src/components/code-snippet'
@@ -177,7 +177,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
             apiData={APIFiles[version]}
             codeblocks={getCodeBlocks('request', codeblocks, requestBody)}
           />
-          <EndpointBlockRespsonse
+          <EndpointBlockResponse
             path={path}
             type={type}
             apiData={APIFiles[version]}
