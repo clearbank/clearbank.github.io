@@ -1,0 +1,110 @@
+---
+title: "Onboard new Sole Traders"
+metaTitle: "Onboard new Sole Traders"
+order: 3
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import Callout from "src/components/callout";
+import ExternalLink from 'src/components/external-link';
+
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+
+## Sole trader onboarding
+
+<Callout colour="green">
+<h2>Sole trader onboarding is coming soon</h2>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
+</Callout>
+
+Every sole trader needs a `CustomerId` before they can be given access to our products, such as [accounts](/uk/docs/embedded-banking/business/sole-traders-v2#compatible-account-types). How you get one depends on who carries out the due diligence checks:
+
+* **ClearBank carries out the checks.** Use our customer due diligence endpoint and webhooks to [onboard the sole trader with our due diligence checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer if the checks pass.
+* **You carry out the checks.** You can then [create the sole trader directly](#create-a-sole-trader-with-your-own-due-diligence), your request should include the outcomes of your checks. No ClearBank checks are performed.
+
+To retrieve and manage a sole trader's details once they exist, use their `CustomerId` with our [sole trader endpoints](/uk/docs/embedded-banking/business/sole-traders-v2).
+
+## Onboard with ClearBank's due diligence
+
+Our sole trader onboarding endpoint lets you onboard new sole traders as business customers in a single request. Share information about the sole trader and their business, and we'll handle the rest. When onboarding is complete, you'll receive a `CustomerId` for the new customer.
+
+Every onboarding application includes our Know Your Business (KYB) due diligence checks. These checks can pass or fail, and we'll tell you the outcome by webhook. If the checks pass, we'll create the sole trader customer for you. If they fail, no customer is created. We may also need more information from the sole trader before we can complete our checks.
+
+If you'd like to use this product, please speak with your Client Director.
+
+### Message flow diagrams
+
+![A message flow diagram demonstrating a sole trader onboarding application that requires additional information before succeeding or failing. The client submits an application using the POST /customer-due-diligence/v1/sole-trader/onboard endpoint, which is acknowledged with a 202 Accepted response. ClearBank identifies further information is required to complete its due diligence checks, and emits a Sole Trader Additional Info Required webhook containing the required actions and URLs to complete them. This webhook may be re-sent once if further information is needed. The sole trader uploads the required documents and completes biometric and document verification. Due diligence checks then proceed, and a Sole Trader Application Declined or Sole Trader Application Successful webhook is sent - depending on the outcome of the checks.](/assets/images/diagrams/uk/onboarding/sole-trader-onboarding-flow.svg)
+
+<EndpointBlock
+  type="post"
+  title="Onboard a new sole trader customer"
+  endpoints={[
+    {
+      path: "/customer-due-diligence/v1/sole-trader/onboard",
+      version: "1.0sole-trader-onboarding",
+      webhooks: [
+        'sole-trader-application-successful-v1',
+        'sole-trader-application-declined-v1',
+        'sole-trader-application-pending-v1'
+      ]
+    }
+  ]}
+/>
+
+### Webhooks
+
+<WebhookPlaceholder render='sole-trader-application-successful-v1' />
+<WebhookPlaceholder render='sole-trader-application-pending-v1' />
+<WebhookPlaceholder render='sole-trader-application-declined-v1' />
+
+### Simulating onboarding webhooks
+
+You can simulate successful, declined and additional information onboarding webhooks in our simulation environment.  
+To do this, call the [**POST /customer-due-diligence/v1/sole-trader/onboard**](#onboard-a-new-sole-trader-customer) endpoint with the `soleTraderData.name.surname` property set to:
+
+* `"pass"` to simulate checks passing, and receive a Sole Trader Application Successful webhook.
+* `"fail"` to simulate checks failing, and receive a Sole Trader Application Declined webhook.
+* `"info"` to simulate checks requiring additional information, and receive a Sole Trader Additional Info Required webhook.
+
+## Create a sole trader with your own due diligence
+
+If you conduct your own due diligence checks on a sole trader, you can create them directly. No ClearBank due diligence checks are performed, so you must supply the outcomes of your own checks in the request. The `kycAml` object, `taxDetails` (including at least one tax residency), `personalDetails`, `businessDetails`, `businessClassification` and `addressHistory` are all required.
+The data required to register a sole trader is a combination of fields associated with both legal entities (incorporated businesses) and [retail customers](/uk/docs/embedded-banking/retail/onboard-retail-customers). This is because a sole trader is simultaneously an individual and a business. For example: a sole trader has both an individual's personal details - such as a `firstName`, and details of their business such as a `tradingName`.
+
+#### Business information
+
+In addition to a sole trader's personal details, you can provide information about their business. This includes their `tradingName`, `annualRevenue`, and `businessClassification`.
+
+A sole trader can use their personal name as their `tradingName`, or instead pick a business name. Guidance on acceptable business names for sole traders can be found on the <ExternalLink href="https://www.gov.uk/become-sole-trader/choose-your-business-name">gov.uk</ExternalLink> website.
+
+The `annualRevenue` you provide for a sole trader should be based on their previous year's revenue. If this is their first year of operation, an estimated value is acceptable.
+
+You can specify the `businessClassification` details of a sole trader. Their `businessClassification.sectorCode` should always be `_8b_UnincorporatedBusinessesOtherThanLLPs`, while their `industryClassification` should be the option that most closely fits their business.
+
+#### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
+
+When you create a sole trader, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
+* `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
+* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+
+If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/sole-traders/{customerId}**](/uk/docs/embedded-banking/business/sole-traders-v2#update-a-sole-trader) endpoint.
+
+#### Addresses
+
+When you create a sole trader, you'll also need to provide their current residential and/or trading address in the `addressHistory.currentAddresses` array. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
+
+<EndpointBlock
+  type="post"
+  title="Create a sole trader"
+  endpoints={[
+    {
+      path: "/customers/v2/sole-traders",
+      version: "2.0-customers-sole-trader"
+    }
+  ]}
+/>
