@@ -98,7 +98,8 @@ function buildSearchIndex (nodes, { readFile = require('fs').readFileSync, extra
           path: slug,
           heading: section.heading,
           anchor: section.anchor,
-          text: section.text
+          text: section.text,
+          ...(section.method ? { method: section.method } : {})
         })
       })
     })

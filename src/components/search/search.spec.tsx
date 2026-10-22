@@ -179,4 +179,44 @@ describe('Search', () => {
 
     expect(screen.getByRole('combobox')).toHaveValue('')
   })
+
+  it('shows an operation method and parent page and navigates to its anchor', async () => {
+  const operation = {
+    id: 'uk-create-account',
+    region: 'uk',
+    title: 'Manage multi-currency accounts',
+    breadcrumb: ['UK', 'Multi Currency'],
+    path: '/uk/docs/multi-currency/manage-multi-currency-accounts',
+    heading: 'Create a new account (real)',
+    anchor: 'create-a-new-account-real',
+    method: 'POST',
+    text: 'POST Create a new account (real)'
+  }
+
+  ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve([operation])
+  })
+
+  const onClose = jest.fn()
+
+  render(<Search isOpen onClose={onClose} region='uk' />)
+
+  fireEvent.change(screen.getByRole('combobox'), {
+    target: { value: 'create a new account' }
+  })
+
+  const result = await screen.findByRole('option')
+
+  expect(result).toHaveTextContent('POST')
+  expect(result).toHaveTextContent('Create a new account (real)')
+  expect(result).toHaveTextContent('Manage multi-currency accounts')
+
+  fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Enter' })
+
+  expect(navigate).toHaveBeenCalledWith(
+    '/uk/docs/multi-currency/manage-multi-currency-accounts#create-a-new-account-real'
+  )
+  expect(onClose).toHaveBeenCalledTimes(1)
+})
+
 })
