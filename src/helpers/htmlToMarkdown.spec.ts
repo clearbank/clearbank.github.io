@@ -155,3 +155,48 @@ test('keeps multiline table cells on one row and preserves inline formatting', (
     ].join('\n')
   )
 })
+
+test('preserves nested schema content in closed native dropdowns', () => {
+  const article = createArticle(`
+    <ul>
+      <li>
+        addressHistory
+        <details>
+          <summary data-markdown-exclude="true">Show children</summary>
+          <ul>
+            <li>
+              currentAddresses
+              <details>
+                <summary data-markdown-exclude="true">Show children</summary>
+                <ul><li>addressType: TradingAddress or ResidentialAddress</li></ul>
+              </details>
+            </li>
+          </ul>
+        </details>
+      </li>
+    </ul>
+  `)
+
+  const markdown = htmlToMarkdown(article)
+
+  expect(markdown).toContain('addressHistory')
+  expect(markdown).toContain('currentAddresses')
+  expect(markdown).toContain(
+    'addressType: TradingAddress or ResidentialAddress'
+  )
+  expect(markdown).not.toContain('Show children')
+  expect(article.querySelector('details')!.hasAttribute('open')).toBe(false)
+})
+
+test('exports the selected API version without dropdown controls', () => {
+  const article = createArticle(`
+    <div data-markdown-exclude="true">
+      <span>API Version dropdown</span>
+      <span>Other version option</span>
+    </div>
+    <p hidden>API Version 2.0</p>
+  `)
+
+  expect(htmlToMarkdown(article)).toBe('API Version 2.0')
+  expect(article.querySelector('p')!.hidden).toBe(true)
+})
