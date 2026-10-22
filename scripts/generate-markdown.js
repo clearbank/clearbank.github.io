@@ -36,12 +36,12 @@ for (const file of findPages(publicDir)) {
   const article = dom.window.document.querySelector('[data-markdown-article]')
   if (!article) continue
 
-  const pageUrl = `${siteUrl}/${rel.slice(0, -1).join('/')}/`
+  const pageUrl = `${siteUrl}/${rel.slice(0, -1).join('/')}`
   const markdown = htmlToMarkdown(article, pageUrl)
   const title = (dom.window.document.querySelector('h1')?.textContent || rel.slice(-2, -1)[0]).trim()
 
   fs.writeFileSync(path.join(path.dirname(file), 'index.md'), markdown + '\n')
-  index.push({ title, url: `${pageUrl}index.md` })
+  index.push({ title, url: `${pageUrl}/index.md` })
 }
 
 index.sort((a, b) => a.url.localeCompare(b.url))

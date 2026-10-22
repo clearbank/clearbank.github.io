@@ -190,3 +190,27 @@ export const AdditionalAttributeValue: any = styled.dd`
       }
     `}
 `
+
+export const SchemaDetails = styled.details`
+  margin-top: 10px;
+
+  > summary {
+    width: fit-content;
+    min-height: 24px;
+    cursor: pointer;
+    font-family: ${fonts.body};
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+    color: ${colors.billionaireBlue};
+  }
+
+  > summary:focus-visible {
+    outline: 2px solid ${colors.billionaireBlue};
+    outline-offset: 3px;
+  }
+
+  > ul {
+    margin-top: 15px !important;
+  }
+`
