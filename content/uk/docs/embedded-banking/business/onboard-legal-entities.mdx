@@ -1,6 +1,6 @@
 ---
-title: "Onboard new Business Customers"
-metaTitle: "Onboard new Business Customers"
+title: "Onboard new Legal Entities"
+metaTitle: "Onboard new Legal Entities"
 order: 1
 showPageMenu: true
 ---
@@ -18,12 +18,12 @@ import WebhookSummary from 'src/components/webhook-summary';
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our UK simulation environment.</p>
 </Callout>
 
-Every legal entity needs a `CustomerId` before it can be given access to our products, such as [accounts](/uk/docs/embedded-banking/business/manage-business-customers#compatible-account-types). How you get one depends on who carries out the due diligence checks:
+Every legal entity needs a `CustomerId` before it can be given access to our products, such as [accounts](/uk/docs/embedded-banking/business/manage-legal-entities#compatible-account-types). How you get one depends on who carries out the due diligence checks:
 
 * **ClearBank carries out the checks.** Use our customer due diligence endpoint and webhooks to [onboard the legal entity with our due diligence checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer and its key people if the checks pass.
 * **You carry out the checks.** You can then [create the legal entity directly](#create-a-legal-entity-with-your-own-due-diligence), your request should include the outcomes of your checks. No ClearBank checks are performed.
 
-Once a legal entity exists, you can retrieve and manage its details on our [Manage existing Business Customers](/uk/docs/embedded-banking/business/manage-business-customers) page.
+Once a legal entity exists, you can retrieve and manage its details on our [Manage existing Legal Entities](/uk/docs/embedded-banking/business/manage-legal-entities) page.
 
 ## Onboard with ClearBank's due diligence
 
@@ -69,7 +69,7 @@ Additional information we may request includes:
 
 If the customer passes our due diligence checks, we'll create the new business customer automatically using the details in the application. You'll receive a [Legal Entity Application Successful](#legal-entity-application-successful-webhook) webhook containing a `CustomerId` for your records. You can use this `CustomerId` to give the customer access to our products.
 
-To retrieve and manage the full details of a business customer and its associated persons, use the `CustomerId` with our [legal entity endpoints](/uk/docs/embedded-banking/business/manage-business-customers).
+To retrieve and manage the full details of a business customer and its associated persons, use the `CustomerId` with our [legal entity endpoints](/uk/docs/embedded-banking/business/manage-legal-entities).
 
 #### Declined onboarding
 
@@ -131,13 +131,13 @@ You'll need to provide the outcomes of any KYB and AML checks you conduct on the
 * `rca` - If your checks identify the company as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
 * `craRating` - Declare a Customer Risk Assessment rating for the company: `Low`, `Medium`, `High`, or `Very_High`.
 
-If you have new KYB or AML outcomes, you can update them using the [**PATCH /customers/v2/legal-entities/{customerId}**](/uk/docs/embedded-banking/business/manage-business-customers#update-a-legal-entity-customer) endpoint.
+If you have new KYB or AML outcomes, you can update them using the [**PATCH /customers/v2/legal-entities/{customerId}**](/uk/docs/embedded-banking/business/manage-legal-entities#update-a-legal-entity-customer) endpoint.
 
 The `annualRevenue` you provide for a legal entity should be based on their previous year's revenue. If this is their first year of operation, an estimated value is acceptable.
 
 You can specify the `businessClassification` details of a legal entity. Set their `businessClassification.sectorCode` and `industryClassification` according to the nature of their business.
 
-Once you've created a legal entity, you can register its directors, UBOs and controlling persons using the [legal entity endpoints](/uk/docs/embedded-banking/business/manage-business-customers).
+Once you've created a legal entity, you can register its directors, UBOs and controlling persons using the [legal entity endpoints](/uk/docs/embedded-banking/business/manage-legal-entities).
 
 <EndpointBlock
   type="post"
