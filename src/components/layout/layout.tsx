@@ -10,6 +10,7 @@ import PageMenu from 'src/components/pageMenu'
 import Pagination from 'src/components/pagination'
 import BackToTop from 'src/components/back-to-top'
 import HeaderMenu from 'src/components/header-menu'
+import AiAgentNote from 'src/components/ai-agent-note'
 
 import * as Styles from './layout.styles'
 import * as Types from './layout.types'
@@ -23,6 +24,8 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
 }): JSX.Element => {
   const { menuItems } = pageContext
 
+  const slug = data?.mdx?.fields?.slug
+
   return (
     <ThemeProvider location={location}>
       <MDXProvider components={mdxComponents}>
@@ -33,6 +36,7 @@ const Layout: React.FunctionComponent<Types.LayoutProps> = ({
           </Styles.HeaderWrapper>
           <Styles.ContentWrapper>
             <Styles.InnerContentWrapper>
+              <AiAgentNote pageSlug={slug} />
               {children}
               <Pagination menuItems={menuItems} />
             </Styles.InnerContentWrapper>

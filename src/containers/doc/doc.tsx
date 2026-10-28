@@ -4,6 +4,7 @@ import kebabCase from 'lodash.kebabcase'
 
 import { Layout } from 'src/components'
 import GithubConnector from 'src/components/github-connector'
+import { rawContentUrl } from 'src/helpers/githubSource'
 
 import config from '../../../config'
 
@@ -56,6 +57,9 @@ export const Head: React.FC<any> = ({ data }) => {
       : canonicalUrl
   canonicalUrl = canonicalUrl + mdx.fields.slug
 
+  // Point automated readers at the raw Markdown source, since the rendered page
+  // collapses schemas/examples behind dropdowns.
+  const markdownSourceUrl = rawContentUrl(mdx.fields.slug)
 
   return (
     <>
@@ -75,6 +79,14 @@ export const Head: React.FC<any> = ({ data }) => {
         <meta property='twitter:description' content={metaDescription} />
       ) : null}
       <link rel='canonical' href={canonicalUrl} />
+      {markdownSourceUrl ? (
+        <link
+          rel='alternate'
+          type='text/markdown'
+          href={markdownSourceUrl}
+          title='Markdown source'
+        />
+      ) : null}
     </>
   )
 }
