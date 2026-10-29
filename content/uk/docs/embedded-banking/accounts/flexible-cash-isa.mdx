@@ -14,10 +14,10 @@ import ExternalLink from 'src/components/external-link';
 
 ## Flexible cash ISAs overview
 
-A cash ISA (Individual Savings Account) is a real savings deposit account held with ClearBank that's subject to certain tax benefits <ExternalLink href="https://www.gov.uk/individual-savings-accounts">defined by the UK government</ExternalLink>. It is eligible for FSCS protection, and can be used to send and/or receive payments once a **nominated account** has been defined.
+A cash [ISA (Individual Savings Account)](/uk/docs/api/glossary#flexible-cash-isa) is a real savings deposit account held with ClearBank that's subject to certain tax benefits <ExternalLink href="https://www.gov.uk/individual-savings-accounts">defined by the UK government</ExternalLink>. It is eligible for [FSCS](/uk/docs/api/glossary#financial-services-compensation-scheme) protection, and can be used to send and/or receive payments once a **nominated account** has been defined.
 
 <Callout colour="blue">
-  <strong>Note:</strong> Deposits held in ClearBank cash ISAs may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
+  <strong>Note:</strong> Deposits held in ClearBank cash ISAs may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or <a href="/uk/docs/api/glossary#legal-entity">legal entity</a> per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
 
 A **nominated account** is the account that you transfer funds from, and any remaining funds and interest will be transferred into upon closure of the cash ISA.
@@ -45,7 +45,7 @@ The sections below explain how to:
 When creating a new cash ISA, you need to first create the account, then set up the nominated account.
 
 <Callout colour="blue">
-If the customer does not already exist, you need to first create a retail customer using the <a href="/uk/docs/embedded-banking/retail/onboard-retail-customers#create-a-retail-customer-v-1">POST /v1/customers/retail</a> endpoint.
+If the customer does not already exist, you need to first create a <a href="/uk/docs/api/glossary#retail-customer">retail customer</a> using the <a href="/uk/docs/embedded-banking/retail/onboard-retail-customers#create-a-retail-customer-v-1">POST /v1/customers/retail</a> endpoint.
 </Callout>
 
 To set up a cash ISA:
@@ -243,7 +243,7 @@ You can also use the [**GET /v1/isas/{accountId}**](#get-cash-isa-details) endpo
 
 ## Subscribe to or withdraw from a cash ISA
 
-You can use the Faster Payments endpoint to subscribe to or withdraw from a cash ISA.
+You can use the [Faster Payments](/uk/docs/api/glossary#faster-payments) endpoint to subscribe to or withdraw from a cash ISA.
 
 <EndpointBlock
 type="post"
@@ -322,11 +322,11 @@ ClearBank offers two methods of transferring a cash ISA in or out:
 **Manual transfer:** Transfers are initiated and managed manually via ClearBank’s API and email workflows. The process involves coordination between the new and old ISA providers using forms like the Transfer Authority Form (TAF) and Transfer History Form (THF). <br/>
 **Timeline:** Governed by HMRC’s SLA (Service Level Agreement) of **15 working days**.
 
-**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with Pay.UK’s automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests. <br/>
+**Automated transfer:** Transfers are initiated and tracked via ClearBank’s API endpoints integrated with <a href="https://wearepay.uk">Pay.UK's</a>  automated service. This includes POST, PUT, and PATCH endpoints for initiating, resubmitting, and updating transfer requests. <br/>
 **Timeline:** Voluntary SLA under Pay.UK of **7 working days**.
 
 <Callout colour="blue">
-<p>Automated transfers are only available when both ISA providers are accredited participants of the Pay.UK scheme. If one provider is not a participant, the manual transfer process must be used.</p>
+<p>Automated transfers are only available when both ISA providers are accredited participants of the <a href="https://www.wearepay.uk/what-we-do/switching-services/the-payment-transfer-service/">Pay.UK</a> <a href="/uk/docs/api/glossary#scheme">scheme</a>. If one provider is not a participant, the manual transfer process must be used.</p>
 </Callout>
 
 Each transfer is assigned a **Unique Reference Number (URN)**, which is a system-generated identifier used to track and manage a transfer throughout its lifecycle. Key functions of the URN include:
@@ -338,7 +338,7 @@ Each transfer is assigned a **Unique Reference Number (URN)**, which is a system
 ## Manually transfer a cash ISA in
 ClearBank supports full or partial transfers in of cash ISAs.
 
-During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the hub account to the cash ISA.
+During the transfer in process, the previous ISA manager will transfer the cash ISA funds to a transfer in hub account created during onboarding. Once you have received the transfer history form from them and submitted it to us, you can then move funds from the [hub account](/uk/docs/api/glossary#hub-account) to the cash ISA.
 
 If you want to reject an existing transfer in request, use the [POST /v1/isas/{accountId}/transfer-in/{transferInId}/rejection](#reject-a-transfer-in) endpoint.
 
