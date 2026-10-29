@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation } from '@reach/router';
+
 import glossaryTerms from '../../data/glossary';
 
 import { heights } from 'src/components/theme';
@@ -68,6 +70,16 @@ const buildSearchText = item => {
 
 const Glossary = ({ region }) => {
   const [query, setQuery] = useState('');
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = decodeURIComponent(hash.slice(1));
+    const timer = setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [hash]);
 
   const regionalTerms = useMemo(() => {
     return glossaryTerms
@@ -87,6 +99,8 @@ const Glossary = ({ region }) => {
         );
       });
   }, [region]);
+
+
 
   const filteredTerms = useMemo(() => {
     const searchQuery = query
