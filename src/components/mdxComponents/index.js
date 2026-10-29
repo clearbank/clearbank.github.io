@@ -1,5 +1,5 @@
 import React from 'react'
-import CodeBlock from './codeBlock'
+import { MdxPre } from './codeBlock'
 import '../styles.css'
 
 import LightboxImage from '../LightboxImage'
@@ -72,10 +72,10 @@ export default {
     />
   ),
 
-  pre: props => <Styles.Pre {...props} />,
+  pre: MdxPre,
 
-  code: CodeBlock,
-
+  code: props => <code {...props} />,
+  
   a: props => <Styles.Link {...props} />,
 
   ul: props => <Styles.List className='list' {...props} />,

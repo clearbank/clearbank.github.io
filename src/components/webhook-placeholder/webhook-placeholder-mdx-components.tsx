@@ -2,7 +2,7 @@ import React from 'react'
 
 import * as DataRow from 'src/components/data-row/data-row.styles'
 
-import CodeBlock from '../mdxComponents/codeBlock'
+import { MdxPre } from '../mdxComponents/codeBlock'
 import AnchorTag from '../mdxComponents/anchor'
 import * as Styles from '../mdxComponents/mdx-components.styles'
 
@@ -62,8 +62,8 @@ export default {
     />
   ),
   p: props => <Styles.Paragraph as='p' className='body-copy' {...props} />,
-  pre: props => <Styles.Pre {...props} />,
-  code: CodeBlock,
+  pre: MdxPre,
+  code: props => <code {...props} />,
   a: props => <Styles.Link {...props} />,
   ul: props => <Styles.List className='list' {...props} />,
   ol: props => <Styles.List as='ol' className='list' {...props} />,
