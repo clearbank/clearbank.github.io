@@ -1,18 +1,24 @@
-import React from 'react'
-import CodeBlock from './codeBlock'
-import '../styles.css'
+import React from 'react';
+import CodeBlock from './codeBlock';
+import '../styles.css';
 
 import LightboxImage from '../LightboxImage'
 
 import kebabCase from 'lodash.kebabcase'
 
-import * as Styles from './mdx-components.styles'
-import * as Table from 'src/components/table/table.styles'
+import * as Styles from './mdx-components.styles';
+import * as Table from 'src/components/table/table.styles';
+
+import Glossary from '../glossary/Glossary';
+import TechnicalReference from '../technical-reference/technical-reference';
 
 export default {
+  Glossary,
+  TechnicalReference,
+
   h1: props => (
     <Styles.H1
-      as='h1'
+      as="h1"
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
     />
@@ -20,8 +26,8 @@ export default {
 
   h2: props => (
     <Styles.H2
-      as='h2'
-      className='cannon page-menu-entry'
+      as="h2"
+      className="cannon page-menu-entry"
       id={kebabCase(props.children.toLowerCase())}
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
@@ -30,8 +36,8 @@ export default {
 
   h3: props => (
     <Styles.H3
-      as='h3'
-      className='paragon page-menu-entry'
+      as="h3"
+      className="paragon page-menu-entry"
       id={kebabCase(props.children.toLowerCase())}
       data-id={kebabCase(props.children.toLowerCase())}
       {...props}
@@ -78,7 +84,12 @@ export default {
 
   a: props => <Styles.Link {...props} />,
 
-  ul: props => <Styles.List className='list' {...props} />,
+  ul: props => (
+    <Styles.List
+      className='list'
+      {...props}
+    />
+  ),
 
   ol: props => (
     <Styles.List
@@ -91,6 +102,8 @@ export default {
   li: props => <Styles.ListItem {...props} />,
 
   img: props => <LightboxImage {...props} />,
+  
+  img: props => <Styles.Img {...props} />,
 
   table: props => <Table.Table {...props} />,
 
@@ -107,5 +120,5 @@ export default {
     />
   ),
 
-  tr: props => <Table.Trow {...props} />
-}
+  tr: props => <Table.Trow {...props} />,
+};
