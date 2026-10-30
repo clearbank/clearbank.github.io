@@ -1,10 +1,9 @@
 import React, { ReactElement } from 'react'
 
-import { Collapse, CollapseItem } from 'src/components/clearbank-ui'
-
 import { CodeblockType } from 'src/global.types'
 import Codeblock from 'src/components/codeblock'
 import * as DataRow from 'src/components/data-row/data-row.styles'
+
 import EndpointBlockContent from '../endpoint-block-content'
 
 import * as Styles from './endpoint-block-response.styles'
@@ -33,7 +32,9 @@ const getRequiredResponseKeys = response => {
   return []
 }
 
-const EndpointBlockModel: React.FunctionComponent<Types.EndpointBlockResponseProps> = ({
+const EndpointBlockModel: React.FunctionComponent<
+  Types.EndpointBlockResponseProps
+> = ({
   path,
   type,
   apiData,
@@ -58,27 +59,36 @@ const EndpointBlockModel: React.FunctionComponent<Types.EndpointBlockResponsePro
                   <DataRow.Header className='great-primer'>
                     {responseKey}{' '}
                   </DataRow.Header>
+
                   {responses[responseKey].description && (
-                    <DataRow.Description as='span' className='body-copy'>
+                    <DataRow.Description as='div' className='body-copy'>
                       {responses[responseKey].description}
-                      {!!responses[responseKey].content && (
-                        <Collapse>
-                          <CollapseItem title='Response model' nested>
-                            <EndpointBlockContent 
-                              allProperties={getResponseProperties(responses[responseKey])} 
-                              requiredPropertyKeys={getRequiredResponseKeys(
-                                responses[responseKey]
-                              )}
-                            />
-                          </CollapseItem>
-                        </Collapse>
-                      )}
                     </DataRow.Description>
+                  )}
+
+                  {!!responses[responseKey].content && (
+                    <DataRow.SchemaDetails>
+                      <summary data-markdown-exclude='true'>
+                        Response model
+                      </summary>
+
+                      <DataRow.DataList nested>
+                        <EndpointBlockContent
+                          allProperties={getResponseProperties(
+                            responses[responseKey]
+                          )}
+                          requiredPropertyKeys={getRequiredResponseKeys(
+                            responses[responseKey]
+                          )}
+                        />
+                      </DataRow.DataList>
+                    </DataRow.SchemaDetails>
                   )}
                 </DataRow.DataListItem>
               ))}
             </DataRow.DataList>
           </Styles.DataListWrapper>
+
           <Styles.CodeblockWrapper>
             {!!codeblocks &&
               codeblocks.map((codeblock: CodeblockType, index: number) => (
