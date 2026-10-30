@@ -123,8 +123,8 @@ export const SearchTrigger = styled.button`
   padding: 8px 16px;
   border: 1px solid ${colors.brandGray};
   border-radius: ${borderRadius.global}px;
-  background: ${colors.brandGrayLight};
-  color: ${colors.brandGrayDark};
+  background: ${colors.brandGrayLighter};
+  color: ${colors.brandGrayDarkest};
   font-size: 14px;
   cursor: pointer;
   min-width: 350px;
@@ -154,7 +154,7 @@ export const SearchTrigger = styled.button`
 export const SearchTriggerLabel = styled.span`
   flex: 1;
   text-align: left;
-  color: ${colors.brandGrayDark};
+  color: ${colors.brandGrayDarkest};
 
   @media (max-width: ${themeBreakpoints.medium}) {
     display: none;
@@ -166,7 +166,7 @@ export const SearchTriggerHint = styled.kbd`
   border: 1px solid ${colors.brandGray};
   border-radius: 3px;
   padding: 1px 6px;
-  color: ${colors.brandGrayDark};
+  color: ${colors.brandGrayDarkest};
 
   @media (max-width: ${themeBreakpoints.medium}) {
     display: none;

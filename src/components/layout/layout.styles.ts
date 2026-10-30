@@ -138,26 +138,28 @@ const SidebarToggleBase = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  min-width: 48px;
-  height: 38px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
   border: none;
-  border-radius: 8px;
-  background: ${colors.brandGrayDark};
-  color: ${colors.brandLight};
+  border-radius: 6px;
+  background: transparent;
+  color: ${colors.brandGrayDarker};
   cursor: pointer;
   font-family: ${fonts.body};
-  font-size: 18px;
+  font-size: 28px;
   line-height: 1;
   box-shadow: none;
 
   &:hover {
-    background: ${colors.wedgewoodapprox};
+    background: ${colors.brandGray};
+    color: ${colors.wedgewoodapprox};
   }
 
   &:focus-visible {
     outline: 2px solid ${colors.wedgewoodapprox};
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 `
 
@@ -197,19 +199,19 @@ export const ContentWrapper = styled.article`
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 24px 20px 20px;
+  padding: 0 20px 20px;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
-    padding: 32px 60px 20px;
-  }
+@media screen and (min-width: ${breakpoints.medium}) {
+  padding: 0 60px 20px;
+}
 
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: 32px 30px 40px;
-  }
+@media screen and (min-width: ${breakpoints.large}) {
+  padding: 0 30px 40px;
+}
 
-  @media screen and (min-width: ${breakpoints.xLarge}) {
-    padding: 40px 60px 40px;
-  }
+@media screen and (min-width: ${breakpoints.xLarge}) {
+  padding: 0 60px 40px;
+}
 
   ${Callout.Container} {
     margin-bottom: 30px;
@@ -226,6 +228,16 @@ export const ContentWrapper = styled.article`
 
     @media screen and (min-width: ${breakpoints.medium}) {
       margin-top: 50px;
+    }
+  }
+
+    .page .page-menu-entry[id] {
+    scroll-margin-top: calc(${headerHeight} + 16px);
+
+    @media screen and (min-width: ${breakpoints.medium}) {
+      scroll-margin-top: calc(
+        ${headerHeight} + var(--article-toolbar-height, 0px) + 16px
+      );
     }
   }
 `
@@ -267,17 +279,30 @@ export const PageHeader = styled.h1`
 `
 
 export const ArticleToolbar = styled.div`
-  position: sticky;
-  top: ${headerHeight};
+  position: static;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    position: sticky;
+    top: ${headerHeight};
+  }
   z-index: 1;
   align-self: flex-start;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   width: 100%;
   gap: 16px;
-  margin: 0 0 16px;
-  padding: 8px 0;
+  margin: 0 0 8px;
+  padding: 16px 0 24px;
   background: ${colors.brandLight};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-top: 20px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xLarge}) {
+    padding-top: 24px;
+  }
 `
 
 export const OnThisPageDisclosure = styled.div`
@@ -287,17 +312,18 @@ export const OnThisPageDisclosure = styled.div`
 
 export const OnThisPageButton = styled.button`
   display: inline-grid;
-  grid-template-columns: auto 16px;
+  grid-template-columns: auto 12px;
   align-items: center;
-  column-gap: 10px;
-  min-height: 44px;
-  padding: 0 18px;
-  border-radius: 10px;
+  column-gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 2px solid ${colors.brandPrimaryDark};
+  border-radius: 8px;
   background: ${colors.brandGrayLight};
   color: ${colors.brandDark};
   cursor: pointer;
   font-family: ${fonts.body};
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1;
   list-style: none;
@@ -328,11 +354,19 @@ export const OnThisPagePanel = styled.div`
   z-index: 3;
   min-width: 320px;
   max-width: 420px;
-  max-height: 60vh;
+  box-sizing: border-box;
+  max-height: min(
+    60vh,
+    calc(
+      100vh - ${headerHeight} -
+        var(--article-toolbar-height, 120px) - 24px
+    )
+  );
   overflow-y: auto;
   border-radius: 0 0 12px 12px;
   background: ${colors.brandLight};
-  border: 1px solid ${colors.brandLight};
+  border: 0.5px solid ${colors.brandGrayLighter};
+  border-top: none;
   box-shadow: none;
 
   #pageMenu {
@@ -340,6 +374,7 @@ export const OnThisPagePanel = styled.div`
     top: auto;
     max-height: none;
     height: auto;
+    overflow: visible;
     padding: 18px 22px;
     border-left: none;
   }
@@ -430,5 +465,22 @@ export const MobileNavigationContent = styled.div`
 
   @media screen and (min-width: ${breakpoints.medium}) {
     padding: 24px 60px;
+  }
+`
+
+export const ArticleBreadcrumb = styled.nav`
+  flex: 0 0 100%;
+  color: rgba(71, 142, 150, 0.5);
+  font-family: ${fonts.body};
+  font-size: 14px;
+  line-height: 1.4;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `
