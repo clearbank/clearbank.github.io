@@ -1,0 +1,48 @@
+---
+title: "External API overview"
+order: 1
+metaTitle: "External API overview"
+metaDescription: "Guidance on how to get started with the ClearBank External API, including an overview of its purpose, benefits, and steps for getting started."
+showPageMenu: true
+---
+
+## Introduction
+
+The ClearBank External API, delivered through our External Gateway, is a JSON RESTful API that lets you integrate your systems with ClearBank's accounts, payments, and embedded banking products. It is built on open standards for authentication and message integrity.
+
+Before you can integrate, you must have been onboarded by ClearBank as a customer and have [registered an API client](./register-your-api-client). Once registered, you can request access tokens, call our endpoints, and exchange digitally signed messages with us.
+
+## Features
+
+* **Standards-based security** — mutual TLS (mTLS) for client authentication and [FAPI 2.0 Message Signing](https://openid.net/specs/fapi-2_0-message-signing.html) (based on [RFC 9421](https://datatracker.ietf.org/doc/rfc9421/)) for message integrity.
+* **OAuth 2.0 access tokens** — obtained using the `client_credentials` grant from our authentication service.
+* **Fine-grained permissions** — scope your access tokens to only the operations you need.
+* **Signed responses and webhooks** — every message we send is signed so you can verify it came from us, untampered.
+* **Self-service client management** — manage your API clients and signature keys through the ClearBank Portal or the [Client Management API](./manage-your-api-clients).
+
+## Core security and authentication concepts
+
+The External API uses three distinct security mechanisms. Understanding how they fit together will help you as you work through the rest of this guide.
+
+* **Mutual TLS (mTLS)** — you authenticate your client to us using a registered mTLS certificate. mTLS is required on every connection to our authentication service and our API, including when requesting access tokens.
+* **Access tokens** — once your client is authenticated with mTLS, you request an OAuth 2.0 access token using the `client_credentials` grant. This token is sent in the `Authorization` header of your API calls.
+* **Digital signatures** — you sign your requests, and we sign our responses and webhooks, using the FAPI 2.0 Message Signing standard. Signatures protect the integrity of each message and let both sides verify that the message has not been tampered with.
+
+mTLS and access tokens together handle *authentication* (proving who you are), while digital signatures handle *integrity* (proving a message has not been altered). These are separate concerns and are configured independently.
+
+## Environments and base URLs
+
+Below are the current root URLs for our EU and UK Production and Simulation APIs:
+
+* Production UK - https://mtls.api.clearbank.co.uk
+* Production EU - https://mtls.api.eu.clearbank.io
+* Simulation UK - https://mtls.api-sim.clearbank.co.uk
+* Simulation EU - https://mtls.api-sim.eu.clearbank.io
+
+## Steps to get started
+
+1. [Register your API client](./register-your-api-client) — register your mTLS certificate and a public/private key pair for signing.
+2. [Request an access token and call our endpoints](./using-the-api) — authenticate with mTLS, obtain an access token, and send your first request.
+3. [Sign your requests](./sign-your-requests) — build and attach a digital signature to every request.
+4. [Verify our responses](./verify-our-responses) — check the signature on the responses we return.
+5. [Configure and handle webhooks](./webhooks) — receive, verify, and respond to asynchronous event notifications.
