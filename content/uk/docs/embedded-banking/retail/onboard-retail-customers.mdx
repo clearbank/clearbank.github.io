@@ -16,7 +16,7 @@ import WebhookSummary from 'src/components/webhook-summary';
 Every retail customer needs a `CustomerId` before they can be given access to our products, such as [accounts](/uk/docs/embedded-banking/retail/manage-retail-customers#compatible-account-types). How you get one depends on who carries out the customer's due diligence checks:
 
 * **ClearBank carries out the checks** - Use our customer due diligence endpoint and webhooks to [onboard the customer with our Know Your Customer (KYC) checks included](#onboard-with-clearbanks-due-diligence). We'll create the customer if they pass.
-* **You carry out the checks** - You can then [create the retail customer directly](#create-a-retail-customer-with-your-own-due-diligence), your request should include the outcomes of your checks. No KYC checks are performed by ClearBank.
+* **You carry out the checks** - You can then [create the retail customer directly](#create-a-retail-customer-with-your-own-due-diligence), your request should include the outcomes of your checks. No [KYC](/uk/docs/api/glossary#know-your-customer) checks are performed by ClearBank.
 
 Once a retail customer exists, you can retrieve and manage their details using the endpoints on our [Manage existing Retail Customers](/uk/docs/embedded-banking/retail/manage-retail-customers) page.
 
@@ -86,9 +86,9 @@ If you conduct your own KYC and Anti-Money Laundering (AML) checks, you can crea
 
 When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
 * `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
-* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
+* `pep` - If your checks identify the customer as a [Politically Exposed Person (PEP)](/uk/docs/api/glossary#politically-exposed-person), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `rca` - If your checks identify the customer as a [Relative or Close Associate (RCA)](/uk/docs/api/glossary#relative-or-close-associate) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
+* `craRating` - Use this field to declare a [Customer Risk Assessment](/uk/docs/api/glossary#customer-risk-assessment) rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
 
 If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/retail/{customerId}**](/uk/docs/embedded-banking/retail/manage-retail-customers#update-a-retail-customer) endpoint.
 
