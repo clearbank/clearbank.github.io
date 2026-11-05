@@ -360,11 +360,11 @@
             "example": "my.email@example.com"
           },
           "mobile": {
-            "pattern": "^\\+?\\d+$",
+            "pattern": "^(00)[0-9]{1,18}$",
             "type": "string",
             "nullable": true,
             "description": "This person's mobile number.",
-            "example": "01234567891"
+            "example": "00441234567891"
           },
           "address": {
             "$ref": "#/components/schemas/LegalEntityAddress",
@@ -476,11 +476,11 @@
             "description": "The customer's email address."
           },
           "mobile": {
-            "pattern": "^(?:[+][1-9])?\\d{11,14}$",
+            "pattern": "^(00)[0-9]{1,18}$",
             "type": "string",
             "nullable": true,
-            "description": "The customer's international mobile number, including its country-code prefix. For example '+44' for UK numbers. The use of '+' is optional.",
-            "example": "+447725666777"
+            "description": "The customer's international mobile number, including its country-code prefix. Must start with '00' in place of '+', and include the country code. For example, '0044' for UK numbers.",
+            "example": "00447725666777"
           },
           "currentAddress": {
             "$ref": "#/components/schemas/Address",
@@ -826,9 +826,9 @@
           "phone":{
             "minLength": 1,
             "type": "string",
-            "description": "The business's phone number. Must be a valid international phone number containing only digits. May start with '+'.",
-            "example": "+441234567890",
-            "pattern": "^\\+?\\d+$"
+            "description": "The business's phone number. Must be a valid international phone number containing only digits.  Must start with '00' in place of '+', and include the country code. For example, '0044' for UK numbers.",
+            "example": "00441234567890",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "address": {
             "$ref": "#/components/schemas/LegalEntityAddressInfo"
