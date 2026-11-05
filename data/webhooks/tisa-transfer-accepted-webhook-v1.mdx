@@ -1,0 +1,97 @@
+---
+title: "Tisa Transfer Accepted webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies that a cash ISA transfer request has been accepted by the ceding party for a transfer in, or acceptance has been sent to the acquiring party for a transfer out.
+
+#### Request body
+
+```json
+{
+    "Type": "TisaTransferAccepted",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field | Type | Format | Required | Min-Max length | Pattern | Description |
+| ----- | ---- | ------ | -------- | -------------- | ------- | ----------- |
+| `SequenceNumber` | integer | - | Yes | - | - | Sequence number indicating the order of webhook events for this transfer. Minimum value: `0`. |
+| `MessageId` | string | - | Yes | 35-35 | `^[A-Z0-9\-]{35}$` | The unique message reference from the XML. |
+| `TimestampCreation` | string | date-time | Yes | - | - | Timestamp created. |
+| `Surname` | string | - | Yes | - | - | Surname of the customer. |
+| `GivenName` | string | - | Yes | - | - | Given name (first name) of the customer. |
+| `BirthDate` | string | date-time | Yes | - | - | Birth date of the customer. |
+| `NINumber` | string | - | Yes | - | - | National Insurance number of the customer. |
+| `AddressLines` | array | - | Yes | - | - | Address of the customer. |
+| `PostCode` | string | - | Yes | - | - | Post code of the customer. |
+| `Country` | string | - | Yes | 2-2 | `^[A-Z]{2}$` | Country of the customer. Must be a valid ISO 3166-1 alpha-2 country code, for example, `GB` for the United Kingdom. |
+| `CedingPartyClientAccountIdentification` | string | - | Yes | - | - | Sort code and account number of the investor in the ceding party's system, or alternative account identifier (Roll Number). |
+| `AcquiringPartyClientAccountIdentification` | string | - | Yes | - | - | Sort code and account number of the investor in the acquiring party's system, or alternative account identifier (Roll Number). |
+| `CedingPartySun` | string | - | Yes | 6-6 | `^[0-9]{6}$` | Ceding party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
+| `AcquiringPartyCollectionAccount` | string | - | Yes | - | - | Sort code and account number of the account the ceding party is to send the transfer funds to. |
+| `AcquiringPartySun` | string | - | Yes | 6-6 | `^[0-9]{6}$` | Acquiring party's SUN (Service User Number), a unique identifier for the ISA manager in the Pay.UK service. |
+| `Urn` | string | - | Yes | 1-18 | `^[A-Z0-9]{18}$` | Unique reference number. |
+| `ActualTransferDate` | string | date-time | Yes | - | - | Mandatory element but currently not used. It has a default value of `2000-01-01`. |
+| `ActualTransferAmount` | decimal | - | No | - | - | The total amount transferred. |
+| `ActualTransferMethod` | string | - | Yes | - | `BACS`, `CHAPS`, `FPS` | The method used to transfer the funds. |
+| `ResidualCashIndicator` | boolean | - | No | - | - | Indicates whether the ISA contains a residual cash asset for transfer. Only relevant for stocks and shares ISA transfers. |
+| `CashComponentIndicator` | boolean | - | No | - | - | Indicates whether the ISA contains a residual cash asset for transfer. Only relevant for stocks and shares ISA transfers. |
+| `ExtendedCurrentYearType` | string | - | Yes | - | `DEFAULT`, `INCLUDECURRENT`, `EXCLUDECURRENT` | Include or exclude the current year subscriptions from the transfer. |
+| `DateOfFirstSubscription` | string | date-time | Yes | - | - | The date of the first subscription made by the customer in the current tax year. |
+| `TotalAmountYearToDate` | decimal | - | Yes | - | - | Maximum amount (excluding interest and withdrawals) that could be transferred by the ceding party under current year subscription. |
+| `AcquiringPartyProductType` | string | - | No | - | `CASH`, `STCK` | Used to indicate the class of assets permitted by the acquiring party's product. |
+
+#### Example Tisa Transfer Accepted webhook request body
+
+```json
+{
+    "Type": "TisaTransferAccepted",
+    "Version": 1,
+    "Payload":{
+        "SequenceNumber": 2,
+        "MessageId": "CC539800B25E0128-260406C25251AA0001",
+        "TimestampCreation": "2025-10-20T09:54:44.000209Z",
+        "Surname": "Green",
+        "GivenName": "Mary",
+        "BirthDate": "1977-08-22",
+        "NINumber": "QQ123456C",
+        "AddressLines": [
+            "84 Fairview Close",
+            "London"
+        ],
+        "PostCode": "SW1A 1AA",
+        "Country": "GB",
+        "CedingPartyClientAccountIdentification": "SC040444AC85574996",
+        "AcquiringPartyClientAccountIdentification": "SC047722AC65339175",
+        "CedingPartySun": "118647",
+        "AcquiringPartyCollectionAccount": "45512287",
+        "AcquiringPartySun": "163599",
+        "Urn": "54dazwsgv4moi3qbvf",
+        "ActualTransferDate": "2000-01-01",
+        "ActualTransferAmount": 14550.01,
+        "ActualTransferMethod": "FPS",
+        "ResidualCashIndicator": "true",
+        "CashComponentIndicator": "false",
+        "ExtendedCurrentYearType": "DEFAULT",
+        "DateOfFirstSubscription": "2024-01-01",
+        "TotalAmountYearToDate": 14550.01,
+        "AcquiringPartyProductType": "CASH"
+
+    },
+    "Nonce": 122672772
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 122672772
+}
+```

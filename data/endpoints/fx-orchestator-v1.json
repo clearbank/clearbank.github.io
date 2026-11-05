@@ -17,6 +17,35 @@
         ],
         "summary": "This endpoint is used to create a Foreign Exchange (FX) trade with the buy or sell amount specified.",
         "operationId": "Order.Create",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Data to create a Foreign Exchange (FX) trade with the buy or sell amount specified.",
           "content": {
@@ -115,13 +144,13 @@
             "minLength": 3,
             "maxLength": 3,
             "type": "string",
-            "description": "Three-letter ISO currency code for the currency to sell."
+            "description": "Three-letter ISO 4217 currency code for the currency to sell."
           },
           "buyCurrency": {
             "minLength": 3,
             "maxLength": 3,
             "type": "string",
-            "description": "Three-letter ISO currency code for the currency to buy."
+            "description": "Three-letter ISO 4217 currency code for the currency to buy."
           }
         },
         "additionalProperties": false,

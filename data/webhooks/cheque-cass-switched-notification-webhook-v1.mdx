@@ -1,0 +1,51 @@
+---
+title: "Cheque CASS Switched Notification webhook"
+version: 1
+webhook: true
+---
+
+This webhook provides advance notice that a cheque deposit is expected following an account switch, allowing a virtual account to be created before the funds are received.
+
+```json
+{
+  "Type": "CassSwitchedChequeNotification",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload Fields
+
+| Field              | Type   | Required | Min length | Description                                                              |
+| ------------------ | ------ | -------- | ---------- | ------------------------------------------------------------------------ |
+| `SortCode`         | string | Yes      | 1          | The beneficiary sort code the cheque deposit is destined for.            |
+| `AccountNumber`    | string | Yes      | 1          | The beneficiary account number the cheque deposit is destined for.       |
+| `ChequeAmount`     | number | Yes      | -          | The value of the cheque.                                                 |
+| `TransactionSetId` | string | Yes      | 1          | The Image Clearing System transaction identifier for the cheque item.    |
+| `CreditItemId`     | string | Yes      | 1          | Unique Credit Item ID used for Image Clearing System (ICS) processing.   |
+
+#### Example Cheque CASS Switched Notification webhook request body
+
+```json
+{
+  "Type": "CassSwitchedChequeNotification",
+  "Version": 1,
+  "Payload": {
+    "SortCode": "040004",
+    "AccountNumber": "12345678",
+    "ChequeAmount": 500.00,
+    "TransactionSetId": "TXN-SET-001",
+    "CreditItemId": "CRI-001"
+  },
+  "Nonce": 134104452
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 134104452
+}
+```

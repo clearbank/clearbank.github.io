@@ -1,10 +1,15 @@
 const SwaggerParser = require('swagger-parser')
-const $RefParser = require('@apidevtools/json-schema-ref-parser')
 const { writefile, getFiles } = require('./helpers')
 
+// NOTE: There is intentionally no webhook manifest step here. The webhook docs
+// now live as `.mdx` files in `data/webhooks/` (see gatsby-config.js) and are
+// consumed via the `allMdx` GraphQL query. The old `createWebhooksFile()` helper
+// dereferenced JSON schemas in `data/webhooks/` into a `data/webhooks.json`
+// manifest that nothing imported, so it was removed to avoid crashing on the
+// `.mdx` files. If you need per-webhook JSON schemas again, reintroduce it with a
+// `.json`-only file filter so it ignores the `.mdx` docs.
 module.exports = async () => {
-  createEndpointFile()
-  createWebhooksFile()
+  await createEndpointFile()
 
   // Merge all the endpoints into one file
   // Use SwaggerParser to dereference all the $ref locations
@@ -27,37 +32,10 @@ module.exports = async () => {
       return total
     }, {})
 
-    writefile(
+    return writefile(
       './data/endpoints.json',
       formatted,
       'Endpoints Manifest File, Saved ⚡️'
-    )
-  }
-
-  // Merge all the webhooks into one file
-  async function createWebhooksFile () {
-    const files = await getFiles('./data/webhooks/')
-
-    const jsonPromises = files.map(file =>
-      $RefParser.dereference(`./data/webhooks/${file}`)
-    )
-
-    const resolvedJSONRefs = await Promise.all(jsonPromises)
-
-    const formatted = resolvedJSONRefs.reduce((prev, curr) => {
-      const total = { ...prev }
-
-      total[curr.title] = {
-        ...curr
-      }
-
-      return total
-    }, {})
-
-    writefile(
-      './data/webhooks.json',
-      formatted,
-      'Webhooks Manifest File, Saved ⚡️'
     )
   }
 }

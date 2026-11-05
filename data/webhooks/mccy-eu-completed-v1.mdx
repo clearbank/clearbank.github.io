@@ -1,0 +1,50 @@
+---
+title: "CBEU Cross-border Outbound Payment Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that an outbound multi-currency EU payment has completed.
+
+#### Request body
+
+```json
+{
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentCompleted",
+    "Version": 1,
+    "Payload": {...},
+    "Nonce":
+}
+```
+
+#### Payload
+| Element         | Description                                                                                                                                                                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EndToEndId`    | *Optional* <br /> End-to-end reference used to identify the payment consistently across all systems and parties involved in processing. <br /> Type: `string`<br /> Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br /> |
+| `InstructionId` | *Optional* <br /> Identifier assigned to a specific instruction request used to correlate client input with downstream processing. <br /> Type: `string`<br />  Pattern: `^[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+](\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+]\|[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+ ]{1,33}[0-9a-zA-Z\/\\-\\?:\\(\\)\\.,''\\+])$` <br />     |
+| `Uetr`          | *Optional* <br /> Universally Unique End-to-End Transaction Reference (UUID v4) used to track the payment across the correspondent banking network. <br /> Type: `string`<br /> Format: `guid` <br /> Pattern: `^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$`                                                            |
+| `PaymentId`     | *Optional* <br /> Internal identifier representing a payment instruction within the platform. <br /> Type: `string` <br /> Pattern: `^[a-zA-Z0-9_-]{0,50}$`                                                                                                                                                                                       |
+
+#### Example CBEU Cross-border Outbound Payment Completed webhook request body
+
+```json
+{
+    "Type": "Payments.CBEU.CrossBorder.OutboundPaymentCompleted",
+    "Version": 1,
+    "Payload": {
+        "EndToEndId": "bXuC9HimDlI0X3Ygmk525Cxb8dYzUddpj4T",
+        "InstructionId": "my-instruction-ident 111ABC-321",
+        "Uetr": "013f6468-dd30-54b6-9003-11cf68b1b989",
+        "PaymentId": "4026da87bb0f4a5"
+    },
+    "Nonce": 748212091
+}
+```
+
+#### Example webhook response
+
+```json
+{
+    "Nonce": 748212091
+}
+```

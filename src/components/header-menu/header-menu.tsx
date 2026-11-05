@@ -5,7 +5,7 @@ import { hasWindow } from 'src/utils/browser.services'
 import HeaderSubMenu from './header-sub-menu'
 
 import * as Styles from './header-menu.styles'
-import * as Types from'./header-meny.types'
+import * as Types from'./header-menu.types'
 
 const isMenuActive = (item: Types.IMenu) => {
   const currentPath = hasWindow() ? window.location.pathname : ''
@@ -14,7 +14,6 @@ const isMenuActive = (item: Types.IMenu) => {
 }
 
 const HeaderMenu: React.FC<Types.IHeaderMenuProps> = ({ items }) => {
-
   return (
     <Styles.MenuContainer>
       {items.map(item => <HeaderSubMenu key={item.menuItem.title} item={item} isActive={isMenuActive(item)} />)}
@@ -22,4 +21,4 @@ const HeaderMenu: React.FC<Types.IHeaderMenuProps> = ({ items }) => {
   )
 } 
 
-  export default HeaderMenu
+export default HeaderMenu

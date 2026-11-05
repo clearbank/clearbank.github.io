@@ -240,9 +240,6 @@
   "components": {
     "schemas": {
       "Agent": {
-        "required": [
-          "bic"
-        ],
         "type": "object",
         "properties": {
           "bic": {
@@ -251,7 +248,8 @@
             "type": "string",
             "pattern": "[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$",
             "description": "Business identifier code (BIC) - Code allocated to a financial institution by the ISO 9362 Registration Authority.",
-            "example": "CLRBNL2AXXX"
+            "example": "CLRBNL2AXXX",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -270,7 +268,7 @@
             "type": "number",
             "description": "Amount of money moved between the debtor and creditor (EUR).",
             "format": "double",
-            "example": "1000"
+            "example": 1000
           },
           "reasonCodeForRecall": {
             "minLength": 1,
@@ -287,10 +285,10 @@
           },
           "originalInstructedDate": {
             "type": "string",
-            "description": "Original date of transaction.",
+            "description": "Original date of transaction, formatted as yyyy-MM-dd, per the ISO 8601 standard.",
             "format": "date",
             "example": "2024-08-23",
-            "pattern": "YYYY-MM-DD"
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
           }
         },
         "additionalProperties": false
@@ -299,7 +297,6 @@
         "required": [
           "amount",
           "creditor",
-          "creditorAgent",
           "debtor",
           "endToEndId"
         ],
@@ -312,6 +309,12 @@
             "description": "Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency (EUR).",
             "format": "double",
             "example": 10.00
+          },
+          "acceptanceDateTime": {
+            "type": "string",
+            "description": "The time the payment was initiated at the Debtor Agent. Mandatory field for SEPA Indirect customers only.",
+            "format": "date-time",
+            "example": "2026-12-09T15:41:45.123Z"
           },
           "creditor": {
             "$ref": "#/components/schemas/Creditor"
@@ -335,7 +338,7 @@
             "description": "Information supplied to enable the matching of an entry with the items that the transfer is intended to settle, such as commercial invoices in an accounts' receivable system.",
             "nullable": true,
             "minLength": 1,
-            "maxLength": 35,
+            "maxLength": 140,
             "example": "INV-00002 2020-01-21"
           },
           "ultimateCreditor": {
@@ -366,8 +369,8 @@
             "minLength": 5,
             "type": "string",
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
-            "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
-            "example": "NL01CLRB0123456789"
+            "description": "International Bank Account Number associated with the creditor account to which a credit entry will be made as a result of the transaction.",
+            "example": "DE75512108001245126199"
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -390,11 +393,11 @@
             "properties": {
               "dateOfBirth": {
                 "type": "string",
-                "description": "Date of birth of a person.",
+                "description": "Date of birth of a person, formatted as yyyy-MM-dd, per the ISO 8601 standard.",
                 "format": "date",
                 "nullable": true,
                 "example": "1991-02-21",
-                "pattern": "YYYY-MM-DD"
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
               },
               "placeOfBirth": {
                 "type": "string",
@@ -445,7 +448,7 @@
             "type": "string",
             "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "description": "International Bank Account Number associated with the debtor account to which a debit entry will be made as a result of the transaction.",
-            "example": "NL45INGB4887467303"
+            "example": "NL73ABNA0529451824"
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -480,7 +483,7 @@
                 "pattern": "^[A-Z0-9]{18}[0-9]{2}$",
                 "example": "724500EAW1MTCM9M1X68"
               },
-              "genericIdentification": {
+              "other": {
                 "$ref": "#/components/schemas/GenericIdentificationObjectForDebtor"
               }
             },
@@ -526,7 +529,7 @@
       },
       "GenericIdentificationObject": {
         "properties": {
-          "genericIdentification": {
+          "other": {
             "type": "object",
             "required": [
               "id"
@@ -757,7 +760,7 @@
           "approve": {
             "type": "boolean",
             "description": "To accept a recall, set the value to true. To reject a recall, set the value to false. If set to false, rejectionCode is required.",
-            "example": "false"
+            "example": false
           },
           "rejectionCode": {
             "type": "string",
