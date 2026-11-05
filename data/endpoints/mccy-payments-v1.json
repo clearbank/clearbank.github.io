@@ -1412,14 +1412,14 @@
           },
           "chargeBearer":{
             "type": "string",
-            "description": "Optional field controlling how transaction fees are paid. By default, transaction fees are deducted from the payment principal. If you provide 'DEBT', your institution will pay for any transaction fees, thereby protecting the payment principal. If you use 'DEBT', you must also provide '/PPRO/' in the instructionForDebtorAgent field for this to work. This feature can only be used by prior arrangement, contact your Client Director for more details.",
+            "description": "Optional field controlling how transaction fees are paid. By default, intermediary transaction fees are deducted from the payment principal. If you provide 'DEBT', your institution can cover intermediary transaction fees by paying a fixed fee to ClearBank, protecting the overall payment principal. If you use 'DEBT', you must also provide '/PPRO/' in the instructionForDebtorAgent field for this to work. This feature can only be used by prior arrangement. Contact your Client Director for more details.",
             "enum": ["DEBT"],
             "example": "DEBT"
           },
           "instructionForDebtorAgent": {
             "type": "string",
             "nullable": true,
-            "description": "Further information about processing the payment instruction for the debtor agent to act upon. If you use 'DEBT' in the chargeBearer field, you must include '/PPRO/' in this field to protect the payment principal. To send payments on behalf of a customer, you should include their BIC in this field preceded by '/INST/' to indicate they are the instructing institution.",
+            "description": "Further information about processing the payment instruction for the debtor agent to act upon. If you use 'DEBT' in the chargeBearer field, you must provide '/PPRO/' in this field to protect the payment principal. To send payments on behalf of a customer, you should include their BIC in this field preceded by '/INST/' to indicate they are the instructing institution. You must use '/PPRO/' alongside '/INST/' when the preconditions for both are applicable.",
             "minLength": 0,
             "maxLength": 140,
             "example": "/PPRO//INST/CLRBGB12123"
