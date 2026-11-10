@@ -10,6 +10,10 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder'
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from "src/components/callout";
 
+import apiFiles from "../../../../data/endpoints.json";
+import { generateDefaultCodeblocks } from "src/components/endpoint-block/endpoint-block.helpers";
+
+
 ## FX trade (RFQ)
 
 A Request for Quote (RFQ) in the context of foreign exchange (FX) will allow you to request a price up-front for any of our currently supported currency pairs and hold that rate for a set period. 
@@ -155,7 +159,31 @@ Maximum trade sizes are under regular review and are subject to change as we wor
   endpoints={[
     {
       path: "/fx/v1/quote",
-      version: "1.FXRFQ"
+      version: "1.FXRFQ",
+      codeblocks: generateDefaultCodeblocks(
+      "response",
+      apiFiles["1.FXRFQ"].paths["/fx/v1/quote"].post.responses
+        ).flatMap(block => block.title === "OK" ? [
+        block,
+          {
+            title: "FX Trade Executed webhook (excerpt)",
+            section: "response",
+            language: "json",
+            color: "#000000",
+            codeSnippet: JSON.stringify(
+              {
+                Type: "Fx.Trade.Executed",
+                Payload: {
+                  EndToEndId: "d4f23e64276c48b19b8c5c4e1c395a82"
+                }
+              },
+              null,
+              2
+            )
+          }
+          ]
+        : [block]
+      )
     }
   ]}
 />
@@ -172,7 +200,25 @@ Maximum trade sizes are under regular review and are subject to change as we wor
         'fx-trade-settled-v1',
         'fx-trade-cancelled-v1',
         'fx-trade-settlement-failed-v1'
-      ]
+      ],
+      codeblocks: [
+        {
+          title: "FX Trade Executed webhook (excerpt)",
+          section: "response",
+          language: "json",
+          color: "#000000",
+          codeSnippet: JSON.stringify(
+            {
+              Type: "Fx.Trade.Executed",
+              Payload: {
+              EndToEndId: "d4f23e64276c48b19b8c5c4e1c395a82"
+            }
+          },
+          null,
+          2
+        )
+      }
+    ],
     }
   ]}
 />
