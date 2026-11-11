@@ -1494,7 +1494,7 @@ const glossaryTerms = [
       'euro credit transfer',
       'single euro payments area credit transfer',
     ],
-    regions: ['eu'],
+    regions: ['eu','uk'],
     category: 'payments',
     definition:
       'A SEPA Credit Transfer (SCT) is a payment scheme that enables euro credit transfers between eligible accounts within the Single Euro Payments Area (SEPA).',
@@ -1826,6 +1826,29 @@ const glossaryTerms = [
 },
 
 {
+  id: 'cass-15',
+  term: 'CASS 15',
+  acronym: '',
+  aliases: [
+    'safeguarding rules',
+    'fca safeguarding rules',
+    'client assets sourcebook',
+  ],
+  regions: ['uk'],
+  category: 'compliance',
+  definition:
+    'CASS 15 is the section of the FCA Client Assets Sourcebook that contains the safeguarding rules for payment and e-money firms. It sets out how relevant funds must be held, reconciled and protected, including the requirement for a safeguarding confirmation letter.',
+  seoTitle: 'What is CASS 15?',
+  seoDescription:
+    'Learn what CASS 15 is and how the FCA safeguarding rules protect relevant funds held by payment and e-money firms.',
+  relatedTerms: [
+    'cass-7',
+    'financial-conduct-authority',
+    'safeguarded-account',
+  ],
+},
+
+{
   id: 'single-euro-payments-area',
   term: 'Single Euro Payments Area',
   acronym: 'SEPA',
@@ -1974,6 +1997,55 @@ const glossaryTerms = [
     'Learn what a CRA rating is and how clients use it to record customer risk during onboarding.',
   relatedTerms: ['know-your-customer', 'politically-exposed-person'],
 },
+
+{
+  id: 'electronic-money-institution',
+  term: 'Electronic Money Institution',
+  acronym: 'EMI',
+  aliases: [
+    'e-money institution',
+    'e-money firm',
+    'emi',
+  ],
+  regions: ['uk', 'eu'],
+  category: 'compliance',
+  definition:
+      'An Electronic Money Institution (EMI) is a firm authorised by a financial regulator, such as the FCA in the UK, to issue electronic money and provide payment services. EMIs must safeguard customer funds.',
+  seoTitle: 'What is an Electronic Money Institution (EMI)?',
+  seoDescription:
+    'Learn what an Electronic Money Institution (EMI) is and how EMIs issue e-money and safeguard customer funds.',
+  relatedTerms: [
+    'payment-service-provider',
+    'safeguarded-account',
+    'cass-15',
+    'financial-conduct-authority',
+  ],
+},
+
+{
+  id: 'payment-institution',
+  term: 'Payment Institution',
+  acronym: 'PI',
+  aliases: [
+    'authorised payment institution',
+    'small payment institution',
+    'spi',
+  ],
+  regions: ['uk', 'eu'],
+  category: 'compliance',
+  definition:
+    'A Payment Institution (PI) is a firm authorised or registered by a financial regulator, such as the FCA in the UK, to provide payment services without issuing electronic money. PIs must safeguard customer funds.',
+  seoTitle: 'What is a Payment Institution (PI)?',
+  seoDescription:
+    'Learn what a Payment Institution (PI) is and how PIs provide payment services and safeguard customer funds.',
+  relatedTerms: [
+    'electronic-money-institution',
+    'payment-service-provider',
+    'safeguarded-account',
+    'cass-15',
+  ],
+},
+
 
 /** Cards definitions
 {
