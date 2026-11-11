@@ -566,14 +566,14 @@ const styles = {
     fontSize: '26px',
     fontWeight: '600',
     lineHeight: '1.3',
-    scrollMarginTop: `calc(${heights.header} + 24px)`,
+    scrollMarginTop: heights.header,
   },
 
   entry: {
     paddingTop: '24px',
     paddingBottom: '24px',
     borderBottom: '1px solid #d8d8d8',
-    scrollMarginTop: `calc(${heights.header} + 24px)`,
+    scrollMarginTop: heights.header,
   },
 
   termHeading: {
