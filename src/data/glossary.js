@@ -1878,7 +1878,7 @@ const glossaryTerms = [
   editorialReview: true,
 },
 
-{
+/* {
   id: 'autofx',
   term: 'AutoFX',
   acronym: null,
@@ -1891,7 +1891,7 @@ const glossaryTerms = [
   seoDescription:
     'Learn how AutoFX automatically converts euros into a target currency for ClearBank Europe cross-border payments.',
   relatedTerms: ['foreign-exchange', 'fx-trade', 'multicurrency', 'cross-border-payment'],
-},
+}, */
 
 {
   id: 'flexible-cash-isa',
