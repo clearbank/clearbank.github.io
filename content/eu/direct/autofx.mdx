@@ -63,7 +63,7 @@ Payment requests should be submitted to our **POST /payments/cross-border/v2/fx-
 
 To proceed with a requested payment, you must accept it using our **POST /payments/cross-border/v2/fx-payments/accept** endpoint using the `paymentId` returned in the **200 - OK** response to your original request. If we do not receive acceptance within 60 seconds of the original **200 - OK** response, the payment request will automatically expire. The exact expiry time is given in the `expiryDateTime` property of the **200 - OK** response.
 
-We'll respond with a **202 - Accepted** response.
+We'll respond with a **202 - Accepted** response. If the payment has already been accepted, you'll receive a **409 - Conflict** error instead.
 
 Note: You can request additional payments in parallel without accepting existing ones. There is currently no limit to the number of open payment requests you can have at once.
 
