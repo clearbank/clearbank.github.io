@@ -10,14 +10,14 @@ import Callout from "src/components/callout";
 import ExternalLink from 'src/components/external-link';
 
 ## Get connected
-Before you can integrate with our API, you need to have been onboarded by us as a customer and have a valid authentication profile set up.
+Before you can integrate with [our API](/uk/docs/api/overview), you need to have been onboarded by us as a customer and have a valid authentication profile set up.
 This authentication profile includes your Digital Certificate and secure API token. The API token needs to be included in the header of all REST API calls.
 
 <br/>
 
 <Callout colour="blue">
   <strong>Security notice: Protecting your credentials</strong><br/><br/>
-  To access the ClearBank API you will use sensitive credentials including API tokens, private keys and digital certificates. These credentials grant direct access to your data and must be protected at all times. You must store, transmit and manage these credentials securely.<br/><br/>
+  To access the ClearBank API, you will use sensitive credentials including API tokens, private keys and digital certificates. These credentials grant direct access to your data and must be protected at all times. You must store, transmit and manage these credentials securely.<br/><br/>
   Credentials must never be shared and may expire periodically, you are responsible for renewing them promptly. Any suspected compromise must be reported to ClearBank immediately, as exposure of credentials could allow unauthorised access to your ClearBank services.
 </Callout>
 
@@ -34,7 +34,7 @@ Your ClearBank authentication profile links your institution to your public key.
 Your authentication profile is a combination of:
 
 - A key pair (public/private)
-- A certificate signing request (CSR) in PKCS #10 format*
+- A [certificate signing request (CSR)](/uk/docs/api/technical-reference#certificate-signing-request) in [PKCS](/uk/docs/api/technical-reference#public-key-cryptography-standards) #10 format*
 - A token
 
 
@@ -84,7 +84,7 @@ We use the following specifications to create a digital signature:
 > (In the simulation environment, this can be done using open source solutions.)
 
 4. The output is the message digital signature
-5. Send the Base64 encoded string representation of the digital signature in the HTTP header **DigitalSignature** for all requests that have a request body
+5. Send the Base64 encoded string representation of the digital signature in the HTTP header [**DigitalSignature**](/uk/docs/api/technical-reference#digital-signature) for all requests that have a request body
 
 For additional help with creating your authentication profile and digital signature, please refer to the following examples on the ClearBank GitHub repository:
 - <ExternalLink href="https://github.com/clearbank/fi-api-101">C# example for ClearBank API and Webhooks</ExternalLink> 
@@ -101,7 +101,7 @@ Once you have set up your connection to our simulation environment, you are read
 
 ### Header parameters
 
-We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and `X-Request-Id` headers. In all our responses we will send an `X-Correlation-Id` in the header, together with an [HTTP status code](#http-status-codes).
+We utilise HTTP-request headers for our API calls which include `Authorization`, `DigitalSignature` and [`X-Request-Id`](/uk/docs/api/technical-reference#x-request-id) headers. In all our responses we will send an []`X-Correlation-Id`](/uk/docs/api/technical-reference#x-correlation-id) in the header, together with an [HTTP status code](#http-status-codes).
 
 Different request types require different headers as shown in this table:
 
@@ -150,7 +150,7 @@ The response shows results from the test call
 ```
 
 To confirm that authentication and signature verification are working as expected, when you send a POST/v1/Test request you will receive a `FITestEvent webhook` from ClearBank (if you are subscribed to it).
-We use webhooks to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
+We use [webhooks](/uk/docs/api/technical-reference#webhook) to deliver transaction confirmation notifications and account-specific reconciliations to your system as soon as such events occur on your account. Please refer to [Set up and test webhook listener URLs](#set-up-and-test-webhook-listener-urls) for more information.
 
 <EndpointBlock
   type="get"
@@ -279,7 +279,7 @@ You may receive a `503 - Service unavailable` response containing a **Retry-Afte
 }
 ```
 ### Rate limiting
-We use rate limiting to protect our systems from excessive load and to ensure a consistent level of availability and performance to all our clients.
+We use [rate limiting](/uk/docs/api/technical-reference#rate-limit) to protect our systems from excessive load and to ensure a consistent level of availability and performance to all our clients.
 
 <Callout colour="blue">
 Our rate limits are dynamic and are therefore subject to change over time. This means you should implement your systems to be able to handle rate limits and react accordingly. 
@@ -397,7 +397,7 @@ When certain events occur, we generate and send out a webhook message to your de
 
 All ClearBank webhooks consist of a `DigitalSignature`, `Type`, `Version`, `Payload`, and `Nonce`. Payload parameters vary depending on the webhook.
 
-Webhooks are asynchronous events and can be delivered in any order. We provide at-least-once delivery of webhooks. Because webhooks may be sent more than once, your webhook handlers must be idempotent. You can check for duplicates based on the payload of the webhook.
+Webhooks are asynchronous events and can be delivered in any order. We provide at-least-once delivery of webhooks. Because webhooks may be sent more than once, your webhook handlers must be [idempotent](/uk/docs/api/technical-reference#idempotency). You can check for duplicates based on the payload of the webhook.
 
 #### Webhook structure
 
