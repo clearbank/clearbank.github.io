@@ -688,6 +688,7 @@ const technicalReferenceTerms = [
       'pacs-008',
       'pacs-009',
       'unique-end-to-end-transaction-reference',
+      'camt-053'
     ],
     relatedGuides: [],
     editorialReview: true,
@@ -982,7 +983,7 @@ const technicalReferenceTerms = [
   externalLinks: [],
   seoTitle: 'What is a sort code?',
   seoDescription: 'Learn what a sort code is and how it is used to identify UK bank accounts.',
-  relatedTerms: ['account-id', 'business-identifier-code'],
+  relatedTerms: ['account-id'],
   relatedGuides: [
     { title: 'IDs and Identifiers', url: '/reference/ids-and-identifiers' },
   ],
