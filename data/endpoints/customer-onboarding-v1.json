@@ -2,12 +2,12 @@
   "openapi": "3.0.2",
   "info": {
     "title": "Customer Due Diligence API",
-    "version": "1.0know-your-customer"
+    "version": "1.0customer-onboarding"
   },
   "paths": {
     "/customer-due-diligence/v1/retail/onboard": {
       "post": {
-        "description": "Use this endpoint to conduct KYC checks for a new retail customer. If the checks pass, the provided details are then used to create a new retail customer.",
+        "description": "Use this endpoint to onboard a new retail customer. Onboarding includes our due diligence checks, and we'll send you the outcome by webhook. If onboarding is successful, we'll create the retail customer and send you their customer ID.",
         "parameters": [
           {
             "name": "Authorization",
@@ -97,7 +97,7 @@
     },
     "/customer-due-diligence/v1/legal-entity/onboard": {
       "post": {
-        "description": "Use this endpoint to conduct KYB checks for a new business customer and KYC checks on its key individuals. If the checks pass, the provided details are then used to create a new legal entity customer and its associated individuals.",
+        "description": "Use this endpoint to onboard a new legal entity customer and its key individuals. Onboarding includes our due diligence checks, and we'll send you the outcome by webhook. If onboarding is successful, we'll create the legal entity customer and its associated individuals, and send you the customer ID.",
         "tags": [
           "CustomerCheck"
         ],
@@ -360,11 +360,11 @@
             "example": "my.email@example.com"
           },
           "mobile": {
-            "pattern": "^\\+?\\d+$",
+            "pattern": "^(00)[0-9]{1,18}$",
             "type": "string",
             "nullable": true,
-            "description": "This person's mobile number.",
-            "example": "01234567891"
+            "description": "This person's mobile number. Must start with '00' in place of '+', and include the country code. For example, '0044' for UK numbers.",
+            "example": "00441234567891"
           },
           "address": {
             "$ref": "#/components/schemas/LegalEntityAddress",
@@ -766,7 +766,7 @@
           "applicationId": {
             "type": "string",
             "format": "uuid",
-            "description": "The unique identifier for this business' KYB check.",
+            "description": "A unique ID for each submitted application. Use this to identify which application a corresponding webhook pertains to.",
             "example": "47ca0728-7db3-577f-94f2-80668239f430"
           }
         },
@@ -826,9 +826,9 @@
           "phone":{
             "minLength": 1,
             "type": "string",
-            "description": "The business's phone number. Must be a valid international phone number containing only digits. May start with '+'.",
-            "example": "+441234567890",
-            "pattern": "^\\+?\\d+$"
+            "description": "The business's phone number. Must be a valid international phone number containing only digits.  Must start with '00' in place of '+', and include the country code. For example, '0044' for UK numbers.",
+            "example": "00441234567890",
+            "pattern": "^(00)[0-9]{1,18}$"
           },
           "address": {
             "$ref": "#/components/schemas/LegalEntityAddressInfo"

@@ -154,6 +154,32 @@ Take care to update the `RequestedExecutionDate` field to today's date, and to u
 <WebhookPlaceholder render='sctuk-customer-accounts-transaction-completed-v1' />
 <WebhookPlaceholder render='sctuk-outbound-payment-return-completed-v1' />
 
+#### Return reason codes
+
+If an outbound SCT UK payment is returned, you'll receive a [Cross-border Outbound Payment Return Completed webhook](#cross-border-outbound-payment-return-completed-webhook). This includes a `ReasonCode` in the `ReturnReasonInformation` array specifying why the payment was returned. The return reason codes include, but are not limited to:
+
+| Reason code | Reason                                   | Description                                                                                                                                                |
+| ----------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC01        | Incorrect Account Number                 | Invalid beneficiary account. The beneficiary's IBAN is invalid or the account does not exist.                                                              |
+| AC04        | Closed Account Number                    | Beneficiary account closed. The beneficiary's account has been closed.                                                                                     |
+| AC06        | Blocked Account                          | Beneficiary account blocked. The beneficiary's account is blocked from processing the payment.                                                             |
+| AG01        | Transaction Forbidden                    | Payment not permitted for this account. The beneficiary account does not allow this type of credit transfer, for example certain savings accounts.         |
+| AG02        | Invalid Bank Operation Code              | Invalid payment information. The payment contains an incorrect scheme, service or transaction code.                                                        |
+| AM05        | Duplication                              | Duplicate payment. The payment has been identified as a duplicate of another payment.                                                                      |
+| BE04        | Missing Creditor Address                 | Beneficiary's address missing or invalid. Required beneficiary address information is missing or cannot be used.                                           |
+| CNOR        | Creditor Bank Is Not Registered          | Beneficiary bank not reachable through the clearing system. The beneficiary bank is not registered for SCT under the specified BIC in the clearing system. |
+| ERIN        | ERI Option Not Supported                 | Extended Remittance Information not supported. The beneficiary bank does not support the Extended Remittance Information option used by the payment.       |
+| MD07        | End Customer Deceased                    | Beneficiary deceased. The payment was returned because the beneficiary is deceased.                                                                        |
+| MS02        | Not Specified Reason Customer Generated  | Returned at the beneficiary's request. The beneficiary has requested that the payment is returned.                                                         |
+| MS03        | Not Specified Reason Agent Generated     | Reason not specified. The beneficiary bank returned the payment without providing a more specific reason.                                                  |
+| RC01        | Bank Identifier Incorrect                | Invalid bank identifier. The BIC identifying a bank involved in the payment is incorrect.                                                                  |
+| RR01        | Missing Debtor Account or Identification | Payer account or identification information missing. Information required to identify the payer or payer's account is missing or incomplete.               |
+| RR02        | Missing Debtor Name or Address           | Payer name or address missing. Required information about the payer, such as their name or address, is missing or incomplete.                              |
+| RR03        | Missing Creditor Name or Address         | Beneficiary name or address missing. Required information about the beneficiary, such as their name or address, is missing or incomplete.                  |
+| RR04        | Regulatory Reason                        | Payment returned for regulatory reasons. The beneficiary bank was unable to process the payment due to regulatory requirements.                            |
+
+External code sets can be downloaded from <ExternalLink href="https://www.iso20022.org">iso20022.org</ExternalLink>.
+
 ## Inbound payments
 
 When you receive an SCT payment, you'll be notified via webhook. To receive webhooks, you'll need to [subscribe to them first](../api/getting-started#set-up-and-test-webhook-listener-urls) using the ClearBank Portal.
@@ -191,7 +217,7 @@ To simulate the return of an outbound SCT UK payment in the simulation environme
 
 Receipt of the [Cross-border Outbound Payment Return Completed webhook](#cross-border-outbound-payment-return-completed-webhook) confirms the return payment.
 
-**Note**: The return reason in Simulation will always be `AC01` (Insufficient Funds).
+**Note**: The return reason in Simulation will always be `AC01` (Incorrect Account Number). See [Return reason codes](#return-reason-codes).
 
 ```json
 "remittanceInformation": {
