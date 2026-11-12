@@ -41,6 +41,8 @@ Although these identifiers might refer to the same payment journey, they serve d
 | Investigate an API call | `X-Correlation-Id` |
 | Trace an applicable scheme or network payment | `UETR`, where provided |
 
+Depending on the scheme, a payment may have more than one `TransactionId`. For example, where a payment is processed by multiple intermediary PSPs, each processing stage may have its own transaction reference.
+
 ## Identifier categories
 
 Identifiers generally fall into five categories.
@@ -68,6 +70,8 @@ Entity identifiers identify ClearBank resources and entities.
 | `DirectDebitMandateId` | A Direct Debit mandate |
 | `OriginalTransactionId` | An earlier transaction |
 
+Depending on the scheme, a payment may have more than one `TransactionId`. For example, where a payment is processed by multiple intermediary PSPs, each processing stage may have its own transaction reference. 
+
 ### Payment references
 
 These fields identify a payment or transaction across the payment chain. Depending on the payment scheme and direction, the value may be supplied by the initiating party or populated from scheme or instruction data.
@@ -78,7 +82,7 @@ These fields identify a payment or transaction across the payment chain. Dependi
 | `EndToEndTransactionId` |
 | `EndToEndIdentification` |
 
-These identifiers are commonly used to reconcile ClearBank activity with internal systems and records.
+These identifiers are commonly used to reconcile ClearBank activity with internal systems and records. The `EndToEndId` should initially be supplied by the initiating party at the start of the payment journey.
 
 ### Scheme-related identifiers
 
@@ -198,8 +202,7 @@ These identifiers represent different concepts.
 | Identifies a payment instruction | Identifies a transaction |
 | Used when referring to the payment | Used when referring to the transaction resulting from or associated with payment processing |
 
-
-A payment journey might contain both identifiers.
+A payment journey might contain both identifiers. A returned payment may be assigned a new `TransactionId`.
 
 ### EndToEndIdentification and PaymentId
 
@@ -214,7 +217,7 @@ Many organisations use `EndToEndIdentification` to reconcile payments with inter
 
 ### X-Request-Id and X-Correlation-Id
 
-These identifiers are used for tracing and troubleshooting.
+These identifiers are used for tracing and troubleshooting individual API requests and related API messages with a shared origin.
 
 | X-Request-Id | X-Correlation-Id |
 |--------------|------------------|
@@ -256,8 +259,8 @@ A common reconciliation approach is:
 
 ## Helpful quick reference guides
 
-Now that you've identified the field you need, use the following lookup tables to find where it appears in API requests, responses and webhook events.
+For more information about API endpoints and webhooks, refer to the following lookup tables.
 
-- [**Endpoint lookup**](/eu/docs/lookup/endpoint-lookup-table): Find which API requests and responses contain a specific field or identifier.
+- [**Endpoint lookup**](/eu/docs/lookup/endpoint-lookup-table): See the available API endpoints and links to further information.
 
-- [**Webhook lookup**](/eu/docs/loookup/webhook-lookup-table): Find which webhook events contain a specific field or identifier.
+- [**Webhook lookup**](/eu/docs/lookup/webhook-lookup-table): Find which webhook events contain a specific field or identifier.

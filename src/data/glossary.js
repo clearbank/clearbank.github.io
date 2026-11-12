@@ -736,8 +736,7 @@ const glossaryTerms = [
   seoDescription:
     `Learn what Embedded Banking is, how it works, and how businesses use Banking as a Service (BaaS) to offer accounts, payments and other banking services within their own products.`,
   relatedTerms: [
-    'banking-as-a-service',
-    'payment-initiation',
+    'banking-as-a-service'
   ],
   editorialReview: true,
 },
@@ -751,8 +750,7 @@ const glossaryTerms = [
       'general segregated account',
       'segregated funds account',
       'gsa',
-      'segregated pooled account',
-      'sepa'
+      'segregated pooled account'
     ],
     regions: ['uk','eu'],
     category: 'accounts',
@@ -1680,7 +1678,7 @@ const glossaryTerms = [
       'euro rtgs',
       'euro real-time gross settlement',
     ],
-    regions: ['eu'],
+    regions: ['uk','eu'],
     category: 'payments',
     definition:
       `T2, formerly TARGET2, is the European Central Bank's real-time gross settlement (RTGS) system used to settle eligible euro transactions across the euro area.`,
@@ -2043,6 +2041,31 @@ const glossaryTerms = [
     'payment-service-provider',
     'safeguarded-account',
     'cass-15',
+  ],
+},
+
+{
+  id: 'verification-of-payee',
+  term: 'Verification of Payee',
+  acronym: 'VoP',
+  aliases: [
+    'vop',
+    'payee verification',
+    'name and IBAN check',
+    'beneficiary name check',
+  ],
+  regions: ['eu'],
+  category: 'payments',
+  definition:
+      'Verification of Payee (VoP) is a name and IBAN verification service that checks whether the payee name provided by the payer matches the name held on the account at the receiving payment service provider (PSP), before a payment is made. It helps reduce fraud and misdirected payments.',
+  seoTitle: 'What is Verification of Payee (VoP)?',
+  seoDescription:
+    'Learn what Verification of Payee is and how name and IBAN checks help prevent misdirected payments and fraud.',
+  relatedTerms: [
+    'beneficiary',
+    'international-bank-account-number',
+    'sepa-credit-transfer',
+    'sepa-instant-credit-transfer',
   ],
 },
 

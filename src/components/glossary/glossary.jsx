@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import glossaryTerms from '../../data/glossary';
 
+import { heights } from 'src/components/theme';
+
 const getDisplayName = item => {
   if (!item.acronym) {
     return item.term;
@@ -385,7 +387,7 @@ const Glossary = ({ region }) => {
                 <h2
                   id={letterId}
                   data-id={letterId}
-                  className="cannon page-menu-entry"
+                  className='cannon page-menu-entry'
                   style={styles.letterHeading}
                 >
                   {letter}
@@ -550,14 +552,14 @@ const styles = {
     fontSize: '26px',
     fontWeight: '600',
     lineHeight: '1.3',
-    scrollMarginTop: '32px',
+    scrollMarginTop: heights.header,
   },
 
   entry: {
     paddingTop: '24px',
     paddingBottom: '24px',
     borderBottom: '1px solid #d8d8d8',
-    scrollMarginTop: '32px',
+    scrollMarginTop: heights.header,
   },
 
   termHeading: {
