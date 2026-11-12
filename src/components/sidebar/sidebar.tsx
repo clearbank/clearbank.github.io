@@ -94,7 +94,7 @@ const Sidebar: React.FunctionComponent<Types.SidebarProps> = ({ currentPageURL, 
       menuLinks[0].scrollIntoView()
     }
   })
-  
+
   return (
     <Styles.Container>
       <Styles.List key={pageInViewport}>
