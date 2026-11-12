@@ -995,7 +995,7 @@ const technicalReferenceTerms = [
   acronym: '',
   aliases: ['camt053', 'camt.053 statement', 'bank to customer statement'],
   category: 'message-standards',
-  regions: ['eu'],
+  regions: ['eu','uk'],
   definition:
     'camt.053 is the ISO 20022 Bank to Customer Statement message. It reports the booked entries and balances on an account for a business day. camt.053 statements are delivered in XML format.',
     externalLinks: [],
