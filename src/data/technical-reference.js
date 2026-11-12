@@ -989,6 +989,29 @@ const technicalReferenceTerms = [
   editorialReview: true,
 },
 
+{
+  id: 'camt-053',
+  term: 'camt.053',
+  acronym: '',
+  aliases: ['camt053', 'camt.053 statement', 'bank to customer statement'],
+  category: 'message-standards',
+  regions: ['eu'],
+  definition:
+    'camt.053 is the ISO 20022 Bank to Customer Statement message. It reports the booked entries and balances on an account for a business day. camt.053 statements are delivered in XML format.',
+    externalLinks: [],
+    seoTitle: 'What is camt.053?',
+    seoDescription:
+      'Learn what a camt.053 ISO 20022 bank to customer statement is and how it is used for account reporting.',
+    relatedTerms: ['iso-20022', 'pacs-008', 'transaction-id'],
+    relatedGuides: [
+      {
+        title: 'Statements',
+        url: '/eu/docs/report/statements',
+      },
+    ],
+    editorialReview: true,
+  },
+
 ];
 
 export default technicalReferenceTerms;
