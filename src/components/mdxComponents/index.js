@@ -9,7 +9,7 @@ import kebabCase from 'lodash.kebabcase'
 import * as Styles from './mdx-components.styles'
 import * as Table from 'src/components/table/table.styles'
 
-import Glossary from '../glossary/Glossary'
+import Glossary from '../glossary/glossary'
 import TechnicalReference from '../technical-reference/technical-reference'
 
 export default {
