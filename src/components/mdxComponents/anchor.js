@@ -1,9 +1,17 @@
 import * as React from 'react'
 
-const AnchorTag = ({ children: link, ...props }) => {
+const AnchorTag = ({ children: link, className, title, ...props }) => {
+  const isDefinition = (className || '').split(' ').includes('glossary-link')
+
   if (link) {
     return (
-      <a href={props.href} target='_self' rel='noopener'>
+      <a
+        href={props.href}
+        title={title}
+        className={isDefinition ? 'glossary-link' : undefined}
+        target='_self'
+        rel='noopener'
+      >
         {link}
       </a>
     )

@@ -9,7 +9,13 @@ import kebabCase from 'lodash.kebabcase'
 import * as Styles from './mdx-components.styles'
 import * as Table from 'src/components/table/table.styles'
 
+import Glossary from '../glossary/glossary'
+import TechnicalReference from '../technical-reference/technical-reference'
+
 export default {
+  Glossary,
+  TechnicalReference,
+
   h1: props => (
     <Styles.H1
       as='h1'
@@ -76,7 +82,25 @@ export default {
 
   code: CodeBlock,
 
-  a: props => <Styles.Link {...props} />,
+  a: props => {
+    const href = typeof props.href === 'string' ? props.href : ''
+    const isGlossary = href.includes('/api/glossary#')
+    const isTechRef = href.includes('/api/technical-reference#')
+
+    return (
+      <Styles.Link
+        {...props}
+        className={isGlossary || isTechRef ? 'glossary-link' : props.className}
+        title={
+          isGlossary
+            ? 'View glossary definition'
+            : isTechRef
+              ? 'View technical reference definition'
+              : props.title
+        }
+      />
+    )
+  },
 
   ul: props => <Styles.List className='list' {...props} />,
 
