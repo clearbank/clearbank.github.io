@@ -1,6 +1,6 @@
 ---
-title: "AutoFX"
-metaTitle: "AutoFX"
+title: "Cross-border FX"
+metaTitle: "Cross-border FX"
 order: 5
 showPageMenu: true
 ---
@@ -10,16 +10,16 @@ import WebhookPlaceholder from 'src/components/webhook-placeholder';
 import WebhookSummary from 'src/components/webhook-summary'
 import Callout from "src/components/callout";
 
-## AutoFX
+## Cross-border FX
 
 <Callout colour="green">
-<h3>AutoFX is coming soon</h3>
+<h3>Cross-border FX is coming soon</h3>
 <p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to aid you in integrating with our API in our EU simulation environment.</p>
 </Callout>
 
-Our AutoFX service lets you make cross-border payments directly from euro accounts. When you send an AutoFX payment, your euros are converted into the target currency automatically. This simplifies multi-currency transactions by allowing you to make payments in a wide range of currencies using a straightforward interface.
+Our Cross-border FX service lets you make cross-border payments directly from euro accounts. When you send a Cross-border FX payment, your euros are converted into the target currency automatically. This simplifies multi-currency transactions by allowing you to make payments in a wide range of currencies using a straightforward interface.
 
-To get started with AutoFX, you'll just need a ClearBank EU euro account. This will be set up for you as part of your onboarding process.
+To get started with Cross-border FX, you'll just need a ClearBank EU euro account. This will be set up for you as part of your onboarding process.
 
 If you're interested in using this service, please reach out to your Client Director.
 
@@ -27,12 +27,12 @@ If you're interested in using this service, please reach out to your Client Dire
 
 ### Payment properties
 
-* AutoFX payments only support same day settlement.
+* Cross-border FX payments only support same day settlement.
 * This service is subject to minimum payment sizes.
 
 ### Available currencies
 
-AutoFX supports the following target currencies:
+Cross-border FX supports the following target currencies:
 
 | Currency             | Code | Minimum payment size (in target currency) | Open / cutoff time (CET)   |
 | -------------------- | ---- | ----------------------------------------- | -------------------------- |
@@ -51,7 +51,7 @@ AutoFX supports the following target currencies:
 ### Hours and holidays
 
 Each currency's availability is subject to different national holidays and respective cutoff times.
-In general, AutoFX is available Monday to Friday, from 09:30 to 15:30 CET.
+In general, Cross-border FX is available Monday to Friday, from 09:30 to 15:30 CET.
 
 ## Payment process
 
@@ -73,29 +73,29 @@ If you do not want to proceed with a requested payment, no action is required. R
 
 ### Ensure settlement amount
 
-You can 'fix' either side of the currency pair in an AutoFX payment.
+You can 'fix' either side of the currency pair in a Cross-border FX payment.
 
 * To fix the amount of EUR you'll pay, use the `instructedAmount` object to declare a payment amount in EUR, including fees. The amount the creditor will receive will be confirmed in the **200 - OK** response body, under the property `equivalentAmount`.
 * To fix the amount of target currency - for example, GBP - use the `equivalentAmount` object to declare the settlement amount in GBP after transaction fees. The amount of EUR you'll pay will be confirmed in the **200 - OK** response body, under the property `instructedAmount`.
 
 ### Receive payment updates
 
-We'll update you about payments' statuses via webhook. AutoFX uses the following webhooks:
+We'll update you about payments' statuses via webhook. Cross-border FX uses the following webhooks:
 
-* [Cross-border FX Outbound Payment Completed webhook](#cross-border-fx-outbound-payment-completed-webhook) - To notify you when an outbound AutoFX payment has been successfully completed.
+* [Cross-border FX Outbound Payment Completed webhook](#cross-border-fx-outbound-payment-completed-webhook) - To notify you when an outbound Cross-border FX payment has been successfully completed.
 * [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook) - To notify you about the payment's update to your account's transactions.
-* [Cross-border FX Outbound Payment Failed webhook](#cross-border-fx-outbound-payment-failed-webhook) - To notify you when an outbound AutoFX payment has failed.
-* [Cross-border FX Outbound Payment Return Completed webhook](#cross-border-fx-outbound-payment-return-completed-webhook) - To notify you when an outbound AutoFX payment has been returned by the recipient's bank and the funds have been credited back to your account.
+* [Cross-border FX Outbound Payment Failed webhook](#cross-border-fx-outbound-payment-failed-webhook) - To notify you when an outbound Cross-border FX payment has failed.
+* [Cross-border FX Outbound Payment Return Completed webhook](#cross-border-fx-outbound-payment-return-completed-webhook) - To notify you when an outbound Cross-border FX payment has been returned by the recipient's bank and the funds have been credited back to your account.
 
 ### Message flow diagram
 
-![Message flow diagram showing the endpoint calls and webhooks involved in making an AutoFX payment. You request a payment and ClearBank responds with 200 - OK, including the payment's details. Within 60 seconds, you accept the payment using the accept an AutoFX payment endpoint and ClearBank responds with 202 - Accepted. ClearBank then sends either a Cross-border FX Outbound Payment Completed webhook or a Cross-border FX Outbound Payment Failed webhook, depending on the outcome. When your account is debited, ClearBank also sends a Customer Accounts Transaction Completed webhook.](/assets/images/diagrams/eu/auto-fx/mccy-eu-payment.svg)
+![Message flow diagram showing the endpoint calls and webhooks involved in making a Cross-border FX payment. You request a payment and ClearBank responds with 200 - OK, including the payment's details. Within 60 seconds, you accept the payment using the accept a Cross-border FX payment endpoint and ClearBank responds with 202 - Accepted. ClearBank then sends either a Cross-border FX Outbound Payment Completed webhook or a Cross-border FX Outbound Payment Failed webhook, depending on the outcome. When your account is debited, ClearBank also sends a Customer Accounts Transaction Completed webhook.](/assets/images/diagrams/eu/cross-border-fx/mccy-eu-payment.svg)
 
 ## Endpoints
 
 <EndpointBlock
   type="post"
-  title="Request an AutoFX payment"
+  title="Request a Cross-border FX payment"
   endpoints={[
     {
       path: "/payments/cross-border/v2/fx-payments",
@@ -108,7 +108,7 @@ We'll update you about payments' statuses via webhook. AutoFX uses the following
 
 <EndpointBlock
   type="post"
-  title="Accept an AutoFX payment"
+  title="Accept a Cross-border FX payment"
   endpoints={[
     {
       path: "/payments/cross-border/v2/fx-payments/accept",
