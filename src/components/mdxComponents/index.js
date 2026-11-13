@@ -86,10 +86,13 @@ export default {
     const href = typeof props.href === 'string' ? props.href : ''
     const isGlossary = href.includes('/api/glossary#')
     const isTechRef = href.includes('/api/technical-reference#')
+    const isDefinition = isGlossary || isTechRef
 
     return (
       <Styles.Link
         {...props}
+        target={isDefinition ? '_blank' : props.target}
+        rel={isDefinition ? 'noopener noreferrer' : props.rel}
         className={isGlossary || isTechRef ? 'glossary-link' : props.className}
         title={
           isGlossary

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const AnchorTag = ({ children: link, className, title, ...props }) => {
+const AnchorTag = ({ children: link, className, title, target, rel, ...props }) => {
   const isDefinition = (className || '').split(' ').includes('glossary-link')
 
   if (link) {
@@ -9,8 +9,8 @@ const AnchorTag = ({ children: link, className, title, ...props }) => {
         href={props.href}
         title={title}
         className={isDefinition ? 'glossary-link' : undefined}
-        target='_self'
-        rel='noopener'
+        target={isDefinition ? '_blank' : '_self'}
+        rel={isDefinition ? 'noopener noreferrer' : 'noopener'}
       >
         {link}
       </a>
