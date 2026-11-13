@@ -1013,6 +1013,19 @@ const technicalReferenceTerms = [
     editorialReview: true,
   },
 
-];
+  {
+    id: 'iso-17442',
+    term: 'ISO 17442',
+    acronym: '',
+    aliases: ['iso17442'],
+    category: 'message-standards',
+    regions: ['uk', 'eu'],
+    definition:
+      'ISO 17442 is the international standard that defines the Legal Entity Identifier (LEI), a 20-character alphanumeric code used to uniquely identify legal entities in financial transactions.',
+    relatedTerms: [],
+
+    },
+    
+ ];
 
 export default technicalReferenceTerms;
