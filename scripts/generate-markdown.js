@@ -45,10 +45,41 @@ for (const file of findPages(publicDir)) {
 }
 
 index.sort((a, b) => a.url.localeCompare(b.url))
-fs.writeFileSync(
-  path.join(publicDir, 'llms.txt'),
-  `# ClearBank Developer Portal\n\n${index.map(p => `- [${p.title}](${p.url})`).join('\n')}\n`
-)
+const indexFile = path.join(publicDir, 'llms.txt')
+const startMarker = '<!-- BEGIN published Markdown pages -->'
+const endMarker = '<!-- END published Markdown pages -->'
+
+if (!fs.existsSync(indexFile)) {
+  throw new Error('Cannot add published Markdown pages: public/llms.txt is missing. Run the Gatsby build first.')
+}
+
+const existing = fs.readFileSync(indexFile, 'utf8')
+const start = existing.indexOf(startMarker)
+const end = existing.indexOf(endMarker)
+
+if (
+  (start === -1) !== (end === -1) ||
+  (start !== -1 && (
+    end < start ||
+    existing.indexOf(startMarker, start + startMarker.length) !== -1 ||
+    existing.indexOf(endMarker, end + endMarker.length) !== -1
+  ))
+) {
+  throw new Error('Cannot update public/llms.txt: published Markdown section markers are invalid.')
+}
+
+const sourceIndex = start === -1
+  ? existing
+  : existing.slice(0, start) + existing.slice(end + endMarker.length)
+
+const publishedSection = [
+  startMarker,
+  '## Published Markdown pages',
+  ...index.map(p => `- [${p.title}](${p.url})`),
+  endMarker
+].join('\n')
+
+fs.writeFileSync(indexFile, `${sourceIndex.trimEnd()}\n\n${publishedSection}\n`, 'utf8')
 console.log(`Generated ${index.length} markdown files`)
 
 const isDocsPath = value => /^\/(?:uk\/|eu\/)?docs\//.test(value)
