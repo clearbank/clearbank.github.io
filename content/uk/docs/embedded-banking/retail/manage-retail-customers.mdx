@@ -1,7 +1,7 @@
 ---
-title: "Retail customers"
-metaTitle: "Retail customers"
-order: 1
+title: "Manage existing Retail Customers"
+metaTitle: "Manage existing Retail Customers"
+order: 2
 showPageMenu: true
 ---
 
@@ -20,7 +20,7 @@ import ExternalLink from 'src/components/external-link';
 **Retail customers** are individual consumers of financial services in a personal capacity. You can manage your retail customer data with ClearBank directly as an embedded banking partner. Creating a retail customer is necessary before you can create a bank account for them.
 
 <Callout colour="blue">
-  The information on this page is intended for embedded banking partners who conduct their own Know Your Customer (KYC) checks. For agency banks utilizing ClearBank's KYC service, please refer to our <a href="/uk/docs/embedded-banking/know-your-customer">Know Your Customer</a> page.
+  To create a retail customer, refer to our <a href="/uk/docs/embedded-banking/retail/onboard-retail-customers">Onboard new Retail Customers</a> page. You can onboard with ClearBank's Know Your Customer (KYC) checks included, or create a customer directly if you conduct your own checks.
 </Callout>
 
 Retail customers V1 documentation can be found at [the bottom of this page](#retail-customers-v-1).
@@ -28,37 +28,16 @@ Retail customers V1 documentation can be found at [the bottom of this page](#ret
 ### Compatible account types
 
 Retail customers are compatible with several account types:
-* [Savings accounts](./savings-accounts) - For earning interest on saved deposits.
-* [Flexible cash ISAs](./flexible-cash-isa) - For earning tax-free interest on saved deposits.
-* [Hub accounts](./hub-accounts) - For specific innovative use cases.
-* [Payment accounts](./payment-accounts) - Including Current accounts and Transaction accounts.
+* [Savings accounts](/uk/docs/embedded-banking/accounts/savings-accounts) - For earning interest on saved deposits.
+* [Flexible cash ISAs](/uk/docs/embedded-banking/accounts/flexible-cash-isa) - For earning tax-free interest on saved deposits.
+* [Hub accounts](/uk/docs/embedded-banking/accounts/hub-accounts) - For specific innovative use cases.
+* [Payment accounts](/uk/docs/embedded-banking/accounts/payment-accounts) - Including Current accounts and Transaction accounts.
 
-## Create, update and retrieve a retail customer
+## Update and retrieve a retail customer
 
-#### Know Your Customer (KYC) and Anti-Money Laundering (AML) fields
+To create a retail customer, refer to our [Onboard new Retail Customers](/uk/docs/embedded-banking/retail/onboard-retail-customers) page.
 
-When you create a retail customer, you'll need to provide the outcomes of any KYC and AML checks you conduct on them. You can record these outcomes using the `kycAml` object. Guidance for each of the object's properties are listed below:
-* `sanctions` - If your KYC checks identify the customer as sanctioned, set to `true`.
-* `pep` - If your checks identify the customer as a Politically Exposed Person (PEP), set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `rca` - If your checks identify the customer as a Relative or Close Associate (RCA) of a PEP, set to `Yes_Domestic` or `Yes_International` accordingly - otherwise set to `No`.
-* `craRating` - Use this field to declare a Customer Risk Assessment rating for the customer. There are four tiers of risk: `Low`, `Medium`, `High`, and `Very_High`.
-
-If you have new KYC or AML outcomes for a customer, you can update these using the [**PATCH /customers/v2/retail/{customerId}**](#update-a-retail-customer) endpoint.
-
-#### Addresses
-
-When you create a retail customer, you'll also need to provide their current address in the `addressHistory.currentAddress` object. You can optionally record their previous address history using the `addressHistory.previousAddresses` array.
-
-<EndpointBlock
-  type="post"
-  title="Create a retail customer"
-  endpoints={[
-    {
-      path: "/customers/v2/retail",
-      version: "2.0-customers-retail"
-    }
-  ]}
-/>
+If you have new Know Your Customer (KYC) or Anti-Money Laundering (AML) outcomes for a customer, you can record them in the `kycAml` object using the [**PATCH /customers/v2/retail/{customerId}**](#update-a-retail-customer) endpoint. Guidance on the object's properties is in the [create guidance](/uk/docs/embedded-banking/retail/onboard-retail-customers#kyc-and-aml-fields).
 
 <EndpointBlock
   type="patch"
@@ -101,7 +80,7 @@ It is not currently possible to delete a previous address.
 
 ## Retail customer ID documents
 
-You can optionally provide identity document information for your retail customers. For example, you can provide a customer's passport number `idNumber` and its date of expiry `idExpiryDate` in the `identityDocuments` array in the [**POST /customers/v2/retail**](#create-a-retail-customer) endpoint.
+You can optionally provide identity document information for your retail customers. For example, you can provide a customer's passport number `idNumber` and its date of expiry `idExpiryDate` in the `identityDocuments` array in the [**POST /customers/v2/retail**](/uk/docs/embedded-banking/retail/onboard-retail-customers#create-a-retail-customer) endpoint.
 
 If you provide customer identity information, you must always include its `idCountryOfIssue`, `idType`, `idNumber`, and `idExpiryDate`. The combination of `idCountryOfIssue` and `idType` uniquely identifies a customer's identity documents in our APIs. You can therefore only provide one `idCountryOfIssue` and `idType` combination per customer.
 
@@ -222,18 +201,6 @@ Embedded banking accounts created using the [POST /v4/Accounts](#create-an-embed
 <Callout colour="blue">
   <strong>Note:</strong> Deposits held in retail current accounts may be eligible for FSCS protection. FSCS protection insures deposits of up to £120,000 per person or legal entity per authorised firm (ClearBank) in the event of insolvency. Customers should review the specific terms and conditions of their account to confirm whether FSCS protection applies.
 </Callout>
-
-<EndpointBlock
-  type="post"
-  title="Create a retail customer V1"
-  description="Once you have created a retail customer, create a new FSCS-protected embedded banking account using the retail customer's unique ID."
-  endpoints={[
-    {
-      path: "/v1/customers/retail",
-      version: "1.0.Retail"
-    }
-  ]}
-/>
 
 <EndpointBlock
   type="post"

@@ -153,7 +153,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "value":{
+                    "value": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/RelatedPartyGetResponse"
@@ -1223,11 +1223,23 @@
           "addressType": {
             "$ref": "#/components/schemas/AddressType"
           },
-          "buildingNameNumber": {
+          "buildingName": {
             "type": "string",
-            "description": "The building name or number at this address.",
+            "description": "The building name at this address.",
+            "nullable": true,
+            "example": "Grayston House"
+          },
+          "buildingNumber": {
+            "type": "string",
+            "description": "The building number at this address.",
             "nullable": true,
             "example": "9"
+          },
+          "subBuilding": {
+            "type": "string",
+            "description": "The sub-building, such as a flat or unit, at this address.",
+            "nullable": true,
+            "example": "1A"
           },
           "streetName": {
             "type": "string",
@@ -1237,14 +1249,14 @@
           },
           "county": {
             "type": "string",
-            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "County of the customer's address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Blueshire"
           },
           "city": {
             "type": "string",
             "minLength": 1,
-            "description": "City of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "City of the customer's address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Lilac City"
           },
@@ -1300,11 +1312,23 @@
           "addressType": {
             "$ref": "#/components/schemas/AddressType"
           },
-          "buildingNameNumber": {
+          "buildingName": {
             "type": "string",
-            "description": "The building name or number at this address.",
+            "description": "The building name at this address.",
+            "nullable": true,
+            "example": "Grayston House"
+          },
+          "buildingNumber": {
+            "type": "string",
+            "description": "The building number at this address.",
             "nullable": true,
             "example": "9"
+          },
+          "subBuilding": {
+            "type": "string",
+            "description": "The sub-building, such as a flat or unit, at this address.",
+            "nullable": true,
+            "example": "1A"
           },
           "streetName": {
             "type": "string",
@@ -1321,7 +1345,7 @@
           "city": {
             "type": "string",
             "minLength": 1,
-            "description": "City of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "City of the customer's address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Lilac City"
           },
@@ -2092,7 +2116,6 @@
       "CurrentAddressRequest": {
         "required": [
           "addressType",
-          "buildingNameNumber",
           "streetName",
           "city",
           "country",
@@ -2103,14 +2126,28 @@
           "addressType": {
             "$ref": "#/components/schemas/AddressType"
           },
-          "buildingNameNumber": {
-            "minLength": 1,
-            "maxLength": 100,
-            "pattern": "[^!$%^_=+><?|;~@`]",
+          "buildingName": {
             "type": "string",
-            "description": "The building name or number of this address. Must not contain postal code.",
-            "nullable": true,
-            "example": "322"
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building name. Must not contain postal code. Required when buildingNumber is not provided.",
+            "example": "Grayston House"
+          },
+          "buildingNumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building number. Must not contain postal code. Required when buildingName is not provided.",
+            "example": "21"
+          },
+          "subBuilding": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Sub-building, such as a flat or unit. Must not contain postal code.",
+            "example": "Flat 9"
           },
           "streetName": {
             "minLength": 1,
@@ -2131,7 +2168,7 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "County of the customer's address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
@@ -2156,7 +2193,19 @@
           }
         },
         "additionalProperties": false,
-        "description": "The customer's current address."
+        "description": "The customer's current address.",
+        "anyOf": [
+          {
+            "required": [
+              "buildingName"
+            ]
+          },
+          {
+            "required": [
+              "buildingNumber"
+            ]
+          }
+        ]
       },
       "CustomerStatus": {
         "enum": [
@@ -2464,7 +2513,6 @@
       "PreviousAddressRequest": {
         "required": [
           "addressType",
-          "buildingNameNumber",
           "streetName",
           "city",
           "country",
@@ -2475,14 +2523,28 @@
           "addressType": {
             "$ref": "#/components/schemas/AddressType"
           },
-          "buildingNameNumber": {
-            "minLength": 1,
-            "maxLength": 100,
-            "pattern": "[^!$%^_=+><?|;~@`]",
+          "buildingName": {
             "type": "string",
-            "description": "The building name or number of this address. Must not contain postal code.",
-            "nullable": true,
-            "example": "233"
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building name. Must not contain postal code. Required when buildingNumber is not provided.",
+            "example": "Grayston House"
+          },
+          "buildingNumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building number. Must not contain postal code. Required when buildingName is not provided.",
+            "example": "21"
+          },
+          "subBuilding": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Sub-building, such as a flat or unit.",
+            "example": "Flat 9"
           },
           "streetName": {
             "minLength": 1,
@@ -2503,7 +2565,7 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "County of the customer's address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Redshire"
           },
@@ -2536,7 +2598,19 @@
           }
         },
         "additionalProperties": false,
-        "description": "The customer's previous address."
+        "description": "The customer's previous address.",
+        "anyOf": [
+          {
+            "required": [
+              "buildingName"
+            ]
+          },
+          {
+            "required": [
+              "buildingNumber"
+            ]
+          }
+        ]
       },
       "ProblemDetails": {
         "type": "object",
@@ -2878,14 +2952,31 @@
       "UpdateCurrentAddressRequest": {
         "type": "object",
         "properties": {
-          "buildingNameNumber": {
+          "buildingName": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 100,
-            "pattern": "[^!$%^_=+><?|;~@`]",
-            "description": "Building name or number of the customer's new address. Must not contain postal code.",
-            "nullable": true,
-            "example": "322"
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building name. Must not contain postal code.",
+            "example": "Grayston House",
+            "nullable": true
+          },
+          "buildingNumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building number. Must not contain postal code.",
+            "example": "21",
+            "nullable": true
+          },
+          "subBuilding": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Sub-building, such as a flat or unit.",
+            "example": "Flat 9",
+            "nullable": true
           },
           "streetName": {
             "type": "string",
@@ -2906,7 +2997,7 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's new address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "County of the customer's new address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
@@ -3043,14 +3134,31 @@
       "UpdatePreviousAddressRequest": {
         "type": "object",
         "properties": {
-          "buildingNameNumber": {
+          "buildingName": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 100,
-            "pattern": "[^!$%^_=+><?|;~@`]",
-            "description": "Building name or number of the customer's previous address. Must not contain postal code.",
-            "nullable": true,
-            "example": "322"
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building name. Must not contain postal code.",
+            "example": "Grayston House",
+            "nullable": true
+          },
+          "buildingNumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Building number. Must not contain postal code.",
+            "example": "21",
+            "nullable": true
+          },
+          "subBuilding": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^(?=.*[A-Za-z0-9])[A-Za-z0-9 .,()'-]+$",
+            "description": "Sub-building, such as a flat or unit.",
+            "example": "Flat 9",
+            "nullable": true
           },
           "streetName": {
             "type": "string",
@@ -3071,7 +3179,7 @@
           "county": {
             "minLength": 1,
             "type": "string",
-            "description": "County of the customer's previous address. Must not contain the values of buildingNameNumber or streetName fields.",
+            "description": "County of the customer's previous address. Must not contain the values of buildingName, buildingNumber, subBuilding or streetName fields.",
             "nullable": true,
             "example": "Greenshire"
           },
