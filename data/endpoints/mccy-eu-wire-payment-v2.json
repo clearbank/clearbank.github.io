@@ -10,6 +10,35 @@
       "post": {
         "summary": "Initiate a wire payment.",
         "operationId": "InitiateWirePayment",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "The wire payment request based on PAIN.001.",
           "content": {
@@ -23,7 +52,7 @@
         },
         "responses": {
           "202": {
-            "description": "The payment was accepted and queued for processing.",
+            "description": "Accepted",
             "content": {
               "application/json": {
                 "schema": {
@@ -33,13 +62,74 @@
             }
           },
           "409": {
-            "description": "A payment with the same identifier already exists."
+            "description": "A payment with the same messageIdentification already exists."
           },
           "422": {
-            "description": "The request was invalid."
+            "description": "The request was invalid. For example, a field failed validation or the request was made outside the operating hours."
           },
           "501": {
             "description": "The requested operation is not implemented."
+          }
+        }
+      }
+    },
+    "/payments/cross-border/v2/simulations/inbound-payments": {
+      "post": {
+        "summary": "Simulate an inbound cross-border wire payment.",
+        "operationId": "SimulateInboundPayment",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Details of the inbound payment to simulate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateInboundPaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateInboundPaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request was invalid. For example, a field failed validation, or the account doesn't exist or can't receive payments in the settlement currency."
           }
         }
       }
@@ -270,13 +360,16 @@
             "minLength": 1,
             "type": "string",
             "description": "Name of the account, as assigned by the account servicing institution.",
-            "nullable": true
+            "nullable": true,
+            "example": "ABC Trading B.V."
           },
           "iban": {
-            "minLength": 1,
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "type": "string",
             "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
-            "example": "DE89370400440532013000"
+            "example": "NL65CLRB0123456789"
           }
         },
         "additionalProperties": false,
@@ -322,7 +415,7 @@
             "type": "string",
             "description": "Code allocated to a financial institution as described in ISO 9362.",
             "nullable": true,
-            "example": "POFICHBEXXX"
+            "example": "EXMPUS33XXX"
           },
           "clearingSystemMemberIdentification": {
             "$ref": "#/components/schemas/ClearingSystemMemberIdentification"
@@ -332,7 +425,8 @@
             "minLength": 1,
             "type": "string",
             "description": "Name by which the financial institution is known.",
-            "nullable": true
+            "nullable": true,
+            "example": "Example Bank, N.A."
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -354,20 +448,22 @@
             "minLength": 1,
             "type": "string",
             "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
-            "example": "FXPAY-EUR-001"
+            "example": "INSTR-20261117-0001"
           },
           "endToEndIdentification": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction.",
-            "example": "E2E-FX-EUR-001"
+            "example": "E2E-INV-2026-0451"
           },
           "uetr": {
             "minLength": 1,
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$",
             "type": "string",
-            "description": "Universally Unique Identifier (UUID) version 4, as described in IETF RFC 4122.",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
+            "format": "uuid",
+            "description": "Universally Unique Identifier (UUID) version 4, as described in IETF RFC 4122. Must be in lowercase and unique for each payment.",
+            "example": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
           }
         },
         "additionalProperties": false,
@@ -430,7 +526,7 @@
             "type": "number",
             "description": "Indicates the amount of a given currency to be used.",
             "format": "double",
-            "example": "1000.00"
+            "example": 25000.5
           },
           "currency": {
             "maxLength": 3,
@@ -438,7 +534,10 @@
             "pattern": "[A-Z]{3}",
             "type": "string",
             "description": "The currency, given as a three-letter ISO 4217 currency code.",
-            "example": "EUR"
+            "example": "USD",
+            "enum": [
+              "USD"
+            ]
           }
         },
         "additionalProperties": false,
@@ -452,9 +551,13 @@
             "minLength": 1,
             "type": "string",
             "description": "Name of the account, as assigned by the account servicing institution.",
-            "nullable": true
+            "nullable": true,
+            "example": "Acme Supplies Inc."
           },
           "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
             "type": "string",
             "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
             "nullable": true,
@@ -466,7 +569,7 @@
             "type": "string",
             "description": "Identification of the account, provided when no IBAN is available.",
             "nullable": true,
-            "example": "CH9300762011623852957"
+            "example": "000123456789"
           },
           "accountIdentificationCode": {
             "maxLength": 4,
@@ -478,7 +581,7 @@
               "UPIC"
             ],
             "type": "string",
-            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org. Required when accountIdentification is provided; must not be provided otherwise.",
             "nullable": true,
             "example": "BBAN"
           }
@@ -869,7 +972,8 @@
             "$ref": "#/components/schemas/PaymentTypeInformation"
           },
           "instructedAmount": {
-            "$ref": "#/components/schemas/AmountType"
+            "$ref": "#/components/schemas/AmountType",
+            "description": "The amount of the payment. The currency must be USD, and the amount must be greater than 13.00, with no more than 2 decimal places."
           },
           "chargeBearer": {
             "maxLength": 4,
@@ -881,7 +985,8 @@
             ],
             "type": "string",
             "description": "Specifies which party/parties will bear the charges associated with the processing of the payment transaction.",
-            "nullable": true
+            "nullable": true,
+            "example": "SHAR"
           },
           "ultimateDebtor": {
             "$ref": "#/components/schemas/PartyIdentification"
@@ -952,12 +1057,15 @@
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message."
+            "description": "Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.",
+            "example": "PMTINF-20261117-0001"
           },
           "requestedExecutionDate": {
             "type": "string",
-            "description": "Must be today's date.",
-            "nullable": true
+            "format": "date",
+            "description": "Must be today's date, formatted as YYYY-MM-DD.",
+            "nullable": true,
+            "example": "2026-11-17"
           },
           "debtor": {
             "$ref": "#/components/schemas/PartyIdentification"
@@ -992,7 +1100,8 @@
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Unique identifier for the message."
+            "description": "Unique identifier for the message.",
+            "example": "MSG-20261117-0001"
           },
           "paymentInformation": {
             "maxItems": 1,
@@ -1005,7 +1114,78 @@
           }
         },
         "additionalProperties": false,
-        "description": "Wire Payment Request (PAIN.001)."
+        "description": "Wire Payment Request (PAIN.001).",
+        "example": {
+          "messageIdentification": "MSG-20261117-0001",
+          "paymentInformation": [
+            {
+              "paymentInformationIdentification": "PMTINF-20261117-0001",
+              "requestedExecutionDate": "2026-11-17",
+              "debtor": {
+                "name": "ABC Trading B.V.",
+                "postalAddress": {
+                  "streetName": "Herengracht",
+                  "buildingNumber": "100",
+                  "postCode": "1015 BS",
+                  "townName": "Amsterdam",
+                  "country": "NL"
+                },
+                "organisationIdentification": {
+                  "lei": "D7R3AROG1XRMZ3LXI712"
+                }
+              },
+              "debtorAccount": {
+                "name": "ABC Trading B.V.",
+                "iban": "NL65CLRB0123456789"
+              },
+              "creditTransferTransactionInformation": [
+                {
+                  "paymentIdentification": {
+                    "instructionIdentification": "INSTR-20261117-0001",
+                    "endToEndIdentification": "E2E-INV-2026-0451",
+                    "uetr": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
+                  },
+                  "paymentTypeInformation": {
+                    "serviceLevelCode": "URGP"
+                  },
+                  "instructedAmount": {
+                    "amount": 25000.5,
+                    "currency": "USD"
+                  },
+                  "chargeBearer": "SHAR",
+                  "creditorAgent": {
+                    "bicfi": "EXMPUS33XXX",
+                    "name": "Example Bank, N.A."
+                  },
+                  "creditor": {
+                    "name": "Acme Supplies Inc.",
+                    "postalAddress": {
+                      "streetName": "Madison Avenue",
+                      "buildingNumber": "350",
+                      "postCode": "10017",
+                      "townName": "New York",
+                      "countrySubDivision": "NY",
+                      "country": "US"
+                    }
+                  },
+                  "creditorAccount": {
+                    "name": "Acme Supplies Inc.",
+                    "accountIdentification": "000123456789",
+                    "accountIdentificationCode": "BBAN"
+                  },
+                  "purpose": {
+                    "code": "GDDS"
+                  },
+                  "remittanceInformation": {
+                    "unstructured": [
+                      "Invoice INV-2026-0451"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
       },
       "PaymentIdentifiers": {
         "required": [
@@ -1033,7 +1213,7 @@
           },
           "paymentId": {
             "type": "string",
-            "description": "The unique ClearBank identifier for the payment.",
+            "description": "The ClearBank identifier for the payment. This has the same value as the uetr.",
             "format": "uuid"
           }
         },
@@ -1064,7 +1244,85 @@
           }
         },
         "additionalProperties": false,
-        "description": "Response returned when a wire payment request is accepted."
+        "description": "Response returned when a wire payment request is accepted.",
+        "example": {
+          "messageIdentification": "MSG-20261117-0001",
+          "paymentIdentification": [
+            {
+              "instructionIdentification": "INSTR-20261117-0001",
+              "endToEndIdentification": "E2E-INV-2026-0451",
+              "uetr": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+              "paymentId": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
+            }
+          ]
+        }
+      },
+      "SimulateInboundPaymentRequest": {
+        "required": [
+          "iban",
+          "settlementAmount",
+          "settlementCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "description": "The IBAN of your account to credit.",
+            "example": "NL65CLRB0123456789"
+          },
+          "settlementAmount": {
+            "maximum": 1000000000,
+            "exclusiveMinimum": true,
+            "minimum": 0,
+            "multipleOf": 0.01,
+            "type": "number",
+            "format": "double",
+            "description": "The amount to credit. Must be greater than zero, with no more than 2 decimal places.",
+            "example": 18750
+          },
+          "settlementCurrency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "The three-letter ISO 4217 currency code of the payment. Must match the currency of the account.",
+            "example": "USD"
+          },
+          "reference": {
+            "maxLength": 140,
+            "type": "string",
+            "nullable": true,
+            "description": "A payment reference. This is sent in the remittance information of the Inbound Payment Completed webhook. The first 35 characters are also used as the instruction and end-to-end identifications.",
+            "example": "Credit note ACME-INV-2026-118"
+          }
+        },
+        "additionalProperties": false,
+        "description": "An inbound payment to simulate."
+      },
+      "SimulateInboundPaymentResponse": {
+        "required": [
+          "message",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique end-to-end transaction reference (UETR) generated for the simulated payment. This is also the PaymentId in the webhook.",
+            "example": "c7e94b12-5a3d-4f8e-b1c6-2d9a8e7f6b54"
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation that the Inbound Payment Completed webhook was sent.",
+            "example": "Inbound payment completed webhook has been sent."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response returned when the simulated payment is credited."
       }
     }
   }

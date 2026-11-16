@@ -1,0 +1,151 @@
+---
+title: "Cross-border wire payments"
+metaTitle: "Cross-border wire payments"
+order: 6
+showPageMenu: true
+---
+
+import EndpointBlock from "src/components/endpoint-block";
+import WebhookPlaceholder from 'src/components/webhook-placeholder';
+import WebhookSummary from 'src/components/webhook-summary';
+import Callout from "src/components/callout";
+
+## Cross-border wire payments
+
+<Callout colour="green">
+<h3>Cross-border wire payments are coming soon</h3>
+<p>All information on this page describes a solution that is <strong>not yet live in production and therefore could change</strong>. This includes any endpoint and webhook details. The information is being provided early to help you integrate with our API in our EU simulation environment.</p>
+</Callout>
+
+Our cross-border wire payments service lets you send US dollar (USD) payments from your ClearBank EU USD account to a USD account held at another bank. You can also receive USD wire payments into your ClearBank EU USD account.
+
+Each payment is made in the same currency from end to end. There's no foreign exchange (FX) quote to accept and no currency conversion, so you send each payment in a single step.
+
+If you're interested in using this service, please speak to your Client Director.
+
+## Availability and hours
+
+### Payment properties
+
+* Payments are made in USD, from a ClearBank EU USD account.
+* The payment amount must be **greater than 13.00 USD**, with no more than 2 decimal places.
+
+### Hours and holidays
+
+You can send cross-border wire payments Monday to Friday, from 09:30 to 17:00 CET, excluding US Federal Reserve holidays.
+
+If you send a payment outside these hours, you'll receive a **422 - Unprocessable Entity** response. Send the payment again during the next open window.
+
+## Send payments
+
+### Send a payment
+
+You can send a payment using the [POST /payments/cross-border/v2/payments](#send-a-cross-border-wire-payment) endpoint. If your request is valid, we'll respond with a **202 - Accepted** response. This confirms that we've accepted the payment and queued it for processing. You don't need to take any further action to send the payment.
+
+The **202 - Accepted** response contains a `paymentIdentification` array. Each item in the array maps the identifiers you supplied for the payment to its `paymentId`. The `paymentId` has the same value as the `uetr` you supplied.
+
+### Structure your request
+
+The request body follows the ISO 20022 customer credit transfer initiation (pain.001) message structure:
+
+* `messageIdentification` – your unique identifier for the request.
+* `paymentInformation` – details that apply to the debit side of the payment, such as the `debtor`, `debtorAccount` and `requestedExecutionDate`.
+  * `creditTransferTransactionInformation` – details of the payment itself, such as the `instructedAmount`, `creditor`, `creditorAccount` and `creditorAgent`.
+
+Each request **must** contain exactly one `paymentInformation` item, which must contain exactly one `creditTransferTransactionInformation` item.
+
+If you provide a `requestedExecutionDate`, it must be today's date, in the format YYYY-MM-DD.
+
+Some objects accept one of two ways to identify a party, account or bank. For each of these, you must provide one option, but not both:
+
+* **`creditorAgent`** – either the `bicfi` or the `clearingSystemMemberIdentification`.
+* **`creditorAccount`** – either the `iban`, or the `accountIdentification` together with an `accountIdentificationCode`.
+* **`organisationIdentification`** – either the `anyBIC` or the `lei`.
+
+### Avoid duplicate payments
+
+Each request must have a unique `messageIdentification`. If you send a request with a `messageIdentification` you've already used, you'll receive a **409 - Conflict** response and we won't process the payment again.
+
+Each payment must also have a unique `uetr`. If you reuse the `uetr` of an earlier payment, the payment will fail after we've accepted it.
+
+### Receive payment updates
+
+After we've accepted your payment, we'll tell you its outcome by webhook. Each webhook contains the identifiers you supplied in your request, so you can match it to the payment.
+
+* If the payment is sent successfully, you'll receive the [CBEU Cross-border Outbound Payment Completed webhook](#cbeu-cross-border-outbound-payment-completed-webhook).
+* If the payment can't be sent, you'll receive the [CBEU Cross-border Outbound Payment Failed webhook](#cbeu-cross-border-outbound-payment-failed-webhook). Where a reason is available, it's included in the `StatusReasonInformation` field.
+
+A payment can fail after we've accepted it for the following reasons:
+
+* The debtor account doesn't exist, isn't active or can't hold USD.
+* There are insufficient funds in the debtor account.
+* The `uetr` has already been used for another payment.
+* The payment is rejected following our payment screening checks.
+* The payment is rejected further along the payment chain.
+
+<!-- TBC: confirm with product whether the debtor account is re-credited automatically when a payment fails after the debit, and say so here. -->
+
+### Message flow diagram
+
+<!-- TBC: check this diagram against the product team's flow diagrams when they're available. -->
+
+![Message flow diagram showing the endpoint call and webhooks involved in sending a cross-border wire payment. You send the payment details to the send a cross-border wire payment endpoint, and ClearBank responds with 202 - Accepted. ClearBank then sends one of two webhooks depending on the outcome: outbound payment completed, or outbound payment failed.](/assets/images/diagrams/eu/cross-border-wire/cross-border-wire-payment.svg)
+
+## Receive payments
+
+When a USD wire payment is sent to your ClearBank EU USD account, we screen the payment and check that the account can receive it. If the checks pass, we credit the payment to your account and send you the [CBEU Cross-border Inbound Payment Completed webhook](#cbeu-cross-border-inbound-payment-completed-webhook).
+
+The webhook includes the `TransactionId` of the credit to your account, and the debtor, amount and remittance details of the payment.
+
+We only credit a payment if the creditor account exists, is active and can hold USD. We won't send you a webhook for a payment we can't credit.
+
+<!-- TBC: confirm with product what happens to inbound payments that can't be credited or are held after screening (for example, whether they're returned to the sender), and whether clients are told. -->
+
+## Endpoints
+
+<EndpointBlock
+  type="post"
+  title="Send a cross-border wire payment"
+  endpoints={[
+    {
+      path: "/payments/cross-border/v2/payments",
+      version: "2.0_WIRE",
+      webhooks: [
+        'mccy-eu-wire-outbound-completed-v1',
+        'mccy-eu-wire-outbound-failed-v1'
+      ]
+    }
+  ]}
+/>
+
+## Webhooks
+
+<WebhookPlaceholder render='mccy-eu-wire-outbound-completed-v1' />
+<WebhookPlaceholder render='mccy-eu-wire-outbound-failed-v1' />
+<WebhookPlaceholder render='mccy-eu-wire-inbound-completed-v1' />
+
+## Simulating cross-border wire payments
+
+In our EU simulation environment, you can simulate an inbound payment to your USD account using the [POST /payments/cross-border/v2/simulations/inbound-payments](#simulate-an-inbound-cross-border-wire-payment) endpoint. You can use this to fund your account before you test sending payments.
+
+When you call the endpoint, we credit the `settlementAmount` to the account with the `iban` you provide, and send you the [CBEU Cross-border Inbound Payment Completed webhook](#cbeu-cross-border-inbound-payment-completed-webhook). The **202 - Accepted** response to your original request includes the `uetr` of the simulated payment, which will also be the `PaymentId` in the Inbound Payment Completed webhook.
+
+The `settlementCurrency` must match the currency of the account. If you provide a `reference`, it's used as the payment's remittance information. If you don't, we generate one for you.
+
+The simulated payment always comes from the same test debtor, named `Simulated Debtor`.
+
+If the account doesn't exist, isn't active or can't hold the `settlementCurrency`, you'll receive a **422 - Unprocessable Entity** response.
+
+<EndpointBlock
+  type="post"
+  title="Simulate an inbound cross-border wire payment"
+  endpoints={[
+    {
+      path: "/payments/cross-border/v2/simulations/inbound-payments",
+      version: "2.0_WIRE",
+      webhooks: [
+        'mccy-eu-wire-inbound-completed-v1'
+      ]
+    }
+  ]}
+/>
