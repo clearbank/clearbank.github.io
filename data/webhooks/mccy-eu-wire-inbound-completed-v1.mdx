@@ -1,18 +1,18 @@
 ---
-title: "CBEU Cross-border Inbound Payment Completed webhook"
+title: "Cross-border Inbound Payment Completed webhook"
 version: 1
 webhook: true
 ---
 
-This webhook confirms that we've received a cross-border wire payment and credited it to your account. Use the `TransactionId` to match the payment to the credit on your account.
+This webhook confirms that you've received a cross-border wire payment and your account has been credited. Use the `TransactionId` to match the payment to the credit on your account.
 
-If the payment doesn't include an end-to-end identification, or the debtor or creditor name is missing, we send the value `NOTPROVIDED` in that field.
+If the payment doesn't include an end-to-end identification, or the debtor or creditor name is missing, you'll receive the value `NOTPROVIDED` in that field.
 
 #### Request body
 
 ```json
 {
-  "Type": "Payments.CBEU.CrossBorder.InboundPaymentCompleted",
+  "Type": "Payments.CrossBorder.InboundPaymentCompleted",
   "Version": 1,
   "Payload": {...},
   "Nonce":
@@ -21,179 +21,179 @@ If the payment doesn't include an end-to-end identification, or the debtor or cr
 
 #### Payload fields
 
-| Field                       | Type   | Format | Required | Min-Max length | Pattern                                                                         | Description                                                                                                                                                                      |
-| --------------------------- | ------ | ------ | -------- | -------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PaymentId`                 | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier to reference this inbound payment. This has the same value as the `UETR` in `PaymentIdentification`.                                                         |
-| `TransactionId`             | string | uuid   | Yes      | 36-36          | `^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$` | A unique identifier assigned by ClearBank to reference the credit transaction related to this inbound payment.                                                                   |
-| `PaymentIdentification`     | object | -      | Yes      | -              | -                                                                               | Set of elements used to reference the payment instruction. See `PaymentIdentification`.                                                                                          |
-| `InterbankSettlementAmount` | object | -      | Yes      | -              | -                                                                               | Amount of money moved between the instructing agent and the instructed agent. This is the amount credited to your account. See `InterbankSettlementAmount`.                      |
-| `DebtorAccount`             | object | -      | No       | -              | -                                                                               | Account of the debtor that the payment was sent from. Can be `null`. See `CashAccount`.                                                                                          |
-| `DebtorAgent`               | object | -      | Yes      | -              | -                                                                               | Financial institution servicing the account of the debtor. See `BranchAndFinancialInstitutionIdentification`.                                                                     |
-| `CreditorAccount`           | object | -      | No       | -              | -                                                                               | Your account that the payment was credited to. Can be `null`. See `CashAccount`.                                                                                                 |
-| `CreditorAgent`             | object | -      | Yes      | -              | -                                                                               | Financial institution servicing the account of the creditor. See `BranchAndFinancialInstitutionIdentification`.                                                                   |
-| `InstructingAgent`          | object | -      | No       | -              | -                                                                               | Agent that instructed ClearBank to carry out the payment. Can be `null`. See `BranchAndFinancialInstitutionIdentification`.                                                      |
-| `UltimateDebtor`            | object | -      | No       | -              | -                                                                               | Ultimate party that owes an amount of money to the (ultimate) creditor. Can be `null`. See `PartyIdentification`.                                                                 |
-| `Debtor`                    | object | -      | Yes      | -              | -                                                                               | Party that owes an amount of money to the (ultimate) creditor. See `PartyIdentification`.                                                                                        |
-| `Creditor`                  | object | -      | Yes      | -              | -                                                                               | Party to which an amount of money is due. See `PartyIdentification`.                                                                                                             |
-| `UltimateCreditor`          | object | -      | No       | -              | -                                                                               | Ultimate party to which an amount of money is due. Can be `null`. See `PartyIdentification`.                                                                                      |
-| `RemittanceInformation`     | object | -      | No       | -              | -                                                                               | Information supplied to help you match the payment with the items it's intended to settle, such as commercial invoices. Can be `null` if none was provided. See `RemittanceInformation`. |
+| Field                       | Type   | Format | Required | Min-Max length | Description                                                                                                                                                                              |
+| --------------------------- | ------ | ------ | -------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`                 | string | uuid   | Yes      | 36-36          | A unique identifier to reference this inbound payment. This has the same value as the `UETR` in `PaymentIdentification`.                                                                 |
+| `TransactionId`             | string | uuid   | Yes      | 36-36          | A unique identifier assigned by ClearBank to reference the credit transaction related to this inbound payment.                                                                           |
+| `PaymentIdentification`     | object | -      | Yes      | -              | Set of elements used to reference the payment instruction. See `PaymentIdentification`.                                                                                                  |
+| `InterbankSettlementAmount` | object | -      | Yes      | -              | Amount of money moved between the instructing agent and the instructed agent. This is the amount credited to your account. See `InterbankSettlementAmount`.                              |
+| `DebtorAccount`             | object | -      | No       | -              | Account of the debtor that the payment was sent from. Can be `null`. See `CashAccount`.                                                                                                  |
+| `DebtorAgent`               | object | -      | Yes      | -              | Financial institution servicing the account of the debtor. See `BranchAndFinancialInstitutionIdentification`.                                                                            |
+| `CreditorAccount`           | object | -      | No       | -              | Your account that the payment was credited to. Can be `null`. See `CashAccount`.                                                                                                         |
+| `CreditorAgent`             | object | -      | Yes      | -              | Financial institution servicing the account of the creditor. See `BranchAndFinancialInstitutionIdentification`.                                                                          |
+| `InstructingAgent`          | object | -      | No       | -              | Agent that instructed ClearBank to carry out the payment. Can be `null`. See `BranchAndFinancialInstitutionIdentification`.                                                              |
+| `UltimateDebtor`            | object | -      | No       | -              | Ultimate party that owes an amount of money to the (ultimate) creditor. Can be `null`. See `PartyIdentification`.                                                                        |
+| `Debtor`                    | object | -      | Yes      | -              | Party that owes an amount of money to the (ultimate) creditor. See `PartyIdentification`.                                                                                                |
+| `Creditor`                  | object | -      | Yes      | -              | Party to which an amount of money is due. See `PartyIdentification`.                                                                                                                     |
+| `UltimateCreditor`          | object | -      | No       | -              | Ultimate party to which an amount of money is due. Can be `null`. See `PartyIdentification`.                                                                                             |
+| `RemittanceInformation`     | object | -      | No       | -              | Information supplied to help you match the payment with the items it's intended to settle, such as commercial invoices. Can be `null` if none was provided. See `RemittanceInformation`. |
 
 ##### PaymentIdentification
 
-| Field                       | Type   | Format | Required | Min-Max length | Description                                                                                                                                                 |
-| --------------------------- | ------ | ------ | -------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `InstructionIdentification` | string | -      | No       | 1-35           | A unique identifier assigned by the instructing party to identify the payment instruction.                                                                  |
-| `EndToEndIdentification`    | string | -      | Yes      | 1-35           | A reference set by the initiating party, which is passed on unchanged throughout the end-to-end chain. If no value is set, this is `NOTPROVIDED`.            |
+| Field                       | Type   | Format | Required | Min-Max length | Description                                                                                                                                                     |
+| --------------------------- | ------ | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `InstructionIdentification` | string | -      | No       | 1-35           | A unique identifier assigned by the instructing party to identify the payment instruction.                                                                      |
+| `EndToEndIdentification`    | string | -      | Yes      | 1-35           | A reference set by the initiating party, which is passed on unchanged throughout the end-to-end chain. If no value is set, this is `NOTPROVIDED`.               |
 | `TransactionIdentification` | string | -      | No       | 1-35           | Unique identification, as assigned by the first instructing agent, to identify the transaction. It's passed on unchanged throughout the entire interbank chain. |
-| `UETR`                      | string | uuid   | No       | 36-36          | A unique end-to-end transaction reference (UETR) used to track the payment end to end across the payment chain. Can be `null`.                               |
+| `UETR`                      | string | uuid   | No       | 36-36          | A unique end-to-end transaction reference (UETR) used to track the payment end to end across the payment chain. Can be `null`.                                  |
 
 ##### InterbankSettlementAmount
 
-| Field      | Type   | Format  | Required | Constraints | Pattern      | Description                                                       |
-| ---------- | ------ | ------- | -------- | ----------- | ------------ | ----------------------------------------------------------------- |
-| `Amount`   | number | decimal | Yes      | -           | -            | The amount of the payment.                                        |
-| `Currency` | string | -       | Yes      | 3-3         | `^[A-Z]{3}$` | The three-letter ISO 4217 currency code of the payment amount.    |
+| Field      | Type   | Format  | Required | Constraints | Pattern      | Description                                                    |
+| ---------- | ------ | ------- | -------- | ----------- | ------------ | -------------------------------------------------------------- |
+| `Amount`   | number | decimal | Yes      | -           | -            | The amount of the payment.                                     |
+| `Currency` | string | -       | Yes      | 3-3         | `^[A-Z]{3}$` | The three-letter ISO 4217 currency code of the payment amount. |
 
 ##### CashAccount (DebtorAccount and CreditorAccount)
 
-| Field   | Type   | Required | Min-Max length | Pattern                                   | Description                                                                                                        |
-| ------- | ------ | -------- | -------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `IBAN`  | string | No       | -              | `[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}`   | International Bank Account Number (IBAN) of the account. Can be `null`.                                            |
-| `Other` | object | No       | -              | -                                         | Identification of the account, using a scheme other than IBAN. Can be `null`. See `GenericAccountIdentification`.  |
+| Field   | Type   | Required | Min-Max length | Pattern                               | Description                                                                                                       |
+| ------- | ------ | -------- | -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `IBAN`  | string | No       | -              | [A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30} | International Bank Account Number (IBAN) of the account. Can be `null`.                                           |
+| `Other` | object | No       | -              | -                                     | Identification of the account, using a scheme other than IBAN. Can be `null`. See `GenericAccountIdentification`. |
 
 ##### GenericAccountIdentification
 
-| Field            | Type   | Required | Min-Max length | Description                                   |
-| ---------------- | ------ | -------- | -------------- | --------------------------------------------- |
+| Field            | Type   | Required | Min-Max length | Description                                                                     |
+| ---------------- | ------ | -------- | -------------- | ------------------------------------------------------------------------------- |
 | `Identification` | string | Yes      | 1-34           | Identification of the account, as assigned by the institution that services it. |
 
 ##### BranchAndFinancialInstitutionIdentification (DebtorAgent, CreditorAgent and InstructingAgent)
 
-| Field                                | Type   | Required | Pattern                                                       | Description                                                                                                                       |
-| ------------------------------------ | ------ | -------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `BICFI`                              | string | No       | `[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}`    | Business Identifier Code (BIC) of the financial institution, as described in ISO 9362. Can be `null`.                             |
-| `ClearingSystemMemberIdentification` | object | No       | -                                                             | Identification of the financial institution as a member of a clearing system. Can be `null`. See `ClearingSystemMemberIdentification`. |
-| `Other`                              | object | No       | -                                                             | Identification of the financial institution using another scheme, such as its Legal Entity Identifier (LEI). Can be `null`. See `GenericFinancialIdentification`. |
+| Field                                | Type   | Required | Pattern                                                  | Description                                                                                                                                                       |
+| ------------------------------------ | ------ | -------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BICFI`                              | string | No       | [A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1} | Business Identifier Code (BIC) of the financial institution, as described in ISO 9362. Either 8 or 11 characters long. Can be `null`.                             |
+| `ClearingSystemMemberIdentification` | object | No       | -                                                        | Identification of the financial institution as a member of a clearing system. Can be `null`. See `ClearingSystemMemberIdentification`.                            |
+| `Other`                              | object | No       | -                                                        | Identification of the financial institution using another scheme, such as its Legal Entity Identifier (LEI). Can be `null`. See `GenericFinancialIdentification`. |
 
 ##### ClearingSystemMemberIdentification
 
-| Field                         | Type   | Required | Min-Max length | Description                                                                                             |
-| ----------------------------- | ------ | -------- | -------------- | ------------------------------------------------------------------------------------------------------- |
-| `ClearingSystemIdentification` | object | No       | -              | The clearing system the member belongs to. Can be `null`. See `ClearingSystemIdentificationChoice`.    |
-| `MemberIdentification`        | string | Yes      | 1-35           | Identification of a member of a clearing system.                                                        |
+| Field                          | Type   | Required | Min-Max length | Description                                                                                         |
+| ------------------------------ | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------- |
+| `ClearingSystemIdentification` | object | No       | -              | The clearing system the member belongs to. Can be `null`. See `ClearingSystemIdentificationChoice`. |
+| `MemberIdentification`         | string | Yes      | 1-35           | Identification of a member of a clearing system.                                                    |
 
 ##### ClearingSystemIdentificationChoice
 
-| Field         | Type   | Required | Min-Max length | Description                                                                                                     |
-| ------------- | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------- |
-| `Code`        | string | No       | 1-5            | Identification of a clearing system, in a coded form as published in an external list. Can be `null`.          |
-| `Proprietary` | string | No       | 1-35           | Identification of a clearing system that isn't in the list of clearing systems. Can be `null`.                  |
+| Field         | Type   | Required | Min-Max length | Description                                                                                           |
+| ------------- | ------ | -------- | -------------- | ----------------------------------------------------------------------------------------------------- |
+| `Code`        | string | No       | 1-5            | Identification of a clearing system, in a coded form as published in an external list. Can be `null`. |
+| `Proprietary` | string | No       | 1-35           | Identification of a clearing system that isn't in the list of clearing systems. Can be `null`.        |
 
 ##### GenericFinancialIdentification
 
-| Field            | Type   | Required | Min-Max length | Description                                                                                                       |
-| ---------------- | ------ | -------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `Identification` | string | Yes      | 1-35           | Unique identification of the financial institution.                                                              |
+| Field            | Type   | Required | Min-Max length | Description                                                                                                                          |
+| ---------------- | ------ | -------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `Identification` | string | Yes      | 1-35           | Unique identification of the financial institution.                                                                                  |
 | `SchemeName`     | object | No       | -              | Name of the identification scheme. For an LEI, `Proprietary` is `LEI`. Can be `null`. See `FinancialIdentificationSchemeNameChoice`. |
 
 ##### FinancialIdentificationSchemeNameChoice
 
-| Field         | Type   | Required | Min-Max length | Description                                                                                    |
-| ------------- | ------ | -------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| Field         | Type   | Required | Min-Max length | Description                                                                                         |
+| ------------- | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------- |
 | `Code`        | string | No       | 1-4            | Name of the identification scheme, in a coded form as published in an external list. Can be `null`. |
-| `Proprietary` | string | No       | 1-35           | Name of the identification scheme, in free text. Can be `null`.                                |
+| `Proprietary` | string | No       | 1-35           | Name of the identification scheme, in free text. Can be `null`.                                     |
 
 ##### PartyIdentification (Debtor, Creditor, UltimateDebtor and UltimateCreditor)
 
-| Field                        | Type   | Required | Min-Max length | Description                                                                                                           |
-| ---------------------------- | ------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `Name`                       | string | Yes      | 1-140          | Name by which the party is known. For the debtor and creditor, if no name is provided, this is `NOTPROVIDED`.          |
-| `PostalAddress`              | object | No       | -              | Postal address of the party. Can be `null`. See `PostalAddress`.                                                      |
-| `OrganisationIdentification` | object | No       | -              | Identification of the party, if it's an organisation. Can be `null`. See `OrganisationIdentification`.                 |
-| `PrivateIdentification`      | object | No       | -              | Identification of the party, if it's a person. Can be `null`. See `PersonIdentification`.                              |
+| Field                        | Type   | Required | Min-Max length | Description                                                                                                   |
+| ---------------------------- | ------ | -------- | -------------- | ------------------------------------------------------------------------------------------------------------- |
+| `Name`                       | string | Yes      | 1-140          | Name by which the party is known. For the debtor and creditor, if no name is provided, this is `NOTPROVIDED`. |
+| `PostalAddress`              | object | No       | -              | Postal address of the party. Can be `null`. See `PostalAddress`.                                              |
+| `OrganisationIdentification` | object | No       | -              | Identification of the party, if it's an organisation. Can be `null`. See `OrganisationIdentification`.        |
+| `PrivateIdentification`      | object | No       | -              | Identification of the party, if it's a person. Can be `null`. See `PersonIdentification`.                     |
 
 ##### PostalAddress
 
-| Field                | Type            | Required | Min-Max length   | Pattern      | Description                                                                                                   |
-| -------------------- | --------------- | -------- | ---------------- | ------------ | ------------------------------------------------------------------------------------------------------------- |
-| `Department`         | string          | No       | 1-70             | -            | Identification of a division of a large organisation or building. Can be `null`.                             |
-| `SubDepartment`      | string          | No       | 1-70             | -            | Identification of a sub-division of a large organisation or building. Can be `null`.                          |
-| `StreetName`         | string          | No       | 1-70             | -            | Name of a street or thoroughfare. Can be `null`.                                                              |
-| `BuildingNumber`     | string          | No       | 1-16             | -            | Number that identifies the position of a building on a street. Can be `null`.                                 |
-| `BuildingName`       | string          | No       | 1-35             | -            | Name of the building or house. Can be `null`.                                                                 |
-| `Floor`              | string          | No       | 1-70             | -            | Floor or storey within a building. Can be `null`.                                                             |
-| `PostBox`            | string          | No       | 1-16             | -            | Numbered box in a post office, where letters are kept until called for. Can be `null`.                        |
-| `Room`               | string          | No       | 1-70             | -            | Building room number. Can be `null`.                                                                          |
-| `PostCode`           | string          | No       | 1-16             | -            | Group of letters and/or numbers added to a postal address to help sort mail. Can be `null`.                   |
-| `TownName`           | string          | No       | 1-35             | -            | Name of a built-up area, with defined boundaries and a local government. Can be `null`.                       |
-| `TownLocationName`   | string          | No       | 1-35             | -            | Specific location name within the town. Can be `null`.                                                        |
-| `DistrictName`       | string          | No       | 1-35             | -            | Subdivision within a country subdivision. Can be `null`.                                                      |
-| `CountrySubDivision` | string          | No       | 1-35             | -            | Subdivision of a country, such as a state, region or county. Can be `null`.                                   |
-| `Country`            | string          | No       | 2-2              | `^[A-Z]{2}$` | Country, as an ISO 3166-1 alpha-2 country code. Can be `null`.                                                |
-| `AddressLine`        | array of string | No       | 0-70 (per item)  | -            | The address in free-format text. Up to 7 entries. Can be `null`.                                              |
+| Field                | Type            | Required | Min-Max length  | Pattern      | Description                                                                                 |
+| -------------------- | --------------- | -------- | --------------- | ------------ | ------------------------------------------------------------------------------------------- |
+| `Department`         | string          | No       | 1-70            | -            | Identification of a division of a large organisation or building. Can be `null`.            |
+| `SubDepartment`      | string          | No       | 1-70            | -            | Identification of a sub-division of a large organisation or building. Can be `null`.        |
+| `StreetName`         | string          | No       | 1-70            | -            | Name of a street or thoroughfare. Can be `null`.                                            |
+| `BuildingNumber`     | string          | No       | 1-16            | -            | Number that identifies the position of a building on a street. Can be `null`.               |
+| `BuildingName`       | string          | No       | 1-35            | -            | Name of the building or house. Can be `null`.                                               |
+| `Floor`              | string          | No       | 1-70            | -            | Floor or storey within a building. Can be `null`.                                           |
+| `PostBox`            | string          | No       | 1-16            | -            | Numbered box in a post office, where letters are kept until called for. Can be `null`.      |
+| `Room`               | string          | No       | 1-70            | -            | Building room number. Can be `null`.                                                        |
+| `PostCode`           | string          | No       | 1-16            | -            | Group of letters and/or numbers added to a postal address to help sort mail. Can be `null`. |
+| `TownName`           | string          | No       | 1-35            | -            | Name of a built-up area, with defined boundaries and a local government. Can be `null`.     |
+| `TownLocationName`   | string          | No       | 1-35            | -            | Specific location name within the town. Can be `null`.                                      |
+| `DistrictName`       | string          | No       | 1-35            | -            | Subdivision within a country subdivision. Can be `null`.                                    |
+| `CountrySubDivision` | string          | No       | 1-35            | -            | Subdivision of a country, such as a state, region or county. Can be `null`.                 |
+| `Country`            | string          | No       | 2-2             | `^[A-Z]{2}$` | Country, as an ISO 3166-1 alpha-2 country code. Can be `null`.                              |
+| `AddressLine`        | array of string | No       | 0-70 (per item) | -            | The address in free-format text. Up to 7 entries. Can be `null`.                            |
 
 ##### OrganisationIdentification
 
-| Field    | Type   | Required | Pattern                                                         | Description                                                                 |
-| -------- | ------ | -------- | --------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `AnyBIC` | string | Yes      | `^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}$`    | Business Identifier Code (BIC) of the organisation, as described in ISO 9362. |
+| Field    | Type   | Required | Pattern                                                    | Description                                                                                                   |
+| -------- | ------ | -------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `AnyBIC` | string | Yes      | ^[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}$ | Business Identifier Code (BIC) of the organisation, as described in ISO 9362. Either 8 or 11 characters long. |
 
 ##### PersonIdentification
 
-| Field             | Type   | Format | Required | Min-Max length | Pattern      | Description                                                                                         |
-| ----------------- | ------ | ------ | -------- | -------------- | ------------ | --------------------------------------------------------------------------------------------------- |
-| `BirthDate`       | string | date   | No       | -              | `YYYY-MM-DD` | Date on which the person was born. Can be `null`.                                                    |
-| `ProvinceOfBirth` | string | -      | No       | 1-35           | -            | Province where the person was born. Can be `null`.                                                   |
-| `CityOfBirth`     | string | -      | No       | 1-35           | -            | City where the person was born. Can be `null`.                                                       |
-| `CountryOfBirth`  | string | -      | No       | -              | `^[A-Z]{2}$` | Country where the person was born, as an ISO 3166-1 alpha-2 country code. Can be `null`.             |
-| `Other`           | array  | -      | No       | -              | -            | Other identification of the person. Can be `null`. See `GenericPersonIdentification`.               |
+| Field             | Type   | Format | Required | Min-Max length | Pattern      | Description                                                                              |
+| ----------------- | ------ | ------ | -------- | -------------- | ------------ | ---------------------------------------------------------------------------------------- |
+| `BirthDate`       | string | date   | No       | -              | `YYYY-MM-DD` | Date on which the person was born. Can be `null`.                                        |
+| `ProvinceOfBirth` | string | -      | No       | 1-35           | -            | Province where the person was born. Can be `null`.                                       |
+| `CityOfBirth`     | string | -      | No       | 1-35           | -            | City where the person was born. Can be `null`.                                           |
+| `CountryOfBirth`  | string | -      | No       | -              | `^[A-Z]{2}$` | Country where the person was born, as an ISO 3166-1 alpha-2 country code. Can be `null`. |
+| `Other`           | array  | -      | No       | -              | -            | Other identification of the person. Can be `null`. See `GenericPersonIdentification`.    |
 
 ##### GenericPersonIdentification
 
-| Field            | Type   | Required | Min-Max length | Description                                  |
-| ---------------- | ------ | -------- | -------------- | -------------------------------------------- |
-| `Identification` | string | Yes      | 1-35           | Unique identification of the person.         |
+| Field            | Type   | Required | Min-Max length | Description                          |
+| ---------------- | ------ | -------- | -------------- | ------------------------------------ |
+| `Identification` | string | Yes      | 1-35           | Unique identification of the person. |
 
 ##### RemittanceInformation
 
-| Field          | Type            | Required | Min-Max length   | Description                                                                                                                                                            |
-| -------------- | --------------- | -------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Field          | Type            | Required | Min-Max length   | Description                                                                                                                                                                      |
+| -------------- | --------------- | -------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Unstructured` | array of string | No       | 0-140 (per item) | Remittance information in free-format text. Up to 3 entries. Longer text is split into 140-character entries, and anything beyond the third entry isn't included. Can be `null`. |
-| `Structured`   | array           | No       | -                | Remittance information in a structured form. Can be `null`. See `StructuredRemittanceInformation`.                                                                     |
+| `Structured`   | array           | No       | -                | Remittance information in a structured form. Can be `null`. See `StructuredRemittanceInformation`.                                                                               |
 
 ##### StructuredRemittanceInformation
 
-| Field                          | Type   | Required | Description                                                                                                                       |
-| ------------------------------ | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Field                          | Type   | Required | Description                                                                                                                             |
+| ------------------------------ | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `CreditorReferenceInformation` | object | No       | Reference information provided by the creditor to identify the underlying documents. Can be `null`. See `CreditorReferenceInformation`. |
 
 ##### CreditorReferenceInformation
 
-| Field       | Type   | Required | Min-Max length | Description                                                                                                 |
-| ----------- | ------ | -------- | -------------- | ----------------------------------------------------------------------------------------------------------- |
-| `Type`      | object | No       | -              | The type of creditor reference. Can be `null`. See `CreditorReferenceType`.                                 |
-| `Reference` | string | No       | 1-35           | Unique reference, as assigned by the creditor, to refer to the payment transaction. Can be `null`.          |
+| Field       | Type   | Required | Min-Max length | Description                                                                                        |
+| ----------- | ------ | -------- | -------------- | -------------------------------------------------------------------------------------------------- |
+| `Type`      | object | No       | -              | The type of creditor reference. Can be `null`. See `CreditorReferenceType`.                        |
+| `Reference` | string | No       | 1-35           | Unique reference, as assigned by the creditor, to refer to the payment transaction. Can be `null`. |
 
 ##### CreditorReferenceType
 
-| Field    | Type   | Required | Min-Max length | Description                                                          |
-| -------- | ------ | -------- | -------------- | -------------------------------------------------------------------- |
-| `Code`   | string | No       | -              | Type of creditor reference, in a coded form. Can be `null`.          |
-| `Issuer` | string | No       | 1-35           | Entity that assigns the creditor reference type. Can be `null`.      |
+| Field    | Type   | Required | Min-Max length | Description                                                     |
+| -------- | ------ | -------- | -------------- | --------------------------------------------------------------- |
+| `Code`   | string | No       | -              | Type of creditor reference, in a coded form. Can be `null`.     |
+| `Issuer` | string | No       | 1-35           | Entity that assigns the creditor reference type. Can be `null`. |
 
-#### Example CBEU Cross-border Inbound Payment Completed webhook request body
+#### Example Cross-border Inbound Payment Completed webhook request body
 
 ```json
 {
-  "Type": "Payments.CBEU.CrossBorder.InboundPaymentCompleted",
+  "Type": "Payments.CrossBorder.InboundPaymentCompleted",
   "Version": 1,
   "Payload": {
     "PaymentId": "c7e94b12-5a3d-4f8e-b1c6-2d9a8e7f6b54",
     "TransactionId": "e2b8f1c4-9d6a-4c3e-8f7b-5a1d2c3e4f60",
     "PaymentIdentification": {
-      "InstructionIdentification": "ACME-PAY-77812",
-      "EndToEndIdentification": "ACME-INV-2026-118",
-      "TransactionIdentification": "ACME-TX-77812",
+      "InstructionIdentification": "WIRE-REF-2026-001",
+      "EndToEndIdentification": "INV-2026-118",
+      "TransactionIdentification": "TX-2026-001",
       "UETR": "c7e94b12-5a3d-4f8e-b1c6-2d9a8e7f6b54"
     },
     "InterbankSettlementAmount": {
@@ -208,15 +208,21 @@ If the payment doesn't include an end-to-end identification, or the debtor or cr
     },
     "DebtorAgent": {
       "BICFI": "EXMPUS33XXX",
-      "ClearingSystemMemberIdentification": null,
+      "ClearingSystemMemberIdentification": {
+        "ClearingSystemIdentification": {
+          "Code": "USABA",
+          "Proprietary": null
+        },
+        "MemberIdentification": "000000000"
+      },
       "Other": null
     },
     "CreditorAccount": {
-      "IBAN": "NL65CLRB0123456789",
+      "IBAN": "NL51ZZZZ0123456789",
       "Other": null
     },
     "CreditorAgent": {
-      "BICFI": "CLRBNL2A",
+      "BICFI": "ZZZZNL2A",
       "ClearingSystemMemberIdentification": null,
       "Other": null
     },
@@ -225,23 +231,28 @@ If the payment doesn't include an end-to-end identification, or the debtor or cr
       "ClearingSystemMemberIdentification": null,
       "Other": null
     },
-    "UltimateDebtor": null,
+    "UltimateDebtor": {
+      "Name": "Sample Payment Originator",
+      "PostalAddress": null,
+      "OrganisationIdentification": null,
+      "PrivateIdentification": null
+    },
     "Debtor": {
-      "Name": "Acme Supplies Inc.",
+      "Name": "Sample Sender",
       "PostalAddress": {
         "Department": null,
         "SubDepartment": null,
-        "StreetName": "Madison Avenue",
-        "BuildingNumber": "350",
+        "StreetName": "Example Street",
+        "BuildingNumber": "12",
         "BuildingName": null,
         "Floor": null,
         "PostBox": null,
         "Room": null,
-        "PostCode": "10017",
-        "TownName": "New York",
+        "PostCode": "12345",
+        "TownName": "Exampleville",
         "TownLocationName": null,
         "DistrictName": null,
-        "CountrySubDivision": "NY",
+        "CountrySubDivision": "CA",
         "Country": "US",
         "AddressLine": null
       },
@@ -249,17 +260,48 @@ If the payment doesn't include an end-to-end identification, or the debtor or cr
       "PrivateIdentification": null
     },
     "Creditor": {
-      "Name": "ABC Trading B.V.",
+      "Name": "Sample Recipient",
+      "PostalAddress": {
+        "Department": null,
+        "SubDepartment": null,
+        "StreetName": "Example Avenue",
+        "BuildingNumber": "8",
+        "BuildingName": null,
+        "Floor": null,
+        "PostBox": null,
+        "Room": null,
+        "PostCode": "1234 AB",
+        "TownName": "Exampledam",
+        "TownLocationName": null,
+        "DistrictName": null,
+        "CountrySubDivision": null,
+        "Country": "NL",
+        "AddressLine": null
+      },
+      "OrganisationIdentification": null,
+      "PrivateIdentification": null
+    },
+    "UltimateCreditor": {
+      "Name": "Sample Final Recipient",
       "PostalAddress": null,
       "OrganisationIdentification": null,
       "PrivateIdentification": null
     },
-    "UltimateCreditor": null,
     "RemittanceInformation": {
       "Unstructured": [
-        "Credit note ACME-INV-2026-118"
+        "Invoice 2026-118"
       ],
-      "Structured": null
+      "Structured": [
+        {
+          "CreditorReferenceInformation": {
+            "Type": {
+              "Code": "SCOR",
+              "Issuer": "ISO"
+            },
+            "Reference": "RF18539007547034"
+          }
+        }
+      ]
     }
   },
   "Nonce": 284617093
