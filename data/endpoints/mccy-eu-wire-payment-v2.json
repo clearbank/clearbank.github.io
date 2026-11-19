@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.0.2",
   "info": {
     "title": "MCCY EU - Wire Payment (PAIN.001)",
@@ -35,6 +35,7 @@
             "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
+              "maxLength": 83,
               "type": "string"
             }
           }
@@ -102,6 +103,7 @@
             "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
             "required": true,
             "schema": {
+              "maxLength": 83,
               "type": "string"
             }
           }
@@ -164,14 +166,15 @@
             "type": "string",
             "description": "Name of a street or thoroughfare.",
             "nullable": true,
-            "example": "Kaiserstrasse"
+            "example": "Herengracht"
           },
           "buildingNumber": {
             "maxLength": 16,
             "minLength": 1,
             "type": "string",
             "description": "Number that identifies the position of a building on a street.",
-            "nullable": true
+            "nullable": true,
+            "example": "100"
           },
           "buildingName": {
             "maxLength": 35,
@@ -207,14 +210,14 @@
             "type": "string",
             "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
             "nullable": true,
-            "example": "60311"
+            "example": "1015 BS"
           },
           "townName": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Name of a built-up area, with defined boundaries, and a local government.",
-            "example": "Frankfurt am Main"
+            "example": "Amsterdam"
           },
           "townLocationName": {
             "maxLength": 35,
@@ -243,7 +246,7 @@
             "pattern": "[A-Z]{2,2}",
             "type": "string",
             "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
-            "example": "DE"
+            "example": "NL"
           }
         },
         "additionalProperties": false,
@@ -259,7 +262,7 @@
             "type": "string",
             "description": "Code allocated to a financial institution as described in ISO 9362.",
             "nullable": true,
-            "example": "CLRBGB10321"
+            "example": "ABCTNL2A"
           },
           "lei": {
             "maxLength": 20,
@@ -268,7 +271,7 @@
             "type": "string",
             "description": "Code allocated to a party as described in ISO 17442.",
             "nullable": true,
-            "example": "D7R3AROG1XRMZ3LXI712"
+            "example": null
           }
         },
         "additionalProperties": false,
@@ -325,7 +328,7 @@
             "minLength": 1,
             "type": "string",
             "description": "The legal name of this party.",
-            "example": "ABC Trading GmbH"
+            "example": "ABC Trading B.V."
           },
           "postalAddress": {
             "$ref": "#/components/schemas/PostalAddress"
@@ -343,7 +346,7 @@
             "type": "string",
             "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
             "nullable": true,
-            "example": "DE"
+            "example": "NL"
           }
         },
         "additionalProperties": false,
@@ -386,20 +389,23 @@
             "minLength": 1,
             "type": "string",
             "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
-            "nullable": true
+            "nullable": true,
+            "example": "USABA"
           },
           "clearingSystemIdentificationProprietary": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Proprietary identification of the clearing system.",
-            "nullable": true
+            "nullable": true,
+            "example": null
           },
           "memberIdentification": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
-            "description": "Identification of a member of a clearing system."
+            "description": "Identification of a member of a clearing system.",
+            "example": "000000000"
           }
         },
         "additionalProperties": false,
@@ -543,6 +549,38 @@
         "additionalProperties": false,
         "description": "A number of monetary units specified in an active or historic currency where the unit of currency is explicit and compliant with ISO 4217."
       },
+      "InstructedAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "maximum": 1000000000,
+            "exclusiveMinimum": true,
+            "minimum": 13,
+            "multipleOf": 0.01,
+            "type": "number",
+            "description": "The amount of the payment. Must be greater than 13.00 and no more than 1,000,000,000.00, with no more than 2 decimal places.",
+            "format": "double",
+            "example": 25000.5
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "The currency of the payment, given as a three-letter ISO 4217 currency code. Must be USD.",
+            "example": "USD",
+            "enum": [
+              "USD"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "The amount of the payment. The currency must be USD, and the amount must be greater than 13.00 and no more than 1,000,000,000.00, with no more than 2 decimal places."
+      },
       "CreditorAccount": {
         "type": "object",
         "properties": {
@@ -561,7 +599,7 @@
             "type": "string",
             "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
             "nullable": true,
-            "example": "GB33BUKB20201555555555"
+            "example": null
           },
           "accountIdentification": {
             "maxLength": 34,
@@ -611,7 +649,8 @@
             "minLength": 1,
             "type": "string",
             "description": "Further information complementing the coded instruction or instruction to the creditor's agent that is bilaterally agreed or specific to a user community.",
-            "nullable": true
+            "nullable": true,
+            "example": null
           }
         },
         "additionalProperties": false,
@@ -633,7 +672,8 @@
             "minLength": 1,
             "type": "string",
             "description": "Proprietary purpose, as defined by a party outside of an ISO code set.",
-            "nullable": true
+            "nullable": true,
+            "example": null
           }
         },
         "additionalProperties": false,
@@ -739,14 +779,16 @@
             ],
             "type": "string",
             "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
-            "nullable": true
+            "nullable": true,
+            "example": "CINV"
           },
           "proprietary": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Proprietary document type.",
-            "nullable": true
+            "nullable": true,
+            "example": null
           }
         },
         "additionalProperties": false,
@@ -861,21 +903,24 @@
             ],
             "type": "string",
             "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
-            "nullable": true
+            "nullable": true,
+            "example": "SCOR"
           },
           "proprietary": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Proprietary creditor reference type.",
-            "nullable": true
+            "nullable": true,
+            "example": null
           },
           "issuer": {
             "maxLength": 35,
             "minLength": 1,
             "type": "string",
             "description": "Entity that assigns the creditor reference type.",
-            "nullable": true
+            "nullable": true,
+            "example": "ISO"
           }
         },
         "additionalProperties": false,
@@ -972,8 +1017,7 @@
             "$ref": "#/components/schemas/PaymentTypeInformation"
           },
           "instructedAmount": {
-            "$ref": "#/components/schemas/AmountType",
-            "description": "The amount of the payment. The currency must be USD, and the amount must be greater than 13.00, with no more than 2 decimal places."
+            "$ref": "#/components/schemas/InstructedAmount"
           },
           "chargeBearer": {
             "maxLength": 4,
@@ -1313,7 +1357,7 @@
             "type": "string",
             "format": "uuid",
             "description": "The unique end-to-end transaction reference (UETR) generated for the simulated payment. This is also the PaymentId in the webhook.",
-            "example": "c7e94b12-5a3d-4f8e-b1c6-2d9a8e7f6b54"
+            "example": "5b8d2e71-0c4a-4f3b-a9e6-3d7c1f8b2a95"
           },
           "message": {
             "type": "string",
