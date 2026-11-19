@@ -23,6 +23,7 @@ export type FontSizes = { [option in FontSizeOption]: number }
 export type WidthOption =
   | 'container'
   | 'gutter'
+  | 'sidebarLeft'
   | 'sidebarRight'
   | 'logo'
   | 'content'
@@ -36,7 +37,9 @@ export type MaxWidthOption =
 
 export type MaxWidths = { [option in MaxWidthOption]: string }
 
-export type HeightOption = 'header'
+export type HeightOption =
+  | 'header'
+  | 'headerCompact'
 
 export type Heights = { [option in HeightOption]: string }
 
