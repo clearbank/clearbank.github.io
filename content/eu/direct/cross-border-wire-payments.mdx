@@ -19,7 +19,7 @@ import Callout from "src/components/callout";
 
 Our cross-border wire payments service lets you send and receive US dollar (USD) payments internationally.
 
-Cross-border wire payments remain in the same currency from end to end - there's no foreign exchange or currency conversion involved. To send payments that change currency, you should use [Cross-border FX](../cross-border-fx-eu) service.
+Cross-border wire payments remain in the same currency from end to end - there's no foreign exchange or currency conversion involved. To send payments that change currency, use our [Cross-border FX](../cross-border-fx-eu) service.
 
 If you're interested in making payments with this service, please speak with your Client Director.
 
@@ -29,7 +29,7 @@ If you're interested in making payments with this service, please speak with you
 
 * **Currencies supported**: Only US dollars can be sent and received using this service. Payments must be made from a USD enabled multi-currency account.
 * **Payment size**: Outbound payments must be greater than 13.00 USD. This is specified in the `instructedAmount` field of the payment request.
-* **Supported regions**: Cross-border wire payments can be sent and received internationally but are subject to ClearBank's country restrictions. For full details of our restricted regions, please refer to our service agreement and associated policies.
+* **Supported regions**: Payments can be sent and received internationally, but are subject to specific country restrictions. For details of ClearBank's restricted regions, please refer to our service agreement and associated policies.
 
 ### Service hours and holidays
 
@@ -43,10 +43,10 @@ Inbound payments are processed regardless of our service hours. You should alway
 
 ### Payment deduplication and uniqueness
 
-Duplicated outbound payment requests are prevented by asserting payments have a unique `messageIdentification` and `uetr`:
+Duplicated outbound payment requests are prevented via unique `messageIdentification` and `uetr` values:
 
-* If you reuse a `messageIdentification` in your request, you'll receive a **409 - Conflict** response. The payment will be treated as a duplicate and will not be processed.
-* If you reuse a `uetr` in your request, the payment will fail _after_ being accepted and you'll be notified of this via webhook. The payment is treated as a duplicate and will not be processed.
+* If you reuse a `messageIdentification` in your request, you'll receive a **409 - Conflict** response. We will treat the payment as a duplicate and it will not be processed.
+* If you reuse a `uetr` in your request, the payment will fail _after_ being accepted and you'll be notified of this via webhook. We will treat the payment as a duplicate and it will not be processed.
 
 ### Reasons for payment failure
 
@@ -115,7 +115,7 @@ There are no endpoints involved in receiving cross-border wire payments.
 
 <EndpointBlock
   type="post"
-  title="Send a cross-border wire payment"
+  title="Send a cross-border wire payment endpoint"
   endpoints={[
     {
       path: "/payments/cross-border/v2/payments",
