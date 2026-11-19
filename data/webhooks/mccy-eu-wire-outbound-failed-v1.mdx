@@ -1,0 +1,75 @@
+---
+title: "Cross-border Outbound Payment Failed webhook"
+version: 1
+webhook: true
+---
+
+This webhook notifies you that a cross-border wire payment you sent has failed and will not be reattempted. It contains the identifiers you supplied in your payment request, and - where available - the reason for the failure.
+
+#### Request body
+
+```json
+{
+  "Type": "Payments.CrossBorder.OutboundPaymentFailed",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                              | Type   | Format  | Required | Min-Max length | Pattern      | Description                                                                                                                                                                        |
+| ---------------------------------- | ------ | ------- | -------- | -------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`                        | string | uuid    | Yes      | 36-36          | -            | A unique identifier to reference this outbound payment. This has the same value as the `UETR`.                                                                                     |
+| `TransactionId`                    | string | uuid    | Yes      | 36-36          | -            | A unique identifier assigned by ClearBank to reference the debit transaction related to this outbound payment.                                                                     |
+| `MessageIdentification`            | string | -       | Yes      | 1-35           | -            | The `messageIdentification` you supplied in your payment request.                                                                                                                  |
+| `PaymentInformationIdentification` | string | -       | Yes      | 1-35           | -            | The `paymentInformationIdentification` you supplied in your payment request.                                                                                                       |
+| `InstructionIdentification`        | string | -       | Yes      | 1-35           | -            | The `instructionIdentification` you supplied in your payment request.                                                                                                              |
+| `EndToEndIdentification`           | string | -       | Yes      | 1-35           | -            | The `endToEndIdentification` you supplied in your payment request, used to trace the payment from origin to destination.                                                           |
+| `UETR`                             | string | uuid    | Yes      | 36-36          | -            | The unique end-to-end transaction reference (UETR) you supplied in your payment request, used to track the payment end to end.                                                     |
+| `InstructedAmount`                 | number | decimal | Yes      | -              | -            | The amount that was instructed to be transferred in the payment.                                                                                                                   |
+| `InstructedCurrency`               | string | -       | Yes      | 3-3            | `^[A-Z]{3}$` | The three-letter ISO 4217 currency code of the instructed amount.                                                                                                                  |
+| `StatusReasonInformation`          | array  | -       | No       | -              | -            | Information about why the payment failed. Contains one entry when failure details are available. Can be `null` if no failure details are available. See `StatusReasonInformation`. |
+
+##### StatusReasonInformation
+
+| Field                   | Type            | Required | Min-Max length   | Description                                                                                                                                               |
+| ----------------------- | --------------- | -------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AdditionalInformation` | array of string | Yes      | 0-140 (per item) | Details of the payment failure, such as descriptive messages. Up to 10 entries. A message longer than 140 characters is split across consecutive entries. |
+
+#### Example Cross-border Outbound Payment Failed webhook request body
+
+```json
+{
+  "Type": "Payments.CrossBorder.OutboundPaymentFailed",
+  "Version": 1,
+  "Payload": {
+    "PaymentId": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+    "TransactionId": "7d1e4b2a-3c5f-4e8d-9a6b-1f2e3d4c5b6a",
+    "MessageIdentification": "MSG-20261117-0001",
+    "PaymentInformationIdentification": "PMTINF-20261117-0001",
+    "InstructionIdentification": "INSTR-20261117-0001",
+    "EndToEndIdentification": "E2E-INV-2026-0451",
+    "UETR": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+    "InstructedAmount": 25000.50,
+    "InstructedCurrency": "USD",
+    "StatusReasonInformation": [
+      {
+        "AdditionalInformation": [
+          "Insufficient funds in the account."
+        ]
+      }
+    ]
+  },
+  "Nonce": 739104526
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 739104526
+}
+```

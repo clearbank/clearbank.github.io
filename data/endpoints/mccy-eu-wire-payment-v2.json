@@ -1,0 +1,1371 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "MCCY EU - Wire Payment (PAIN.001)",
+    "description": "OpenAPI definition for the Wire Payment endpoint.",
+    "version": "2.0_WIRE"
+  },
+  "paths": {
+    "/payments/cross-border/v2/payments": {
+      "post": {
+        "summary": "Initiate a wire payment.",
+        "operationId": "InitiateWirePayment",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "maxLength": 83,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The wire payment request based on PAIN.001.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A payment with the same messageIdentification already exists."
+          },
+          "422": {
+            "description": "The request was invalid. For example, a field failed validation or the request was made outside the operating hours."
+          },
+          "501": {
+            "description": "The requested operation is not implemented."
+          }
+        }
+      }
+    },
+    "/payments/cross-border/v2/simulations/inbound-payments": {
+      "post": {
+        "summary": "Simulate an inbound cross-border wire payment.",
+        "operationId": "SimulateInboundPayment",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Your API token, obtained from the ClearBank Portal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DigitalSignature",
+            "in": "header",
+            "description": "Signed hash of the body of the request. The hash is signed by your private key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "description": "A unique identifier for the request; valid for 24 hours, max length 83.",
+            "required": true,
+            "schema": {
+              "maxLength": 83,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Details of the inbound payment to simulate.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateInboundPaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateInboundPaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request was invalid. For example, a field failed validation, or the account doesn't exist or can't receive payments in the settlement currency."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostalAddress": {
+        "required": [
+          "country",
+          "townName"
+        ],
+        "type": "object",
+        "properties": {
+          "department": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identification of a division of a large organisation or building.",
+            "nullable": true
+          },
+          "subDepartment": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identification of a sub-division of a large organisation or building.",
+            "nullable": true
+          },
+          "streetName": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of a street or thoroughfare.",
+            "nullable": true,
+            "example": "Herengracht"
+          },
+          "buildingNumber": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "description": "Number that identifies the position of a building on a street.",
+            "nullable": true,
+            "example": "100"
+          },
+          "buildingName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the building or house.",
+            "nullable": true
+          },
+          "floor": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Floor or storey within a building.",
+            "nullable": true
+          },
+          "postBox": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "description": "Numbered box in a post office, assigned to a person or organisation, where letters are kept until called for.",
+            "nullable": true
+          },
+          "room": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Building room number.",
+            "nullable": true
+          },
+          "postCode": {
+            "maxLength": 16,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identifier consisting of a group of letters and/or numbers that is added to a postal address to assist the sorting of mail.",
+            "nullable": true,
+            "example": "1015 BS"
+          },
+          "townName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of a built-up area, with defined boundaries, and a local government.",
+            "example": "Amsterdam"
+          },
+          "townLocationName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Specific location name within the town.",
+            "nullable": true
+          },
+          "districtName": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identifies a subdivision within a country sub-division.",
+            "nullable": true
+          },
+          "countrySubDivision": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identifies a subdivision of a country, such as state, region or county.",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "example": "NL"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The postal address of a party."
+      },
+      "OrganisationIdentification": {
+        "type": "object",
+        "properties": {
+          "anyBIC": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Code allocated to a financial institution as described in ISO 9362.",
+            "nullable": true,
+            "example": "ABCTNL2A"
+          },
+          "lei": {
+            "maxLength": 20,
+            "minLength": 20,
+            "pattern": "[A-Z0-9]{18,18}[0-9]{2,2}",
+            "type": "string",
+            "description": "Code allocated to a party as described in ISO 17442.",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unique and unambiguous way to identify an organisation.\r\nEither AnyBIC or LEI must be provided, but not both."
+      },
+      "PersonIdentification": {
+        "required": [
+          "birthDate",
+          "cityOfBirth",
+          "countryOfBirth"
+        ],
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Date of birth, formatted as YYYY-MM-DD, in alignment with the ISO 8601 standard.",
+            "example": "1990-01-01"
+          },
+          "provinceOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Province where a person was born.",
+            "nullable": true
+          },
+          "cityOfBirth": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "City where a person was born.",
+            "example": "Amsterdam"
+          },
+          "countryOfBirth": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "example": "NL"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unique and unambiguous way to identify a person."
+      },
+      "PartyIdentification": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "The legal name of this party.",
+            "example": "ABC Trading B.V."
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          },
+          "organisationIdentification": {
+            "$ref": "#/components/schemas/OrganisationIdentification"
+          },
+          "privateIdentification": {
+            "$ref": "#/components/schemas/PersonIdentification"
+          },
+          "countryOfResidence": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "nullable": true,
+            "example": "NL"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Identifies a party.\r\nProvide neither or either OrganisationIdentification or PrivateIdentification, but not both."
+      },
+      "DebtorAccount": {
+        "required": [
+          "iban"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the account, as assigned by the account servicing institution.",
+            "nullable": true,
+            "example": "ABC Trading B.V."
+          },
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
+            "example": "NL65CLRB0123456789"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unambiguous identification of the account of the debtor to which a debit entry will be made as a result of the transaction.\r\nFor outbound payments the DebtorAccount is a ClearBank account so an IBAN must always be provided."
+      },
+      "ClearingSystemMemberIdentification": {
+        "required": [
+          "memberIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "clearingSystemIdentificationCode": {
+            "maxLength": 5,
+            "minLength": 1,
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true,
+            "example": "USABA"
+          },
+          "clearingSystemIdentificationProprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Proprietary identification of the clearing system.",
+            "nullable": true,
+            "example": null
+          },
+          "memberIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identification of a member of a clearing system.",
+            "example": "000000000"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unique identification, as assigned by a clearing system, to unambiguously identify a member of the clearing system.\r\nEither ClearingSystemIdentificationCode or ClearingSystemIdentificationProprietary must be provided, but not both."
+      },
+      "BranchAndFinancialInstitutionIdentification": {
+        "type": "object",
+        "properties": {
+          "bicfi": {
+            "maxLength": 11,
+            "minLength": 8,
+            "pattern": "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}",
+            "type": "string",
+            "description": "Code allocated to a financial institution as described in ISO 9362.",
+            "nullable": true,
+            "example": "EXMPUS33XXX"
+          },
+          "clearingSystemMemberIdentification": {
+            "$ref": "#/components/schemas/ClearingSystemMemberIdentification"
+          },
+          "name": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name by which the financial institution is known.",
+            "nullable": true,
+            "example": "Example Bank, N.A."
+          },
+          "postalAddress": {
+            "$ref": "#/components/schemas/PostalAddress"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Identifies a financial institution.\r\nEither BICFI or ClearingSystemMemberIdentification must be provided, but not both."
+      },
+      "PaymentIdentification": {
+        "required": [
+          "endToEndIdentification",
+          "instructionIdentification",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identification, as assigned by an instructing party for an instructed party, to unambiguously identify the instruction.",
+            "example": "INSTR-20261117-0001"
+          },
+          "endToEndIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify the transaction.",
+            "example": "E2E-INV-2026-0451"
+          },
+          "uetr": {
+            "minLength": 1,
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "format": "uuid",
+            "description": "Universally Unique Identifier (UUID) version 4, as described in IETF RFC 4122. Must be in lowercase and unique for each payment.",
+            "example": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Unique identification of the payment transaction."
+      },
+      "PaymentTypeInformation": {
+        "required": [
+          "serviceLevelCode"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionPriority": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "HIGH",
+              "NORM"
+            ],
+            "type": "string",
+            "description": "Indicator of the urgency or order of importance that the instructing party would like the instructed party to apply to the processing of the instruction.",
+            "nullable": true,
+            "example": "NORM"
+          },
+          "serviceLevelCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "enum": [
+              "URGP"
+            ],
+            "type": "string",
+            "description": "Agreement under which or rules under which the transaction should be processed. Follows the latest version of the External Code Set.",
+            "example": "URGP"
+          },
+          "localInstrumentCode": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "User community specific instrument. Follows the latest version of the External Code Set.",
+            "nullable": true
+          },
+          "categoryPurposeCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Specifies the high level purpose of the instruction based on a set of pre-defined categories. Follows the latest version of the External Code Set.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Set of elements used to further specify the type of transaction."
+      },
+      "AmountType": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Indicates the amount of a given currency.",
+            "format": "double",
+            "example": 25000.5
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "[A-Z]{3}",
+            "type": "string",
+            "description": "The currency, given as a three-letter ISO 4217 currency code.",
+            "example": "USD",
+            "enum": [
+              "USD"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "A number of monetary units specified in an active or historic currency where the unit of currency is explicit and compliant with ISO 4217."
+      },
+      "InstructedAmount": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "minimum": 13.01,
+            "multipleOf": 0.01,
+            "type": "number",
+            "description": "The amount of the payment. Must be greater than 13.00, with no more than 2 decimal places.",
+            "format": "double",
+            "example": 25000.5
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "The currency of the payment, given as a three-letter ISO 4217 currency code. Must be USD.",
+            "example": "USD",
+            "enum": [
+              "USD"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "description": "The amount of the payment. The currency must be USD, and the amount must be greater than 13.00, with no more than 2 decimal places."
+      },
+      "CreditorAccount": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 70,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the account, as assigned by the account servicing institution.",
+            "nullable": true,
+            "example": "Acme Supplies Inc."
+          },
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "description": "A code used to uniquely identify the account of a customer at a financial institution as described in the 2007 edition of the ISO 13616 standard.",
+            "nullable": true,
+            "example": null
+          },
+          "accountIdentification": {
+            "maxLength": 34,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identification of the account, provided when no IBAN is available.",
+            "nullable": true,
+            "example": "000123456789"
+          },
+          "accountIdentificationCode": {
+            "maxLength": 4,
+            "minLength": 1,
+            "enum": [
+              "AIIN",
+              "BBAN",
+              "CUID",
+              "UPIC"
+            ],
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org. Required when accountIdentification is provided; must not be provided otherwise.",
+            "nullable": true,
+            "example": "BBAN"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information about the creditor account in a given transaction.\r\nEither IBAN or AccountIdentification must be provided, but not both."
+      },
+      "InstructionForCreditorAgent": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "CHQB",
+              "HOLD",
+              "PHOB",
+              "TELB"
+            ],
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true,
+            "example": "HOLD"
+          },
+          "instructionInformation": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Further information complementing the coded instruction or instruction to the creditor's agent that is bilaterally agreed or specific to a user community.",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "Further information related to the processing of the payment instruction, provided by the initiating party, and intended for the creditor agent.\r\nEither Code or InstructionInformation must be provided, but not both."
+      },
+      "Purpose": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true,
+            "example": "COST"
+          },
+          "proprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Proprietary purpose, as defined by a party outside of an ISO code set.",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "Underlying reason for the payment transaction.\r\nEither Code or Proprietary must be provided, but not both."
+      },
+      "RegulatoryReporting": {
+        "type": "object",
+        "properties": {
+          "debitCreditReportingIndicator": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "CRED",
+              "DEBT",
+              "BOTH"
+            ],
+            "type": "string",
+            "description": "Identifies whether the regulatory reporting information applies to the debit side, the credit side or both.",
+            "nullable": true
+          },
+          "authorityName": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the entity requiring the regulatory reporting information.",
+            "nullable": true
+          },
+          "authorityCountry": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country of the entity that requires the regulatory reporting information.",
+            "nullable": true
+          },
+          "type": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Specifies the nature, purpose, and reason for the transaction to be reported.",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "description": "Date related to the specified type of regulatory reporting details.",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "pattern": "[A-Z]{2,2}",
+            "type": "string",
+            "description": "Country code following the ISO 3166-1 Alpha-2 standard.",
+            "nullable": true
+          },
+          "code": {
+            "maxLength": 10,
+            "minLength": 1,
+            "type": "string",
+            "description": "Specifies the nature, purpose, and reason for the transaction to be reported for regulatory and statutory requirements.",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount of money to be reported for regulatory and statutory requirements.",
+            "format": "double",
+            "nullable": true
+          },
+          "information": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Additional details that cater for specific domestic regulatory requirements.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information needed due to regulatory and/or statutory requirements."
+      },
+      "ReferredDocumentType": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "MSIN",
+              "CNFA",
+              "DNFA",
+              "CINV",
+              "CREN",
+              "DEBN",
+              "HIRI",
+              "SBIN",
+              "CMCN",
+              "SOAC",
+              "DISP",
+              "BOLD",
+              "VCHR",
+              "AROI",
+              "TSUT",
+              "PUOR"
+            ],
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true,
+            "example": "CINV"
+          },
+          "proprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Proprietary document type.",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "Specifies the type of the document referred to in the remittance information.\r\nEither Code or Proprietary must be provided, but not both."
+      },
+      "ReferredDocumentInformation": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ReferredDocumentType"
+          },
+          "number": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique and unambiguous identification of the referred document.",
+            "nullable": true
+          },
+          "relatedDate": {
+            "type": "string",
+            "description": "Date associated with the referred document.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Set of elements used to identify the documents referred to in the remittance information."
+      },
+      "DocumentAdjustment": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "creditDebitIndicator": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "CRDT",
+              "DBIT"
+            ],
+            "type": "string",
+            "description": "Specifies whether the adjustment must be subtracted or added to the total amount.",
+            "nullable": true
+          },
+          "additionalInformation": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Provides further details on the document adjustment.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Set of elements used to provide information on the document adjustment."
+      },
+      "ReferredDocumentAmount": {
+        "type": "object",
+        "properties": {
+          "duePayableAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "discountAppliedAmount": {
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmountType"
+            },
+            "description": "Amount of money resulting from the application of an agreed discount to the amount due and payable to the creditor.",
+            "nullable": true
+          },
+          "creditNoteAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          },
+          "taxAmount": {
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AmountType"
+            },
+            "description": "Quantity of cash resulting from the calculation of the tax.",
+            "nullable": true
+          },
+          "adjustmentAmountAndReason": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentAdjustment"
+            },
+            "description": "Set of elements used to provide information on the amount and reason of the document adjustment.",
+            "nullable": true
+          },
+          "remittedAmount": {
+            "$ref": "#/components/schemas/AmountType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Set of elements used to provide information on the amounts of the referred document."
+      },
+      "CreditorReferenceType": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "RADM",
+              "RPIN",
+              "FXDR",
+              "DISP",
+              "PUOR",
+              "SCOR"
+            ],
+            "type": "string",
+            "description": "Follows the latest version of the External Code Set, available at www.iso20022.org.",
+            "nullable": true,
+            "example": "SCOR"
+          },
+          "proprietary": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Proprietary creditor reference type.",
+            "nullable": true,
+            "example": null
+          },
+          "issuer": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Entity that assigns the creditor reference type.",
+            "nullable": true,
+            "example": "ISO"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Specifies the type of creditor reference.\r\nEither Code or Proprietary must be provided, but not both."
+      },
+      "CreditorReferenceInformation": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/CreditorReferenceType"
+          },
+          "reference": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Reference information provided by the creditor to allow the identification of the underlying documents."
+      },
+      "StructuredRemittanceInformation": {
+        "type": "object",
+        "properties": {
+          "referredDocumentInformation": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferredDocumentInformation"
+            },
+            "description": "Provides the identification and the content of the referred document.",
+            "nullable": true
+          },
+          "referredDocumentAmount": {
+            "$ref": "#/components/schemas/ReferredDocumentAmount"
+          },
+          "creditorReferenceInformation": {
+            "$ref": "#/components/schemas/CreditorReferenceInformation"
+          },
+          "additionalRemittanceInformation": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional information, in free text form, to complement the structured remittance information.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment\r\nis intended to settle, in a structured form."
+      },
+      "RemittanceInformation": {
+        "type": "object",
+        "properties": {
+          "unstructured": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment\r\nis intended to settle, in an unstructured form.",
+            "nullable": true
+          },
+          "structured": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StructuredRemittanceInformation"
+            },
+            "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment\r\nis intended to settle, in a structured form.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Information supplied to enable the matching/reconciliation of an entry with the items that the payment is intended to settle."
+      },
+      "CreditTransferTransaction": {
+        "required": [
+          "creditor",
+          "creditorAccount",
+          "creditorAgent",
+          "instructedAmount",
+          "paymentIdentification",
+          "paymentTypeInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentIdentification": {
+            "$ref": "#/components/schemas/PaymentIdentification"
+          },
+          "paymentTypeInformation": {
+            "$ref": "#/components/schemas/PaymentTypeInformation"
+          },
+          "instructedAmount": {
+            "$ref": "#/components/schemas/InstructedAmount"
+          },
+          "chargeBearer": {
+            "maxLength": 4,
+            "minLength": 4,
+            "enum": [
+              "SHAR",
+              "DEBT",
+              "CRED"
+            ],
+            "type": "string",
+            "description": "Specifies which party/parties will bear the charges associated with the processing of the payment transaction.",
+            "nullable": true,
+            "example": "SHAR"
+          },
+          "ultimateDebtor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "intermediaryAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditorAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "creditorAccount": {
+            "$ref": "#/components/schemas/CreditorAccount"
+          },
+          "ultimateCreditor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "instructionForCreditorAgent": {
+            "$ref": "#/components/schemas/InstructionForCreditorAgent"
+          },
+          "instructionForDebtorAgent": {
+            "maxLength": 140,
+            "minLength": 1,
+            "type": "string",
+            "description": "Further information related to the processing of the payment instruction, intended for the debtor agent.",
+            "nullable": true
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/Purpose"
+          },
+          "regulatoryReporting": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegulatoryReporting"
+            },
+            "description": "Information needed due to regulatory and/or statutory requirements.",
+            "nullable": true
+          },
+          "relatedRemittanceIdentification": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Unique identification, as assigned by the initiating party, to unambiguously identify related remittance information.",
+            "nullable": true
+          },
+          "remittanceInformation": {
+            "$ref": "#/components/schemas/RemittanceInformation"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Provides information specific to the individual credit transfer transaction."
+      },
+      "PaymentInstruction": {
+        "required": [
+          "creditTransferTransactionInformation",
+          "debtor",
+          "debtorAccount",
+          "paymentInformationIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentInformationIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identification, as assigned by a sending party, to unambiguously identify the payment information group within the message.",
+            "example": "PMTINF-20261117-0001"
+          },
+          "requestedExecutionDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Must be today's date, formatted as YYYY-MM-DD.",
+            "nullable": true,
+            "example": "2026-11-17"
+          },
+          "debtor": {
+            "$ref": "#/components/schemas/PartyIdentification"
+          },
+          "debtorAccount": {
+            "$ref": "#/components/schemas/DebtorAccount"
+          },
+          "debtorAgent": {
+            "$ref": "#/components/schemas/BranchAndFinancialInstitutionIdentification"
+          },
+          "creditTransferTransactionInformation": {
+            "maxItems": 1,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditTransferTransaction"
+            },
+            "description": "Provides information on the individual transaction(s) included in the message."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Characteristics that apply to the debit side of the payment transactions included in the payment instruction."
+      },
+      "PaymentRequest": {
+        "required": [
+          "messageIdentification",
+          "paymentInformation"
+        ],
+        "type": "object",
+        "properties": {
+          "messageIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier for the message.",
+            "example": "MSG-20261117-0001"
+          },
+          "paymentInformation": {
+            "maxItems": 1,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentInstruction"
+            },
+            "description": "Set of characteristics that apply to the debit side of the payment transactions included in the request."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Wire Payment Request (PAIN.001).",
+        "example": {
+          "messageIdentification": "MSG-20261117-0001",
+          "paymentInformation": [
+            {
+              "paymentInformationIdentification": "PMTINF-20261117-0001",
+              "requestedExecutionDate": "2026-11-17",
+              "debtor": {
+                "name": "ABC Trading B.V.",
+                "postalAddress": {
+                  "streetName": "Herengracht",
+                  "buildingNumber": "100",
+                  "postCode": "1015 BS",
+                  "townName": "Amsterdam",
+                  "country": "NL"
+                },
+                "organisationIdentification": {
+                  "lei": "D7R3AROG1XRMZ3LXI712"
+                }
+              },
+              "debtorAccount": {
+                "name": "ABC Trading B.V.",
+                "iban": "NL65CLRB0123456789"
+              },
+              "creditTransferTransactionInformation": [
+                {
+                  "paymentIdentification": {
+                    "instructionIdentification": "INSTR-20261117-0001",
+                    "endToEndIdentification": "E2E-INV-2026-0451",
+                    "uetr": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
+                  },
+                  "paymentTypeInformation": {
+                    "serviceLevelCode": "URGP"
+                  },
+                  "instructedAmount": {
+                    "amount": 25000.5,
+                    "currency": "USD"
+                  },
+                  "chargeBearer": "SHAR",
+                  "creditorAgent": {
+                    "bicfi": "EXMPUS33XXX",
+                    "name": "Example Bank, N.A."
+                  },
+                  "creditor": {
+                    "name": "Acme Supplies Inc.",
+                    "postalAddress": {
+                      "streetName": "Madison Avenue",
+                      "buildingNumber": "350",
+                      "postCode": "10017",
+                      "townName": "New York",
+                      "countrySubDivision": "NY",
+                      "country": "US"
+                    }
+                  },
+                  "creditorAccount": {
+                    "name": "Acme Supplies Inc.",
+                    "accountIdentification": "000123456789",
+                    "accountIdentificationCode": "BBAN"
+                  },
+                  "purpose": {
+                    "code": "GDDS"
+                  },
+                  "remittanceInformation": {
+                    "unstructured": [
+                      "Invoice INV-2026-0451"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "PaymentIdentifiers": {
+        "required": [
+          "endToEndIdentification",
+          "instructionIdentification",
+          "paymentId",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "instructionIdentification": {
+            "type": "string",
+            "description": "Unique identification as assigned by an instructing party for an instructed party.",
+            "nullable": true
+          },
+          "endToEndIdentification": {
+            "type": "string",
+            "description": "Unique identification assigned by the initiating party to identify the transaction.",
+            "nullable": true
+          },
+          "uetr": {
+            "type": "string",
+            "description": "Universally unique identifier to provide an end-to-end reference of a payment transaction.",
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "description": "The ClearBank identifier for the payment. This has the same value as the uetr.",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Maps a payment submitted in the request to the ClearBank system-generated PaymentId."
+      },
+      "PaymentResponse": {
+        "required": [
+          "messageIdentification",
+          "paymentIdentification"
+        ],
+        "type": "object",
+        "properties": {
+          "messageIdentification": {
+            "maxLength": 35,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique identifier for the message."
+          },
+          "paymentIdentification": {
+            "maxItems": 300,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentIdentifiers"
+            },
+            "description": "A collection of records that map each payment submitted in the request to the\r\nClearBank system-generated PaymentId.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response returned when a wire payment request is accepted.",
+        "example": {
+          "messageIdentification": "MSG-20261117-0001",
+          "paymentIdentification": [
+            {
+              "instructionIdentification": "INSTR-20261117-0001",
+              "endToEndIdentification": "E2E-INV-2026-0451",
+              "uetr": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+              "paymentId": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e"
+            }
+          ]
+        }
+      },
+      "SimulateInboundPaymentRequest": {
+        "required": [
+          "iban",
+          "settlementAmount",
+          "settlementCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "iban": {
+            "maxLength": 34,
+            "minLength": 5,
+            "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+            "type": "string",
+            "description": "The IBAN of your account to credit.",
+            "example": "NL65CLRB0123456789"
+          },
+          "settlementAmount": {
+            "maximum": 1000000000,
+            "exclusiveMinimum": true,
+            "minimum": 0,
+            "multipleOf": 0.01,
+            "type": "number",
+            "format": "double",
+            "description": "The amount to credit. Must be greater than zero, with no more than 2 decimal places.",
+            "example": 18750
+          },
+          "settlementCurrency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "The three-letter ISO 4217 currency code of the payment. Must match the currency of the account.",
+            "example": "USD"
+          },
+          "reference": {
+            "maxLength": 140,
+            "type": "string",
+            "nullable": true,
+            "description": "A payment reference. This is sent in the remittance information of the Inbound Payment Completed webhook. The first 35 characters are also used as the instruction and end-to-end identifications.",
+            "example": "Credit note ACME-INV-2026-118"
+          }
+        },
+        "additionalProperties": false,
+        "description": "An inbound payment to simulate."
+      },
+      "SimulateInboundPaymentResponse": {
+        "required": [
+          "message",
+          "uetr"
+        ],
+        "type": "object",
+        "properties": {
+          "uetr": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique end-to-end transaction reference (UETR) generated for the simulated payment. This is also the PaymentId in the webhook.",
+            "example": "5b8d2e71-0c4a-4f3b-a9e6-3d7c1f8b2a95"
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation that the Inbound Payment Completed webhook was sent.",
+            "example": "Inbound payment completed webhook has been sent."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response returned when the simulated payment is credited."
+      }
+    }
+  }
+}
