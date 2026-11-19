@@ -2,6 +2,8 @@ import styled from 'styled-components'
 
 import { breakpoints, fonts, colors, heights } from 'src/components/theme'
 
+import { OnThisPageButton } from 'src/components/layout/layout.styles'
+
 export const Title = styled.h1`
   margin-top: 40px;
   font-family: ${fonts.body};
@@ -44,4 +46,57 @@ export const ShareContainer = styled.div<{ isFirstEntry?: boolean }>`
   right: 0;
   // first headline has larger margin top
   top: ${({ isFirstEntry }) => (isFirstEntry ? '15px' : '3px;')};
+`
+
+export const PageActions = styled.div`
+  position: relative;
+`
+
+export const CopyMarkdownButton = styled(OnThisPageButton)`
+  display: inline-flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  &::after {
+    content: none;
+  }
+
+  &[aria-expanded='true']::after {
+    content: none;
+  }
+`
+
+export const CopyMarkdownStatus = styled.span`
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  color: ${colors.brandGrayDarker};
+  font-family: ${fonts.body};
+  font-size: 10px;
+  line-height: 16px;
+`
+
+export const ArticleBreadcrumb = styled.nav`
+  flex: 0 0 100%;
+  color: #356b70;
+  font-family: ${fonts.body};
+  font-size: 12px;
+  line-height: 1;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `

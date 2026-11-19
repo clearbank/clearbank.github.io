@@ -52,7 +52,7 @@ export const Title = styled.h2`
   margin: 0;
   text-decoration: none;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   color: ${colors.brandDark}
 `;
 
@@ -61,7 +61,7 @@ export const SubTitle = styled.a`
   text-decoration: none;
   cursor: pointer;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 14px;
   color: ${colors.brandDark}
 `
 
@@ -71,7 +71,7 @@ export const LeafTitle = styled.div`
   text-decoration: none;
   cursor: default;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 14px;
 
   &:after {
     padding-top: 2px;
@@ -129,7 +129,7 @@ export const Copywrite = styled.p`
   max-width: calc(100% - 40px);
   margin: 0 20px;
   text-align: left;
-  font-size: 0.8em;
+  font-size: 0.7em;
   color: ${colors.brandPrimary};
 
   @media screen and (min-width: ${breakpoints.medium}) {
