@@ -1023,6 +1023,40 @@ const technicalReferenceTerms = [
     relatedTerms: [],
 
     },
+
+    {
+    id: 'end-to-end-id-multi-currency',
+    term: 'End-to-End ID (multi-currency / FX)',
+    acronym: 'endToEndId',
+    aliases: ['endtoendid', 'end to end id', 'fx end to end id'],
+    category: 'payment-references',
+    regions: ['uk', 'eu'],
+    usedIn: ['Multi-currency payments'],
+    definition:
+      'In multi-currency (FX) payments, the EndtoEndId is the reference supplied by the client for an individual payment within a batch. It is used with the batchId to cancel a single payment.',
+    externalLinks: [],
+    seoTitle: 'What is an EndToEndId in multi-currency payments?',
+    seoDescription:
+      'Learn how the EndToEndId identifies an individual payment within a multi-currency batch.',
+    relatedTerms: ['end-to-end-id'],
+    relatedGuides: [],
+  },
+  {
+    id: 'secondary-reference-data-cop',
+    term: 'Secondary Reference Data',
+    acronym: 'SRD',
+    aliases: ['srd', 'secondary reference', 'secondaryidentification'],
+    category: 'payments',
+    regions: ['uk'],
+    definition:
+      'Secondary reference data (SRD) is additional information used to identify an underlying account when a sort code and account number alone are not sufficient, for example when performing Confirmation of Payee (CoP) check.',
+    externalLinks: [],
+    seoTitle: 'What is secondary reference data (SRD)?',
+    seoDescription:
+      'Learn what secondary reference data is and how it identifies an account in Confirmation of Payee checks.',
+    relatedTerms: ['sort-code'],
+    relatedGuides: [],
+  },
     
  ];
 

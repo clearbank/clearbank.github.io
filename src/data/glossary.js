@@ -2178,6 +2178,176 @@ const glossaryTerms = [
 
  */
 
+
+  {
+    id: 'reversal-fps',
+    term: 'Reversal',
+    acronym: '',
+    aliases: ['fps reversal', 'payment reversal'],
+    regions: ['uk'],
+    category: 'payments',
+    definition:
+      'A reversal is a payment sent to reverse a previous payment, returning the funds to the original sender.',
+    seoTitle: 'What is a reversal?',
+    seoDescription:
+      'Learn what a Faster Payments reversal is and how it returns funds to the original sender.',
+    relatedTerms: ['faster-payments', 'return-fps', 'credit-payment-recovery'],
+  },
+  {
+    id: 'return-fps',
+    term: 'Return',
+    acronym: '',
+    aliases: ['fps return', 'returned payment', 'payment return'],
+    regions: ['uk'],
+    category: 'payments',
+    definition:
+      'A return is a payment sent back to the original sender after the original payment has been processed, for example when the receiving institution cannot apply the funds.',
+    seoTitle: 'What is a return?',
+    seoDescription:
+      'Learn what a returned payment is and when funds are sent back to the original sender.',
+    relatedTerms: ['faster-payments', 'reversal-fps'],
+  },
+  {
+    id: 'fi-api',
+    term: 'Financial Institution API',
+    acronym: 'FI API',
+    aliases: ['fi api', 'financial institution api'],
+    regions: ['uk', 'eu'],
+    category: 'api',
+    definition:
+      'A financial institution API is an API that allows ClearBank clients to integrate with ClearBank services and perform actions such as managing accounts and payments.',
+    seoTitle: 'What is the Financial Institution API (FI API)?',
+    seoDescription:
+      'Learn what the Financial Institution API is and how clients use it to manage accounts and payments.',
+    relatedTerms: ['payment-service-provider'],
+  },
+  {
+    id: 'aisp',
+    term: 'Account Information Service Provider',
+    acronym: 'AISP',
+    aliases: ['aisp', 'account information service provider'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      'An Account Information Service Provider (AISP) is a regulated payment service provider that can access account information held by another payment service provider, with customer consent.',
+    seoTitle: 'What is an Account Information Service Provider (AISP)?',
+    seoDescription:
+      'Learn what an AISP is and how it accesses account information with customer consent.',
+    relatedTerms: ['open-banking', 'consent', 'pisp', 'aspsp'],
+  },
+  {
+    id: 'pisp',
+    term: 'Payment Initiation Service Provider',
+    acronym: 'PISP',
+    aliases: ['pisp', 'payment initiation service provider'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      "A Payment Initiation Service Provider (PISP) is a regulated payment service provider that, with a customer's consent, can initiate a payment from an account held with another payment service provider.",
+    seoTitle: 'What is a Payment Initiation Service Provider (PISP)?',
+    seoDescription:
+      'Learn what a PISP is and how it initiates payments with customer consent.',
+    relatedTerms: ['open-banking', 'consent', 'aisp', 'aspsp'],
+  },
+  {
+    id: 'aspsp',
+    term: 'Account Servicing Payment Service Provider',
+    acronym: 'ASPSP',
+    aliases: ['aspsp', 'account servicing payment service provider'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      'An Account Servicing Payment Service Provider (ASPSP) is a payment service provider that provides and maintains a payment account for a customer.',
+    seoTitle: 'What is an Account Servicing Payment Service Provider (ASPSP)?',
+    seoDescription:
+      'Learn what an ASPSP is and its role in Open Banking.',
+    relatedTerms: ['open-banking', 'aisp', 'pisp', 'payment-service-provider'],
+  },
+  {
+    id: 'open-banking',
+    term: 'Open Banking',
+    acronym: '',
+    aliases: ['open banking', 'psd2'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      'Open Banking allows customers to securely share their payment account information with authorised third-party providers and use third-party services to initiate payments.',
+    seoTitle: 'What is Open Banking?',
+    seoDescription:
+      'Learn what Open Banking is and how customers share account information with authorised providers.',
+    relatedTerms: ['aisp', 'pisp', 'aspsp', 'consent', 'strong-customer-authentication'],
+  },
+  {
+    id: 'consent',
+    term: 'Consent',
+    acronym: '',
+    aliases: ['customer consent', 'open banking consent'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      'Consent is the permission given by a customer to grant authorised third parties access to specific account information or initiate a payment on their behalf.',
+    seoTitle: 'What is consent in Open Banking?',
+    seoDescription:
+      'Learn what customer consent means when third parties access account information or initiate payments.',
+    relatedTerms: ['open-banking', 'aisp', 'pisp'],
+  },
+  {
+    id: 'strong-customer-authentication',
+    term: 'Strong Customer Authentication',
+    acronym: 'SCA',
+    aliases: ['sca', 'strong customer authentication', 'two-factor authentication'],
+    regions: ['uk', 'eu'],
+    category: 'open-banking',
+    definition:
+      "Strong Customer Authentication (SCA) is an authentication process that uses at least two independent elements to verify a customer's identity when accessing an account or carrying out certain payment activities.",
+    seoTitle: 'What is Strong Customer Authentication (SCA)?',
+    seoDescription:
+      'Learn what SCA is and when two independent authentication elements are required.',
+    relatedTerms: ['open-banking', 'consent'],
+  },
+  {
+    id: 'payment-screening',
+    term: 'Payment Screening',
+    acronym: '',
+    aliases: ['sanctions screening', 'payment checks'],
+    regions: ['uk', 'eu'],
+    category: 'compliance',
+    definition:
+      'Payment screening is the process of checking payment information against applicable financial crime controls, such as sanctions requirements, before or during payment processing.',
+    seoTitle: 'What is payment screening?',
+    seoDescription:
+      'Learn what payment screening is and how payments are checked against financial crime controls.',
+    relatedTerms: ['payment-service-provider'],
+  },
+  {
+    id: 'debit',
+    term: 'Debit',
+    acronym: '',
+    aliases: ['debit entry', 'debit transaction'],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'A debit is an entry that decreases the balance of an account, for example when money is paid out of an account.',
+    seoTitle: 'What is a debit?',
+    seoDescription:
+      'Learn what a debit entry is and how it decreases an account balance.',
+    relatedTerms: ['credit'],
+  },
+  {
+    id: 'credit',
+    term: 'Credit',
+    acronym: '',
+    aliases: ['credit entry', 'credit transaction'],
+    regions: ['uk', 'eu'],
+    category: 'payments',
+    definition:
+      'A credit is an entry that increases the balance of an account, for example when money is received into an account.',
+    seoTitle: 'What is a credit?',
+    seoDescription:
+      'Learn what a credit entry is and how it increases an account balance.',
+    relatedTerms: ['debit'],
+  },
+
 ];
 
 export default glossaryTerms;
