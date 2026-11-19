@@ -29,7 +29,7 @@ You can send or return CHAPS payments between 08:00 – 17:00 Monday to Friday (
 - If you need to return a CHAPS payment, you can do so using the [POST /payments/chaps/v6/return-payments](#return-a-chaps-payment) endpoint.
 
 <Callout colour="blue">
-  It is important to verify your firewall and security settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field. <br/><br/>If ClearBank has successfully processed a notification but your system rejects it (for example, with a 403 response due to a firewall or security restriction), we will not reprocess or replay that notification. To retrieve settlement details, use the existing <a href="../gbp-accounts/transaction-data">GET transaction endpoint</a>. You can also find the transaction in the ClearBank Portal and access the full ISO 20022 message there.
+  It is important to verify your firewall and security settings to ensure that they do not block <a href="#transaction-settled-webhook">Transaction Settled webhook</a> notifications, which can include a large payload due to the size of the Iso20022XmlDocument field. <br/><br/>If ClearBank has successfully processed a notification but your system rejects it (for example, with a 403 response due to a firewall or security restriction), we will not reprocess or replay that notification. To retrieve settlement details, use the existing <a href="../gbp-accounts/transaction-data">GET transaction endpoint</a>. You can also find the transaction in the ClearBank Portal and access the full <a href="/uk/docs/api/technical-reference#iso-20022">ISO 20022</a> message there.
 </Callout>
 
 The latest versions of the CHAPS endpoints support the new ISO20022 payment message formats. See [FIN to ISO20022 field mapping](#fin-to-iso-20022-field-mapping) for guidance on how the previous MT numbered field values map to the new ISO20022 XML tags.
@@ -37,12 +37,12 @@ The latest versions of the CHAPS endpoints support the new ISO20022 payment mess
 ### What's changed in version 6
 The version 6 endpoints introduce the changes required to remove unstructured address types, together with a small number of ClearBank enhancements. If you are migrating from version 5, the key differences are:
 
-**Customer payments (pacs.008) — `POST /payments/chaps/v6/customer-payments`**
+**Customer payments ([pacs.008](/uk/docs/api/technical-reference#pacs-008)) — `POST /payments/chaps/v6/customer-payments`**
 - The Creditor's `postalAddress` is now **mandatory** (optional in v5). This enriches payment information with additional creditor details to reduce follow-on queries, improve STP processing, and future-proof you for upcoming scheme-mandated requirements.
 - On the `Other` account identification block for `sourceAccount`, `debtorAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
 - The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount` to more accurately align with ISO 20022 wording.
 
-**Institution / bank-to-bank payments (pacs.009) — `POST /payments/chaps/v6/institution-payments`**
+**Institution / bank-to-bank payments ([pacs.009](/uk/docs/api/technical-reference#pacs-009)) — `POST /payments/chaps/v6/institution-payments`**
 - On the `Other` account identification block for `sourceAccount` and `creditorAccount`: `schemeName` is now enforced and the legacy `proprietary` field has been removed.
 - The amount field has been renamed from `instructedAmount` to `interBankSettlementAmount`.
 
@@ -50,7 +50,7 @@ The version 6 endpoints introduce the changes required to remove unstructured ad
 For BoE funding clients: the new v6 and current v5 endpoints, as well as all Institution Portal screens, remain available until <strong>17:55</strong> UK time. We recommend that clients who complete Bank of England account funding through the ClearBank Portal screens integrate with the pacs.009 v6 endpoint to offer an alternative means of submitting these payments.
 </Callout>
 
-**Return payments (pacs.004) — `POST /payments/chaps/v6/return-payments`**
+**Return payments ([pacs.004](/uk/docs/api/technical-reference#pacs-004)) — `POST /payments/chaps/v6/return-payments`**
 - A new optional `additionalInformation` field (105 characters) has been added to allow reason context to be supplied with a return. This field is **required** when the return reason code is `NARR`.
 
 ### Hybrid address
@@ -86,7 +86,7 @@ In line with the Bank of England's ISO 20022 data enhancement requirements, you 
 You can find further details about these fields on our Knowledge Centre, or access a list of all the recommended Purpose and Category Purpose Codes and their definitions on the Bank of England website: <ExternalLink href="https://www.bankofengland.co.uk/-/media/boe/files/payments/rtgs-renewal-programme/iso-20022/uk-recommended-purpose-code-list.pdf">UK recommended Purpose Code PDF</ExternalLink>.  
 
 #### Legal Entity Identifier (LEI)
-The [LEI](/uk/docs/api/glossary#legal-entity-identifier) is a 20-character, alpha-numeric code based on the ISO 17442 standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
+The [LEI](/uk/docs/api/glossary#legal-entity-identifier) is a 20-character, alpha-numeric code based on the [ISO 17442](/uk/docs/api/technical-reference#iso-17442) standard and contains information about an entity’s ownership structure. Providing the LEI is mandatory for pacs.008 where the party being described (debtor or creditor) is a financial institution. Otherwise, it is an optional field but strongly recommended to include when the party is an organisation.
 
 #### Purpose Codes and Category Purpose Codes
 The Purpose Code captures the nature of the payment and should be transported end to end. The Purpose Code is 4 characters used to abbreviate the purpose, for example, IVPT - Invoice Payment.
