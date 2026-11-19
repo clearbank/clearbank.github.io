@@ -33,13 +33,13 @@ If you're interested in making payments with this service, please speak with you
 
 ### Service hours and holidays
 
-**Operating times**: This payment service is available between 09:30 and 19:00 CET/CEST, Monday to Friday.
+**Operating times**: This service operates between 09:30 and 19:00 CET/CEST, Monday to Friday.
 
-**Holidays**: The service does not operate on US public holidays.
+**Holidays**: The service does not operate on US and German (TBC) public holidays.
 
-Outbound payments are not accepted outside of our service hours and on certain public holidays. If you request an outbound payment when our service is closed, it will not proceed and we'll respond to your request with a **422 - Unprocessable Entity** response. You can try again when the service's operating hours resume.
+_Outbound_ payments are not accepted outside of our service hours. If you request an outbound payment when this service is closed, the payment will not proceed and we'll respond to your request with a **422 - Unprocessable Entity** response. You should try again when operating hours resume.
 
-Inbound payments are processed regardless of our service hours. You should always expect to receive Inbound Payment Completed webhooks at all hours when using this service. If an inbound payment _fails_ it will be handled manually within service hours.
+_Inbound_ payments are processed regardless of our service hours. You should always expect to receive Inbound Payment Completed webhooks at all hours when using this service. If an inbound payment _fails_ it will be handled manually within service hours.
 
 ### Payment deduplication and uniqueness
 
@@ -50,28 +50,29 @@ Duplicated outbound payment requests are prevented via unique `messageIdentifica
 
 ### Reasons for payment failure
 
-**Outbound payments** can fail after we've accepted them for the following reasons:
+**Outbound payments** may fail after we've accepted them for the following reasons*:
 
 * There are insufficient funds in your account.
 * Your account doesn't exist, isn't active, or can't hold USD.
-* The `uetr` you provided for this payment has already been used in another payment.
+* The `uetr` or `messageIdentification` you provided for this payment has already been used in another payment.
 * Your payment has failed our screening checks.
 * Your payment was rejected further along the payment chain, such as by an intermediary bank.
 
 If any of these failures occur, you'll receive a [Cross-border Outbound Payment Failed webhook](#cross-border-outbound-payment-failed-webhook).
 
-**Inbound payments** can only be credited if your multi-currency account is active and enabled for USD. You should ensure these criteria are met before attempting to receive inbound payments.
+**Inbound payments** can only be credited to you if your account is a multi-currency account that is active and enabled for USD. You should ensure these criteria are met before attempting to receive inbound payments.
 
-These failure reasons are not exhaustive.
+*_International payments can fail for myriad reasons: the above reasons are not exhaustive._
 
 ## How to send cross-border wire payments
 
 ### Webhooks and endpoints
 
-To send cross-border wire payments, you'll need to integrate with our `POST /payments/cross-border/v2/payments` endpoint and the two associated webhooks:
+To send cross-border wire payments, you'll need to integrate with our [POST /payments/cross-border/v2/payments](#post-payments-cross-border-v2-payments-endpoint) endpoint and the three associated webhooks:
 
 * [Cross-border Outbound Payment Completed webhook](#cross-border-outbound-payment-completed-webhook)
 * [Cross-border Outbound Payment Failed webhook](#cross-border-outbound-payment-failed-webhook)
+* [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook) - this is a generic webhook sent for all account debits and credits regardless of the service or rail used.
 
 ### Accounts and configuration (Outbound)
 
@@ -81,7 +82,7 @@ To send cross-border wire payments, you'll need to integrate with our `POST /pay
 
 ### Track outbound payments
 
-When you send a cross-border wire payment, you'll receive a **202 - Accepted** response if your request is valid. This response contains several identifiers you can use to help reconcile your payment with its corresponding webhooks:
+When you successfully request a cross-border wire payment, you'll receive a **202 - Accepted** response. This response contains several identifiers you can refer to when reconciling your payment with its associated webhooks:
 
 * `instructionIdentification`
 * `endToEndIdentification`
@@ -101,17 +102,17 @@ The below diagram illustrates the endpoints and webhooks involved in sending a c
 To receive notifications about inbound cross-border wire payments, you should integrate with two webhooks:
 
 * [Cross-border Inbound Payment Completed webhook](#cross-border-inbound-payment-completed-webhook)
-* [Customer Accounts Transaction Completed webhook](../cross-border-fx-eu#customer-accounts-transaction-completed-webhook)
+* [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook)
 
-There are no endpoints involved in receiving cross-border wire payments.
+There are no endpoints associated with receiving cross-border wire payments.
 
 ### Accounts and configuration (Inbound)
 
 **Multi-currency accounts**: To receive cross-border wire payments, you must have an active multi-currency account that's enabled for USD.
 
-**Webhook subscription**: You should subscribe to the relevant webhooks in the ClearBank Portal to be notified of received inbound payments.
+**Webhook subscription**: You should subscribe to the relevant webhooks in the ClearBank Portal to receive notifications about inbound payments.
 
-## Endpoints
+## Service endpoints
 
 <EndpointBlock
   type="post"
@@ -122,17 +123,19 @@ There are no endpoints involved in receiving cross-border wire payments.
       version: "2.0_WIRE",
       webhooks: [
         'mccy-eu-wire-outbound-completed-v1',
-        'mccy-eu-wire-outbound-failed-v1'
+        'mccy-eu-wire-outbound-failed-v1',
+        'mccy-eu-wire-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
 />
 
-## Webhooks
+## Service webhooks
 
 <WebhookPlaceholder render='mccy-eu-wire-outbound-completed-v1' />
 <WebhookPlaceholder render='mccy-eu-wire-outbound-failed-v1' />
 <WebhookPlaceholder render='mccy-eu-wire-inbound-completed-v1' />
+<WebhookPlaceholder render='mccy-eu-wire-customer-accounts-transaction-completed-v1' />
 
 ## How to simulate cross-border wire payments
 
@@ -140,7 +143,7 @@ There are no endpoints involved in receiving cross-border wire payments.
 
 In our EU simulation environment, you can simulate an inbound payment to your USD account using the [POST /payments/cross-border/v2/simulations/inbound-payments](#simulate-an-inbound-cross-border-wire-payment-endpoint) endpoint. You can use this to fund your account before you test sending payments.
 
-When you call the endpoint, we credit the `settlementAmount` to the simulation account with the `iban` you provide, and send you a [Cross-border Inbound Payment Completed webhook](#cross-border-inbound-payment-completed-webhook).
+When you call the endpoint, we credit the `settlementAmount` to the simulation account with the `iban` you provide, and send you a [Cross-border Inbound Payment Completed webhook](#cross-border-inbound-payment-completed-webhook) and a [Customer Accounts Transaction Completed webhook](#customer-accounts-transaction-completed-webhook).
 
 The simulated payment always comes from the same test debtor, named `Simulated Debtor`.
 
@@ -154,8 +157,13 @@ If the creditor account you specify doesn't exist in our simulation environment,
       path: "/payments/cross-border/v2/simulations/inbound-payments",
       version: "2.0_WIRE",
       webhooks: [
-        'mccy-eu-wire-inbound-completed-v1'
+        'mccy-eu-wire-inbound-completed-v1',
+        'mccy-eu-wire-customer-accounts-transaction-completed-v1'
       ]
     }
   ]}
 />
+
+### Simulate outbound payments
+
+To simulate an outbound cross-border wire payment, you can use the [POST /payments/cross-border/v2/payments](#post-payments-cross-border-v2-payments-endpoint) endpoint within our simulation environment. Valid requests to this endpoint in our simulation environment will trigger the associated outbound payment flow webhooks.
