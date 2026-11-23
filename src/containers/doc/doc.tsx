@@ -122,7 +122,7 @@ const parentCategoryPath = parentCategory
             <span>Copy as Markdown</span>
           </Styles.CopyMarkdownButton>
 
-          <Styles.ViewMarkdownLink as='a' href={markdownUrl}>
+          <Styles.ViewMarkdownLink as='a' href={markdownUrl} target='_blank' rel='noopener noreferrer'>
               <FileText size={16} aria-hidden='true' />
                 <span>View as Markdown</span>
                 </Styles.ViewMarkdownLink>
