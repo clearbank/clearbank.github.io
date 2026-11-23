@@ -82,6 +82,10 @@ const Sidebar: React.FunctionComponent<Types.SidebarProps> = ({ currentPageURL, 
 
   // TODO: Find permanent solution for menu state between page loads
   useEffect(() => {
+    if (hasWindow() && window.location.hash) {
+      return
+    }
+
     const currentPath = hasWindow() ? window.location.pathname : ''
     const currentSlug = currentPath.replace(/\/$/, '')
     const menuLinks = document.querySelectorAll(`a[href='${currentSlug}']`)
