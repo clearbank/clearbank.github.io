@@ -67,9 +67,8 @@ const buildSearchText = item => {
     item.note,
     ...(item.aliases || []),
     ...getArrayText(item.usedIn),
-    ...getArrayText(item.acceptedValues),
-    ...getArrayText(item.examples),
-    ...getArrayText(item.notes),
+    ...getArrayText(item.usedIn && item.usedIn.uk),
+    ...getArrayText(item.usedIn && item.usedIn.eu),
   ]
     .filter(Boolean)
     .join(' ')
@@ -78,6 +77,14 @@ const buildSearchText = item => {
 
 const TechnicalReference = ({ region }) => {
   const [query, setQuery] = useState('');
+
+  const getUsedIn = item => {
+    if (Array.isArray(item.usedIn)) {
+      return item.usedIn;
+    }
+
+    return (item.usedIn && item.usedIn[region]) || [];
+  };
 
   const regionalTerms = useMemo(() => {
     return technicalReferenceTerms
@@ -337,6 +344,8 @@ const TechnicalReference = ({ region }) => {
   const renderEntry = item => {
     const displayName = getDisplayName(item);
 
+    const usedIn = getUsedIn(item);
+
     return (
       <article
         key={item.id}
@@ -351,11 +360,18 @@ const TechnicalReference = ({ region }) => {
           {item.definition}
         </p>
 
-        {renderDetailList({
-          heading: 'Used in',
-          items: item.usedIn,
-          ariaLabel: `${displayName} usage`,
-        })}
+        {usedIn.length > 0 && (
+          <ul
+            style={styles.tagList}
+            aria-label={`${displayName} used in`}
+          >
+            {usedIn.map(tag => (
+              <li key={tag} style={styles.tag}>
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
 
         {renderDetailList({
           heading: 'Accepted values',
@@ -511,7 +527,27 @@ const TechnicalReference = ({ region }) => {
 };
 
 const styles = {
-  technicalReference: {
+    tagList: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6px',
+    listStyle: 'none',
+    margin: '10px 0 0',
+    padding: 0,
+  },
+  tag: {
+    backgroundColor: '#f1f4f9',
+    border: '1px solid #d9e0ec',
+    borderRadius: '999px',
+    color: '#0B2145',
+    fontSize: '11px',
+    fontWeight: 400,
+    letterSpacing: '0.02em',
+    lineHeight: '1.3',
+    margin: 0,
+    padding: '2px 8px',
+  },
+    technicalReference: {
     width: '100%',
     maxWidth: '900px',
     marginTop: '24px',
@@ -788,5 +824,6 @@ const styles = {
     cursor: 'pointer',
   },
 };
+
 
 export default TechnicalReference;
