@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Box } from 'rebass'
 
-import { breakpoints, fonts, heights } from 'src/components/theme'
+import { breakpoints, colors, fonts, heights } from 'src/components/theme'
 
 export const Title: any = styled.h3`
   margin: 0;
@@ -60,6 +60,44 @@ export const CodeblockWrapper = styled.div`
 export const DropdownWrapper = styled.div`
   margin-bottom: 15px;
   width: 100%;
+`
+
+export const ApiVariantTabs = styled.div`
+  display: inline-flex;
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+  border: 1px solid ${colors.wedgewoodapprox};
+  border-radius: 5px;
+  overflow: hidden;
+`
+
+export const ApiVariantTab: any = styled.button`
+  padding: 8px 16px;
+  border: none;
+  background: ${(props: any) =>
+    props.active ? colors.wedgewoodapprox : colors.brandGrayLight};
+  color: ${(props: any) =>
+    props.active ? colors.brandLight : '#4D4D4D'};
+  font-family: ${fonts.body};
+  font-size: 15px;
+  font-weight: ${(props: any) => (props.active ? 600 : 400)};
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: ${(props: any) =>
+      props.active ? colors.wedgewoodapprox : colors.brandGray};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.wedgewoodapprox};
+    outline-offset: -2px;
+  }
+
+  & + & {
+    border-left: 1px solid ${colors.wedgewoodapprox};
+  }
 `
 
 export const Type: any = styled.span`
