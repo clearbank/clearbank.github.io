@@ -17,7 +17,7 @@ import 'src/components/styles.css'
 import { IMenu } from 'src/components/menu/menu.types'
 
 export default function Doc(props: any) {
-  const articleRef = React.useRef<HTMLDivElement>(null)
+  const articleRef = React.useRef<HTMLElement>(null)
   const [copyStatus, setCopyStatus] = React.useState('')
   const { data } = props
 
@@ -124,12 +124,12 @@ const parentCategoryPath = parentCategory
         </Styles.PageActions>
       }
     >
-      <Styles.Page className='page' id={`doc-page-${pageId}`} key={pageId}>
+      <Styles.Page className='page' id={`doc-page-${pageId}`} key={pageId} ref={articleRef}>
         <Styles.Title id='pageTitle' className='page-menu-entry'>
           {pageTitle}
         </Styles.Title>
 
-        <div ref={articleRef}>
+        <div>
           {data.pageContent.edges.map(({ node }, index: number) => {
             const filePath = `${config.header.githubDocsRoot}${node.fields.slug}.mdx`
 
