@@ -4,7 +4,7 @@ import { SelectDropdown, SelectOption } from 'src/components/select-dropdown'
 import { SectionType } from 'src/global.types'
 
 import EndpointBlockModel from './components/endpoint-block-model'
-import EndpointBlockRespsonse from './components/endpoint-block-response'
+import EndpointBlockResponse from './components/endpoint-block-response'
 import EndpointBlockParameters from './components/endpoint-block-parameters'
 import EndpointBlockWebhooks from './components/endpoint-block-webhooks'
 import CodeSnippet from 'src/components/code-snippet'
@@ -29,7 +29,7 @@ const renderDescription = (descriptionApi: any, descriptionProps: any) => (
 const getCodeBlocks = (
   section: SectionType,
   codeblocks: Types.Codeblock[] = [],
-  content: any
+  content?: any
 ) => {
   const customCodeblocksForSection = codeblocks.filter(
     (codeblock: Types.Codeblock) => codeblock.section === section
@@ -149,13 +149,21 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
           code={apiURL}
           className='endpoint-block-code'
         />
-        {renderVersionDropdown(endpoints, setCurrentVersion, currentVersion)}
+                <div data-markdown-exclude='true'>
+          {renderVersionDropdown(
+            endpoints,
+            setCurrentVersion,
+            currentVersion
+          )}
+        </div>
       </Styles.DropdownWrapper>
+
+      <p hidden>API Version {version}</p>
       <Styles.Description>{message}</Styles.Description>
 
       {summary && <Styles.SubTitle>{summary}</Styles.SubTitle>}
 
-      {renderDescription(descriptionApi, descriptionProps)}
+     {renderDescription(descriptionApi, descriptionProps)}
 
       <Styles.FlexContainer>
         <Styles.EndpointWrapper>
@@ -169,7 +177,7 @@ const EndpointBlock: React.FunctionComponent<Types.EndpointProps> = ({
             apiData={APIFiles[version]}
             codeblocks={getCodeBlocks('request', codeblocks, requestBody)}
           />
-          <EndpointBlockRespsonse
+          <EndpointBlockResponse
             path={path}
             type={type}
             apiData={APIFiles[version]}
