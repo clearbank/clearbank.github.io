@@ -7,3 +7,13 @@ export interface LayoutProps {
   pageContext: any
   hideFooterNavigation?: boolean
 }
+
+export interface LayoutProps {
+  children: ReactNode
+  location: any
+  data: any
+  pageContext: any
+  hideFooterNavigation?: boolean
+  articleActions?: ReactNode
+  articleBreadcrumb?: ReactNode
+}
