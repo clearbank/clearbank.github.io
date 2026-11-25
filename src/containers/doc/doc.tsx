@@ -1,7 +1,7 @@
 import React from 'react'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import kebabCase from 'lodash.kebabcase'
-import { Check, Copy } from 'react-feather'
+import { Check, Copy, FileText } from 'react-feather'
 
 import { Layout } from 'src/components'
 import GithubConnector from 'src/components/github-connector'
@@ -59,7 +59,11 @@ export default function Doc(props: any) {
 
   const currentPath = (
   props.pageContext.slug || props.location?.pathname || ''
-).replace(/\/+$/, '')
+)
+  .replace(/\/index\/?$/, '')
+  .replace(/\/+$/, '')
+
+const markdownUrl = `${currentPath}/index.md`
 
 const region = currentPath.split('/').filter(Boolean)[0] === 'eu'
   ? 'eu'
@@ -117,6 +121,11 @@ const parentCategoryPath = parentCategory
               : <Copy size={16} aria-hidden='true' />}
             <span>Copy as Markdown</span>
           </Styles.CopyMarkdownButton>
+
+          <Styles.ViewMarkdownLink as='a' href={markdownUrl} target='_blank' rel='noopener noreferrer'>
+              <FileText size={16} aria-hidden='true' />
+                <span>View as Markdown</span>
+                </Styles.ViewMarkdownLink>
 
           <Styles.CopyMarkdownStatus role='status' aria-live='polite'>
             {copyStatus}

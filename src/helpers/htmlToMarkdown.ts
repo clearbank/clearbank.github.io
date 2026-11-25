@@ -78,7 +78,7 @@ export function htmlToMarkdown(
 
   copy
     .querySelectorAll(
-      '[data-markdown-exclude], button, [role="status"], .copy-code-control'
+      '[data-markdown-exclude], button, [role="status"], .copy-code-control, style'
     )
     .forEach(element => element.remove())
 

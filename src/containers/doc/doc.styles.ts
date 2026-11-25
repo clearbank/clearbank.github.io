@@ -50,6 +50,10 @@ export const ShareContainer = styled.div<{ isFirstEntry?: boolean }>`
 
 export const PageActions = styled.div`
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 `
 
 export const CopyMarkdownButton = styled(OnThisPageButton)`
@@ -82,6 +86,14 @@ export const CopyMarkdownStatus = styled.span`
   font-family: ${fonts.body};
   font-size: 10px;
   line-height: 16px;
+`
+
+export const ViewMarkdownLink = styled(CopyMarkdownButton)`
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
 `
 
 export const ArticleBreadcrumb = styled.nav`
