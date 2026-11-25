@@ -150,8 +150,27 @@ const Search: React.FunctionComponent<SearchProps> = ({ isOpen, onClose, region 
                   {breadcrumb && (
                     <Styles.ResultBreadcrumb>{breadcrumb}</Styles.ResultBreadcrumb>
                     )}
-                    <Styles.ResultTitle>{result.heading || result.title}</Styles.ResultTitle>
-                    <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
+                    {result.method ? (
+  <>
+    <Styles.OperationTitleRow>
+      <Styles.MethodBadge $method={result.method}>
+        {result.method}
+      </Styles.MethodBadge>
+      <Styles.ResultTitle>
+        {result.heading || result.title}
+      </Styles.ResultTitle>
+    </Styles.OperationTitleRow>
+
+    <Styles.ParentPage>{result.title}</Styles.ParentPage>
+  </>
+) : (
+  <>
+    <Styles.ResultTitle>
+      {result.heading || result.title}
+    </Styles.ResultTitle>
+    <Styles.ResultSnippet>{result.snippet}</Styles.ResultSnippet>
+  </>
+)}
                   </Styles.ResultItem>
                 )
               })}

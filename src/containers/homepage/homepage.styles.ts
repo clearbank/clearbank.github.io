@@ -3,27 +3,50 @@ import styled from 'styled-components'
 import { breakpoints, colors, heights } from 'src/components/theme'
 
 export const PageTitle = styled.h1`
-  line-height: 46px;
-  font-size: 64px;
+  line-height: 1.15;
+  font-size: 36px;
   font-weight: 600;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    line-height: 46px;
+    font-size: 64px;
+  }
 `
 
 export const PageSubTitle = styled.p`
-  margin-top: 35px;
-  line-height: 30px;
-  font-size: 24px;
+  margin-top: 20px;
+  line-height: 1.4;
+  font-size: 18px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-top: 35px;
+    line-height: 30px;
+    font-size: 24px;
+  }
 `
 
 export const Row = styled.div`
   display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    flex-direction: row;
+  }
 `
 
 export const IntroductionContainer = styled.div`
-  padding: 45px 45px 35px 45px;
-  border-radius: 36px;
+  padding: 24px 20px;
+  border-radius: 24px;
   border: 1px solid #8D8BA7;
   flex: 2;
-  margin-right: 30px;
+  margin-bottom: 20px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 45px 45px 35px 45px;
+    border-radius: 36px;
+    margin-right: 30px;
+    margin-bottom: 0;
+  }
 `
 
 export const SectionSpacer = styled.div`
@@ -34,13 +57,23 @@ export const SectionSpacer = styled.div`
 
 export const IntroductionContentWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
 `
 
 export const IntroductionTitle = styled.h2`
-  line-height: 46px;
-  font-size: 36px;
+  line-height: 1.2;
+  font-size: 24px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    line-height: 46px;
+    font-size: 36px;
+  }
 `
 
 export const Page = styled.section`
@@ -64,16 +97,30 @@ export const Page = styled.section`
 
 export const SectionContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: 1fr;
+  gap: 20px;
   grid-auto-rows: minmax(100px, auto);
-  margin-left: 30px;
+  margin-left: 0;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-left: 30px;
+  }
+
+  @media screen and (min-width: ${breakpoints.large}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
 
 export const GitHubSectionContainer = styled.div`
   display: flex;
-  margin-left: 30px;
+  margin-left: 0;
   align-items: center;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: 30px;
+  }
 `
 
 export const GitHubSectionDescription = styled.p`
@@ -85,19 +132,29 @@ export const GitHubSectionDescription = styled.p`
 `
 
 export const SectionTitle = styled.h3`
-  margin-top: 55px;
-  line-height: 46px;
-  font-size: 36px;
+  margin-top: 40px;
+  line-height: 1.2;
+  font-size: 24px;
   font-weight: 400;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-top: 55px;
+    line-height: 46px;
+    font-size: 36px;
+  }
 `
 
 export const TableWrapper = styled.div`
-  margin-left: 30px;
+  margin-left: 0;
   margin-bottom: 40px;
   border-radius: 25px;
   max-height: 270px;
   overflow-y: scroll;
   scroll-margin-right: 30px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: 30px;
+  }
 
   &::-webkit-scrollbar {
     width: 18px;
@@ -124,11 +181,17 @@ export const Table = styled.table`
 
 export const TableTitleCell = styled.td`
   width: 60%;
-  padding: 25px;
-  line-height: 38px;
-  font-size: 24px;
+  padding: 14px;
+  line-height: 1.4;
+  font-size: 16px;
   border-right: 4px solid #BCBCBC;
   border-bottom: 4px solid #BCBCBC;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 25px;
+    line-height: 38px;
+    font-size: 24px;
+  }
 `
 export const TableDateCell = styled(TableTitleCell)`
   text-align: center;

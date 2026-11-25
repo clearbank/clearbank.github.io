@@ -305,3 +305,45 @@ describe('extractSections (end-to-end orchestration)', () => {
     expect(sections.some(s => s.text.includes('WebhookPlaceholder'))).toBe(false)
   })
 })
+
+describe('API operation extraction', () => {
+  test('indexes an operation once, but not a fenced example', () => {
+    const source = [
+      '## Accounts',
+      '',
+      'Manage your accounts.',
+      '',
+      '<EndpointBlock',
+      '  type="post"',
+      '  title="Create a new account (real)"',
+      '  endpoints={[',
+      '    { path: "/mccy/v2/Accounts", version: "2.0.MCCY-ACC" },',
+      '    { path: "/mccy/v1/Accounts", version: "1.0.MCCY-ACC" }',
+      '  ]}',
+      '/>',
+      '',
+      '```jsx',
+      '<EndpointBlock type="get" title="Example only" />',
+      '```'
+    ].join('\n')
+
+    const sections = extractSections(source)
+    const operations = sections.filter(section => section.method)
+
+    expect(operations).toEqual([
+      {
+        heading: 'Create a new account (real)',
+        anchor: 'create-a-new-account-real',
+        method: 'POST',
+        text: 'POST Create a new account (real)'
+      }
+    ])
+
+    expect(sections).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        heading: 'Accounts',
+        anchor: 'accounts'
+      })
+    ]))
+  })
+})

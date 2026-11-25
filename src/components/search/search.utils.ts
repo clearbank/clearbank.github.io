@@ -10,11 +10,12 @@ export interface SearchIndexItem {
   id: string
   region: Region
   title: string
-  breadcrumb: string
+  breadcrumb: string | string[]
   path: string
   heading: string | null
   anchor: string | null
   text: string
+  method?: string
 }
 
 // A search result is an index item plus a rendering-ready snippet showing
