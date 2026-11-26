@@ -1,0 +1,127 @@
+---
+title: "Customer Accounts Transaction Completed webhook"
+version: 1
+webhook: true
+---
+
+Sent when a cross-border wire payment has been debited from or credited to your account. A transaction represents a ledger update for an account, and includes the minimum data necessary to support balance reconciliation.
+
+For outbound payments, we send this webhook when the payment completes. If the payment fails, the debit is cancelled and you won't receive this webhook. For inbound payments, we send this webhook when the payment is credited to your account.
+
+#### Request body
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                    | Type   | Format    | Required | Min-Max length | Pattern                                                                       | Description                                                                                                                                                                                                                                       |
+| ------------------------ | ------ | --------- | -------- | -------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TransactionId`          | string | uuid      | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | Unique identification, assigned by ClearBank, to unambiguously identify the transaction. This has the same value as the `TransactionId` in the corresponding Cross-border Outbound Payment Completed or Cross-border Inbound Payment Completed webhook. |
+| `EndToEndIdentification` | string | -         | Yes      | -              | -                                                                             | For outbound payments, the `endToEndIdentification` you supplied in your payment request. For inbound payments, the end-to-end identification of the received payment.                                                                           |
+| `CreatedDateTime`        | string | date-time | Yes      | -              | -                                                                             | The date and time the transaction was created in ClearBank's system.                                                                                                                                                                             |
+| `CompletedDateTime`      | string | date-time | Yes      | -              | -                                                                             | The date and time the amount of money ceased to be available, or became available, to the account in ClearBank's system.                                                                                                                         |
+| `ClearingChannel`        | string | -         | No       | -              | -                                                                             | The clearing channel used to process the transaction. For cross-border wire payments, this is `cross-border`.                                                                                                                                    |
+| `DebitCreditCode`        | string | -         | Yes      | -              | -                                                                             | States whether this transaction is a credit or a debit. Outbound payments are `Debit` and inbound payments are `Credit`.                                                                                                                         |
+| `Amount`                 | number | decimal   | Yes      | -              | -                                                                             | The amount of money moved between the debtor and creditor. Always a positive value; use `DebitCreditCode` for the direction.                                                                                                                     |
+| `Currency`               | string | -         | Yes      | -              | -                                                                             | The currency of the transaction, given as a three-letter ISO 4217 currency code. For cross-border wire payments, this is `USD`.                                                                                                                  |
+| `RemittanceInformation`  | string | -         | No       | -              | -                                                                             | For outbound payments, the first entry of `remittanceInformation.unstructured` in your payment request or, if none was provided, your `instructionIdentification`. For inbound payments, the instruction identification of the received payment. |
+| `DebtorAccount`          | object | -         | Yes      | -              | -                                                                             | Identification of the account that was debited. For outbound payments, this is your account. See `PartyAccount`.                                                                                                                                 |
+| `CreditorAccount`        | object | -         | Yes      | -              | -                                                                             | Identification of the account that was credited. For inbound payments, this is your account. See `PartyAccount`.                                                                                                                                 |
+
+##### PartyAccount (DebtorAccount and CreditorAccount)
+
+| Field        | Type   | Format | Required | Min-Max length | Pattern                                                                       | Description                                                                                                                                                                                                                                                                                                                                                  |
+| ------------ | ------ | ------ | -------- | -------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AccountId`  | string | uuid   | No       | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | The ID of your account in ClearBank's systems. Only provided for your account. Can be `null`.                                                                                                                                                                                                                                                                |
+| `Iban`       | string | -      | No       | 0-34           | -                                                                             | The IBAN of the account, where one was provided. Can be `null`.                                                                                                                                                                                                                                                                                              |
+| `Bban`       | string | -      | No       | 0-30           | -                                                                             | The BBAN of the account. Not used for cross-border wire payments. Can be `null`.                                                                                                                                                                                                                                                                             |
+| `Descriptor` | string | -      | No       | -              | -                                                                             | Identification of the account when no IBAN is available. For an outbound payment's creditor, this is the `accountIdentificationCode` and `accountIdentification` from your payment request, separated by a space. For an inbound payment's debtor, this is the debtor's account identification, or `NOTPROVIDED` if none was provided. Can be `null`. |
+
+#### Example Customer Accounts Transaction Completed webhook request body for an outbound cross-border wire payment
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "7d1e4b2a-3c5f-4e8d-9a6b-1f2e3d4c5b6a",
+    "EndToEndIdentification": "E2E-INV-2026-0451",
+    "CreatedDateTime": "2026-11-17T10:15:03.412Z",
+    "CompletedDateTime": "2026-11-17T10:42:51.087Z",
+    "ClearingChannel": "cross-border",
+    "DebitCreditCode": "Debit",
+    "Amount": 25000.50,
+    "Currency": "USD",
+    "RemittanceInformation": "Invoice INV-2026-0451",
+    "DebtorAccount": {
+      "AccountId": "3f6c2a91-8b4e-4d7a-a1c5-9e2b7d4f6a83",
+      "Iban": "NL65CLRB0123456789",
+      "Bban": null,
+      "Descriptor": null
+    },
+    "CreditorAccount": {
+      "AccountId": null,
+      "Iban": null,
+      "Bban": null,
+      "Descriptor": "BBAN 000123456789"
+    }
+  },
+  "Nonce": 402871635
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 402871635
+}
+```
+
+#### Example Customer Accounts Transaction Completed webhook request body for an inbound cross-border wire payment
+
+```json
+{
+  "Type": "CustomerAccounts.TransactionCompleted",
+  "Version": 1,
+  "Payload": {
+    "TransactionId": "e2b8f1c4-9d6a-4c3e-8f7b-5a1d2c3e4f60",
+    "EndToEndIdentification": "INV-2026-118",
+    "CreatedDateTime": "2026-11-16T15:20:11.530Z",
+    "CompletedDateTime": "2026-11-16T15:20:12.104Z",
+    "ClearingChannel": "cross-border",
+    "DebitCreditCode": "Credit",
+    "Amount": 18750.00,
+    "Currency": "USD",
+    "RemittanceInformation": "WIRE-REF-2026-001",
+    "DebtorAccount": {
+      "AccountId": null,
+      "Iban": null,
+      "Bban": null,
+      "Descriptor": "000987654321"
+    },
+    "CreditorAccount": {
+      "AccountId": "3f6c2a91-8b4e-4d7a-a1c5-9e2b7d4f6a83",
+      "Iban": "NL65CLRB0123456789",
+      "Bban": null,
+      "Descriptor": null
+    }
+  },
+  "Nonce": 951386274
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 951386274
+}
+```

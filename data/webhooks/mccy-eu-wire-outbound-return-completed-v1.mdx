@@ -1,0 +1,98 @@
+---
+title: "Cross-border Outbound Payment Return Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that a cross-border wire payment you sent has been returned. It includes ISO 20022 compliant details identifying the original payment and the returned amount.
+
+#### Request body
+
+```json
+{
+  "Type": "Payments.CBEU.CrossBorder.OutboundPaymentReturnCompleted",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload Fields
+
+| Field                    | Type   | Format | Required | Min-Max length | Pattern | Description                                                                                                                |
+| ------------------------ | ------ | ------ | -------- | -------------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `OriginalPaymentId`      | string | uuid   | Yes      | -              | -       | The UETR of the original outbound payment.                                                                                   |
+| `OriginalTransactionId`  | string | uuid   | Yes      | -              | -       | A unique identifier assigned by ClearBank referencing the debit transaction that relates to the original outbound payment. |
+| `TransactionId`          | string | uuid   | Yes      | -              | -       | A unique identifier assigned by ClearBank referencing the credit transaction that relates to the returned payment.         |
+| `ReturnId`               | string | uuid   | Yes      | -              | -       | A ClearBank-generated identifier referencing the return message.                                                           |
+| `TransactionInformation` | object | -      | Yes      | -              | -       | Information concerning the original transaction, to which the return refers. Refer to the 'TransactionInformation' table.       |
+
+##### TransactionInformation
+
+| Field                               | Type   | Required | Min-Max length | Pattern | Description                                                                                                                                                               |
+| ----------------------------------- | ------ | -------- | -------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OriginalMessageIdentification`     | string | Yes      | 1-35           | -       | Point to point reference assigned by the original instructing party to unambiguously identify the original message.                                                       |
+| `OriginalUETR`                      | string | Yes      | -              | -       | The UETR of the original outbound payment. Format: `uuid`.                                                                                                             |
+| `OriginalEndToEndIdentification`    | string | Yes      | 1-35           | -       | Unique identification, as assigned by the original initiating party, to unambiguously identify the original transaction.                                                  |
+| `OriginalInterbankSettlementAmount` | object | Yes      | -              | -       | Amount of money moved between the instructing agent and the instructed agent, as provided in the original instruction. Refer to the 'ActiveOrHistoricCurrencyAndAmount' table. |
+| `ReturnedInterbankSettlementAmount` | object | Yes      | -              | -       | Amount of money to be moved between the instructing agent and the instructed agent in the returned instruction. Refer to the 'ActiveOrHistoricCurrencyAndAmount' table.        |
+| `ReturnReasonInformation`           | array  | No       | -              | -       | Provides detailed information on the return reason. Contains 0 to 10 items. Refer to the 'PaymentReturnReason' table.                                                          |
+
+##### ActiveOrHistoricCurrencyAndAmount (OriginalInterbankSettlementAmount and ReturnedInterbankSettlementAmount)
+
+| Field      | Type    | Required | Constraints      | Pattern      | Description                                             |
+| ---------- | ------- | -------- | ---------------- | ------------ | ------------------------------------------------------- |
+| `Amount`   | decimal | Yes      | Multiple of 0.01 | -            | Amount of money.                                        |
+| `Currency` | string  | Yes      | 3-3 length       | `^[A-Z]{3}$` | Currency of money. Three-letter ISO 4217 currency code. |
+
+##### PaymentReturnReason
+
+| Field                   | Type   | Required | Min-Max length | Pattern | Description                                                                                           |
+| ----------------------- | ------ | -------- | -------------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `ReasonCode`            | string | No       | 1-4            | -       | Specifies the reason for the return, as published in an external reason code list. Refer to [Return reason codes](#return-reason-codes). |
+| `Originator`            | object | No       | -              | -       | Party that issues the return. This is always `null` for this webhook. |
+| `AdditionalInformation` | array  | No       | -              | -       | Contains 0 to 10 items of 1 to 105 characters. It is `["Payment returned"]` for `MS02`, `["Payment was rejected"]` for `MS03`, and `null` for other reason codes. |
+
+#### Example Outbound Payment Return Completed webhook request body
+
+```json
+{
+  "Type": "Payments.CBEU.CrossBorder.OutboundPaymentReturnCompleted",
+  "Version": 1,
+  "Payload": {
+    "OriginalPaymentId": "7f3a9c21-4b8e-4d6a-9e15-2c7b8f0d4a63",
+    "OriginalTransactionId": "e8b14d72-3c9f-4a05-b6e8-91d2f7a3c540",
+    "TransactionId": "4c6d2e8f-91a7-4b3c-8d5e-0f7a2b9c1e64",
+    "ReturnId": "a92f5b13-6e4c-4f8d-a1b7-3d8c0e5f2a96",
+    "TransactionInformation": {
+      "OriginalMessageIdentification": "MsgId123",
+      "OriginalUETR": "7f3a9c21-4b8e-4d6a-9e15-2c7b8f0d4a63",
+      "OriginalEndToEndIdentification": "EndToEnd123",
+      "OriginalInterbankSettlementAmount": {
+        "Amount": 1500.00,
+        "Currency": "USD"
+      },
+      "ReturnedInterbankSettlementAmount": {
+        "Amount": 1500.00,
+        "Currency": "USD"
+      },
+      "ReturnReasonInformation": [
+        {
+          "ReasonCode": "MS02",
+          "Originator": null,
+          "AdditionalInformation": ["Payment returned"]
+        }
+      ]
+    }
+  },
+  "Nonce": 4482910675
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 4482910675
+}
+```

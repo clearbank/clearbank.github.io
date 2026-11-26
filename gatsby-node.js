@@ -4,3 +4,4 @@ exports.onCreateBabelConfig = require('./gatsby/node/onCreateBabelConfig')
 
 exports.createPages = require('./gatsby/node/createPages')
 exports.onCreateNode = require('./gatsby/node/onCreateNode')
+exports.onPostBuild = require('./gatsby/node/onPostBuild')

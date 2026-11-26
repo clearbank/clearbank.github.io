@@ -365,15 +365,30 @@
           },
           "creditor": {
             "type": "object",
-            "description": "The creditor's organisation or private details.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/creditorPartyIdentification"
+            "required": [
+              "name"
+            ],
+            "description": "The creditor's organisation or private individual details. You may provide either the organisationIdentification or the privateIdentification object, but not both.",
+            "properties": {
+              "name": {
+                "maxLength": 140,
+                "minLength": 1,
+                "type": "string",
+                "example": "Sea Beam Corporation",
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+                "description": "The name of the creditor."
               },
-              {
-                "$ref": "#/components/schemas/privatePartyIdentification"
+              "postalAddress": {
+                "$ref": "#/components/schemas/PostalAddress"
+              },
+              "organisationIdentification": {
+                "$ref": "#/components/schemas/OrganisationIdentification"
+              },
+              "privateIdentification": {
+                "$ref": "#/components/schemas/PersonIdentification"
               }
-            ]
+            },
+            "additionalProperties": false
           },
           "creditorAccount": {
             "$ref": "#/components/schemas/CreditorAccount"
@@ -537,19 +552,7 @@
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "maxLength": 140,
-            "minLength": 1,
-            "type": "string",
-            "example": "Pinto Corporation",
-            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$"
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
-          },
-          "organisationIdentification": {
-            "$ref": "#/components/schemas/OrganisationIdentification"
-          }
+
         },
         "additionalProperties": false
       },
@@ -571,29 +574,6 @@
           },
           "organisationIdentification": {
             "$ref": "#/components/schemas/OrganisationIdentification"
-          }
-        },
-        "additionalProperties": false
-      },
-      "privatePartyIdentification": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 140,
-            "minLength": 1,
-            "type": "string",
-            "example": "Elias Pinto",
-            "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
-            "description": "The name of this person or organisation."
-          },
-          "postalAddress": {
-            "$ref": "#/components/schemas/PostalAddress"
-          },
-          "privateIdentification": {
-            "$ref": "#/components/schemas/PersonIdentification"
           }
         },
         "additionalProperties": false
@@ -629,7 +609,7 @@
             "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
             "type": "string",
             "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
-            "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
+            "example": "2199f959-77ef-4fa0-9580-33a8fec38f0d"
           }
         },
         "additionalProperties": false
@@ -659,7 +639,7 @@
             "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}",
             "type": "string",
             "description": "A Universally Unique Identifier (UUID) version 4, must be unique to this payment else it will be rejected as a duplicate payment.",
-            "example": "2199f959-77ef-5fa0-9580-33a8fec38f0d"
+            "example": "2199f959-77ef-4fa0-9580-33a8fec38f0d"
           },
           "paymentId": {
             "type": "string",
@@ -689,23 +669,39 @@
           },
           "requestedExecutionDate": {
             "type": "string",
-            "description": "Must always be today's date, formatted as YYYY-MM-DD.",
-            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "description": "Must always be today's date, formatted as YYYY-MM-DD, per the ISO 8601 standard.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
             "format": "date",
             "nullable": true,
             "example": "2025-11-13"
           },
           "debtor": {
             "type": "object",
-            "description": "The debtor's organisation or private details.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/debtorPartyIdentification"
+            "required": [
+              "name",
+              "postalAddress"
+            ],
+            "description": "The debtor's organisation or private individual details. You may provide either the organisationIdentification or the privateIdentification object, but not both.",
+            "properties": {
+              "name": {
+                "maxLength": 140,
+                "minLength": 1,
+                "type": "string",
+                "example": "Pinto Corporation",
+                "pattern": "^[A-Za-z/\\-?:().\"+ 0-9]{1,140}$",
+                "description": "The name of the debtor."
               },
-              {
-                "$ref": "#/components/schemas/privatePartyIdentification"
+              "postalAddress": {
+                "$ref": "#/components/schemas/PostalAddress"
+              },
+              "organisationIdentification": {
+                "$ref": "#/components/schemas/OrganisationIdentification"
+              },
+              "privateIdentification": {
+                "$ref": "#/components/schemas/PersonIdentification"
               }
-            ]
+            },
+            "additionalProperties": false
           },
           "debtorAccount": {
             "description": "The debtor's account details.",
@@ -798,14 +794,14 @@
           "countryOfBirth"
         ],
         "type": "object",
-        "description": "Contains identification information for this person.",
+        "description": "Contains identification information for this person. Fields within are only required when you provide this object.",
         "properties": {
           "birthDate": {
             "minLength": 1,
             "type": "string",
             "description": "The person's date of birth, formatted as YYYY-MM-DD, per the ISO 8601 standard.",
             "format": "date",
-            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
             "example": "1985-10-27"
           },
           "cityOfBirth": {
@@ -941,7 +937,7 @@
             },
             "description": "A maximum of 1 item can be supplied.",
             "nullable": true,
-            "example": "Invoice no': ABC-71124-12"
+            "example": [ "Invoice no': ABC-71124-12" ]
           }
         },
         "additionalProperties": false

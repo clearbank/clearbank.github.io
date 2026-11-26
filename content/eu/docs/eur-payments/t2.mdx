@@ -18,7 +18,7 @@ T2 has no transaction limit, making it suitable for high-value payments. Transac
 
 <br/>
 
-![T2 message flow diagram](/assets/images/Target2-message-flow.svg)
+![T2 message flow diagram](/assets/images/diagrams/eu/t2/Target2-message-flow.svg)
 
 ### Payment types
 
@@ -64,7 +64,7 @@ T2 does not operate on the following days:
 
 To send a T2 payment, use the [/payments/t2-rtgs/v1/customer-payments](#send-a-t2-payment) endpoint. You will receive the [T2 Customer Credit Transfer Outbound Completed webhook](#t-2-customer-credit-transfer-outbound-completed-webhook) when the payment successfully goes through.
 
-![T2 send a payment message flow diagram](/assets/images/t2-send-payment.svg)
+![T2 send a payment message flow diagram](/assets/images/diagrams/eu/t2/t2-send-payment.svg)
 
 If the payment fails, you will receive the [T2 Customer Credit Transfer Outbound Failed webhook](#t-2-customer-credit-transfer-outbound-failed-webhook).
 
@@ -201,7 +201,7 @@ The following error codes may appear in the `Errors` field of the T2 failure web
 
 To return a T2 payment, use the [/payments/t2-rtgs/v1/payment-returns](#return-a-t2-payment) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-payment-return-outbound-completed-webhook) when the return successfully goes through.
 
-![T2 return a payment message flow diagram](/assets/images/t2-return-payment.svg)
+![T2 return a payment message flow diagram](/assets/images/diagrams/eu/t2/t2-return-payment.svg)
 
 If the return fails, you will receive the [T2 Payment Return Outbound Failed webhook](#t-2-payment-return-outbound-failed-webhook).
 
@@ -232,7 +232,7 @@ If the return fails, you will receive the [T2 Payment Return Outbound Failed web
 
 To send a T2 payment to an institution, use the [/payments/t2-rtgs/v1/institution-payments](#send-a-t2-payment-to-an-institution) endpoint. You will receive the [T2 Payment Return Outbound Completed webhook](#t-2-financial-institution-credit-transfer-outbound-completed-webhook) when the payment successfully goes through.
 
-![T2 send an FI payment message flow diagram](/assets/images/t2-send-FI-payment.svg)
+![T2 send an FI payment message flow diagram](/assets/images/diagrams/eu/t2/t2-send-FI-payment.svg)
 
 If the payment fails, you will receive the [T2 Payment Return Outbound Completed webhook](#t-2-financial-institution-credit-transfer-outbound-failed-webhook).
 
@@ -272,6 +272,81 @@ These endpoints can be used to simulate payments. You can also use them for auto
 - Simulate an inbound T2 payment (pacs.008) through the [POST /payments/t2-rtgs/v1/inbound/customer-payments](#simulate-a-t-2-payment) endpoint.
 - Simulate a returned T2 payment (pacs.004) through the [POST /payments/t2-rtgs/v1/inbound/payment-returns](#simulate-a-return-t-2-payment) endpoint.
 - Simulate a T2 bank-to-bank payment (pacs.009) through the [POST /payments/t2-rtgs/v1/inbound/institution-payments](#simulate-a-t-2-bank-to-bank-payment) endpoint.
+
+### Example request payloads
+
+These simulation endpoints are comprehensive in the fields they allow you to test, however for simple test scenarios such as funding an account you can use the minimum set of required fields. 
+
+We've provided an example payload that you can copy and paste. **You may need to edit certain fields.**
+
+#### Submit an inbound T2 payment (pacs.008) endpoint example
+
+**In this example, you'll need to edit xyz field**
+
+```
+{
+    "paymentIdentification": {
+        "instructionId": "75030e66dc7844ed9e4a1266c9e8410f",
+        "endToEndId": "Inbound Payment",
+        "uetr": "3f2504e0-4f89-11d3-9a0c-0305e82c3301"
+    },
+    "header": {
+        "bizMsgId": "75030e66dc7844ed9e4a1266c9e8410f",
+        "from": "CLRBNL2AXXX",
+        "to": "CLRBNL2AXXX"
+    },
+    "value": {
+        "settlementAmount": 1000,
+        "settlementCurrency": "EUR"
+    },
+    "debtor": {
+        "party": {
+            "name": "Debtor Name",
+            "address": {
+                "townName": "Amsterdam",
+                "country": "NL",
+                "postcode": "BN3 1DG"
+            }
+        },
+        "account": {
+            "identification": {
+                "iban": "NL17CLRB0126793871"
+            }
+        }
+    },
+    "debtorAgent": {
+        "identification": {
+            "bicFi": "AACSDE33XXX"
+        }
+    },
+    "creditor": {
+        "party": {
+            "name": "Creditor Name",
+            "address": {
+                "townName": "Amsterdam",
+                "country": "NL",
+                "postcode": "BN3 1DG"
+            }
+        },
+        "account": {
+            "identification": {
+                "iban": "INSERT CREDITOR IBAN"
+            }
+        }
+    },
+    "creditorAgent": {
+        "identification": {
+            "bicFi": "INSERT CREDITOR BIC"
+        }
+    },
+    "instructingAgent": {
+        "bic": "CLRBNL2AXXX"
+    },
+    "instructedAgent": {
+        "bic": "CLRBNL2AXXX"
+    }
+}
+```
 
 <EndpointBlock
   type="post"

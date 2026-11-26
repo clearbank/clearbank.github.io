@@ -1,0 +1,61 @@
+---
+title: "Cross-border Outbound Payment Completed webhook"
+version: 1
+webhook: true
+---
+
+This webhook confirms that a cross-border wire payment you sent has completed. It contains the identifiers you supplied in your payment request, so you can match it to the original payment.
+
+#### Request body
+
+```json
+{
+  "Type": "Payments.CBEU.CrossBorder.OutboundPaymentCompleted",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                              | Type   | Format  | Required | Min-Max length | Pattern      | Description                                                                                                                    |
+| ---------------------------------- | ------ | ------- | -------- | -------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `PaymentId`                        | string | uuid    | Yes      | 36-36          | -            | A unique identifier to reference this outbound payment. This has the same value as the `UETR`.                                 |
+| `TransactionId`                    | string | uuid    | Yes      | 36-36          | -            | A unique identifier assigned by ClearBank to reference the debit transaction related to this outbound payment.                 |
+| `MessageIdentification`            | string | -       | Yes      | 1-35           | -            | The `messageIdentification` you supplied in your payment request.                                                              |
+| `PaymentInformationIdentification` | string | -       | Yes      | 1-35           | -            | The `paymentInformationIdentification` you supplied in your payment request.                                                   |
+| `InstructionIdentification`        | string | -       | Yes      | 1-35           | -            | The `instructionIdentification` you supplied in your payment request.                                                          |
+| `EndToEndIdentification`           | string | -       | Yes      | 1-35           | -            | The `endToEndIdentification` you supplied in your payment request, used to trace the payment from origin to destination.       |
+| `UETR`                             | string | uuid    | Yes      | 36-36          | -            | The unique end-to-end transaction reference (UETR) you supplied in your payment request, used to track the payment end to end. |
+| `InstructedAmount`                 | number | decimal | Yes      | -              | -            | The amount that was instructed to be transferred in the payment.                                                               |
+| `InstructedCurrency`               | string | -       | Yes      | 3-3            | `^[A-Z]{3}$` | The three-letter ISO 4217 currency code of the instructed amount.                                                              |
+
+#### Example Cross-border Outbound Payment Completed webhook request body
+
+```json
+{
+  "Type": "Payments.CBEU.CrossBorder.OutboundPaymentCompleted",
+  "Version": 1,
+  "Payload": {
+    "PaymentId": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+    "TransactionId": "7d1e4b2a-3c5f-4e8d-9a6b-1f2e3d4c5b6a",
+    "MessageIdentification": "MSG-20261117-0001",
+    "PaymentInformationIdentification": "PMTINF-20261117-0001",
+    "InstructionIdentification": "INSTR-20261117-0001",
+    "EndToEndIdentification": "E2E-INV-2026-0451",
+    "UETR": "a3f2c1d4-7b8e-4c9a-9d2e-5f6a7b8c9d0e",
+    "InstructedAmount": 25000.50,
+    "InstructedCurrency": "USD"
+  },
+  "Nonce": 615203948
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 615203948
+}
+```

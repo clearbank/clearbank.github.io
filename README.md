@@ -1,12 +1,14 @@
 # To update the site
 
-## Create a GitHub personal access token (PAT)
+## Create a GitHub personal access token (PAT) — currently unused
+
+> **Note:** This step is not required to run the site today. The only place a GitHub token was consumed (`gatsby-source-graphql` in `gatsby-config.js`) is currently commented out in the codebase. This section is left here in case that integration is re-enabled in the future — if you don't see any GitHub GraphQL data source active in `gatsby-config.js`, you can skip this step.
 
 Under developer settings create a new PAT with read-only access to public repositories. Ensure you copy this once created as you can't view it again.
 
 ![alt text](image.png)
 
-## Create .Env file
+## Create .Env file (only needed if the GitHub token above is required)
 
 Create a `.Env` file in the directory root and add your GitHub token
 
@@ -31,7 +33,7 @@ GITHUB_TOKEN=<token>
 
 ![alt text](image-2.png)
 
-5) Open a new terminal and run `npm run start`. You should see output like below and be able to access the site on `https://localhost:8000`
+5) Open a new terminal and run `npm run start`. You should see output like below and be able to access the site on `http://localhost:8000`
 
 ![alt text](image-3.png)
 
@@ -53,6 +55,22 @@ If you see errors about missing Visual Studio then install Visual Studio 2019 bu
 ```bash
 npm config set msvs_version 2019
 ```
+
+## Troubleshooting slow or broken `npm run start`
+
+If `gatsby develop` takes several minutes, hangs, or you see warnings like:
+
+    [webpack.cache.PackFileCacheStrategy] Restoring failed ... TypeError: this.blocks is not iterable
+
+your local Gatsby cache is corrupted (common after an interrupted build, branch switch, or Node version change). Fix it with:
+
+    npm run clean
+    npm run start
+
+The first run after `clean` will be slower (full rebuild); subsequent runs should return to normal speed.
+
+If build times remain inconsistent (e.g. swinging between under a minute and several minutes) with no code changes, this is often caused by antivirus/endpoint security software scanning `node_modules` and `.cache` on every file access. If you're on a managed corporate machine, ask IT to add an exclusion for the repository folder.
+
 
 ## To create a new Parent and child menu
 - Copy the template folder structure into the content folder
@@ -217,3 +235,4 @@ beforeAll(() => {
 ```
 
 More information: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+

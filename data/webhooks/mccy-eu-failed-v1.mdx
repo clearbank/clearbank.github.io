@@ -1,0 +1,68 @@
+---
+title: "Cross-border FX Outbound Payment Failed webhook"
+version: 1
+webhook: true
+---
+
+Sent when an outbound Cross-border FX payment has failed. The reasons for the failure are provided where possible.
+
+#### Request body
+
+```json
+{
+  "Type": "Payments.CrossBorder.FxOutboundPaymentFailed",
+  "Version": 1,
+  "Payload": {...},
+  "Nonce":
+}
+```
+
+#### Payload fields
+
+| Field                       | Type   | Format | Required | Min-Max length | Pattern                                                                       | Description                                                                                                                                                                     |
+| --------------------------- | ------ | ------ | -------- | -------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PaymentId`                 | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank to reference this outbound payment.                                                                                                   |
+| `TransactionId`             | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A unique identifier assigned by ClearBank to reference the debit transaction related to this outbound payment.                                                                  |
+| `InstructionIdentification` | string | -      | Yes      | 1-35           | -                                                                             | A unique identifier assigned by you to identify the original payment instruction.                                                                                               |
+| `EndToEndIdentification`    | string | -      | Yes      | 1-35           | -                                                                             | A unique identifier assigned by you to trace the payment from origin to destination.                                                                                            |
+| `UETR`                      | string | uuid   | Yes      | 36-36          | ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$ | A universally unique transaction reference (UETR) used to track the payment end-to-end across the payment chain.                                                                |
+| `StatusReasonInformation`   | array  | -      | No       | -              | -                                                                             | A list of status reason information entries, up to 10. Each entry contains additional information related to the payment failure. Can be `null`. See `StatusReasonInformation`. |
+
+##### StatusReasonInformation
+
+| Field                   | Type            | Required | Min-Max length   | Description                                                                                                                 |
+| ----------------------- | --------------- | -------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `AdditionalInformation` | array of string | Yes      | 0-140 characters | A list of supplementary details regarding the payment failure, such as error codes or descriptive messages. Up to 10 items. |
+
+#### Example Cross-border FX Outbound Payment Failed webhook request body
+
+```json
+{
+  "Type": "Payments.CrossBorder.FxOutboundPaymentFailed",
+  "Version": 1,
+  "Payload": {
+    "PaymentId": "3c1e9f4a-8b2d-4e7a-9f61-2d5b7c0e8a14",
+    "TransactionId": "fb7d026f-cbf6-4412-b498-47fb5a94e1ad",
+    "InstructionIdentification": "INSTID-4771-MYID",
+    "EndToEndIdentification": "E2EREF-BB44-MYID",
+    "UETR": "3c1e9f4a-8b2d-4e7a-9f61-2d5b7c0e8a14",
+    "StatusReasonInformation": [
+      {
+        "AdditionalInformation": [
+          "Insufficient funds",
+          "Account blocked"
+        ]
+      }
+    ]
+  },
+  "Nonce": 573918264
+}
+```
+
+#### Example webhook response
+
+```json
+{
+  "Nonce": 573918264
+}
+```

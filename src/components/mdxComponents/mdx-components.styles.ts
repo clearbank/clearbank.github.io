@@ -65,10 +65,15 @@ export const ListItem = styled.li`
 `
 
 export const Img = styled.img`
+  display: block;
+  margin: 24px auto;
   width: 100%;
+  max-width: 100%;
+  height: auto;
+  cursor: zoom-in;
 
   @media screen and (min-width: ${breakpoints.large}) {
-    max-width: 75%;
+    max-width: 90%;
   }
 `
 
